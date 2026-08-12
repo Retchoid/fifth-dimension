@@ -4,6 +4,10 @@ import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, C
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
 const REQUIRED_RECORDS = 5;
+const LEVEL_TWO_REQUIRED_RECORDS = 15;
+const LEVEL_TWO_REAR_SPRITE = "/manus-storage/5d-jungle-dj-rear-view_895d2e0c.png";
+
+type GameLevel = 1 | 2;
 
 interface LeaderboardEntry {
   name: string;
@@ -17,23 +21,31 @@ const DEFAULT_LEADERBOARD: LeaderboardEntry[] = [
   { name: "SOUNDBOY", score: 300 },
 ];
 
+const CELEBRATION_DANCERS = [
+  { className: "dancer-lime", src: "/manus-storage/5d-jungle-dancer-lime_af13269a.png" },
+  { className: "dancer-cyan", src: "/manus-storage/5d-jungle-dancer-cyan_391dfc3c.png" },
+  { className: "dancer-magenta", src: "/manus-storage/5d-jungle-dancer-magenta_da5bea9b.png" },
+] as const;
+
 interface FallingItem {
   id: number;
   x: number; // percentage 0-92
   y: number; // percentage 0-90
-  type: "record" | "cop";
+  type: "record" | "cop" | "bottle" | "apple";
   speed: number;
   size: number;
 }
 
 interface DjMiniGameProps {
   onUnlockDownload?: () => void;
+  onAchievementFlowComplete?: () => void;
   downloadUnlocked?: boolean;
   isUnlockCelebrating?: boolean;
 }
 
-export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false, isUnlockCelebrating = false }: DjMiniGameProps) {
+export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete, downloadUnlocked = false, isUnlockCelebrating = false }: DjMiniGameProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [level, setLevel] = useState<GameLevel>(1);
   const [score, setScore] = useState(0);
   const [recordsCaught, setRecordsCaught] = useState(0);
   const [combo, setCombo] = useState(1);
@@ -45,6 +57,8 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
   const [isUnlockPaused, setIsUnlockPaused] = useState(false);
+  const [levelTwoComplete, setLevelTwoComplete] = useState(false);
+  const [finale, setFinale] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [submittedName, setSubmittedName] = useState("");
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
@@ -61,11 +75,13 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
   const soundEnabledRef = useRef(true);
   const bgMusicRef = useRef<HTMLAudioElement | null>(null);
   const scoreRef = useRef(0);
+  const levelRef = useRef<GameLevel>(1);
   const recordsCaughtRef = useRef(0);
   const downloadUnlockedRef = useRef(downloadUnlocked);
   const unlockJinglePlayedRef = useRef(false);
   const highScoreRef = useRef(0);
   const livesRef = useRef(3);
+  const finaleRef = useRef(false);
   const itemsRef = useRef<FallingItem[]>([]);
   const nextIdRef = useRef(1);
   const spawnTimerRef = useRef(0);
@@ -321,17 +337,44 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     setPlayerName(safeName);
     setSubmittedName(safeName);
     setScoreSubmitted(true);
+    onAchievementFlowComplete?.();
+    if (levelTwoComplete) {
+      finaleRef.current = true;
+      setFinale(true);
+    }
+  };
+
+  const startLevelTwo = () => {
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    levelRef.current = 2;
+    setLevel(2);
+    recordsCaughtRef.current = 0;
+    livesRef.current = 3;
+    comboRef.current = 1;
+    scoreRef.current = scoreRef.current;
+    setRecordsCaught(0);
+    setLives(3);
+    setCombo(1);
+    setIsPlaying(true);
+    setIsUnlockPaused(false);
+    setGameOver(false);
+    setLevelTwoComplete(false);
+    setFinale(false);
+    finaleRef.current = false;
+    itemsRef.current = [];
+    setVisibleItems([]);
+    spawnTimerRef.current = 0;
+    lastTimeRef.current = performance.now();
+    isPlayingRef.current = true;
+    primeAudio();
+    playBackgroundMusic();
+    requestRef.current = requestAnimationFrame(updateGame);
   };
 
   const keepPlayingAfterUnlock = () => {
     if (!isUnlockPaused) return;
-    setIsUnlockPaused(false);
-    isPlayingRef.current = true;
-    setIsPlaying(true);
-    lastTimeRef.current = performance.now();
-    primeAudio();
-    playBackgroundMusic();
-    requestRef.current = requestAnimationFrame(updateGame);
+    onAchievementFlowComplete?.();
+    startLevelTwo();
   };
 
   useEffect(() => {
@@ -369,6 +412,11 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     const ctx = getAudioContext();
     if (ctx && ctx.state === "suspended") void ctx.resume();
     unlockJinglePlayedRef.current = false;
+    levelRef.current = 1;
+    setLevel(1);
+    setLevelTwoComplete(false);
+    setFinale(false);
+    finaleRef.current = false;
     isPlayingRef.current = true;
     if (soundEnabledRef.current && bgMusicRef.current) {
       bgMusicRef.current.currentTime = 0;
@@ -380,6 +428,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     livesRef.current = 3;
     setIsPlaying(true);
     setGameOver(false);
+    setLevelTwoComplete(false);
     setIsUnlockPaused(false);
     setIsNewRecord(false);
     setScoreSubmitted(false);
@@ -414,22 +463,27 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
 
     let structureChanged = false;
     spawnTimerRef.current += dt;
-    if (spawnTimerRef.current >= 0.72) {
+    if (spawnTimerRef.current >= (levelRef.current === 2 ? 0.62 : 0.72)) {
       spawnTimerRef.current = 0;
-      const isCop = Math.random() < 0.3;
+      const roll = Math.random();
+      const spawnedType: FallingItem["type"] = levelRef.current === 2
+        ? (roll < 0.68 ? "record" : roll < 0.84 ? "bottle" : "apple")
+        : (roll < 0.3 ? "cop" : "record");
+      const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : 30;
       itemsRef.current.push({
         id: nextIdRef.current++,
         x: Math.floor(Math.random() * 84) + 6,
         y: -10,
-        type: isCop ? "cop" : "record",
-        speed: Math.floor(Math.random() * 13) + 31,
-        size: isCop ? 38 : 34,
+        type: spawnedType,
+        speed: Math.floor(Math.random() * 13) + (levelRef.current === 2 ? 34 : 31),
+        size,
       });
       structureChanged = true;
     }
 
     const nextItems: FallingItem[] = [];
     let pauseAfterUnlock = false;
+    let completeLevelTwo = false;
     let currentLives = livesRef.current;
     let currentScore = scoreRef.current;
     const itemNodes = itemsLayerRef.current?.children;
@@ -454,11 +508,14 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
           recordsCaughtRef.current = nextRecordsCaught;
           setScore(currentScore);
           setRecordsCaught(nextRecordsCaught);
-          if (nextRecordsCaught >= REQUIRED_RECORDS && !downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
+          if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS && !downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
             unlockJinglePlayedRef.current = true;
             playUnlockJingle();
             onUnlockDownload?.();
             pauseAfterUnlock = true;
+          }
+          if (levelRef.current === 2 && nextRecordsCaught >= LEVEL_TWO_REQUIRED_RECORDS) {
+            completeLevelTwo = true;
           }
         } else {
           playCopSiren();
@@ -473,6 +530,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
             itemsRef.current = [];
             setVisibleItems([]);
             setGameOver(true);
+            setLevelTwoComplete(false);
             setIsUnlockPaused(false);
             setIsPlaying(false);
             setIsNewRecord(currentScore > highScoreRef.current);
@@ -523,6 +581,19 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
       setIsUnlockPaused(true);
       return;
     }
+    if (completeLevelTwo) {
+      isPlayingRef.current = false;
+      if (bgMusicRef.current) bgMusicRef.current.pause();
+      setIsPlaying(false);
+      setLevelTwoComplete(true);
+      setGameOver(true);
+      setIsUnlockPaused(false);
+      setIsNewRecord(currentScore > highScoreRef.current);
+      setScoreSubmitted(false);
+      setPlayerName("");
+      setSubmittedName("");
+      return;
+    }
     if (isPlayingRef.current) requestRef.current = requestAnimationFrame(updateGame);
   };
 
@@ -560,7 +631,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
           <p className="eyebrow"><Disc size={15} /> ARCADE PORTAL / 06</p>
           <h2 id="minigame-title">SELECTOR<br /><em>SHOWDOWN.</em></h2>
         </div>
-        <p>Catch the heavy 5D dubplates and dodge the badge patrol. Collect 5 records to unlock the free “Jersh in Case” download. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
+        <p>Catch the heavy 5D dubplates and dodge the badge patrol. Clear Level 1 to unlock the free “Jersh in Case” download, then keep playing through the crowd level and catch 15 records. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
       </div>
 
       <audio
@@ -590,10 +661,11 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
           updateDjPositionFromClientX(e.touches[0].clientX);
         }}
       >
-        <div className="game-grid-bg" aria-hidden="true" />
+        <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
         <div className="game-hud">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
-          <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{REQUIRED_RECORDS}</strong></div>
+          <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>
+          <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{level === 2 ? LEVEL_TWO_REQUIRED_RECORDS : REQUIRED_RECORDS}</strong></div>
           <div className="hud-badge combo-badge" aria-label={`Combo multiplier: ${combo}x`}>COMBO: <strong>{combo}x</strong></div>
           <div className="hud-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
           <div className="hud-badge lives-badge">LIVES: <strong>{"❤️".repeat(lives)}</strong></div>
@@ -613,7 +685,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
-              <p>Catch spinning vinyl records (+100pts). Collect 5 records to unlock the free “Jersh in Case” download. Avoid the cop badges—missed records and caught badges cost lives.</p>
+              <p>{level === 2 ? "Level 2: command the crowd from the booth. Catch 15 records while avoiding bottles and apple cores thrown from the rave floor." : "Catch spinning vinyl records (+100pts). Collect 5 records to unlock the free “Jersh in Case” download. Avoid the cop badges—missed records and caught badges cost lives."}</p>
               <button type="button" className="tape-play-button" onClick={startGame}>
                 <span className="tape-play-face" aria-hidden="true">
                   <i className="tape-reel tape-reel-left" />
@@ -628,6 +700,20 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
 
         {isUnlockPaused && !gameOver && (
           <div className="game-overlay unlock-overlay">
+            {isUnlockCelebrating && (
+              <div className="unlock-celebration-layer" aria-hidden="true">
+                <div className="celebration-dancers">
+                  {CELEBRATION_DANCERS.map((dancer) => (
+                    <img key={dancer.className} className={`celebration-dancer ${dancer.className}`} src={dancer.src} alt="" />
+                  ))}
+                </div>
+                <div className="confetti-burst-layer">
+                  {Array.from({ length: 18 }, (_, index) => (
+                    <i key={index} className={`confetti-particle confetti-${index % 5}`} />
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="overlay-box unlock-overlay-box">
               <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
               <h3>LEVEL CLEARED</h3>
@@ -654,7 +740,18 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
           </div>
         )}
 
-        {gameOver && (
+        {finale && (
+          <div className="game-overlay finale-overlay">
+            <div className="finale-box" role="status" aria-live="polite">
+              <span className="finale-kicker">5D TRANSMISSION COMPLETE</span>
+              <div className="finale-copy">BIG UP BADMAN <strong>{submittedName || "SELECTOR"}</strong><br />JUNGLE IS MASSIVE.</div>
+              <span className="finale-subline">LEVEL 2 / 15 DUBPLATES CLEARED</span>
+              <button type="button" className="finale-restart-button" onClick={startGame}>PLAY AGAIN</button>
+            </div>
+          </div>
+        )}
+
+        {gameOver && !finale && (
           <div className="game-overlay game-over-overlay">
             <div className="overlay-box game-over-box-wide">
               {isNewRecord && (
@@ -662,8 +759,8 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
                   <Trophy size={17} /> NEW RECORD!
                 </div>
               )}
-              <h3>SESSION TERMINATED</h3>
-              <p>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</p>
+              <h3>{levelTwoComplete ? "LEVEL 2 CLEARED" : "SESSION TERMINATED"}</h3>
+              <p>{levelTwoComplete ? `Final Score: ${score} — Save your selector tag to send the transmission.` : <>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</>}</p>
 
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitScore}>
@@ -744,7 +841,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
                     <span className="vinyl-label" />
                     <span className="vinyl-spindle" />
                   </div>
-                ) : (
+                ) : item.type === "cop" ? (
                   <div className="police-badge-sprite" aria-hidden="true">
                     <span className="badge-shield">
                       <span className="badge-star">★</span>
@@ -755,12 +852,26 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
                       <span className="siren-beacon siren-beacon-right" />
                     </span>
                   </div>
+                ) : (
+                  <div className={`crowd-throw-sprite ${item.type}`} aria-label={item.type === "bottle" ? "Thrown bottle" : "Thrown apple core"}>
+                    {item.type === "bottle" ? <span className="bottle-neck" /> : <><span className="apple-core-seed" /><span className="apple-core-leaf" /></>}
+                  </div>
                 )}
               </div>
             ))}
         </div>
+        {level === 2 && (
+          <div className="level-two-booth" aria-hidden="true">
+            <div className="crowd-line crowd-line-back">{Array.from({ length: 18 }, (_, index) => <i key={index} />)}</div>
+            <div className="crowd-line crowd-line-front">{Array.from({ length: 13 }, (_, index) => <i key={index} />)}</div>
+            <div className="stage-light-beam beam-left" />
+            <div className="stage-light-beam beam-right" />
+            <div className="booth-console"><span /><span /><span /></div>
+          </div>
+        )}
+
         {/* Speaker towers and lowering DJ booth celebration elements */}
-        <div className={`dj-booth-stage${downloadUnlocked ? " is-unlocked-celebrating" : ""}`} aria-hidden="true">
+        <div className={`dj-booth-stage${downloadUnlocked ? " is-unlocked-celebrating" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
           <div className="speaker-tower speaker-tower-left">
             <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
           </div>
@@ -768,26 +879,45 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
             <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
           </div>
           {isUnlockCelebrating && (
-            <div className="confetti-burst-layer" aria-hidden="true">
-              {Array.from({ length: 18 }, (_, index) => (
-                <i key={index} className={`confetti-particle confetti-${index % 5}`} />
-              ))}
-            </div>
+            <>
+              <div className="celebration-dancers" aria-hidden="true">
+                {CELEBRATION_DANCERS.map((dancer) => (
+                  <img key={dancer.className} className={`celebration-dancer ${dancer.className}`} src={dancer.src} alt="" />
+                ))}
+              </div>
+              <div className="confetti-burst-layer" aria-hidden="true">
+                {Array.from({ length: 18 }, (_, index) => (
+                  <i key={index} className={`confetti-particle confetti-${index % 5}`} />
+                ))}
+              </div>
+            </>
           )}
         </div>
 
         {/* DJ selector with turntable at bottom */}
-        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}`} style={{ left: `${djXRef.current}%` }}>
+        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
-            <img
-              className="dj-sprite"
-              src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png"
-              alt=""
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-                event.currentTarget.parentElement?.classList.add("sprite-failed");
-              }}
-            />
+            {level === 2 ? (
+              <div className="rear-dj-fallback" role="img" aria-label="Rear view of the 5D jungle DJ facing a massive crowd">
+                <span className="rear-dj-headphones" />
+                <span className="rear-dj-cap" />
+                <span className="rear-dj-head" />
+                <span className="rear-dj-jacket" />
+                <span className="rear-dj-arm rear-dj-arm-left" />
+                <span className="rear-dj-arm rear-dj-arm-right" />
+                <span className="rear-dj-deck" />
+              </div>
+            ) : (
+              <img
+                className="dj-sprite"
+                src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png"
+                alt=""
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                  event.currentTarget.parentElement?.classList.add("sprite-failed");
+                }}
+              />
+            )}
             <div className="dj-sprite-fallback" aria-hidden="true">
               <span className="dj-selector-head">5D</span>
               <span className="dj-selector-body" />

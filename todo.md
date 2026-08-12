@@ -276,3 +276,20 @@
 - [x] Add player-name entry before saving a score and display names in the leaderboard.
 - [x] Diagnose and repair background music playback, including asset loading, AudioContext resume, and mute/unmute state.
 - [x] Validate typecheck, production build, gameplay flow, and checkpoint delivery.
+
+## Five-second achievement reveal and dancing sprite ensemble
+
+- [x] Generate and upload three original female jungle dancer sprites with transparent backgrounds for the achievement sequence.
+- [x] Extend the achievement celebration and download reveal timing to five seconds.
+- [x] Animate the unlocked download box descending from the top and reveal a green free-download button.
+- [x] Show and animate all three dancer sprites during the achievement sequence with reduced-motion and mobile support.
+- [x] Validate the celebration flow, asset loading, typecheck, production build, and checkpoint delivery.
+
+## Two-level Selector Showdown finale
+
+- [x] Return the unlocked release card to its normal page position after Keep Playing and score-name submission while preserving the unlocked state.
+- [x] Add Level 2 state and transition with rear-view DJ booth art, crowd, stage lights, and reset lives.
+- [x] Add Level 2 falling records plus bottle and apple-core hazards; require 15 records to pass and remove a life for each caught hazard.
+- [x] Preserve the same jungle music style and keep gameplay smooth across the level transition.
+- [x] Add the dark green 1980s end screen using the submitted leaderboard username: “Big Up Badman [username] Jungle is Massive.”
+- [x] Refine the arcade cabinet geometry and validate the full user journey, responsive behavior, audio, typecheck, production build, and checkpoint delivery.

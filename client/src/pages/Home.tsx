@@ -128,9 +128,13 @@ export default function Home() {
     }
   };
 
+  const settleAchievementFlow = () => {
+    setIsUnlockCelebrating(false);
+  };
+
   useEffect(() => {
     if (!isUnlockCelebrating) return;
-    const celebrationTimer = window.setTimeout(() => setIsUnlockCelebrating(false), 1800);
+    const celebrationTimer = window.setTimeout(() => setIsUnlockCelebrating(false), 5000);
     return () => window.clearTimeout(celebrationTimer);
   }, [isUnlockCelebrating]);
 
@@ -381,7 +385,7 @@ export default function Home() {
               )}
               <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 5 records in Selector Showdown to unlock the free complete track download.</p>
               {downloadUnlocked ? (
-                <a className="exclusive-download" href={EXCLUSIVE_RELEASE.url} download="Jersh in Case — 5th Dimension, Skavo featuring MestUp.mp3">
+                <a className={`exclusive-download${isUnlockCelebrating ? " is-revealing" : ""}`} href={EXCLUSIVE_RELEASE.url} download="Jersh in Case — 5th Dimension, Skavo featuring MestUp.mp3">
                   <span>Download Jersh in Case</span><ArrowDownRight size={19} />
                 </a>
               ) : (
@@ -394,7 +398,7 @@ export default function Home() {
           </article>
         </section>
 
-        <DjMiniGame downloadUnlocked={downloadUnlocked} onUnlockDownload={unlockDownload} isUnlockCelebrating={isUnlockCelebrating} />
+        <DjMiniGame downloadUnlocked={downloadUnlocked} onUnlockDownload={unlockDownload} onAchievementFlowComplete={settleAchievementFlow} isUnlockCelebrating={isUnlockCelebrating} />
 
         <section id="visuals" className="visuals-section" aria-labelledby="visuals-title">
           <div className="section-heading">
