@@ -1525,13 +1525,50 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 .unlock-celebration-layer {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   overflow: hidden;
   pointer-events: none;
 }
 .unlock-overlay-box {
   position: relative;
-  z-index: 2;
+  z-index: 4;
+}
+.unlock-overlay.is-celebrating .unlock-overlay-box {
+  border-color: #c6ff00;
+  box-shadow: 8px 8px 0 #ff007a, 0 0 24px rgba(198,255,0,.35);
+}
+.unlock-download-drop {
+  display: grid;
+  gap: .18rem;
+  margin: .2rem 0 1rem;
+  padding: .75rem .9rem;
+  border: 2px solid #c6ff00;
+  background: #27b85a;
+  color: #07120b;
+  box-shadow: 4px 4px 0 #09070f, inset 0 0 0 2px rgba(255,255,255,.25);
+  text-align: left;
+  animation: unlock-download-drop-in 5s cubic-bezier(.23,1,.32,1) both;
+}
+.unlock-download-drop-label,
+.unlock-download-drop > span:last-child {
+  font-family: monospace;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.unlock-download-drop strong {
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: 1.55rem;
+  letter-spacing: .08em;
+  line-height: .9;
+}
+@keyframes unlock-download-drop-in {
+  0% { opacity: 0; transform: translateY(-190%) rotate(-1.5deg); }
+  22% { opacity: .12; transform: translateY(-110%) rotate(.8deg); }
+  62% { opacity: .92; transform: translateY(7%) rotate(-.3deg); }
+  80% { opacity: 1; transform: translateY(-1.5%) rotate(.1deg); }
+  100% { opacity: 1; transform: translateY(0) rotate(0); }
 }
 .unlock-overlay .celebration-dancer {
   width: clamp(68px, 11vw, 122px);
@@ -1625,11 +1662,13 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   .download-unlock-banner.is-celebrating,
   .download-unlock-banner.is-celebrating .unlock-sparks span,
   .exclusive-download.is-revealing,
+  .unlock-download-drop,
   .celebration-dancer {
     animation: none;
   }
   .download-unlock-banner.is-celebrating,
-  .exclusive-download.is-revealing {
+  .exclusive-download.is-revealing,
+  .unlock-download-drop {
     opacity: 1;
     transform: none;
   }
@@ -1646,6 +1685,12 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   .unlock-overlay .celebration-dancer.dancer-lime { left: 12%; }
   .unlock-overlay .celebration-dancer.dancer-cyan { left: 50%; }
   .unlock-overlay .celebration-dancer.dancer-magenta { left: 88%; }
+  .unlock-download-drop {
+    padding: .62rem .68rem;
+  }
+  .unlock-download-drop strong {
+    font-size: 1.3rem;
+  }
   .celebration-dancer {
     width: clamp(48px, 20vw, 82px);
     max-height: 66%;

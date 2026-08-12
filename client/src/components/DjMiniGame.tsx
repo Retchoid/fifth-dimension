@@ -5,8 +5,6 @@ const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
 const REQUIRED_RECORDS = 5;
 const LEVEL_TWO_REQUIRED_RECORDS = 15;
-const LEVEL_TWO_REAR_SPRITE = "/manus-storage/5d-jungle-dj-rear-view_895d2e0c.png";
-
 type GameLevel = 1 | 2;
 
 interface LeaderboardEntry {
@@ -713,7 +711,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
 
         {isUnlockPaused && !gameOver && (
-          <div className="game-overlay unlock-overlay">
+          <div className={`game-overlay unlock-overlay${isUnlockCelebrating ? " is-celebrating" : ""}`}>
             {isUnlockCelebrating && (
               <div className="unlock-celebration-layer" aria-hidden="true">
                 <div className="celebration-dancers">
@@ -731,6 +729,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="overlay-box unlock-overlay-box">
               <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
               <h3>LEVEL CLEARED</h3>
+              {isUnlockCelebrating && (
+                <div className="unlock-download-drop" role="status" aria-live="polite">
+                  <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
+                  <strong>JERSH IN CASE</strong>
+                  <span>THE SIGNAL IS YOURS — 5 DUBPLATES CAUGHT.</span>
+                </div>
+              )}
               <p>You caught all 5 dubplates. The free “Jersh in Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
               <div className="unlock-decision-actions">
                 <button type="button" className="tape-play-button" onClick={startGame}>
@@ -911,27 +916,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {/* DJ selector with turntable at bottom */}
         <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
-            {level === 2 ? (
-              <div className="rear-dj-fallback" role="img" aria-label="Rear view of the 5D jungle DJ facing a massive crowd">
-                <span className="rear-dj-headphones" />
-                <span className="rear-dj-cap" />
-                <span className="rear-dj-head" />
-                <span className="rear-dj-jacket" />
-                <span className="rear-dj-arm rear-dj-arm-left" />
-                <span className="rear-dj-arm rear-dj-arm-right" />
-                <span className="rear-dj-deck" />
-              </div>
-            ) : (
-              <img
-                className="dj-sprite"
-                src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png"
-                alt=""
-                onError={(event) => {
-                  event.currentTarget.style.display = "none";
-                  event.currentTarget.parentElement?.classList.add("sprite-failed");
-                }}
-              />
-            )}
+            <img
+              className="dj-sprite"
+              src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png"
+              alt=""
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+                event.currentTarget.parentElement?.classList.add("sprite-failed");
+              }}
+            />
             <div className="dj-sprite-fallback" aria-hidden="true">
               <span className="dj-selector-head">5D</span>
               <span className="dj-selector-body" />

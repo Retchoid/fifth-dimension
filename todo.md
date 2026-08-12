@@ -301,3 +301,11 @@
 - [x] Audit the full site against established hierarchy, contrast, readability, accessibility, responsive, and conversion principles.
 - [x] Fix any discovered gameplay, visual, accessibility, metadata, or marketing-flow issues.
 - [x] Validate the complete site, build, audio, and responsive behavior, then save a checkpoint.
+
+## Shared Level 2 character and unlock celebration correction
+
+- [x] Replace the Level 2 rear-view character with the exact same playable DJ sprite used in Level 1.
+- [x] Reproduce the five-record unlock from a clean state and ensure dancer sprites, confetti, and the five-second celebration are visibly rendered.
+- [x] Ensure the unlocked download box visibly descends from the top into its green free-download state.
+- [x] Analyze the 16-bit jungle MP3 and verify an amen-break section is present; confirm the real MP3 plays during active gameplay.
+- [x] Validate Level 1 unlock, Level 2 character consistency, celebration timing, download reveal, audio, build, and checkpoint delivery.
