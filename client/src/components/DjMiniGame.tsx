@@ -1073,6 +1073,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="police-dj-reaction" aria-hidden="true">
               <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" />
             </div>
+            <div className="police-recovery-prompt" aria-hidden="true">
+              <strong>RECOVERY COMBO</strong>
+              <span>CATCH 3 DUBPLATES — TAKE BACK THE SET</span>
+            </div>
             <div className="police-seizure-copy">
               <span>BADGE PATROL / 2 HITS</span>
               <strong>COPS SEIZED<br />YOUR MIXER.</strong>

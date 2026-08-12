@@ -474,3 +474,8 @@
 - [x] Add a brief expressive DJ sprite beat after the cop-car sequence.
 - [x] Keep the reaction inside the seizure pause window, responsive, and clear before automatic gameplay resumption.
 - [x] Validate presentation, continuation, build, and checkpoint delivery.
+
+## Post-seizure recovery combo prompt
+
+- [x] Add a recovery-combo encouragement prompt immediately after the DJ reaction beat.
+- [x] Keep the prompt inside the seizure pause window and validate responsive presentation, continuation, build, and checkpoint delivery.
