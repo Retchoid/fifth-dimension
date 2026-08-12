@@ -35,56 +35,56 @@ const projects = [
     title: "New frequency loading",
     detail: "A fresh 5th Dimension mix is taking shape between breakbeat pressure, bassline weight, and late-night jungle heat.",
     status: "In the lab",
-    image: "/manus-storage/fifth-dimension-signal_c9f26047.jpg",
+    image: "/manus-storage/5th-dimension-character_a901a681.jpg",
   },
   {
     id: "LIVE SIGNAL",
     title: "Floor rewiring sessions",
     detail: "Upcoming appearances, special broadcasts, and after-hours selections will land here when the coordinates are locked.",
     status: "Signal incoming",
-    image: "/manus-storage/fifth-dimension-mark_cb4f8370.png",
+    image: "/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png",
   },
 ];
 
 const art = [
   {
-    src: "/manus-storage/fifth-dimension-grid_d7b944d5.jpg",
+    src: "/manus-storage/ragga-revival_bc56c618.png",
     alt: "Ragga Revival event poster featuring Hi Deaf",
     label: "RAGGA REVIVAL / 2012",
     className: "art-tall art-ragga",
   },
   {
-    src: "/manus-storage/fifth-dimension-signal_c9f26047.jpg",
-    alt: "Graffiti-covered cake decorated with neon green drips",
+    src: "/manus-storage/graffiti-collage_bac19afe.png",
+    alt: "Graffiti collage with retro figures and neon green paint",
     label: "GRAFFITI CAKE / 2025",
     className: "art-square art-cake",
   },
   {
-    src: "/manus-storage/fifth-dimension-hero_85ca57e5.jpg",
+    src: "/manus-storage/cool-world-piece_b1a88e9c.png",
     alt: "Cool World-inspired painted art with a rabbit character and green graffiti",
     label: "COOL WORLD STUDY",
     className: "art-tall art-cool",
   },
   {
-    src: "/manus-storage/fifth-dimension-mark_cb4f8370.png",
+    src: "/manus-storage/painted-character_15d43de1.png",
     alt: "Hand-painted portrait with a wax-style graffiti cap",
     label: "WAX PORTRAIT",
     className: "art-square art-wax",
   },
   {
-    src: "/manus-storage/fifth-dimension-signal_c9f26047.jpg",
+    src: "/manus-storage/5th-dimension-character_a901a681.jpg",
     alt: "Neon vaporwave portrait in magenta, cyan and violet",
     label: "NEON FREQUENCY PORTRAIT",
     className: "art-square art-portrait",
   },
   {
-    src: "/manus-storage/fifth-dimension-signal_c9f26047.jpg",
+    src: "/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png",
     alt: "5th Dimension graffiti illustration in cyan, magenta and black",
     label: "ORBIT TAG / 5D",
     className: "art-round",
   },
   {
-    src: "/manus-storage/fifth-dimension-mark_cb4f8370.png",
+    src: "/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png",
     alt: "5th Dimension graffiti logo on cyan paint texture",
     label: "DIMENSION TAG",
     className: "art-tall art-tag",
@@ -149,7 +149,7 @@ export default function Home() {
       <main id="top">
         <section className="hero" aria-labelledby="hero-title">
           <img
-            src="/manus-storage/fifth-dimension-hero_85ca57e5.jpg"
+            src="/manus-storage/5th-dimension-character_a901a681.jpg"
             alt=""
             className="hero-bg"
           />
@@ -172,7 +172,7 @@ export default function Home() {
           <div className="hero-logo-stage">
             <div className="logo-grid" aria-hidden="true" />
             <img
-              src="/manus-storage/fifth-dimension-mark_cb4f8370.png"
+              src="/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png"
               alt="5th Dimension graffiti logo"
               className="hero-logo"
             />
@@ -265,7 +265,7 @@ export default function Home() {
             <div className="tags"><span>#BASSADDICT</span><span>#JUNGLEREVIVAL</span><span>#BREAKBEATALCHEMIST</span></div>
           </div>
           <div className="bio-art-panel">
-            <img src="/manus-storage/fifth-dimension-signal_c9f26047.jpg" alt="5th Dimension street-art insignia" />
+            <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
             <span>JUNGLE / GROOVE / PRESSURE</span>
           </div>
         </section>
@@ -294,7 +294,7 @@ export default function Home() {
           </div>
           <article className="matrix-preview" aria-labelledby="matrix-title">
             <div className="matrix-art-window" aria-hidden="true">
-              <img src="/manus-storage/fifth-dimension-grid_d7b944d5.jpg" alt="" />
+              <img src="/manus-storage/dimension-performance-matrix_c45b9b28.png" alt="" />
             </div>
             <div className="matrix-scrim" aria-hidden="true" />
             <div className="matrix-content">
@@ -384,7 +384,7 @@ export default function Home() {
               <p className="social-card-desc">Follow for behind-the-scenes studio sessions, flyer drops, and rave snapshots from the front line.</p>
               <div className="social-embed-preview">
                 <div className="social-preview-art">
-                  <img src="/manus-storage/fifth-dimension-signal_c9f26047.jpg" alt="Instagram preview visual" />
+                  <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="Instagram preview visual" />
                   <div className="social-preview-overlay">
                     <Instagram size={36} />
                     <span>View latest posts &amp; reels</span>
@@ -399,7 +399,7 @@ export default function Home() {
               <p className="social-card-desc">Stream the newest jungle transmissions, hip-hop refixes, and heavy bassline workouts directly.</p>
               <div className="social-embed-preview">
                 <div className="social-preview-art">
-                  <img src="/manus-storage/fifth-dimension-signal_c9f26047.jpg" alt="SoundCloud preview visual" />
+                  <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="SoundCloud preview visual" />
                   <div className="social-preview-overlay">
                     <Music2 size={36} />
                     <span>Listen on SoundCloud</span>
@@ -424,7 +424,7 @@ export default function Home() {
             </div>
           </div>
           <div className="contact-logo-wrap">
-            <img src="/manus-storage/fifth-dimension-mark_cb4f8370.png" alt="5th Dimension graffiti mark" />
+            <img src="/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png" alt="5th Dimension graffiti mark" />
           </div>
         </section>
       </main>
