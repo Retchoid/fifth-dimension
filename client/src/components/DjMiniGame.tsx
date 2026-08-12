@@ -695,7 +695,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
         <div
           ref={containerRef}
-          className="game-viewport"
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}`}
         onPointerMove={handlePointerMove}
         onPointerDown={(e) => {
           if (e.pointerType === "touch") updateDjPositionFromClientX(e.clientX);
@@ -960,7 +960,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 {/* Falling items */}
         <div ref={itemsLayerRef} className="falling-items-layer" aria-hidden="true">
           {isPlaying &&
-            visibleItems.map((item) => (
+            visibleItems.slice(-18).map((item) => (
               <div
                 key={item.id}
                 className={`falling-object ${item.type}`}

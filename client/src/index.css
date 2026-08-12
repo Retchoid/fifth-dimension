@@ -483,7 +483,10 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   box-shadow: inset 0 0 30px rgba(0, 231, 255, .15);
   touch-action: none;
   cursor: ew-resize;
+  isolation: isolate;
+  contain: layout paint style;
 }
+.game-viewport.is-level-two { background: #05020b; }
 .game-grid-bg {
   position: absolute;
   inset: 0;
@@ -687,7 +690,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   padding: 8px 4px;
   transform: translateY(154px) scale(.56);
   opacity: 0;
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.35s ease, width 0.45s cubic-bezier(0.23, 1, 0.32, 1), height 0.45s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .dj-booth-stage.is-unlocked-celebrating .speaker-tower {
   transform: translateY(0);
@@ -2330,12 +2333,13 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
    crowd, incoming records, bottles, apple cores, and sirens stay unchanged. */
 .game-grid-bg.level-two-grid-bg {
   opacity: 1;
+  background-color: #05020b;
   background-image:
     linear-gradient(180deg, rgba(7, 2, 18, .12) 0%, rgba(4, 1, 8, .58) 100%),
     url("/manus-storage/5d-selector-level-two-detailed-stage_89e2157b.png");
   background-size: cover;
   background-position: center;
-  filter: saturate(1.12) contrast(1.09) brightness(.93);
+  filter: none;
 }
 .game-grid-bg.level-two-grid-bg::before {
   content: "";
@@ -2345,7 +2349,8 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
     linear-gradient(112deg, transparent 0 24%, rgba(0,231,255,.11) 25% 26%, transparent 27% 58%, rgba(255,0,122,.13) 59% 60%, transparent 61%),
     repeating-linear-gradient(90deg, transparent 0 82px, rgba(255,255,255,.035) 83px 84px),
     radial-gradient(ellipse at 50% 8%, rgba(198,255,0,.15), transparent 28%);
-  mix-blend-mode: screen;
+  mix-blend-mode: normal;
+  opacity: .64;
   pointer-events: none;
 }
 .game-grid-bg.level-two-grid-bg::after {
@@ -2547,17 +2552,21 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 }
 
 /* 10 / 15 / 20 dubplate sound-system assembly. */
-.dj-booth-stage.speakers-half-raised { opacity: .78; }
+.dj-booth-stage.speakers-half-raised { z-index: 7; opacity: 1; }
 .dj-booth-stage.speakers-half-raised .speaker-tower {
-  transform: translateY(82px) scale(.78);
-  opacity: .86;
+  width: 68px;
+  height: 178px;
+  transform: translateY(58px) scale(.92) !important;
+  opacity: 1 !important;
+  border-color: #00e7ff;
+  box-shadow: 0 0 24px rgba(0,231,255,.62), 0 0 38px rgba(255,0,122,.24);
 }
-.dj-booth-stage.speakers-full-raised { opacity: .96; }
+.dj-booth-stage.speakers-full-raised { z-index: 7; opacity: 1; }
 .dj-booth-stage.speakers-full-raised .speaker-tower {
-  width: 62px;
-  height: 188px;
-  transform: translateY(0) scale(1);
-  opacity: 1;
+  width: 78px;
+  height: 216px;
+  transform: translateY(0) scale(1) !important;
+  opacity: 1 !important;
   border-color: #c6ff00;
   box-shadow: 0 0 21px rgba(198,255,0,.38), 0 0 38px rgba(0,231,255,.22);
 }

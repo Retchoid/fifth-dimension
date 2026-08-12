@@ -373,3 +373,10 @@
 - [x] Raise speaker towers halfway at 10 records and to full size at 15 records, with debris effects on each growth milestone.
 - [x] Drop a side turntable/deck set at 20 records for the Level 2 setup and preserve the 25-record unlock.
 - [x] Validate all milestones, responsive gameplay, build, and checkpoint delivery.
+
+## Speaker milestone and Level 2 stability repair
+
+- [x] Diagnose and repair the missing 10/15-record speaker milestone visibility.
+- [x] Diagnose and repair the Level 2 white-screen failure reported around 30 records.
+- [x] Validate Level 1 milestones and extended Level 2 play through the 50-record finale.
+- [x] Run build checks and save the repaired checkpoint.
