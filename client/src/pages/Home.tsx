@@ -349,6 +349,8 @@ export default function Home() {
           </article>
         </section>
 
+        <DjMiniGame onUnlockDownload={() => setDownloadUnlocked(true)} />
+
         <section id="visuals" className="visuals-section" aria-labelledby="visuals-title">
           <div className="section-heading">
             <div>
@@ -408,8 +410,6 @@ export default function Home() {
             </DialogContent>
           </Dialog>
         </section>
-
-        <DjMiniGame onUnlockDownload={() => setDownloadUnlocked(true)} />
 
         <section id="booking" className="booking-section" aria-labelledby="booking-title">
           <div className="booking-signal" aria-hidden="true"><span>GIG</span><strong>5D</strong><span>CALL</span></div>
