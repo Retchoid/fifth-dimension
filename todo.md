@@ -219,3 +219,10 @@
 - [x] Wrap the game viewport inside an authentic 90s Sega arcade cabinet bezel frame with marquee header and control panel base.
 - [x] Implement responsive cabinet bezel styling and metallic/neon accents in index.css.
 - [x] Validate typecheck, build checks, and checkpoint delivery.
+
+## Retro high-score table popup
+
+- [x] Implement top-selector score array persistence and ranking logic in DjMiniGame.tsx.
+- [x] Render a retro arcade high-score leaderboard table on the game-over screen.
+- [x] Add retro table styling in index.css.
+- [x] Validate typecheck, production build, and checkpoint delivery.

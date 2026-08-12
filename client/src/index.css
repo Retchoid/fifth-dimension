@@ -992,6 +992,57 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   }
 }
 
+.game-over-box-wide {
+  max-width: 440px !important;
+  width: 94% !important;
+  padding: 1.25rem !important;
+}
+.arcade-leaderboard-container {
+  width: 100%;
+  margin: 0.75rem 0;
+  background: #090610;
+  border: 2px solid #33f3ff;
+  border-radius: 6px;
+  padding: 8px 10px;
+  box-shadow: inset 0 0 14px rgba(51, 243, 255, .15);
+}
+.arcade-leaderboard-container h4 {
+  font-family: monospace;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: #ffe600;
+  margin-bottom: 6px;
+  text-shadow: 0 0 6px rgba(255, 230, 0, .8);
+}
+.arcade-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+.arcade-score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: monospace;
+  font-size: 0.75rem;
+  text-align: left;
+}
+.arcade-score-table th {
+  color: #33f3ff;
+  padding: 3px 6px;
+  border-bottom: 1px dashed rgba(51, 243, 255, .3);
+  font-size: 0.65rem;
+}
+.arcade-score-table td {
+  color: #fff;
+  padding: 5px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.arcade-score-table tr.is-current-score td {
+  color: #ffe600;
+  font-weight: 700;
+  background: rgba(255, 230, 0, .12);
+  text-shadow: 0 0 6px rgba(255, 230, 0, .6);
+}
+
 .new-record-badge {
   display: inline-flex;
   align-items: center;

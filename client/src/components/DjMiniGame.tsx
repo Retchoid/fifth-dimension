@@ -2,7 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX } from "lucide-react";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
+const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
 const REQUIRED_RECORDS = 5;
+
+interface LeaderboardEntry {
+  name: string;
+  score: number;
+}
+
+const DEFAULT_LEADERBOARD: LeaderboardEntry[] = [
+  { name: "5D-KILLA", score: 1200 },
+  { name: "DUB-SELECTOR", score: 900 },
+  { name: "AMEN-IST", score: 600 },
+  { name: "SOUNDBOY", score: 300 },
+];
 
 interface FallingItem {
   id: number;
@@ -24,6 +37,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
   const [score, setScore] = useState(0);
   const [recordsCaught, setRecordsCaught] = useState(0);
   const [highScore, setHighScore] = useState(0);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(DEFAULT_LEADERBOARD);
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [lives, setLives] = useState(3);
@@ -191,6 +205,14 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
       const savedScore = Number.isFinite(storedScore) ? Math.max(0, Math.floor(storedScore)) : 0;
       highScoreRef.current = savedScore;
       setHighScore(savedScore);
+
+      const rawBoard = window.localStorage.getItem(LEADERBOARD_STORAGE_KEY);
+      if (rawBoard) {
+        const parsed = JSON.parse(rawBoard);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setLeaderboard(parsed);
+        }
+      }
     } catch {
       // Local storage may be unavailable in private or restricted browser contexts.
     }
@@ -203,12 +225,22 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     highScoreRef.current = bestScore;
     setIsNewRecord(isRecord);
     setHighScore(bestScore);
-    if (bestScore > candidate || bestScore === 0) return;
     try {
       window.localStorage.setItem(HIGH_SCORE_STORAGE_KEY, String(bestScore));
     } catch {
-      // Keep the in-session score when local storage is unavailable.
+      // Keep in-session score.
     }
+
+    // Update leaderboard table
+    setLeaderboard((prev) => {
+      const updated = [...prev, { name: isRecord ? "YOU (NEW BEST)" : "SELECTOR", score: candidate }];
+      updated.sort((a, b) => b.score - a.score);
+      const sliced = updated.slice(0, 5);
+      try {
+        window.localStorage.setItem(LEADERBOARD_STORAGE_KEY, JSON.stringify(sliced));
+      } catch {}
+      return sliced;
+    });
   };
 
   useEffect(() => {
@@ -470,7 +502,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
 
         {gameOver && (
           <div className="game-overlay game-over-overlay">
-            <div className="overlay-box">
+            <div className="overlay-box game-over-box-wide">
               {isNewRecord && (
                 <div className="new-record-badge" role="status" aria-live="polite">
                   <Trophy size={17} /> NEW RECORD!
@@ -478,7 +510,31 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
               )}
               <h3>SESSION TERMINATED</h3>
               <p>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</p>
-              <p className="game-over-best"><Trophy size={15} /> Best score saved locally: <strong>{highScore}</strong></p>
+              
+              <div className="arcade-leaderboard-container">
+                <h4>TOP ARCADE SELECTORS</h4>
+                <div className="arcade-table-wrap">
+                  <table className="arcade-score-table">
+                    <thead>
+                      <tr>
+                        <th>RANK</th>
+                        <th>SELECTOR</th>
+                        <th>SCORE</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {leaderboard.map((entry, idx) => (
+                        <tr key={idx} className={entry.score === score ? "is-current-score" : ""}>
+                          <td>#{idx + 1}</td>
+                          <td>{entry.name}</td>
+                          <td>{entry.score}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
               <button type="button" className="tape-play-button" onClick={startGame}>
                 <span className="tape-play-face" aria-hidden="true">
                   <i className="tape-reel tape-reel-left" />
