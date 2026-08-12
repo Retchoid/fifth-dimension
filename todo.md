@@ -463,3 +463,8 @@
 - [x] Add a short synthesized police-radio voice-style burst at the cop-car splash entry.
 - [x] Keep the burst synchronized, mute-aware, and safe across repeated seizure events.
 - [x] Validate audio behavior, build, and checkpoint delivery.
+
+## Police-radio squelch click
+
+- [x] Add a distinct radio-squelch click immediately before the police voice-style burst.
+- [x] Preserve mute-aware timing and validate build and checkpoint delivery.

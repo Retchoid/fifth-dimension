@@ -225,8 +225,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const voiceBus = context.createGain();
     const radioBand = context.createBiquadFilter();
     const staticGain = context.createGain();
+    const squelchFilter = context.createBiquadFilter();
+    const squelchGain = context.createGain();
     const staticBuffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.44), context.sampleRate);
     const staticData = staticBuffer.getChannelData(0);
+    const squelchBuffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.04), context.sampleRate);
+    const squelchData = squelchBuffer.getChannelData(0);
 
     // Narrow-band static plus short pitched syllable pulses evokes a 16-bit
     // police-radio dispatch without using an external voice or media asset.
@@ -234,15 +238,31 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const envelope = 1 - index / staticData.length;
       staticData[index] = (Math.random() * 2 - 1) * envelope;
     }
+    for (let index = 0; index < squelchData.length; index += 1) {
+      const envelope = 1 - index / squelchData.length;
+      squelchData[index] = (Math.random() * 2 - 1) * envelope * envelope;
+    }
     const radioStatic = context.createBufferSource();
+    const radioSquelch = context.createBufferSource();
     radioStatic.buffer = staticBuffer;
+    radioSquelch.buffer = squelchBuffer;
+    // The hard, filtered click opens the radio channel a fraction before the
+    // dispatch-style burst, making the seizure cue feel like a real squelch.
+    squelchFilter.type = "bandpass";
+    squelchFilter.frequency.setValueAtTime(2480, now);
+    squelchFilter.Q.setValueAtTime(1.15, now);
+    squelchGain.gain.setValueAtTime(0.13, now);
+    squelchGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.043);
+    radioSquelch.connect(squelchFilter);
+    squelchFilter.connect(squelchGain);
+    squelchGain.connect(voiceBus);
     radioBand.type = "bandpass";
     radioBand.frequency.setValueAtTime(1550, now);
     radioBand.Q.setValueAtTime(1.7, now);
     staticGain.gain.setValueAtTime(0.0001, now);
-    staticGain.gain.exponentialRampToValueAtTime(0.095, now + 0.012);
-    staticGain.gain.setValueAtTime(0.072, now + 0.16);
-    staticGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+    staticGain.gain.exponentialRampToValueAtTime(0.095, now + 0.048);
+    staticGain.gain.setValueAtTime(0.072, now + 0.18);
+    staticGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
     radioStatic.connect(radioBand);
     radioBand.connect(staticGain);
     staticGain.connect(voiceBus);
@@ -251,7 +271,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const syllable = context.createOscillator();
       const syllableGain = context.createGain();
       const syllableFormant = context.createBiquadFilter();
-      const start = now + 0.055 + index * 0.105;
+      const start = now + 0.065 + index * 0.105;
       syllable.type = "sawtooth";
       syllable.frequency.setValueAtTime(frequency, start);
       syllable.frequency.linearRampToValueAtTime(frequency * 0.79, start + 0.07);
@@ -272,8 +292,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     voiceBus.gain.exponentialRampToValueAtTime(0.82, now + 0.012);
     voiceBus.gain.exponentialRampToValueAtTime(0.0001, now + 0.46);
     voiceBus.connect(context.destination);
-    radioStatic.start(now);
-    radioStatic.stop(now + 0.45);
+    radioSquelch.start(now);
+    radioSquelch.stop(now + 0.045);
+    radioStatic.start(now + 0.035);
+    radioStatic.stop(now + 0.48);
   };
 
   const playUnlockJingle = () => {
