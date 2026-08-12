@@ -194,3 +194,10 @@
 - [x] Upgrade `playRecordScratch` to a multi-oscillator 16-bit scratch chime with chip-lead resonance.
 - [x] Upgrade `playCopSiren` to an authentic multi-octave Sega Genesis alarm sweep with square-wave pulse distortion.
 - [x] Validate audio synchronization, mute control, typecheck, build, and checkpoint.
+
+## Scoring & five-record unlock celebration repair
+
+- [x] Audit and fix score tracking and 5-record unlock trigger in DjMiniGame.tsx.
+- [x] Implement DJ booth and speaker-drop lowering animation on unlock celebration.
+- [x] Add the animated waveform pulse and unlocked download confirmation near the release card.
+- [x] Validate scoring, build checks, and checkpoint delivery.

@@ -307,9 +307,9 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
           scoreRef.current = currentScore;
           const nextRecordsCaught = recordsCaughtRef.current + 1;
           recordsCaughtRef.current = nextRecordsCaught;
-          setRecordsCaught(nextRecordsCaught);
           setScore(currentScore);
-          if (nextRecordsCaught === REQUIRED_RECORDS && !downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
+          setRecordsCaught(nextRecordsCaught);
+          if (nextRecordsCaught >= REQUIRED_RECORDS && !downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
             unlockJinglePlayedRef.current = true;
             playUnlockJingle();
             onUnlockDownload?.();
@@ -505,8 +505,18 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
               </div>
             ))}
         </div>
+        {/* Speaker towers and lowering DJ booth celebration elements */}
+        <div className={`dj-booth-stage${downloadUnlocked ? " is-unlocked-celebrating" : ""}`} aria-hidden="true">
+          <div className="speaker-tower speaker-tower-left">
+            <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
+          </div>
+          <div className="speaker-tower speaker-tower-right">
+            <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
+          </div>
+        </div>
+
         {/* DJ selector with turntable at bottom */}
-        <div ref={djCatcherRef} className="dj-catcher" style={{ left: `${djXRef.current}%` }}>
+        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
               className="dj-sprite"
