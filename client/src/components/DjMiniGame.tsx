@@ -170,20 +170,39 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     const context = getAudioContext();
     if (!context) return;
     const now = context.currentTime;
-    const notes = [523.25, 659.25, 783.99, 1046.5];
-    notes.forEach((frequency, index) => {
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-      const start = now + index * 0.09;
-      oscillator.type = index === notes.length - 1 ? "triangle" : "square";
-      oscillator.frequency.setValueAtTime(frequency, start);
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(index === notes.length - 1 ? 0.14 : 0.09, start + 0.012);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
-      oscillator.connect(gain).connect(context.destination);
-      oscillator.start(start);
-      oscillator.stop(start + 0.18);
-    });
+    // Classic dancehall laser burst: multiple descending frequency sweeps with square/sawtooth resonance
+    const laser1 = context.createOscillator();
+    const laser2 = context.createOscillator();
+    const filter = context.createBiquadFilter();
+    const gain = context.createGain();
+
+    laser1.type = "sawtooth";
+    laser2.type = "square";
+
+    laser1.frequency.setValueAtTime(2400, now);
+    laser1.frequency.exponentialRampToValueAtTime(120, now + 0.45);
+
+    laser2.frequency.setValueAtTime(1800, now);
+    laser2.frequency.exponentialRampToValueAtTime(90, now + 0.45);
+
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(3200, now);
+    filter.frequency.exponentialRampToValueAtTime(400, now + 0.45);
+    filter.Q.setValueAtTime(5.5, now);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.24, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
+
+    laser1.connect(filter);
+    laser2.connect(filter);
+    filter.connect(gain);
+    gain.connect(context.destination);
+
+    laser1.start(now);
+    laser2.start(now);
+    laser1.stop(now + 0.5);
+    laser2.stop(now + 0.5);
   };
 
   const toggleSound = () => {

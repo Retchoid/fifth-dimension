@@ -251,3 +251,9 @@
 - [x] Render combo badge / multiplier ticker in the game HUD.
 - [x] Add combo badge styling in index.css.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## 16-bit jungle music restoration & unlock laser burst
+
+- [x] Audit and ensure background music element is unmuted, looping, and reliably triggered on startGame gesture in DjMiniGame.tsx.
+- [x] Upgrade playUnlockJingle to an authentic multi-octave descending dancehall laser burst.
+- [x] Validate typecheck, production build, and checkpoint delivery.
