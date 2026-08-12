@@ -118,3 +118,9 @@
 - [x] Trigger a celebratory animation when the fifth record unlocks the free download.
 - [x] Show a persistent confirmation banner near the Jersh in Case release card after unlock and after refresh restoration.
 - [x] Validate first unlock, restored unlock, reduced-motion behavior, build, tests, responsive rendering, and save a checkpoint.
+
+## Download unlock jingle
+
+- [x] Add a short retro unlock jingle that plays once when the fifth record unlocks the free download.
+- [x] Respect the existing sound toggle and avoid replaying the jingle on refresh restoration.
+- [x] Validate the unlock audio path, build, tests, responsive rendering, and save a checkpoint.

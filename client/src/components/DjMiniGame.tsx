@@ -15,9 +15,10 @@ interface FallingItem {
 
 interface DjMiniGameProps {
   onUnlockDownload?: () => void;
+  downloadUnlocked?: boolean;
 }
 
-export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
+export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false }: DjMiniGameProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
   const [recordsCaught, setRecordsCaught] = useState(0);
@@ -35,6 +36,8 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
   const soundEnabledRef = useRef(true);
   const scoreRef = useRef(0);
   const recordsCaughtRef = useRef(0);
+  const downloadUnlockedRef = useRef(downloadUnlocked);
+  const unlockJinglePlayedRef = useRef(false);
   const highScoreRef = useRef(0);
   const livesRef = useRef(3);
   const itemsRef = useRef<FallingItem[]>([]);
@@ -42,6 +45,7 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
   const spawnTimerRef = useRef(0);
   const djXRef = useRef(50);
   djXRef.current = djX;
+  downloadUnlockedRef.current = downloadUnlocked;
 
   // Key state for smooth movement
   const keysRef = useRef<{ [key: string]: boolean }>({});
@@ -98,6 +102,26 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
     oscillator.connect(gain).connect(context.destination);
     oscillator.start(now);
     oscillator.stop(now + 0.35);
+  };
+
+  const playUnlockJingle = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((frequency, index) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      const start = now + index * 0.09;
+      oscillator.type = index === notes.length - 1 ? "triangle" : "square";
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(index === notes.length - 1 ? 0.14 : 0.09, start + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(start);
+      oscillator.stop(start + 0.18);
+    });
   };
 
   const toggleSound = () => {
@@ -165,6 +189,7 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
 
   const startGame = () => {
     primeAudio();
+    unlockJinglePlayedRef.current = false;
     isPlayingRef.current = true;
     scoreRef.current = 0;
     recordsCaughtRef.current = 0;
@@ -231,7 +256,9 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
             const nextRecordsCaught = recordsCaughtRef.current + 1;
             recordsCaughtRef.current = nextRecordsCaught;
             setRecordsCaught(nextRecordsCaught);
-            if (nextRecordsCaught === REQUIRED_RECORDS) {
+            if (nextRecordsCaught === REQUIRED_RECORDS && !downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
+              unlockJinglePlayedRef.current = true;
+              playUnlockJingle();
               onUnlockDownload?.();
             }
             setScore(currentScore);
