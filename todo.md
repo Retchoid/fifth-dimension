@@ -380,3 +380,9 @@
 - [x] Diagnose and repair the Level 2 white-screen failure reported around 30 records.
 - [x] Validate Level 1 milestones and extended Level 2 play through the 50-record finale.
 - [x] Run build checks and save the repaired checkpoint.
+
+## Critical blank-page restoration
+
+- [x] Identify and repair the current blank white-page runtime regression.
+- [x] Verify the page, arcade entry, and production build render normally.
+- [x] Save a corrective checkpoint only after the live preview is restored.
