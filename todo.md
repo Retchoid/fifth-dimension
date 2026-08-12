@@ -233,3 +233,8 @@
 - [x] Add post-level smooth scroll / handoff to the unlocked download release section on the site once 5 records are caught.
 - [x] Add share button styling in index.css.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## Social preview optimization
+
+- [x] Update client/index.html with rich Open Graph and Twitter card meta tags for 5th Dimension (Bobby Bass) and Selector Showdown.
+- [x] Validate typecheck, production build, and checkpoint delivery.
