@@ -445,3 +445,9 @@
 - [x] Add silver link fragments that fall from the release chain after it breaks.
 - [x] Bounce fragments along the cabinet base, clear them before continuation, and preserve reduced-motion behavior.
 - [x] Validate layering, timing, build, and checkpoint delivery.
+
+## Exclusive-drop credit and arcade graffiti flow
+
+- [x] Make the Jersh In Case artist credit substantially more prominent and legible.
+- [x] Add graffiti-style arrows flowing from the exclusive drop toward and around the arcade cabinet.
+- [x] Validate desktop/mobile wrapping, contrast, build, and checkpoint delivery.

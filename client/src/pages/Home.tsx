@@ -421,7 +421,11 @@ export default function Home() {
             <div className="exclusive-band">
               <p className="exclusive-meta"><Music2 size={15} /> 5D EXCLUSIVE / 001 <i /> DIRECT FILE DROP</p>
               <h3 id="exclusive-title">{EXCLUSIVE_RELEASE.title}</h3>
-              <p className="exclusive-artist">{EXCLUSIVE_RELEASE.artist}</p>
+              <p className="exclusive-artist">
+                <span>ARTIST CREDIT</span>
+                <strong>5TH DIMENSION · SKAVO</strong>
+                <em>FEATURING MC MESTUP</em>
+              </p>
             </div>
             <div className="exclusive-track">
               {downloadUnlocked && (
@@ -477,14 +481,24 @@ export default function Home() {
           </article>
         </section>
 
-        <DjMiniGame
-          downloadUnlocked={downloadUnlocked}
-          onUnlockDownload={unlockDownload}
-          onAchievementFlowComplete={settleAchievementFlow}
-          isUnlockCelebrating={isUnlockCelebrating}
-          supporterGateRequired={requiresSupporterConfirmation}
-          onSupporterConfirmed={confirmSupporterAccess}
-        />
+        {/* 5D design: the exclusive drop hands visitors directly into Selector Showdown,
+            using graffiti direction marks that visually wrap the cabinet rather than a generic divider. */}
+        <div className="arcade-flow-shell">
+          <div className="arcade-graffiti-flow" aria-hidden="true">
+            <span className="arcade-flow-stamp">EXCLUSIVE DROP → PLAY THE ARCADE</span>
+            <span className="arcade-flow-arrow arcade-flow-arrow-left">↘</span>
+            <span className="arcade-flow-arrow arcade-flow-arrow-right">↙</span>
+            <span className="arcade-flow-arrow arcade-flow-arrow-base">⇣</span>
+          </div>
+          <DjMiniGame
+            downloadUnlocked={downloadUnlocked}
+            onUnlockDownload={unlockDownload}
+            onAchievementFlowComplete={settleAchievementFlow}
+            isUnlockCelebrating={isUnlockCelebrating}
+            supporterGateRequired={requiresSupporterConfirmation}
+            onSupporterConfirmed={confirmSupporterAccess}
+          />
+        </div>
 
         <section id="visuals" className="visuals-section" aria-labelledby="visuals-title">
           <div className="section-heading">
