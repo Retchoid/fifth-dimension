@@ -163,3 +163,8 @@
 
 - [x] Restyle the Selector Showdown start/play control as a retro tape-deck play button.
 - [x] Preserve accessibility, mobile visibility, game start behavior, and validate build before checkpoint.
+
+## Selector Showdown failed catcher repair
+
+- [x] Replace the failed generated DJ catcher image with a reliable built-in CSS/HTML boombox catcher.
+- [x] Validate active mobile gameplay, touch controls, responsive layout, build, and checkpoint.

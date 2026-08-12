@@ -486,13 +486,114 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   pointer-events: none;
 }
 .dj-catcher-art {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
   filter: drop-shadow(0 0 14px rgba(255, 0, 122, .75)) drop-shadow(5px 5px 0 rgba(0, 231, 255, .65));
   animation: selector-bob 1.7s ease-in-out infinite;
 }
+.dj-selector-head {
+  position: absolute;
+  top: 1%;
+  left: 34%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 32%;
+  height: 23%;
+  border: 2px solid #c6ff00;
+  border-radius: 48% 48% 40% 40%;
+  background: #ff007a;
+  color: #fff;
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: .8rem;
+  letter-spacing: .08em;
+  box-shadow: 3px 3px 0 #00e7ff;
+}
+.dj-selector-head::before {
+  content: "";
+  position: absolute;
+  inset: -7px -5px 5px;
+  z-index: -1;
+  border: 3px solid #00e7ff;
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0;
+}
+.dj-selector-body {
+  position: absolute;
+  top: 19%;
+  left: 24%;
+  z-index: 1;
+  width: 52%;
+  height: 49%;
+  border: 2px solid #00e7ff;
+  background: linear-gradient(135deg, #ff007a 0 42%, #7118e8 42% 64%, #251c36 64%);
+  box-shadow: 4px 4px 0 #c6ff00;
+  clip-path: polygon(12% 0, 88% 0, 100% 18%, 91% 100%, 9% 100%, 0 18%);
+}
+.dj-selector-body::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 13%;
+  height: 20%;
+  border: 1px solid #c6ff00;
+  background: #09070f;
+}
+.dj-selector-arm {
+  position: absolute;
+  top: 44%;
+  z-index: 2;
+  width: 42%;
+  height: 9%;
+  border: 2px solid #09070f;
+  background: #00e7ff;
+  box-shadow: 2px 2px 0 #ff007a;
+}
+.dj-selector-arm-left {
+  left: 4%;
+  transform: rotate(30deg);
+  transform-origin: right center;
+}
+.dj-selector-arm-right {
+  right: 4%;
+  transform: rotate(-30deg);
+  transform-origin: left center;
+}
+.dj-selector-deck {
+  position: absolute;
+  left: 3%;
+  bottom: 1%;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 94%;
+  height: 31%;
+  border: 2px solid #00e7ff;
+  background: #251c36;
+  box-shadow: 4px 4px 0 #ff007a, inset 0 0 0 2px #09070f;
+}
+.dj-selector-reel {
+  display: block;
+  width: 35%;
+  aspect-ratio: 1;
+  border: 3px solid #c6ff00;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff007a 0 12%, #09070f 13% 34%, #00e7ff 35% 42%, #09070f 43% 100%);
+  animation: spin 2.5s linear infinite;
+}
+.dj-selector-label {
+  padding: .2rem .3rem;
+  border: 1px solid #ff007a;
+  color: #c6ff00;
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: .55rem;
+  letter-spacing: .08em;
+}
+
 .turntable-deck {
   position: relative;
   width: 100%;

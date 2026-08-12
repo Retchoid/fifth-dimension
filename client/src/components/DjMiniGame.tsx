@@ -422,11 +422,16 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
 
         {/* DJ selector with turntable at bottom */}
         <div className="dj-catcher" style={{ left: `${djX}%` }}>
-          <img
-            className="dj-catcher-art"
-            src="/manus-storage/selector-dj-catcher_51ee93c3.png"
-            alt="Neon 5D DJ selector holding a turntable"
-          />
+          <div className="dj-catcher-art" role="img" aria-label="Neon 5D DJ selector holding a turntable">
+            <span className="dj-selector-head" aria-hidden="true">5D</span>
+            <span className="dj-selector-body" aria-hidden="true" />
+            <span className="dj-selector-arm dj-selector-arm-left" aria-hidden="true" />
+            <span className="dj-selector-arm dj-selector-arm-right" aria-hidden="true" />
+            <span className="dj-selector-deck" aria-hidden="true">
+              <span className="dj-selector-reel" />
+              <span className="dj-selector-label">PLAY</span>
+            </span>
+          </div>
         </div>
       </div>
     </section>
