@@ -2,13 +2,18 @@
 
 ## Art direction
 
-The mini-game follows the existing 5th Dimension visual system: a dark plum vaporwave city-night arena, cyan and hot-pink skyline energy, lime-green records, magenta cop-badge hazards, scanlines, perspective grid, bold black outlines, and dancehall/junglist sound-system sticker language.
+Selector Showdown follows the 5th Dimension visual system through a dark plum rave-stage arena, cyan and hot-pink sound-system energy, lime-green records, magenta hazards, scanlines, chunky pixel silhouettes, and dancehall/junglist sticker language. The new character direction is deliberately 2-bit Sega Genesis-inspired: readable pixel clusters, limited palette, hard silhouettes, and authentic jungle-DJ posture.
 
 ## Generated assets
 
 | Asset | Role | Lifecycle URL | Prompt summary |
 |---|---|---|---|
-| Selector Showdown reference | Visual target for the embedded game | `/manus-storage/selector-showdown-reference_e332e8a4.png` | 16:9 game screenshot with a neon DJ selector at the bottom, falling records, cop badges, vaporwave city, grid, HUD, and start overlay. |
-| Selector DJ catcher | Player artwork | `/manus-storage/selector-dj-catcher_51ee93c3.png` | Transparent waist-up dancehall/junglist DJ in a magenta/cyan bomber jacket holding a compact turntable, matched to the reference direction. |
+| Selector Showdown reference | Earlier visual target for the embedded game | `/manus-storage/selector-showdown-reference_e332e8a4.png` | 16:9 game screenshot with a neon DJ selector at the bottom, falling records, cop badges, vaporwave city, grid, HUD, and start overlay. |
+| 2-bit jungle DJ sprite | Player artwork | `/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png` | Transparent full-body 16-bit/2-bit Sega Genesis-inspired jungle DJ in a bomber jacket, headphones, cap, sneakers, and compact turntable, using plum, magenta, cyan, lime, and white. |
+| Selector rave stage | Playfield background | `/manus-storage/5d-selector-rave-stage_e4fdff4b.png` | Wide pixel-art underground jungle rave with speaker stacks, DJ booth, lasers, fog, dancer silhouettes, and a dark center/lower safe area for gameplay. |
 
-The original supplied 5th Dimension artwork remains the primary site identity. The generated selector asset is scoped to the mini-game player only.
+## Fallback layer
+
+The player wrapper includes a CSS-rendered neon selector fallback. If the generated sprite fails to load, the fallback is revealed automatically, so the gameplay character never degrades to a browser image-error placeholder.
+
+The original supplied 5th Dimension artwork remains the primary site identity. The generated selector assets are scoped to the mini-game player and playfield only.

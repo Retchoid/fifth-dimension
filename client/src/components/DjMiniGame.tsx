@@ -27,8 +27,10 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
-  const [djX, setDjX] = useState(50); // percentage 0-90
+  const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const itemsLayerRef = useRef<HTMLDivElement>(null);
+  const djCatcherRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
@@ -44,7 +46,6 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
   const nextIdRef = useRef(1);
   const spawnTimerRef = useRef(0);
   const djXRef = useRef(50);
-  djXRef.current = djX;
   downloadUnlockedRef.current = downloadUnlocked;
 
   // Key state for smooth movement
@@ -188,6 +189,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
   }, [isPlaying]);
 
   const startGame = () => {
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
     primeAudio();
     unlockJinglePlayedRef.current = false;
     isPlayingRef.current = true;
@@ -200,109 +202,114 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
     setScore(0);
     setRecordsCaught(0);
     setLives(3);
-    setDjX(50);
+    djXRef.current = 50;
+    setVisibleItems([]);
     itemsRef.current = [];
+    nextIdRef.current = 1;
     spawnTimerRef.current = 0;
     lastTimeRef.current = performance.now();
     requestRef.current = requestAnimationFrame(updateGame);
   };
 
   const updateGame = (time: number) => {
-    const dt = (time - lastTimeRef.current) / 1000;
+    const elapsed = Math.max(0, time - lastTimeRef.current);
+    const dt = Math.min(0.032, elapsed / 1000);
     lastTimeRef.current = time;
 
-    // Move DJ based on keys
     let currentX = djXRef.current;
-    const moveSpeed = 65; // percent per second
-    if (keysRef.current["left"]) {
-      currentX = Math.max(4, currentX - moveSpeed * dt);
+    const moveSpeed = 78;
+    if (keysRef.current["left"]) currentX = Math.max(4, currentX - moveSpeed * dt);
+    if (keysRef.current["right"]) currentX = Math.min(90, currentX + moveSpeed * dt);
+    if (currentX !== djXRef.current) {
+      djXRef.current = currentX;
+      if (djCatcherRef.current) djCatcherRef.current.style.left = `${currentX}%`;
     }
-    if (keysRef.current["right"]) {
-      currentX = Math.min(90, currentX + moveSpeed * dt);
-    }
-    setDjX(currentX);
 
-    // Spawn items
+    let structureChanged = false;
     spawnTimerRef.current += dt;
-    if (spawnTimerRef.current > 0.85) {
+    if (spawnTimerRef.current >= 0.72) {
       spawnTimerRef.current = 0;
-      const isCop = Math.random() < 0.32;
+      const isCop = Math.random() < 0.3;
       itemsRef.current.push({
         id: nextIdRef.current++,
-        x: Math.floor(Math.random() * 85) + 5,
+        x: Math.floor(Math.random() * 84) + 6,
         y: -10,
         type: isCop ? "cop" : "record",
-        speed: Math.floor(Math.random() * 18) + 28, // speed % per second
+        speed: Math.floor(Math.random() * 13) + 31,
         size: isCop ? 38 : 34,
       });
+      structureChanged = true;
     }
 
-    // Update item positions and check collisions
     const nextItems: FallingItem[] = [];
     let currentLives = livesRef.current;
     let currentScore = scoreRef.current;
+    const itemNodes = itemsLayerRef.current?.children;
 
-    for (const item of itemsRef.current) {
+    for (let index = 0; index < itemsRef.current.length; index += 1) {
+      const item = itemsRef.current[index];
       const newY = item.y + item.speed * dt;
+      const itemNode = itemNodes?.[index] as HTMLElement | undefined;
+      if (itemNode) itemNode.style.top = `${newY}%`;
 
-      // Check collision with DJ catcher (at y between 72 and 88)
-      if (newY >= 72 && newY <= 88) {
-        // DJ catch zone roughly x between djX and djX + 16
-        if (item.x >= currentX - 4 && item.x <= currentX + 18) {
-          if (item.type === "record") {
-            playRecordScratch();
-            currentScore += 100;
-            scoreRef.current = currentScore;
-            const nextRecordsCaught = recordsCaughtRef.current + 1;
-            recordsCaughtRef.current = nextRecordsCaught;
-            setRecordsCaught(nextRecordsCaught);
-            if (nextRecordsCaught === REQUIRED_RECORDS && !downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
-              unlockJinglePlayedRef.current = true;
-              playUnlockJingle();
-              onUnlockDownload?.();
-            }
-            setScore(currentScore);
-            // play catch chime if possible
-          } else {
-            playCopSiren();
-            currentLives = Math.max(0, currentLives - 1);
-            livesRef.current = currentLives;
-            setLives(currentLives);
-            if (currentLives === 0) {
-              isPlayingRef.current = false;
-              setGameOver(true);
-              setIsPlaying(false);
-              recordHighScore(currentScore);
-              return;
-            }
-          }
-          continue; // item caught/hit, remove
-        }
-      }
-
-      if (newY > 105) {
-        // missed record -> lose life or just pass? Let's penalize missed records if life > 0
+      if (newY >= 72 && newY <= 88 && item.x >= currentX - 5 && item.x <= currentX + 19) {
+        structureChanged = true;
         if (item.type === "record") {
+          playRecordScratch();
+          currentScore += 100;
+          scoreRef.current = currentScore;
+          const nextRecordsCaught = recordsCaughtRef.current + 1;
+          recordsCaughtRef.current = nextRecordsCaught;
+          setRecordsCaught(nextRecordsCaught);
+          setScore(currentScore);
+          if (nextRecordsCaught === REQUIRED_RECORDS && !downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
+            unlockJinglePlayedRef.current = true;
+            playUnlockJingle();
+            onUnlockDownload?.();
+          }
+        } else {
+          playCopSiren();
           currentLives = Math.max(0, currentLives - 1);
+          livesRef.current = currentLives;
           setLives(currentLives);
           if (currentLives === 0) {
+            isPlayingRef.current = false;
+            itemsRef.current = [];
+            setVisibleItems([]);
             setGameOver(true);
             setIsPlaying(false);
-            setHighScore((prev) => Math.max(prev, currentScore));
+            recordHighScore(currentScore);
             return;
           }
         }
-        continue; // fallen off screen
+        continue;
+      }
+
+      if (newY > 105) {
+        structureChanged = true;
+        if (item.type === "record") {
+          currentLives = Math.max(0, currentLives - 1);
+          livesRef.current = currentLives;
+          setLives(currentLives);
+          if (currentLives === 0) {
+            isPlayingRef.current = false;
+            itemsRef.current = [];
+            setVisibleItems([]);
+            setGameOver(true);
+            setIsPlaying(false);
+            recordHighScore(currentScore);
+            return;
+          }
+        }
+        continue;
       }
 
       nextItems.push({ ...item, y: newY });
     }
 
     itemsRef.current = nextItems;
-
-    if (isPlayingRef.current) {
-      requestRef.current = requestAnimationFrame(updateGame);
-    }
+    if (structureChanged) setVisibleItems(nextItems);
+    if (isPlayingRef.current) requestRef.current = requestAnimationFrame(updateGame);
   };
 
   useEffect(() => {
@@ -315,12 +322,17 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
     };
   }, []);
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isPlaying || !containerRef.current) return;
+  const updateDjPositionFromClientX = (clientX: number) => {
+    if (!isPlayingRef.current || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const clientX = e.clientX - rect.left;
-    const percentage = Math.max(4, Math.min(90, (clientX / rect.width) * 100));
-    setDjX(percentage);
+    const percentage = Math.max(4, Math.min(90, ((clientX - rect.left) / rect.width) * 100));
+    djXRef.current = percentage;
+    if (djCatcherRef.current) djCatcherRef.current.style.left = `${percentage}%`;
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") return;
+    updateDjPositionFromClientX(e.clientX);
   };
 
   return (
@@ -337,12 +349,13 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
         ref={containerRef}
         className="game-viewport"
         onPointerMove={handlePointerMove}
+        onPointerDown={(e) => {
+          if (e.pointerType === "touch") updateDjPositionFromClientX(e.clientX);
+        }}
         onTouchMove={(e) => {
-          if (!isPlaying || !containerRef.current || !e.touches[0]) return;
-          const rect = containerRef.current.getBoundingClientRect();
-          const clientX = e.touches[0].clientX - rect.left;
-          const percentage = Math.max(4, Math.min(90, (clientX / rect.width) * 100));
-          setDjX(percentage);
+          if (!e.touches[0]) return;
+          e.preventDefault();
+          updateDjPositionFromClientX(e.touches[0].clientX);
         }}
       >
         <div className="game-grid-bg" aria-hidden="true" />
@@ -403,34 +416,46 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
           </div>
         )}
 
-        {/* Falling items */}
-        {isPlaying &&
-          itemsRef.current.map((item) => (
-            <div
-              key={item.id}
-              className={`falling-object ${item.type}`}
-              style={{
-                left: `${item.x}%`,
-                top: `${item.y}%`,
-                width: `${item.size}px`,
-                height: `${item.size}px`,
-              }}
-            >
-              {item.type === "record" ? <Disc size={item.size} /> : <ShieldAlert size={item.size} />}
-            </div>
-          ))}
-
+                {/* Falling items */}
+        <div ref={itemsLayerRef} className="falling-items-layer" aria-hidden="true">
+          {isPlaying &&
+            visibleItems.map((item) => (
+              <div
+                key={item.id}
+                className={`falling-object ${item.type}`}
+                style={{
+                  left: `${item.x}%`,
+                  top: `${item.y}%`,
+                  width: `${item.size}px`,
+                  height: `${item.size}px`,
+                }}
+              >
+                {item.type === "record" ? <Disc size={item.size} /> : <ShieldAlert size={item.size} />}
+              </div>
+            ))}
+        </div>
         {/* DJ selector with turntable at bottom */}
-        <div className="dj-catcher" style={{ left: `${djX}%` }}>
-          <div className="dj-catcher-art" role="img" aria-label="Neon 5D DJ selector holding a turntable">
-            <span className="dj-selector-head" aria-hidden="true">5D</span>
-            <span className="dj-selector-body" aria-hidden="true" />
-            <span className="dj-selector-arm dj-selector-arm-left" aria-hidden="true" />
-            <span className="dj-selector-arm dj-selector-arm-right" aria-hidden="true" />
-            <span className="dj-selector-deck" aria-hidden="true">
-              <span className="dj-selector-reel" />
-              <span className="dj-selector-label">PLAY</span>
-            </span>
+        <div ref={djCatcherRef} className="dj-catcher" style={{ left: `${djXRef.current}%` }}>
+          <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
+            <img
+              className="dj-sprite"
+              src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png"
+              alt=""
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+                event.currentTarget.parentElement?.classList.add("sprite-failed");
+              }}
+            />
+            <div className="dj-sprite-fallback" aria-hidden="true">
+              <span className="dj-selector-head">5D</span>
+              <span className="dj-selector-body" />
+              <span className="dj-selector-arm dj-selector-arm-left" />
+              <span className="dj-selector-arm dj-selector-arm-right" />
+              <span className="dj-selector-deck">
+                <span className="dj-selector-reel" />
+                <span className="dj-selector-label">PLAY</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>

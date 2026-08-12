@@ -1,28 +1,31 @@
-# Game Plan: 5D Selector Showdown
+# Game Plan: 5D Selector Showdown rebuild
 
-## Risk Tasks
+## Goal
 
-### 1. Continuous falling-item loop
-- **Why isolated:** The game must update falling records and cop badges continuously while React remains responsive.
-- **Approach:** Keep mutable gameplay entities in refs, use one requestAnimationFrame loop, and mirror only score, lives, position, and state into React for rendering.
-- **Verify:** Starting a session continues spawning and moving objects beyond the first frame; score and lives persist across multiple catches, misses, and hazards; the loop stops on game over and unmount.
+Rebuild Selector Showdown as a responsive, low-latency arcade game with a readable 2-bit jungle DJ sprite, a rave-stage background, and reliable keyboard, pointer, and touch movement.
+
+## Risk slices
+
+### 1. Low-latency animation loop
+
+Keep mutable gameplay entities in refs, clamp frame delta, mutate catcher and falling-object transforms directly, and avoid React state updates for every animation frame. React should update only HUD values and structural item changes.
 
 ### 2. Input handoff across keyboard and touch
-- **Why isolated:** Keyboard listeners and pointer/touch movement can fight each other or remain attached after the game is left.
-- **Approach:** Use a single normalized DJ x-position, map arrow/A-D keys and pointer/touch coordinates into that position, prevent page scrolling during active touch control, and remove listeners during cleanup.
-- **Verify:** Left/Right and A/D move the catcher; touch/drag moves it on mobile; no stale listeners remain after unmount.
 
-## Main Build
+Use one normalized DJ x-position, map arrow/A-D keys and pointer/touch coordinates into that position, prevent page scrolling during active touch control, and clamp the catcher to visible bounds. Remove listeners during cleanup.
 
-Build an embedded game section immediately before the site footer. The player is a compact neon DJ with a turntable at the bottom of a vaporwave sound-system arena. Spinning vinyl records fall from above and award points when caught. Pink cop-badge hazards reduce lives when caught, while missed records also cost a life. The game includes a start overlay, score, high score, three-life HUD, game-over state, restart action, and keyboard/touch instructions.
+### 3. Sprite and background reliability
 
-- **Assets needed:** Existing 5th Dimension character portrait for the small DJ avatar; Lucide vector icons for records and cop badges; CSS-generated vaporwave grid, neon UI, turntable, and skyline treatment.
-- **Verify:**
-  - Records and hazards visibly fall and the catcher responds to input.
-  - Catching records increments score; hazards and missed records reduce lives.
-  - Game over stops the loop and offers restart.
-  - HUD, controls, and game canvas remain readable on desktop and mobile.
-  - No missing assets, clipping, or browser console errors.
-  - The mini-game appears at the bottom of the existing page without changing the booking, lightbox, audio, or contact flows.
-  - The game’s neon palette matches the vaporwave/dancehall/junglist visual system.
-  - `pnpm run check`, production build, unit tests, and responsive screenshots pass.
+Use the generated pixel-art jungle DJ sprite with pixelated rendering, a generated rave-stage texture behind the playfield, and a CSS catcher fallback if the sprite URL cannot load.
+
+### 4. Game continuity
+
+Preserve score, lives, local high score, sound effects, five-record download unlock, replay, and the existing reduced-motion styling.
+
+## Main build
+
+The embedded game remains immediately before the visuals and booking content. A 2-bit jungle DJ holds a turntable at the bottom of a rave-stage playfield. Spinning vinyl records fall from above and award points when caught. Pink cop-badge hazards reduce lives when caught, while missed records also cost a life. The game includes a start overlay, score, high score, three-life HUD, sound toggle, game-over state, restart action, and keyboard/touch instructions.
+
+## Verification criteria
+
+The active game must show a readable 2-bit jungle DJ rather than an image-error placeholder. The DJ must respond immediately to Left/Right and A/D input, pointer movement, and touch dragging. Falling records and cop badges must remain visible, collisions must update score/lives, and the five-record unlock callback must remain connected. The rave background must be visible but keep gameplay readable. The page must pass `pnpm run check`, production build, responsive screenshots, and source/runtime audits without changing the booking, lightbox, audio, or contact flows.

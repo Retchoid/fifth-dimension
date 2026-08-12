@@ -168,3 +168,10 @@
 
 - [x] Replace the failed generated DJ catcher image with a reliable built-in CSS/HTML boombox catcher.
 - [x] Validate active mobile gameplay, touch controls, responsive layout, build, and checkpoint.
+
+## Selector Showdown 2-bit jungle DJ rebuild
+
+- [x] Inspect current game-loop timing, movement input, collision bounds, and rendered catcher.
+- [x] Create and integrate a 2-bit Sega Genesis-inspired jungle DJ sprite and rave-stage background.
+- [x] Rebuild movement/rendering for responsive mobile touch and keyboard play with smoother frame updates.
+- [x] Validate score, lives, high score, sound, five-record unlock, mobile/desktop play, build, and checkpoint.
