@@ -309,3 +309,10 @@
 - [x] Ensure the unlocked download box visibly descends from the top into its green free-download state.
 - [x] Analyze the 16-bit jungle MP3 and verify an amen-break section is present; confirm the real MP3 plays during active gameplay.
 - [x] Validate Level 1 unlock, Level 2 character consistency, celebration timing, download reveal, audio, build, and checkpoint delivery.
+
+## Level 2 terminal finale restoration
+
+- [x] Inspect the Level 2 completion, name-save, finale state, and rendered overlay wiring.
+- [x] Restore the neon-green-on-black 1980s computer-terminal finale with the exact personalized message.
+- [x] Ensure the finale appears after the selector name is saved and remains readable on mobile.
+- [x] Validate Level 2 completion, name submission, finale visibility, typecheck, production build, and checkpoint delivery.

@@ -35,3 +35,9 @@ The second capture also settled after the five-second animation because browser 
 ## Active celebration DOM proof
 
 A real user-gesture deterministic session reached the active celebration. The live DOM reported `overlayCelebrating: true`, the green box text `FREE DOWNLOAD UNLOCKED / JERSH IN CASE / THE SIGNAL IS YOURS — 5 DUBPLATES CAUGHT`, box opacity `0.999603`, and three dancer images with visible opacity around `0.98` and nonzero dimensions (134×191, 124×183, and 121×182). The MP3 element was present, looped, unmuted, and had a valid 149.5-second duration; it paused at the intentional unlock pause. The follow-up screenshot landed after the five-second window, so it shows the settled overlay rather than the active animation.
+
+## Terminal finale live validation
+
+The live deterministic replay reached `LVL 2`, `RECORDS: 15/15`, and the `LEVEL 2 CLEARED` selector-tag form. The next validation step is submitting a real selector name, then inspecting the resulting in-cabinet overlay for the terminal message and neon-green styling.
+
+The live score submission with selector tag `RAGGA KING` now replaces the Level 2 score-entry overlay with the green-on-black terminal finale and personalized text `BIG UP BADMAN RAGGA KING / JUNGLE IS MASSIVE.` The final CSS pass tightened terminal spacing, switched to top-aligned content, and reduced responsive type scale so the opening line and Play Again action fit inside the short arcade viewport without clipping. Typecheck and production build passed afterward.

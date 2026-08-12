@@ -2034,17 +2034,40 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   to { transform: rotate(352deg) translateY(2px); }
 }
 .finale-overlay {
+  z-index: 70;
+  overflow: auto;
   background: #010702;
   backdrop-filter: none;
   color: #63ff63;
+  isolation: isolate;
+}
+.finale-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .5;
+  background: repeating-linear-gradient(0deg, rgba(99,255,99,.1) 0 1px, transparent 1px 5px), radial-gradient(circle at 50% 42%, rgba(99,255,99,.12), transparent 56%);
+  mix-blend-mode: screen;
 }
 .finale-box {
+  position: relative;
+  z-index: 1;
   width: min(92%, 580px);
+  min-height: 0;
+  max-height: calc(100% - 1rem);
+  overflow-y: auto;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: .3rem;
   padding: clamp(1.3rem, 4vw, 3rem);
   border: 2px solid #63ff63;
   background: #020a04;
   box-shadow: 0 0 0 5px #041b08, 0 0 28px rgba(99,255,99,.42), inset 0 0 24px rgba(99,255,99,.12);
   text-align: center;
+  font-family: "Courier New", Courier, monospace;
   animation: terminal-flicker 2.4s steps(2, end) infinite;
 }
 .finale-kicker,
@@ -2054,17 +2077,17 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   letter-spacing: .18em;
   text-transform: uppercase;
 }
-.finale-kicker { color: #c6ff00; margin-bottom: 1.25rem; }
-.finale-subline { margin-top: 1.2rem; color: #42c842; }
+.finale-kicker { color: #c6ff00; margin-bottom: .45rem; }
+.finale-subline { margin-top: .55rem; color: #42c842; }
 .finale-copy {
   color: #63ff63;
-  font: 800 clamp(1.8rem, 5vw, 4rem)/1.05 monospace;
+  font: 800 clamp(1.2rem, 3.5vw, 2.8rem)/1.05 monospace;
   letter-spacing: .08em;
   text-shadow: 0 0 4px #63ff63, 3px 3px 0 #0e4119;
 }
 .finale-copy strong { color: #c6ff00; }
 .finale-restart-button {
-  margin-top: 1.7rem;
+  margin-top: .85rem;
   padding: .72rem 1.2rem;
   border: 2px solid #63ff63;
   background: #0b3b15;
@@ -2099,6 +2122,6 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   .level-two-booth .crowd-line { left: -5%; right: -5%; }
   .crowd-line i { width: 13px; height: 21px; }
   .booth-console { left: 17%; right: 17%; bottom: 9%; }
-  .finale-box { padding: 1.25rem .8rem; }
-  .finale-copy { font-size: clamp(1.35rem, 8vw, 2.35rem); }
+  .finale-box { max-height: calc(100% - .6rem); padding: .85rem .7rem; gap: .25rem; }
+  .finale-copy { font-size: clamp(1.05rem, 6vw, 1.8rem); }
 }

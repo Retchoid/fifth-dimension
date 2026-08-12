@@ -345,6 +345,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
   };
 
+  useEffect(() => {
+    // Keep the terminal finale tied to the completed Level 2 + saved-name state,
+    // even if the parent settles the download celebration in the same render.
+    if (!levelTwoComplete || !scoreSubmitted || !submittedName.trim()) return;
+    finaleRef.current = true;
+    setFinale(true);
+  }, [levelTwoComplete, scoreSubmitted, submittedName]);
+
   const startLevelTwo = () => {
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     levelRef.current = 2;
