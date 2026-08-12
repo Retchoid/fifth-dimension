@@ -558,6 +558,9 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 }
 .unlock-overlay-box {
   max-width: 520px;
+  max-height: calc(100% - 1rem);
+  overflow-y: auto;
+  padding: clamp(1rem, 3vw, 1.45rem);
 }
 .unlock-overlay-kicker {
   display: inline-flex;
@@ -576,6 +579,12 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   flex-wrap: wrap;
   justify-content: center;
   gap: .8rem;
+  margin: .45rem 0 .7rem;
+}
+.unlock-overlay-box > p:last-child {
+  margin: 0;
+  font-size: clamp(.68rem, 1.7vw, .82rem);
+  line-height: 1.35;
 }
 .keep-playing-button {
   background: #00e7ff;
@@ -2378,6 +2387,33 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   opacity: .55;
   pointer-events: none;
 }
+.level-two-dancer-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: .38;
+}
+.level-two-dancer {
+  position: absolute;
+  bottom: -5%;
+  width: clamp(46px, 8vw, 88px);
+  max-height: 54%;
+  object-fit: contain;
+  object-position: bottom center;
+  image-rendering: pixelated;
+  filter: grayscale(.12) brightness(.8) drop-shadow(2px 3px 0 rgba(0,0,0,.78));
+  transform: translateX(-50%) translateY(8px) scale(.78);
+  animation: level-two-dancer-sway 2.8s ease-in-out infinite alternate;
+}
+.level-two-dancer.dancer-lime { left: 18%; animation-delay: -.4s; }
+.level-two-dancer.dancer-cyan { left: 50%; animation-delay: -1.2s; }
+.level-two-dancer.dancer-magenta { left: 82%; animation-delay: -.8s; }
+@keyframes level-two-dancer-sway {
+  from { transform: translateX(-50%) translateY(10px) scale(.75) rotate(-1.5deg); }
+  to { transform: translateX(-50%) translateY(2px) scale(.8) rotate(1.5deg); }
+}
 @media (prefers-reduced-motion: no-preference) {
   .game-grid-bg.level-two-grid-bg::before { animation: level-two-haze 4.8s ease-in-out infinite alternate; }
   .level-two-booth::before { animation: level-two-truss-pulse 1.8s ease-in-out infinite alternate; }
@@ -2387,4 +2423,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 @media (max-width: 640px) {
   .marquee-transmission-meta { display: none; }
   .marquee-seal { width: 22px; height: 22px; margin-right: .25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .level-two-dancer { animation: none; }
 }

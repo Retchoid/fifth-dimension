@@ -768,9 +768,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   <div className="unlock-download-drop" role="status" aria-live="polite">
                     <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
                     <strong>JERSH IN CASE</strong>
-                    <span>THE SIGNAL IS YOURS — 5 DUBPLATES CAUGHT.</span>
+                    <span>THE SIGNAL IS YOURS — 25 DUBPLATES CAUGHT.</span>
                   </div>
-                  <p>You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
                   <div className="unlock-decision-actions">
                     <button type="button" className="tape-play-button" onClick={startGame}>
                       <span className="tape-play-face" aria-hidden="true">
@@ -789,6 +788,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       <span className="tape-play-copy">Keep Playing</span>
                     </button>
                   </div>
+                  <p>You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
                 </>
               )}
             </div>
@@ -984,6 +984,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="crowd-line crowd-line-front">{Array.from({ length: 13 }, (_, index) => <i key={index} />)}</div>
             <div className="stage-light-beam beam-left" />
             <div className="stage-light-beam beam-right" />
+            <div className="level-two-dancer-backdrop" aria-hidden="true">
+              {CELEBRATION_DANCERS.map((dancer) => (
+                <img key={`level-two-${dancer.className}`} className={`level-two-dancer ${dancer.className}`} src={dancer.src} alt="" />
+              ))}
+            </div>
             <div className="booth-console"><span /><span /><span /></div>
           </div>
         )}

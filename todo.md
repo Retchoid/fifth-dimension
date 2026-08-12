@@ -348,3 +348,9 @@
 - [x] Add a bottom-centered green scrolling terminal message: “MAXIMUM RESPEKT BOH! BOH!”
 - [x] Preserve the existing personalized terminal finale text, CTA, and reduced-motion support.
 - [x] Validate the terminal layout, build, and checkpoint delivery.
+
+## Unlock control visibility and Level 2 dancer backdrop
+
+- [x] Raise the Keep Playing action so it is visible in the Level 1 unlock decision without scrolling.
+- [x] Retain the dancer sprites during Level 2 as a low-priority background layer that does not obscure playable objects.
+- [x] Validate unlock decision visibility, Level 2 visual layering, build, and checkpoint delivery.
