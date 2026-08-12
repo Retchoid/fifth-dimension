@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX } from "lucide-react";
+import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, Check } from "lucide-react";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
@@ -42,6 +42,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
+  const [shared, setShared] = useState(false);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
@@ -355,6 +356,13 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
             unlockJinglePlayedRef.current = true;
             playUnlockJingle();
             onUnlockDownload?.();
+            // Smoothly guide user to release card on site after catching 5 records
+            setTimeout(() => {
+              const releaseCard = document.querySelector(".exclusive-release");
+              if (releaseCard) {
+                releaseCard.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+            }, 600);
           }
         } else {
           playCopSiren();
@@ -629,6 +637,33 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
           <div className="arcade-joystick-hint"><span>◄ ► ARROWS / A-D TO SCRATCH</span></div>
           <div className="arcade-coin-slot"><span className="coin-slot-slit" /><strong>PLAYER 1</strong></div>
         </div>
+      </div>
+      <div className="arcade-cabinet-share-bar">
+        <button
+          type="button"
+          className="arcade-share-btn"
+          onClick={async () => {
+            const shareUrl = `${window.location.origin}#minigame`;
+            if (navigator.share) {
+              try {
+                await navigator.share({
+                  title: "5th Dimension — Selector Showdown",
+                  text: "Play Selector Showdown and unlock the exclusive free 5D jungle download!",
+                  url: shareUrl,
+                });
+                return;
+              } catch {}
+            }
+            try {
+              await navigator.clipboard.writeText(shareUrl);
+              setShared(true);
+              setTimeout(() => setShared(false), 2200);
+            } catch {}
+          }}
+        >
+          {shared ? <Check size={16} /> : <Share2 size={16} />}
+          <span>{shared ? "GAME LINK COPIED!" : "SHARE 5D ARCADE GAME"}</span>
+        </button>
       </div>
     </section>
   );

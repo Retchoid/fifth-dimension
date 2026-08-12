@@ -226,3 +226,10 @@
 - [x] Render a retro arcade high-score leaderboard table on the game-over screen.
 - [x] Add retro table styling in index.css.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## Share button & post-level free-download handoff
+
+- [x] Add share button below the arcade cabinet with Web Share API and copy-to-clipboard fallback in DjMiniGame.tsx.
+- [x] Add post-level smooth scroll / handoff to the unlocked download release section on the site once 5 records are caught.
+- [x] Add share button styling in index.css.
+- [x] Validate typecheck, production build, and checkpoint delivery.

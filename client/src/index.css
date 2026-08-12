@@ -442,6 +442,37 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   color: #33f3ff;
   text-shadow: 0 0 6px rgba(51, 243, 255, .7);
 }
+.arcade-cabinet-share-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+.arcade-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #ff007a 0%, #7118e8 100%);
+  color: #fff;
+  border: 2px solid #33f3ff;
+  border-radius: 6px;
+  padding: 0.65rem 1.25rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #ffe600, 0 0 16px rgba(255, 0, 122, .45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.arcade-share-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+  box-shadow: 6px 6px 0 #ffe600, 0 0 22px rgba(51, 243, 255, .65);
+}
+.arcade-share-btn:active {
+  transform: translateY(1px);
+  box-shadow: 2px 2px 0 #ffe600;
+}
 .game-viewport {
   position: relative;
   width: 100%;
