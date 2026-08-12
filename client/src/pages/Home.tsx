@@ -45,10 +45,10 @@ const DOWNLOAD_UNLOCK_STORAGE_KEY = "5d-selector-showdown-download-unlocked";
 const projects = [
   {
     id: "TRANSMISSION 01",
-    title: "New frequency loading",
+    title: "Frequency loading",
     detail: "A fresh 5th Dimension mix is taking shape between breakbeat pressure, bassline weight, and late-night jungle heat.",
     status: "In the lab",
-    image: "/manus-storage/graffiti-collage_bac19afe.png",
+    image: "/manus-storage/5d-frequency-loading-boombox_ce5a46d2.png",
   },
   {
     id: "LIVE SIGNAL",
@@ -166,6 +166,7 @@ export default function Home() {
           <a href="#bio">Bio</a>
           <a href="#projects">Projects</a>
           <a href="#visuals">Visuals</a>
+          <a href="#booking">Booking</a>
           <a href="#contact">Contact</a>
         </nav>
         <div className="header-actions">
@@ -190,6 +191,7 @@ export default function Home() {
               ["Bio", "#bio"],
               ["Projects", "#projects"],
               ["Visuals", "#visuals"],
+              ["Booking", "#booking"],
               ["Contact", "#contact"],
             ].map(([label, href]) => (
               <a href={href} key={href} onClick={() => setMenuOpen(false)}>{label}</a>
@@ -285,10 +287,25 @@ export default function Home() {
           </div>
         </section>
 
+        <section id="bio" className="bio-section" aria-labelledby="bio-title">
+          <div className="bio-tag"><span>THE</span><strong>5D</strong><span>FREQUENCY</span></div>
+          <div className="bio-copy">
+            <p className="eyebrow"><Zap size={15} fill="currentColor" /> SELECTOR PROFILE / 02</p>
+            <h2 id="bio-title">BASS ISN’T A GENRE.<br /><em>IT’S A GRAVITY FIELD.</em></h2>
+            <p className="bio-lead"><strong>5th Dimension is the sonic alter-ego of Bobby Bass</strong> (aka Bobby Jackets / Hi Deaf)—shaping a heavy sound-system discipline where raw dancehall attitude, ragga-steppa pressure, and intricate jungle breakbeats collide.</p>
+            <p>Rooted in sound-system culture and late-night rave frequency, every transmission moves from heavyweight basslines to hypnotic ragga vocal chops and hypnotic amen pressure. Selector rules: select the heaviest plate, test the stack, and let the bass take control.</p>
+            <div className="tags"><span>#DANCEHALLVIBES</span><span>#JUNGLEREVIVAL</span><span>#SOUNDSYSTEMWEIGHT</span><span>#BREAKBEATALCHEMIST</span></div>
+          </div>
+          <div className="bio-art-panel">
+            <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
+            <span>JUNGLE / GROOVE / PRESSURE</span>
+          </div>
+        </section>
+
         <section id="other-mixes" className="genre-mixes-section" aria-labelledby="genre-mixes-title">
           <div className="section-heading">
             <div>
-              <p className="eyebrow"><Disc3 size={15} /> MORE ROOMS / 01B</p>
+              <p className="eyebrow"><Disc3 size={15} /> MORE ROOMS / 02B</p>
               <h2 id="genre-mixes-title">HOUSE MIXES &amp;<br /><em>OTHER FREQUENCIES.</em></h2>
             </div>
             <p>Future channels are standing by. New house sets, genre detours, and special sessions will appear here when the links land.</p>
@@ -303,21 +320,6 @@ export default function Home() {
                 <span className="genre-mix-status"><i /> Awaiting the next drop</span>
               </article>
             ))}
-          </div>
-        </section>
-
-        <section id="bio" className="bio-section" aria-labelledby="bio-title">
-          <div className="bio-tag"><span>THE</span><strong>5D</strong><span>FREQUENCY</span></div>
-          <div className="bio-copy">
-            <p className="eyebrow"><Zap size={15} fill="currentColor" /> SELECTOR PROFILE / 02</p>
-            <h2 id="bio-title">BASS ISN’T A GENRE.<br /><em>IT’S A GRAVITY FIELD.</em></h2>
-            <p className="bio-lead"><strong>5th Dimension is the sonic alter-ego of Bobby Bass</strong> (aka Bobby Jackets / Hi Deaf)—shaping a heavy sound-system discipline where raw dancehall attitude, ragga-steppa pressure, and intricate jungle breakbeats collide.</p>
-            <p>Rooted in sound-system culture and late-night rave frequency, every transmission moves from heavyweight basslines to hypnotic ragga vocal chops and hypnotic amen pressure. Selector rules: select the heaviest plate, test the stack, and let the bass take control.</p>
-            <div className="tags"><span>#DANCEHALLVIBES</span><span>#JUNGLEREVIVAL</span><span>#SOUNDSYSTEMWEIGHT</span><span>#BREAKBEATALCHEMIST</span></div>
-          </div>
-          <div className="bio-art-panel">
-            <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
-            <span>JUNGLE / GROOVE / PRESSURE</span>
           </div>
         </section>
 

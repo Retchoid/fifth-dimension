@@ -146,3 +146,9 @@
 
 - [x] Increase the mobile breathing room between the DUBPLATE flare and signal label.
 - [x] Preserve the clear first 5 and desktop layout while validating screenshots, build, and checkpoint.
+
+## Frequency Loading boombox and page-flow refinement
+
+- [x] Replace the Frequency Loading section artwork with a generic 1980s cartoon boombox.
+- [x] Reorder the artist-site sections and navigation into a clearer visitor flow.
+- [x] Validate the new artwork, lightbox/game/download/booking interactions, responsive layouts, build, and checkpoint.
