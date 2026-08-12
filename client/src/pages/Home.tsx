@@ -16,6 +16,7 @@ import {
   Pause,
   Play,
   Radio,
+  Share2,
   ShieldAlert,
   Sparkles,
   Volume2,
@@ -43,6 +44,7 @@ import {
 } from "@/components/ui/dialog";
 
 const DOWNLOAD_UNLOCK_STORAGE_KEY = "5d-selector-showdown-download-unlocked";
+const SUPPORTER_CONFIRMATION_STORAGE_KEY = "5d-selector-showdown-supporter-confirmed";
 
 const projects = [
   {
@@ -110,12 +112,17 @@ export default function Home() {
   const [bookingEventDate, setBookingEventDate] = useState("");
   const [bookingEventLocation, setBookingEventLocation] = useState("");
   const [isExclusivePlaying, setIsExclusivePlaying] = useState(false);
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
+  const [requiresSupporterConfirmation, setRequiresSupporterConfirmation] = useState(false);
   const exclusiveAudioRef = useRef<HTMLAudioElement>(null);
   const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
 
   useEffect(() => {
     try {
       setDownloadUnlocked(window.localStorage.getItem(DOWNLOAD_UNLOCK_STORAGE_KEY) === "true");
+      const hasConfirmedSupport = window.localStorage.getItem(SUPPORTER_CONFIRMATION_STORAGE_KEY) === "true";
+      const arrivedViaSharedGameLink = new URLSearchParams(window.location.search).get("from") === "selector-share";
+      setRequiresSupporterConfirmation(arrivedViaSharedGameLink && !hasConfirmedSupport);
     } catch {
       // Local storage may be unavailable in private or restricted browser contexts.
     }
@@ -144,6 +151,36 @@ export default function Home() {
     } else {
       audio.pause();
     }
+  };
+
+  const shareGameLink = async () => {
+    const gameUrl = `${window.location.origin}${window.location.pathname}?from=selector-share#minigame`;
+    const shareData = {
+      title: "5th Dimension — Selector Showdown",
+      text: "Run the 5D Selector Showdown and unlock the bass transmission.",
+      url: gameUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+      await navigator.clipboard.writeText(gameUrl);
+      setShareStatus("copied");
+      window.setTimeout(() => setShareStatus("idle"), 2600);
+    } catch {
+      // Closing a system share sheet is not an error state worth surfacing.
+    }
+  };
+
+  const confirmSupporterAccess = () => {
+    try {
+      window.localStorage.setItem(SUPPORTER_CONFIRMATION_STORAGE_KEY, "true");
+    } catch {
+      // Keep the confirmation active for this visit when storage is unavailable.
+    }
+    setRequiresSupporterConfirmation(false);
   };
 
   useEffect(() => {
@@ -425,6 +462,10 @@ export default function Home() {
                   <a className={`exclusive-download${isUnlockCelebrating ? " is-revealing" : ""}`} href={EXCLUSIVE_RELEASE.url} download="Jersh In Case — 5th Dimension, Skavo featuring MC Mestup.mp3">
                     <span>Download MP3</span><ArrowDownRight size={19} />
                   </a>
+                  <button type="button" className="exclusive-share-button" onClick={shareGameLink}>
+                    <Share2 size={17} />
+                    <span>{shareStatus === "copied" ? "Game link copied" : "Share game"}</span>
+                  </button>
                 </div>
               ) : (
                 <div className="exclusive-locked" role="status">
@@ -436,7 +477,14 @@ export default function Home() {
           </article>
         </section>
 
-        <DjMiniGame downloadUnlocked={downloadUnlocked} onUnlockDownload={unlockDownload} onAchievementFlowComplete={settleAchievementFlow} isUnlockCelebrating={isUnlockCelebrating} />
+        <DjMiniGame
+          downloadUnlocked={downloadUnlocked}
+          onUnlockDownload={unlockDownload}
+          onAchievementFlowComplete={settleAchievementFlow}
+          isUnlockCelebrating={isUnlockCelebrating}
+          supporterGateRequired={requiresSupporterConfirmation}
+          onSupporterConfirmed={confirmSupporterAccess}
+        />
 
         <section id="visuals" className="visuals-section" aria-labelledby="visuals-title">
           <div className="section-heading">

@@ -39,9 +39,11 @@ interface DjMiniGameProps {
   onAchievementFlowComplete?: () => void;
   downloadUnlocked?: boolean;
   isUnlockCelebrating?: boolean;
+  supporterGateRequired?: boolean;
+  onSupporterConfirmed?: () => void;
 }
 
-export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete, downloadUnlocked = false, isUnlockCelebrating = false }: DjMiniGameProps) {
+export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete, downloadUnlocked = false, isUnlockCelebrating = false, supporterGateRequired = false, onSupporterConfirmed }: DjMiniGameProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [level, setLevel] = useState<GameLevel>(1);
   const [score, setScore] = useState(0);
@@ -724,7 +726,23 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </button>
         </div>
 
-        {!isPlaying && !gameOver && !isUnlockPaused && (
+        {supporterGateRequired && (
+          <div className="game-overlay supporter-gate-overlay">
+            <div className="overlay-box supporter-gate-box">
+              <div className="unlock-overlay-kicker"><Disc size={16} /> SHARED SIGNAL DETECTED</div>
+              <h3>SUPPORT 5D</h3>
+              <p>Visit the 5th Dimension Music Facebook page, tap Like in Facebook, then return here. This browser will remember your confirmation for future sessions.</p>
+              <a className="supporter-facebook-link" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer">OPEN FACEBOOK PAGE</a>
+              <button type="button" className="tape-play-button supporter-confirm-button" onClick={onSupporterConfirmed}>
+                <span className="tape-play-face" aria-hidden="true"><i className="tape-reel tape-reel-left" /><span className="tape-window"><Check size={15} /></span><i className="tape-reel tape-reel-right" /></span>
+                <span className="tape-play-copy">I’VE SUPPORTED 5D — UNLOCK GAME</span>
+              </button>
+              <small>Facebook does not provide this site with visitor-level Like verification; this is an honor-based supporter confirmation.</small>
+            </div>
+          </div>
+        )}
+
+        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>

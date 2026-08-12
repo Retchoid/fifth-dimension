@@ -2431,7 +2431,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 /* Exclusive release playback and download controls */
 .exclusive-listen-actions {
   display: grid;
-  grid-template-columns: minmax(0, .82fr) minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .65rem;
   align-items: stretch;
 }
@@ -2459,7 +2459,55 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   box-shadow: 5px 5px 0 #c6ff00;
 }
 .exclusive-listen-button:active { transform: scale(.97); }
+.exclusive-share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  min-height: 100%;
+  border: 2px solid var(--signal-orange);
+  background: #171022;
+  color: var(--signal-orange);
+  font: 800 .66rem/1 var(--font-sans, sans-serif);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #09070f;
+  transition: transform 160ms var(--ease-out), background 160ms var(--ease-out), color 160ms var(--ease-out);
+}
+.exclusive-share-button:hover {
+  background: var(--signal-orange);
+  color: #09070f;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 #c6ff00;
+}
+.exclusive-share-button:active { transform: scale(.97); }
 @media (max-width: 650px) {
   .exclusive-listen-actions { grid-template-columns: 1fr; }
-  .exclusive-listen-button { min-height: 48px; }
+  .exclusive-listen-button, .exclusive-share-button { min-height: 48px; }
+}
+
+/* Shared-link supporter confirmation: clear and persistent, but never claims
+   a third-party social action can be verified by this static site. */
+.supporter-gate-box { max-width: 470px; }
+.supporter-gate-box p { margin-bottom: 1rem; }
+.supporter-facebook-link {
+  display: block;
+  margin: 0 auto .75rem;
+  padding: .72rem 1rem;
+  border: 2px solid #4267b2;
+  background: #173b79;
+  color: #fff;
+  font: 800 .67rem/1 monospace;
+  letter-spacing: .1em;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 #09070f;
+}
+.supporter-facebook-link:hover { background: #4267b2; transform: translate(-2px, -2px); }
+.supporter-confirm-button { margin: 0 auto; }
+.supporter-gate-box small {
+  display: block;
+  margin-top: .75rem;
+  color: #a9a0ae;
+  font: .58rem/1.45 monospace;
 }

@@ -360,3 +360,9 @@
 - [x] Add an in-page Play/Pause control for the unlocked Jersh In Case MP3.
 - [x] Preserve the locked state and direct download action after the 25-record unlock.
 - [x] Validate listen, pause, unlock gating, download behavior, build, and checkpoint delivery.
+
+## Direct game share and supporter confirmation
+
+- [x] Keep the existing bottom arcade share widget and add a matching direct-game share widget beside the unlocked player.
+- [x] Implement an honest, persistent supporter confirmation flow for shared-game visitors; do not falsely claim to verify a Facebook Like.
+- [x] Validate both sharing widgets, local persistence, unlock gating, build, and checkpoint delivery.
