@@ -106,3 +106,9 @@
 
 - [x] Move Selector Showdown directly below the Jersh in Case download card and above booking.
 - [x] Validate the new order, download unlock, arcade audio, build, tests, and responsive rendering.
+
+## Persistent download unlock
+
+- [x] Save the five-record download unlock in browser local storage.
+- [x] Restore the unlocked download state on page load while preserving the locked first-play state.
+- [x] Validate unlock persistence, typecheck, build, tests, responsive rendering, and save a checkpoint.

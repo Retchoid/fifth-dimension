@@ -39,6 +39,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+const DOWNLOAD_UNLOCK_STORAGE_KEY = "5d-selector-showdown-download-unlocked";
+
 const projects = [
   {
     id: "TRANSMISSION 01",
@@ -104,6 +106,23 @@ export default function Home() {
   const [bookingEventDate, setBookingEventDate] = useState("");
   const [bookingEventLocation, setBookingEventLocation] = useState("");
   const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
+
+  useEffect(() => {
+    try {
+      setDownloadUnlocked(window.localStorage.getItem(DOWNLOAD_UNLOCK_STORAGE_KEY) === "true");
+    } catch {
+      // Local storage may be unavailable in private or restricted browser contexts.
+    }
+  }, []);
+
+  const unlockDownload = () => {
+    setDownloadUnlocked(true);
+    try {
+      window.localStorage.setItem(DOWNLOAD_UNLOCK_STORAGE_KEY, "true");
+    } catch {
+      // Keep the unlocked state for the current session when storage is unavailable.
+    }
+  };
 
   useEffect(() => {
     if (lightboxIndex === null) return;
@@ -349,7 +368,7 @@ export default function Home() {
           </article>
         </section>
 
-        <DjMiniGame onUnlockDownload={() => setDownloadUnlocked(true)} />
+        <DjMiniGame onUnlockDownload={unlockDownload} />
 
         <section id="visuals" className="visuals-section" aria-labelledby="visuals-title">
           <div className="section-heading">
