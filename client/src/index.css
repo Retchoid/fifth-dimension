@@ -1575,7 +1575,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   max-height: 58%;
 }
 .unlock-overlay .celebration-dancer.dancer-lime { left: 16%; }
-.unlock-overlay .celebration-dancer.dancer-cyan { left: 50%; }
+.unlock-overlay .celebration-dancer.dancer-cyan { left: 24%; }
 .unlock-overlay .celebration-dancer.dancer-magenta { left: 84%; }
 .exclusive-download.is-revealing {
   position: relative;
@@ -1618,7 +1618,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   transform: translateX(-50%) translateY(-130px) scale(.78);
 }
 .celebration-dancer.dancer-lime {
-  left: 21%;
+  left: 8%;
   animation: dancer-lime-five 5s cubic-bezier(.23,1,.32,1) both;
 }
 .celebration-dancer.dancer-cyan {
@@ -1627,9 +1627,14 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   animation: dancer-cyan-five 5s cubic-bezier(.23,1,.32,1) .08s both;
 }
 .celebration-dancer.dancer-magenta {
-  left: 79%;
+  left: 92%;
   filter: drop-shadow(3px 4px 0 rgba(9,7,15,.9)) drop-shadow(0 0 11px rgba(198,255,0,.35));
   animation: dancer-magenta-five 5s cubic-bezier(.23,1,.32,1) .16s both;
+}
+.unlock-overlay .overlay-box {
+  position: relative;
+  z-index: 10;
+  max-width: min(88%, 440px);
 }
 @keyframes dancer-lime-five {
   0% { opacity: 0; transform: translateX(-50%) translateY(-130px) rotate(-14deg) scale(.78); }
@@ -1683,7 +1688,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
     max-height: 52%;
   }
   .unlock-overlay .celebration-dancer.dancer-lime { left: 12%; }
-  .unlock-overlay .celebration-dancer.dancer-cyan { left: 50%; }
+  .unlock-overlay .celebration-dancer.dancer-cyan { left: 24%; }
   .unlock-overlay .celebration-dancer.dancer-magenta { left: 88%; }
   .unlock-download-drop {
     padding: .62rem .68rem;

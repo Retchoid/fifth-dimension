@@ -719,31 +719,27 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
 
         {isUnlockPaused && !gameOver && (
-          <div className={`game-overlay unlock-overlay${isUnlockCelebrating ? " is-celebrating" : ""}`}>
-            {isUnlockCelebrating && (
-              <div className="unlock-celebration-layer" aria-hidden="true">
-                <div className="celebration-dancers">
-                  {CELEBRATION_DANCERS.map((dancer) => (
-                    <img key={dancer.className} className={`celebration-dancer ${dancer.className}`} src={dancer.src} alt="" />
-                  ))}
-                </div>
-                <div className="confetti-burst-layer">
-                  {Array.from({ length: 18 }, (_, index) => (
-                    <i key={index} className={`confetti-particle confetti-${index % 5}`} />
-                  ))}
-                </div>
+          <div className="game-overlay unlock-overlay is-celebrating">
+            <div className="unlock-celebration-layer" aria-hidden="true">
+              <div className="celebration-dancers">
+                <img className="celebration-dancer dancer-lime" src={CELEBRATION_DANCERS[0].src} alt="" />
+                <img className="celebration-dancer dancer-cyan" src={CELEBRATION_DANCERS[1].src} alt="" />
+                <img className="celebration-dancer dancer-magenta" src={CELEBRATION_DANCERS[2].src} alt="" />
               </div>
-            )}
+              <div className="confetti-burst-layer">
+                {Array.from({ length: 18 }, (_, index) => (
+                  <i key={index} className={`confetti-particle confetti-${index % 5}`} />
+                ))}
+              </div>
+            </div>
             <div className="overlay-box unlock-overlay-box">
               <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
               <h3>LEVEL CLEARED</h3>
-              {isUnlockCelebrating && (
-                <div className="unlock-download-drop" role="status" aria-live="polite">
-                  <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
-                  <strong>JERSH IN CASE</strong>
-                  <span>THE SIGNAL IS YOURS — 5 DUBPLATES CAUGHT.</span>
-                </div>
-              )}
+              <div className="unlock-download-drop" role="status" aria-live="polite">
+                <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
+                <strong>JERSH IN CASE</strong>
+                <span>THE SIGNAL IS YOURS — 5 DUBPLATES CAUGHT.</span>
+              </div>
               <p>You caught all 5 dubplates. The free “Jersh in Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
               <div className="unlock-decision-actions">
                 <button type="button" className="tape-play-button" onClick={startGame}>

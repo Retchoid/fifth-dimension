@@ -41,3 +41,11 @@ A real user-gesture deterministic session reached the active celebration. The li
 The live deterministic replay reached `LVL 2`, `RECORDS: 15/15`, and the `LEVEL 2 CLEARED` selector-tag form. The next validation step is submitting a real selector name, then inspecting the resulting in-cabinet overlay for the terminal message and neon-green styling.
 
 The live score submission with selector tag `RAGGA KING` now replaces the Level 2 score-entry overlay with the green-on-black terminal finale and personalized text `BIG UP BADMAN RAGGA KING / JUNGLE IS MASSIVE.` The final CSS pass tightened terminal spacing, switched to top-aligned content, and reduced responsive type scale so the opening line and Play Again action fit inside the short arcade viewport without clipping. Typecheck and production build passed afterward.
+
+## Persistent raver celebration validation
+
+A clean reload returned the arcade to the locked Level 1 start overlay with the release card locked. The corrected unlock overlay now always includes all three dancer images while `isUnlockPaused` is active, rather than removing them when the five-second parent celebration timer settles.
+
+A live hot-update check confirmed `.unlock-overlay` contained all three dancer images with `display: block`, opacity 0.98, and non-zero dimensions: lime 129×185, cyan 130×187, and magenta 133×189. The unlock box and both Reset Game / Keep Playing actions were present concurrently.
+
+After a real Keep Playing click, the DOM reported `LVL 2`, no `.unlock-overlay`, zero remaining celebration dancers, the `.level-two-grid-bg` scene, and exactly the Level 1 DJ sprite URL in the active game viewport. The separate jungle MP3 element remained valid and looped; the later paused state was consistent with the deterministic test reaching the Level 2 completion branch during the observation window.

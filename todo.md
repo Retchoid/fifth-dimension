@@ -316,3 +316,10 @@
 - [x] Restore the neon-green-on-black 1980s computer-terminal finale with the exact personalized message.
 - [x] Ensure the finale appears after the selector name is saved and remains readable on mobile.
 - [x] Validate Level 2 completion, name submission, finale visibility, typecheck, production build, and checkpoint delivery.
+
+## Persistent raver-sprite celebration and box framing
+
+- [x] Ensure the three female raver sprites remain visible on screen beside the unlock box during the Level 1 decision state.
+- [x] Cleanly clear the raver sprites and celebration state when transitioning to Level 2 or resetting the game.
+- [x] Style the dancers on either side of the unlock box within the arcade overlay.
+- [x] Validate Level 1 unlock celebration, dancer persistence, Level 2 cleanup, typecheck, build, and checkpoint delivery.
