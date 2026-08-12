@@ -112,3 +112,9 @@
 - [x] Save the five-record download unlock in browser local storage.
 - [x] Restore the unlocked download state on page load while preserving the locked first-play state.
 - [x] Validate unlock persistence, typecheck, build, tests, responsive rendering, and save a checkpoint.
+
+## Download unlock celebration
+
+- [x] Trigger a celebratory animation when the fifth record unlocks the free download.
+- [x] Show a persistent confirmation banner near the Jersh in Case release card after unlock and after refresh restoration.
+- [x] Validate first unlock, restored unlock, reduced-motion behavior, build, tests, responsive rendering, and save a checkpoint.

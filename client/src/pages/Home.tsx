@@ -15,6 +15,7 @@ import {
   Music2,
   Radio,
   ShieldAlert,
+  Sparkles,
   Volume2,
   X,
   Zap,
@@ -103,6 +104,7 @@ export default function Home() {
   const [bookingSubject, setBookingSubject] = useState("");
   const [bookingMessage, setBookingMessage] = useState("");
   const [downloadUnlocked, setDownloadUnlocked] = useState(false);
+  const [isUnlockCelebrating, setIsUnlockCelebrating] = useState(false);
   const [bookingEventDate, setBookingEventDate] = useState("");
   const [bookingEventLocation, setBookingEventLocation] = useState("");
   const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
@@ -116,13 +118,21 @@ export default function Home() {
   }, []);
 
   const unlockDownload = () => {
+    const wasAlreadyUnlocked = downloadUnlocked;
     setDownloadUnlocked(true);
+    if (!wasAlreadyUnlocked) setIsUnlockCelebrating(true);
     try {
       window.localStorage.setItem(DOWNLOAD_UNLOCK_STORAGE_KEY, "true");
     } catch {
       // Keep the unlocked state for the current session when storage is unavailable.
     }
   };
+
+  useEffect(() => {
+    if (!isUnlockCelebrating) return;
+    const celebrationTimer = window.setTimeout(() => setIsUnlockCelebrating(false), 1800);
+    return () => window.clearTimeout(celebrationTimer);
+  }, [isUnlockCelebrating]);
 
   useEffect(() => {
     if (lightboxIndex === null) return;
@@ -353,6 +363,17 @@ export default function Home() {
               <p className="exclusive-artist">{EXCLUSIVE_RELEASE.artist}</p>
             </div>
             <div className="exclusive-track">
+              {downloadUnlocked && (
+                <div
+                  className={`download-unlock-banner${isUnlockCelebrating ? " is-celebrating" : ""}`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  <div className="unlock-sparks" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span><span>✦</span></div>
+                  <Sparkles size={19} />
+                  <div><strong>FREE DOWNLOAD UNLOCKED</strong><span>5 RECORDS CAUGHT — THE SIGNAL IS YOURS.</span></div>
+                </div>
+              )}
               <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 5 records in Selector Showdown to unlock the free complete track download.</p>
               {downloadUnlocked ? (
                 <a className="exclusive-download" href={EXCLUSIVE_RELEASE.url} download="Jersh in Case — 5th Dimension, Skavo featuring MestUp.mp3">

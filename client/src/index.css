@@ -633,3 +633,92 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
     margin-left: auto;
   }
 }
+
+.download-unlock-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  overflow: visible;
+  margin: 0 0 1rem;
+  padding: .85rem 1rem;
+  border: 2px solid #c6ff00;
+  background: linear-gradient(105deg, #ff007a 0%, #7118e8 55%, #00e7ff 100%);
+  color: #fff;
+  box-shadow: 5px 5px 0 #09070f;
+}
+.download-unlock-banner svg {
+  flex: 0 0 auto;
+  color: #c6ff00;
+  filter: drop-shadow(0 0 7px rgba(198,255,0,.9));
+}
+.download-unlock-banner > div:not(.unlock-sparks) {
+  display: grid;
+  gap: .18rem;
+}
+.download-unlock-banner strong {
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: .07em;
+  line-height: .9;
+}
+.download-unlock-banner span:not(.unlock-sparks span) {
+  color: #fff;
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+.unlock-sparks {
+  position: absolute;
+  inset: -18px -12px -18px -12px;
+  pointer-events: none;
+}
+.unlock-sparks span {
+  position: absolute;
+  color: #c6ff00;
+  font-size: 1.25rem;
+  opacity: 0;
+  text-shadow: 0 0 10px #c6ff00;
+}
+.unlock-sparks span:nth-child(1) { left: 7%; top: 12%; }
+.unlock-sparks span:nth-child(2) { right: 9%; top: 8%; }
+.unlock-sparks span:nth-child(3) { right: 18%; bottom: 2%; }
+.unlock-sparks span:nth-child(4) { left: 28%; bottom: -8%; }
+.download-unlock-banner.is-celebrating {
+  animation: unlock-banner-pop 520ms var(--ease-out) both;
+}
+.download-unlock-banner.is-celebrating .unlock-sparks span {
+  animation: unlock-spark-burst 900ms var(--ease-out) both;
+}
+@keyframes unlock-banner-pop {
+  0% { opacity: 0; transform: translateY(10px) scale(.96); }
+  65% { opacity: 1; transform: translateY(-3px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes unlock-spark-burst {
+  0% { opacity: 0; transform: scale(.4) rotate(-25deg); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.35) rotate(35deg) translateY(-12px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .download-unlock-banner.is-celebrating,
+  .download-unlock-banner.is-celebrating .unlock-sparks span {
+    animation: none;
+  }
+  .download-unlock-banner.is-celebrating .unlock-sparks span {
+    opacity: .9;
+  }
+}
+@media (max-width: 650px) {
+  .download-unlock-banner {
+    align-items: flex-start;
+    padding: .78rem .72rem;
+  }
+  .download-unlock-banner strong {
+    font-size: 1.15rem;
+  }
+  .download-unlock-banner span:not(.unlock-sparks span) {
+    font-size: .52rem;
+  }
+}
