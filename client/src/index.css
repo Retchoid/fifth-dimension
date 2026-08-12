@@ -496,12 +496,99 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 }
 .dj-catcher {
   position: absolute;
-  bottom: 4px;
+  bottom: 2px;
   z-index: 8;
-  width: clamp(100px, 14vw, 168px);
-  height: clamp(112px, 18vw, 188px);
+  width: clamp(124px, 18vw, 204px);
+  height: clamp(126px, 20vw, 212px);
   transform: translateX(-50%);
   pointer-events: none;
+}
+.vinyl-record-sprite {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #08060e;
+  border-radius: 50%;
+  border: 2px solid #33f3ff;
+  box-shadow: 0 0 10px rgba(51, 243, 255, .75), inset 0 0 8px rgba(0,0,0,.9);
+  animation: vinyl-spin 0.9s linear infinite;
+}
+.vinyl-grooves {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px dashed rgba(51, 243, 255, .45);
+}
+.vinyl-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 38%;
+  height: 38%;
+  transform: translate(-50%, -50%);
+  background: #ff007a;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  box-shadow: inset 0 0 3px rgba(0,0,0,.7);
+}
+.vinyl-spindle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12%;
+  height: 12%;
+  transform: translate(-50%, -50%);
+  background: #000;
+  border-radius: 50%;
+  border: 1px solid #33f3ff;
+}
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.cop-siren-sprite {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.siren-housing {
+  position: absolute;
+  bottom: 2px;
+  width: 82%;
+  height: 52%;
+  background: #111;
+  border: 2px solid #ff007a;
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(255, 0, 122, .85);
+}
+.siren-beacon {
+  position: absolute;
+  top: 4px;
+  width: 38%;
+  height: 58%;
+  border-radius: 50% 50% 20% 20%;
+  border: 1px solid #fff;
+  animation: siren-flash 0.32s infinite alternate;
+}
+.siren-beacon-left {
+  left: 6%;
+  background: #ff0033;
+  box-shadow: 0 0 14px #ff0033;
+  animation-delay: 0s;
+}
+.siren-beacon-right {
+  right: 6%;
+  background: #0066ff;
+  box-shadow: 0 0 14px #0066ff;
+  animation-delay: 0.16s;
+}
+@keyframes siren-flash {
+  from { opacity: 0.3; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1.08); filter: brightness(1.4); }
 }
 .dj-catcher-art {
   position: relative;

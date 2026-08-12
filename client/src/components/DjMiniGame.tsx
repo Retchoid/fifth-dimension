@@ -266,7 +266,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
       const itemNode = itemNodes?.[index] as HTMLElement | undefined;
       if (itemNode) itemNode.style.top = `${newY}%`;
 
-      if (newY >= 72 && newY <= 88 && item.x >= currentX - 5 && item.x <= currentX + 19) {
+      if (newY >= 70 && newY <= 90 && item.x >= currentX - 8 && item.x <= currentX + 22) {
         structureChanged = true;
         if (item.type === "record") {
           playRecordScratch();
@@ -456,7 +456,19 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
                   height: `${item.size}px`,
                 }}
               >
-                {item.type === "record" ? <Disc size={item.size} /> : <ShieldAlert size={item.size} />}
+                {item.type === "record" ? (
+                  <div className="vinyl-record-sprite" aria-hidden="true">
+                    <span className="vinyl-grooves" />
+                    <span className="vinyl-label" />
+                    <span className="vinyl-spindle" />
+                  </div>
+                ) : (
+                  <div className="cop-siren-sprite" aria-hidden="true">
+                    <span className="siren-housing" />
+                    <span className="siren-beacon siren-beacon-left" />
+                    <span className="siren-beacon siren-beacon-right" />
+                  </div>
+                )}
               </div>
             ))}
         </div>

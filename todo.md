@@ -181,3 +181,10 @@
 - [x] Enter generate mode and produce an authentic 16-bit Sega Genesis jungle / drum and bass background track.
 - [x] Wire the looping track into Selector Showdown with user-gesture safety, pause/resume, and volume controls.
 - [x] Validate playback, build checks, and checkpoint delivery.
+
+## 90s Sega arcade polish
+
+- [x] Redesign falling records into detailed spinning vinyl records with center spindle labels.
+- [x] Redesign cop badges into flashing Sega-style twin cop sirens with animated beacon domes.
+- [x] Expand the DJ catcher’s horizontal catch surface for fair, responsive gameplay.
+- [x] Audit all code, styles, and audio hooks to guarantee a professional 16-bit arcade finish.
