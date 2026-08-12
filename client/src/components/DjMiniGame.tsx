@@ -488,19 +488,26 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     let structureChanged = false;
     spawnTimerRef.current += dt;
-    if (spawnTimerRef.current >= (levelRef.current === 2 ? 0.62 : 0.72)) {
+    // Reduce spawn frequency slightly (e.g. interval 1.1s for L1, 0.9s for L2)
+    const spawnInterval = levelRef.current === 2 ? 0.90 : 1.10;
+    if (spawnTimerRef.current >= spawnInterval) {
       spawnTimerRef.current = 0;
       const roll = Math.random();
+      // Level 1: records, cop sirens, and cop badges
+      // Level 2: records, apple cores, bottles, and cop sirens
       const spawnedType: FallingItem["type"] = levelRef.current === 2
-        ? (roll < 0.68 ? "record" : roll < 0.84 ? "bottle" : "apple")
-        : (roll < 0.3 ? "cop" : "record");
+        ? (roll < 0.55 ? "record" : roll < 0.72 ? "bottle" : roll < 0.88 ? "apple" : "cop")
+        : (roll < 0.62 ? "record" : roll < 0.82 ? "cop" : "cop");
       const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : 30;
+      // Increase speed moderately with progression / score
+      const baseSpeed = levelRef.current === 2 ? 42 : 36;
+      const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
       itemsRef.current.push({
         id: nextIdRef.current++,
         x: Math.floor(Math.random() * 84) + 6,
         y: -10,
         type: spawnedType,
-        speed: Math.floor(Math.random() * 13) + (levelRef.current === 2 ? 34 : 31),
+        speed: Math.floor(Math.random() * 10) + baseSpeed + speedRamp,
         size,
       });
       structureChanged = true;
@@ -541,8 +548,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               onUnlockDownload?.();
               pauseAfterUnlock = true;
             } else {
-              // A replay after the download is already unlocked should not
-              // inflate Level 1 past 5/5. Route cleanly into Level 2 instead.
               advanceToLevelTwo = true;
             }
           }
@@ -975,7 +980,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
 
         {/* Speaker towers and lowering DJ booth celebration elements */}
-        <div className={`dj-booth-stage${downloadUnlocked ? " is-unlocked-celebrating" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
+        <div className={`dj-booth-stage${recordsCaught >= 3 ? " is-unlocked-celebrating" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
           <div className="speaker-tower speaker-tower-left">
             <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
           </div>

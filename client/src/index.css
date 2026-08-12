@@ -2166,3 +2166,26 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 @keyframes spin-waiting {
   to { transform: rotate(360deg); }
 }
+
+/* Street Fighter 3 Sega Arcade Style Background Detail Enhancement */
+.game-viewport {
+  background: radial-gradient(circle at 50% 30%, #150a2b 0%, #06040a 70%);
+}
+.game-grid-bg {
+  background-image: linear-gradient(rgba(4, 2, 8, 0.4), rgba(4, 2, 8, 0.75)),
+                    linear-gradient(rgba(0, 231, 255, 0.16) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 0, 122, 0.16) 1px, transparent 1px),
+                    radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.12) 0%, transparent 60%),
+                    url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png");
+  background-size: auto, 32px 32px, 32px 32px, 100% 100%, cover;
+  filter: contrast(1.15) brightness(1.05);
+}
+.level-two-grid-bg {
+  background-image: linear-gradient(rgba(1, 10, 5, 0.35), rgba(1, 4, 3, 0.82)),
+                    radial-gradient(ellipse at 20% 10%, rgba(255, 0, 122, 0.35), transparent 25%),
+                    radial-gradient(ellipse at 80% 10%, rgba(0, 231, 255, 0.35), transparent 25%),
+                    radial-gradient(circle at 50% 30%, rgba(57, 255, 20, 0.18) 0%, transparent 70%),
+                    url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png");
+  background-size: auto, auto, auto, 100% 100%, cover;
+  filter: saturate(1.25) contrast(1.12);
+}
