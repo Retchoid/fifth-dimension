@@ -34,3 +34,27 @@
 - [x] Enhance dancehall and junglist sound-system references in copy, tags, and badges.
 - [x] Ensure the art lightbox, image removals, and audio download remain fully functional.
 - [x] Run typecheck, build, unit tests, and take verification screenshots.
+
+## Interactive graffiti flares
+
+- [ ] Add hover and keyboard-focus feedback to the graffiti flare stickers.
+- [ ] Add a restrained neon pulse and spray/drip effect with reduced-motion support.
+- [ ] Validate desktop/mobile styling, typecheck, build, tests, and save a checkpoint.
+
+## Hero number-5 protection
+
+- [ ] Keep the number 5 in the 5th Dimension hero title visibly clear of both interactive graffiti flares at desktop and mobile widths.
+- [ ] Revalidate the interactive flare styling and save the updated checkpoint.
+
+## Vaporwave cityscape replacement
+
+- [ ] Remove the vaporwave sun layer from the hero.
+- [ ] Add a neon vaporwave cityscape with skyline silhouettes, window lights, haze, and perspective grid energy.
+- [ ] Confirm the hero number 5 remains clear of the cityscape and interactive flares on desktop and mobile.
+- [ ] Run typecheck, build, tests, screenshots, and save a checkpoint.
+
+## Booking inquiry subject update
+
+- [x] Update the booking mailto subject prefix to `BOOKING!` while retaining the user-entered subject.
+- [x] Ensure the booking inquiry link and form target bobbyjackets.one@gmail.com.
+- [x] Validate encoded subject/body behavior, typecheck, build, tests, and save a checkpoint.

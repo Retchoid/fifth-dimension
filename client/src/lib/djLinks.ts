@@ -9,7 +9,7 @@ export const BOOKING_EMAIL = "bobbyjackets.one@gmail.com";
 
 export function createBookingMailto(subject: string, message: string) {
   const normalizedSubject = subject.trim();
-  const emailSubject = `Bookings — ${normalizedSubject || "Inquiry"}`;
+  const emailSubject = `BOOKING! — ${normalizedSubject || "Inquiry"}`;
   const body = message.trim() || "Hello 5th Dimension,\n\n";
   return `mailto:${BOOKING_EMAIL}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(body)}`;
 }

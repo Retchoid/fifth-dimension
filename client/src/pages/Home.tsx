@@ -171,9 +171,9 @@ export default function Home() {
           <div className="hero-orbit orbit-a" aria-hidden="true" />
           <div className="hero-orbit orbit-b" aria-hidden="true" />
           <div className="hero-noise" aria-hidden="true" />
-          <div className="vapor-sun" aria-hidden="true" />
-          <span className="graffiti-flare flare-left" aria-hidden="true">DUBPLATE</span>
-          <span className="graffiti-flare flare-right" aria-hidden="true">RAGGA / AMEN / BASS</span>
+          <div className="vapor-cityscape" aria-hidden="true" />
+          <span className="graffiti-flare flare-left" role="img" tabIndex={0} aria-label="Dubplate sound system flare">DUBPLATE</span>
+          <span className="graffiti-flare flare-right" role="img" tabIndex={0} aria-label="Ragga, amen and bass flare">RAGGA / AMEN / BASS</span>
           <div className="hero-content">
             <p className="signal-label"><Zap size={15} fill="currentColor" /> DANCEHALL VIBES / DEEP JUNGLE BREAKS / SOUND SYSTEM WEIGHT</p>
             <h1 id="hero-title">
@@ -403,7 +403,7 @@ export default function Home() {
           <div className="booking-copy">
             <p className="eyebrow"><Zap size={15} fill="currentColor" /> BOOKING INQUIRIES / LIVE CHANNEL</p>
             <h2 id="booking-title">BRING THE<br /><em>FREQUENCY.</em></h2>
-            <p>For bookings, event enquiries, guest spots, and collaborative transmissions, send a quick signal. Your email client will open with the subject automatically marked <strong>“Bookings —”</strong> before your subject.</p>
+            <p>For bookings, event enquiries, guest spots, and collaborative transmissions, send a quick signal. Your email client will open with the subject automatically marked <strong>“BOOKING!”</strong> before your subject.</p>
             <a className="booking-email" href={`mailto:${BOOKING_EMAIL}`}><Mail size={18} /> {BOOKING_EMAIL}</a>
           </div>
           <form className="booking-form" onSubmit={openBookingEmail}>
@@ -424,7 +424,7 @@ export default function Home() {
               placeholder="Date, venue, set time, and any key details."
             />
             <button type="submit" className="booking-submit">Create booking email <ArrowUpRight size={18} /></button>
-            <p className="booking-note">Generated subject: <b>Bookings — {bookingSubject || "Your subject"}</b></p>
+            <p className="booking-note">Generated subject: <b>BOOKING! — {bookingSubject || "Your subject"}</b></p>
           </form>
         </section>
 

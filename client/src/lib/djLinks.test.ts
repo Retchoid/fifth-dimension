@@ -36,10 +36,10 @@ describe("5th Dimension public channel configuration", () => {
     expect(decodeURIComponent(MIXCLOUD_EMBED)).toContain("/fingerbanginfaderz/logikal-grinder/");
   });
 
-  it("creates booking emails with a predictable bookings subject prefix", () => {
+  it("creates booking emails with the BOOKING subject prefix", () => {
     const draft = createBookingMailto("Festival set", "Hello from the promoter");
     expect(draft).toContain(`mailto:${BOOKING_EMAIL}`);
-    expect(draft).toContain("subject=Bookings%20%E2%80%94%20Festival%20set");
+    expect(draft).toContain("subject=BOOKING!%20%E2%80%94%20Festival%20set");
     expect(draft).toContain("Hello%20from%20the%20promoter");
   });
 
