@@ -434,3 +434,8 @@
 - [x] Rebuild the Level 1 achievement chain as oversized silver links spanning the download text before the break.
 - [x] Restrict “Rewind Achieved” feedback to the 10× and 20× combo reward moments only.
 - [x] Validate chain scale, break choreography, reward copy, build, and checkpoint delivery.
+
+## Pre-break silver-chain glint
+
+- [x] Add a brief reflective silver glint sweep just before the chain-break phase.
+- [x] Preserve the chain impact timing, reduced-motion behavior, build, and checkpoint delivery.

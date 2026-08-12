@@ -1621,7 +1621,21 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 /* 5D style: oversized silver arcade-chain links run across the full release title,
    like a fast 16-bit platform-game lock, before bursting apart at the impact cue. */
 .achievement-chain-wrap { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
-.chain-run-text { position: absolute; top: 49%; left: -7%; right: -7%; display: flex; align-items: center; justify-content: space-between; transform: translateY(-50%); }
+.chain-run-text { position: absolute; top: 49%; left: -7%; right: -7%; display: flex; align-items: center; justify-content: space-between; overflow: hidden; transform: translateY(-50%); }
+.chain-run-text::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  width: 30%;
+  left: -38%;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0) 24%, rgba(255,255,255,.96) 48%, rgba(219,240,255,.68) 58%, rgba(255,255,255,0) 78%, transparent 100%);
+  filter: blur(1px);
+  mix-blend-mode: screen;
+  animation: silver-chain-glint .58s cubic-bezier(.22,.84,.28,1) 4.38s both;
+}
 .chain-link {
   position: relative;
   display: block;
@@ -1661,6 +1675,8 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 @keyframes chain-link-rattle { from { filter: brightness(.88) drop-shadow(2px 3px 0 rgba(1,3,7,.92)); } to { filter: brightness(1.32) drop-shadow(-2px 2px 0 rgba(1,3,7,.92)); } }
 @keyframes chain-link-break { 0%, 8% { opacity: 1; } 19% { opacity: 1; transform: translate(-6px, 6px) rotate(30deg) scale(1.16); } 100% { opacity: 0; transform: translate(var(--link-x, 96px), var(--link-y, -78px)) rotate(540deg) scale(.26); } }
 @keyframes chain-padlock-open { 0%, 11% { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); } 26% { opacity: 1; transform: translate(-50%, -50%) rotate(-13deg); } 100% { opacity: 0; transform: translate(110px, -74px) rotate(210deg) scale(.4); } }
+@keyframes silver-chain-glint { 0% { opacity: 0; transform: translateX(0) skewX(-18deg); } 13% { opacity: .92; } 77% { opacity: .8; } 100% { opacity: 0; transform: translateX(510%) skewX(-18deg); } }
+@media (prefers-reduced-motion: reduce) { .chain-run-text::after { animation: none; opacity: 0; } }
 .unlock-download-drop-label,
 .unlock-download-drop > span:last-child {
   font-family: monospace;
