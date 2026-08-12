@@ -428,3 +428,9 @@
 - [x] Detect the 20× combo threshold and award a ten-point bonus once per uninterrupted streak.
 - [x] Pause gameplay for a distinct “WHEEL IT UP” visual, then resume automatically.
 - [x] Validate reward precedence with the 10× rewind, score continuity, responsive display, build, and checkpoint delivery.
+
+## Silver full-width chain and reward callout refinement
+
+- [x] Rebuild the Level 1 achievement chain as oversized silver links spanning the download text before the break.
+- [x] Restrict “Rewind Achieved” feedback to the 10× and 20× combo reward moments only.
+- [x] Validate chain scale, break choreography, reward copy, build, and checkpoint delivery.

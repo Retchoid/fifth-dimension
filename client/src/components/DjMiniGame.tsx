@@ -25,7 +25,7 @@ const CELEBRATION_DANCERS = [
   { className: "dancer-magenta", src: "/manus-storage/5d-jungle-dancer-magenta_da5bea9b.png" },
 ] as const;
 
-const COMBO_CALLOUTS = ["Big Up!", "Rewind Achieved", "Gun Finger Massive", "Maximum Boost", "Maximum Respect"] as const;
+const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maximum Respect"] as const;
 
 interface FallingItem {
   id: number;
@@ -935,6 +935,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="wheel-copy">
               <span>20× COMBO / +10 PTS</span>
               <strong>WHEEL IT UP!</strong>
+              <b>REWIND ACHIEVED</b>
               <em>SELECTOR RUN THE TRACK BACK</em>
             </div>
             {Array.from({ length: 14 }, (_, index) => <i key={index} className={`wheel-ray wheel-ray-${index % 7}`} aria-hidden="true" />)}
@@ -967,13 +968,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <>
                   <div className="unlock-download-drop" role="status" aria-live="polite">
                     <div className="achievement-chain-wrap" aria-hidden="true">
-                      {(["top", "bottom", "left", "right"] as const).map((edge) => (
-                        <span key={edge} className={`chain-run chain-run-${edge}`}>
-                          {Array.from({ length: edge === "top" || edge === "bottom" ? 12 : 7 }, (_, index) => (
-                            <i key={index} className="chain-link" />
-                          ))}
-                        </span>
-                      ))}
+                      {/* 5D style: an oversized silver arcade chain bars the full release title until the unlock impact. */}
+                      <span className="chain-run chain-run-text">
+                        {Array.from({ length: 12 }, (_, index) => <i key={index} className="chain-link" />)}
+                      </span>
                       <span className="chain-padlock" />
                     </div>
                     <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
