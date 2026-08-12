@@ -71,3 +71,9 @@ Signal Orange — `#ff5a1f`, used sparingly for active links, release highlights
 The archive currently has a legacy top-level folder and project metadata from an earlier workspace. Merge application source into `/home/ubuntu/fifth-dimension`, retain only the fresh project's deployment metadata, and verify that visible copy, HTML metadata, package identity, tests, and configuration contain no former workspace identifiers. Media paths already point to lifecycle-backed Manus storage URLs; preserve those paths unless validation shows they are broken.
 
 Generated fallback assets prepared for this project live outside the project directory and are intended only for prominent surfaces that are missing or need a neutral replacement: `/manus-storage/fifth-dimension-mark_cb4f8370.png`, `/manus-storage/fifth-dimension-hero_85ca57e5.jpg`, `/manus-storage/fifth-dimension-grid_d7b944d5.jpg`, and `/manus-storage/fifth-dimension-signal_c9f26047.jpg`.
+
+## Style Decisions
+
+- Signal Orange `#ff5a1f` is now the primary functional cue for action buttons, release highlights, and transmission moments; magenta and cyan remain as artwork/glitch energy, while acid green stays reserved for live-status and alert details.
+- New surfaces should read as archive broadcast matter through subtle grain, offset rules, technical metadata, and hard-edged poster layering rather than clean synthetic neon panels alone.
+- The page rhythm should continue alternating between flyer, broadcast log, release label, and artwork-wall compositions; the Selector Showdown overlay now follows the release-label language with direct, legible decision controls.

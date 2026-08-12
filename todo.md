@@ -269,3 +269,10 @@
 
 - [x] Reduce cabinet wrapper height, marquee padding, and viewport height in index.css for a realistic 90s tabletop/upright arcade proportion.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## Post-unlock controls, named high scores & music playback repair
+
+- [x] Stop gameplay when the fifth record unlocks the download and show Reset Game / Keep Playing choices.
+- [x] Add player-name entry before saving a score and display names in the leaderboard.
+- [x] Diagnose and repair background music playback, including asset loading, AudioContext resume, and mute/unmute state.
+- [x] Validate typecheck, production build, gameplay flow, and checkpoint delivery.

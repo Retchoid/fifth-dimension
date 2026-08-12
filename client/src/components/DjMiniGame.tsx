@@ -44,6 +44,11 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
+  const [isUnlockPaused, setIsUnlockPaused] = useState(false);
+  const [playerName, setPlayerName] = useState("");
+  const [submittedName, setSubmittedName] = useState("");
+  const [scoreSubmitted, setScoreSubmitted] = useState(false);
+  const [musicStatus, setMusicStatus] = useState<"loading" | "ready" | "playing" | "paused" | "blocked" | "error">("loading");
   const [shared, setShared] = useState(false);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,6 +88,20 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
 
   const primeAudio = () => {
     getAudioContext();
+  };
+
+  const playBackgroundMusic = () => {
+    const audio = bgMusicRef.current;
+    if (!audio || !soundEnabledRef.current) return;
+    audio.volume = 0.34;
+    audio.muted = false;
+    const playPromise = audio.play();
+    playPromise
+      .then(() => setMusicStatus("playing"))
+      .catch((error: unknown) => {
+        console.warn("Background jungle track could not start:", error);
+        setMusicStatus("blocked");
+      });
   };
 
   const playRecordScratch = () => {
@@ -206,22 +225,49 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
   };
 
   const toggleSound = () => {
+    if (soundEnabledRef.current && isPlayingRef.current && (musicStatus === "blocked" || musicStatus === "error")) {
+      primeAudio();
+      playBackgroundMusic();
+      return;
+    }
     const nextEnabled = !soundEnabledRef.current;
     soundEnabledRef.current = nextEnabled;
     setSoundEnabled(nextEnabled);
     if (nextEnabled) {
       const ctx = getAudioContext();
       if (ctx && ctx.state === "suspended") void ctx.resume();
-      if (isPlayingRef.current && bgMusicRef.current) {
-        bgMusicRef.current.muted = false;
-        bgMusicRef.current.play().catch(() => {});
-      }
-    } else {
-      if (bgMusicRef.current) {
-        bgMusicRef.current.pause();
-      }
+      if (isPlayingRef.current) playBackgroundMusic();
+    } else if (bgMusicRef.current) {
+      bgMusicRef.current.pause();
+      setMusicStatus("paused");
     }
   };
+
+  useEffect(() => {
+    const audio = bgMusicRef.current;
+    if (!audio) return;
+    audio.volume = 0.34;
+    const handleCanPlay = () => setMusicStatus("ready");
+    const handlePlaying = () => setMusicStatus("playing");
+    const handlePause = () => {
+      if (!isPlayingRef.current) setMusicStatus("paused");
+    };
+    const handleError = () => {
+      console.warn("The 5D jungle soundtrack failed to load.");
+      setMusicStatus("error");
+    };
+    audio.addEventListener("canplay", handleCanPlay);
+    audio.addEventListener("playing", handlePlaying);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("error", handleError);
+    audio.load();
+    return () => {
+      audio.removeEventListener("canplay", handleCanPlay);
+      audio.removeEventListener("playing", handlePlaying);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("error", handleError);
+    };
+  }, []);
 
   useEffect(() => {
     try {
@@ -242,7 +288,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     }
   }, []);
 
-  const recordHighScore = (candidate: number) => {
+  const recordHighScore = (candidate: number, rawName: string) => {
     const previousBest = highScoreRef.current;
     const isRecord = candidate > previousBest;
     const bestScore = Math.max(previousBest, candidate);
@@ -257,7 +303,8 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
 
     // Update leaderboard table
     setLeaderboard((prev) => {
-      const updated = [...prev, { name: isRecord ? "YOU (NEW BEST)" : "SELECTOR", score: candidate }];
+      const safeName = rawName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
+      const updated = [...prev, { name: safeName, score: candidate }];
       updated.sort((a, b) => b.score - a.score);
       const sliced = updated.slice(0, 5);
       try {
@@ -265,6 +312,26 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
       } catch {}
       return sliced;
     });
+  };
+
+  const submitScore = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const safeName = playerName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
+    recordHighScore(score, safeName);
+    setPlayerName(safeName);
+    setSubmittedName(safeName);
+    setScoreSubmitted(true);
+  };
+
+  const keepPlayingAfterUnlock = () => {
+    if (!isUnlockPaused) return;
+    setIsUnlockPaused(false);
+    isPlayingRef.current = true;
+    setIsPlaying(true);
+    lastTimeRef.current = performance.now();
+    primeAudio();
+    playBackgroundMusic();
+    requestRef.current = requestAnimationFrame(updateGame);
   };
 
   useEffect(() => {
@@ -304,11 +371,8 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     unlockJinglePlayedRef.current = false;
     isPlayingRef.current = true;
     if (soundEnabledRef.current && bgMusicRef.current) {
-      bgMusicRef.current.muted = false;
       bgMusicRef.current.currentTime = 0;
-      bgMusicRef.current.play().catch((err) => {
-        console.warn("Background audio play interrupted:", err);
-      });
+      playBackgroundMusic();
     }
     scoreRef.current = 0;
     recordsCaughtRef.current = 0;
@@ -316,7 +380,11 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     livesRef.current = 3;
     setIsPlaying(true);
     setGameOver(false);
+    setIsUnlockPaused(false);
     setIsNewRecord(false);
+    setScoreSubmitted(false);
+    setSubmittedName("");
+    setPlayerName("");
     setScore(0);
     setRecordsCaught(0);
     setCombo(1);
@@ -361,6 +429,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     }
 
     const nextItems: FallingItem[] = [];
+    let pauseAfterUnlock = false;
     let currentLives = livesRef.current;
     let currentScore = scoreRef.current;
     const itemNodes = itemsLayerRef.current?.children;
@@ -389,13 +458,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
             unlockJinglePlayedRef.current = true;
             playUnlockJingle();
             onUnlockDownload?.();
-            // Smoothly guide user to release card on site after catching 5 records
-            setTimeout(() => {
-              const releaseCard = document.querySelector(".exclusive-release");
-              if (releaseCard) {
-                releaseCard.scrollIntoView({ behavior: "smooth", block: "center" });
-              }
-            }, 600);
+            pauseAfterUnlock = true;
           }
         } else {
           playCopSiren();
@@ -410,8 +473,12 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
             itemsRef.current = [];
             setVisibleItems([]);
             setGameOver(true);
+            setIsUnlockPaused(false);
             setIsPlaying(false);
-            recordHighScore(currentScore);
+            setIsNewRecord(currentScore > highScoreRef.current);
+            setScoreSubmitted(false);
+            setPlayerName("");
+            setSubmittedName("");
             return;
           }
         }
@@ -432,8 +499,12 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
             itemsRef.current = [];
             setVisibleItems([]);
             setGameOver(true);
+            setIsUnlockPaused(false);
             setIsPlaying(false);
-            recordHighScore(currentScore);
+            setIsNewRecord(currentScore > highScoreRef.current);
+            setScoreSubmitted(false);
+            setPlayerName("");
+            setSubmittedName("");
             return;
           }
         }
@@ -445,6 +516,13 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
 
     itemsRef.current = nextItems;
     if (structureChanged) setVisibleItems(nextItems);
+    if (pauseAfterUnlock) {
+      isPlayingRef.current = false;
+      if (bgMusicRef.current) bgMusicRef.current.pause();
+      setIsPlaying(false);
+      setIsUnlockPaused(true);
+      return;
+    }
     if (isPlayingRef.current) requestRef.current = requestAnimationFrame(updateGame);
   };
 
@@ -487,9 +565,11 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
 
       <audio
         ref={bgMusicRef}
-        src="/manus-storage/5d-jungle-genesis-track_5b23d949.mp3"
+        src="/manus-storage/5d-jungle-genesis-track_ff9d149a.mp3"
         loop
         preload="auto"
+        playsInline
+        aria-label="16-bit jungle background soundtrack"
       />
       <div className="arcade-cabinet-bezel">
         <div className="arcade-marquee">
@@ -525,11 +605,11 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
             onClick={toggleSound}
           >
             {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
-            {soundEnabled ? "SOUND ON" : "MUTED"}
+            {soundEnabled ? (musicStatus === "playing" ? "MUSIC ON" : musicStatus === "blocked" ? "TAP FOR MUSIC" : "SOUND READY") : "MUTED"}
           </button>
         </div>
 
-        {!isPlaying && !gameOver && (
+        {!isPlaying && !gameOver && !isUnlockPaused && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -546,6 +626,34 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
           </div>
         )}
 
+        {isUnlockPaused && !gameOver && (
+          <div className="game-overlay unlock-overlay">
+            <div className="overlay-box unlock-overlay-box">
+              <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
+              <h3>LEVEL CLEARED</h3>
+              <p>You caught all 5 dubplates. The free “Jersh in Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
+              <div className="unlock-decision-actions">
+                <button type="button" className="tape-play-button" onClick={startGame}>
+                  <span className="tape-play-face" aria-hidden="true">
+                    <i className="tape-reel tape-reel-left" />
+                    <span className="tape-window"><RotateCcw size={15} /></span>
+                    <i className="tape-reel tape-reel-right" />
+                  </span>
+                  <span className="tape-play-copy">Reset Game</span>
+                </button>
+                <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
+                  <span className="tape-play-face" aria-hidden="true">
+                    <i className="tape-reel tape-reel-left" />
+                    <span className="tape-window"><Play size={15} fill="currentColor" /></span>
+                    <i className="tape-reel tape-reel-right" />
+                  </span>
+                  <span className="tape-play-copy">Keep Playing</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {gameOver && (
           <div className="game-overlay game-over-overlay">
             <div className="overlay-box game-over-box-wide">
@@ -556,7 +664,30 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
               )}
               <h3>SESSION TERMINATED</h3>
               <p>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</p>
-              
+
+              {!scoreSubmitted ? (
+                <form className="score-entry-form" onSubmit={submitScore}>
+                  <label htmlFor="selector-name">ENTER YOUR SELECTOR TAG</label>
+                  <div className="score-entry-row">
+                    <input
+                      id="selector-name"
+                      value={playerName}
+                      onChange={(event) => setPlayerName(event.target.value.toUpperCase().slice(0, 12))}
+                      maxLength={12}
+                      autoComplete="nickname"
+                      placeholder="YOUR NAME"
+                      aria-describedby="selector-name-hint"
+                    />
+                    <button type="submit" className="score-submit-button">SAVE SCORE</button>
+                  </div>
+                  <span id="selector-name-hint">Up to 12 characters. Your tag is saved on this device.</span>
+                </form>
+              ) : (
+                <div className="score-saved-badge" role="status" aria-live="polite">
+                  <Trophy size={15} /> SCORE SAVED AS <strong>{submittedName}</strong>
+                </div>
+              )}
+
               <div className="arcade-leaderboard-container">
                 <h4>TOP ARCADE SELECTORS</h4>
                 <div className="arcade-table-wrap">
@@ -570,7 +701,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
                     </thead>
                     <tbody>
                       {leaderboard.map((entry, idx) => (
-                        <tr key={idx} className={entry.score === score ? "is-current-score" : ""}>
+                        <tr key={`${entry.name}-${entry.score}-${idx}`} className={scoreSubmitted && entry.score === score && entry.name === submittedName ? "is-current-score" : ""}>
                           <td>#{idx + 1}</td>
                           <td>{entry.name}</td>
                           <td>{entry.score}</td>
