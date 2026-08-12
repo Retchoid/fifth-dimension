@@ -451,3 +451,9 @@
 - [x] Make the Jersh In Case artist credit substantially more prominent and legible.
 - [x] Add graffiti-style arrows flowing from the exclusive drop toward and around the arcade cabinet.
 - [x] Validate desktop/mobile wrapping, contrast, build, and checkpoint delivery.
+
+## Two-badge police seizure splash
+
+- [x] Track police-badge hits and trigger a seizure event after the second hit in a run.
+- [x] Pause for a Sega-style police-car splash reading “COPS SEIZED YOUR MIXER. WATCH OUT!”, then resume gameplay automatically.
+- [x] Validate lives, threshold reset, continuation, responsive animation, build, and checkpoint delivery.

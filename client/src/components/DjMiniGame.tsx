@@ -73,6 +73,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [showComboBurst, setShowComboBurst] = useState(false);
   const [isRewindPaused, setIsRewindPaused] = useState(false);
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
+  const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
@@ -93,6 +94,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const rewindPauseTimerRef = useRef<number>(0);
   const wheelItUpAwardedRef = useRef(false);
   const wheelItUpPauseTimerRef = useRef<number>(0);
+  const policeBadgeHitsRef = useRef(0);
+  const policeSeizurePauseTimerRef = useRef<number>(0);
   const highScoreRef = useRef(0);
   const livesRef = useRef(4);
   const finaleRef = useRef(false);
@@ -427,6 +430,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     comboRef.current = 1;
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
+    policeBadgeHitsRef.current = 0;
     scoreRef.current = scoreRef.current;
     setRecordsCaught(0);
     setLives(4);
@@ -435,6 +439,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsUnlockPaused(false);
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
+    setIsPoliceSeizurePaused(false);
     setGameOver(false);
     setLevelTwoComplete(false);
     setFinale(false);
@@ -498,6 +503,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     return () => window.clearTimeout(wheelItUpPauseTimerRef.current);
   }, [isWheelItUpPaused]);
 
+  useEffect(() => {
+    if (!isPoliceSeizurePaused) return;
+    policeSeizurePauseTimerRef.current = window.setTimeout(() => {
+      setIsPoliceSeizurePaused(false);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      requestRef.current = requestAnimationFrame(updateGame);
+    }, 2150);
+    return () => window.clearTimeout(policeSeizurePauseTimerRef.current);
+  }, [isPoliceSeizurePaused]);
+
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const safeName = playerName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
@@ -548,8 +565,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     chainBreakImpactPlayedRef.current = false;
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
+    policeBadgeHitsRef.current = 0;
     window.clearTimeout(rewindPauseTimerRef.current);
     window.clearTimeout(wheelItUpPauseTimerRef.current);
+    window.clearTimeout(policeSeizurePauseTimerRef.current);
     levelRef.current = 1;
     setLevel(1);
     setLevelTwoComplete(false);
@@ -570,6 +589,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsUnlockPaused(false);
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
+    setIsPoliceSeizurePaused(false);
     setUnlockRevealReady(false);
     setChainBreakComplete(false);
     setIsCabinetVibrating(false);
@@ -636,6 +656,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     let pauseAfterUnlock = false;
     let pauseForRewind = false;
     let pauseForWheelItUp = false;
+    let pauseForPoliceSeizure = false;
     let advanceToLevelTwo = false;
     let completeLevelTwo = false;
     let currentLives = livesRef.current;
@@ -717,6 +738,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             setSubmittedName("");
             return;
           }
+          if (item.type === "cop") {
+            policeBadgeHitsRef.current += 1;
+            if (policeBadgeHitsRef.current >= 2) {
+              // 5D design: the second badge hit briefly interrupts play with a
+              // readable Sega police seizure warning; the lost life still counts.
+              policeBadgeHitsRef.current = 0;
+              pauseForPoliceSeizure = true;
+            }
+          }
         }
         continue;
       }
@@ -763,6 +793,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setIsWheelItUpPaused(true);
       return;
     }
+    if (pauseForPoliceSeizure) {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      setIsPoliceSeizurePaused(true);
+      return;
+    }
     if (advanceToLevelTwo) {
       startLevelTwo();
       return;
@@ -799,6 +835,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       }
       window.clearTimeout(rewindPauseTimerRef.current);
       window.clearTimeout(wheelItUpPauseTimerRef.current);
+      window.clearTimeout(policeSeizurePauseTimerRef.current);
     };
   }, []);
 
@@ -893,7 +930,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && (
+        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -939,6 +976,25 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <em>SELECTOR RUN THE TRACK BACK</em>
             </div>
             {Array.from({ length: 14 }, (_, index) => <i key={index} className={`wheel-ray wheel-ray-${index % 7}`} aria-hidden="true" />)}
+          </div>
+        )}
+
+        {isPoliceSeizurePaused && !gameOver && (
+          <div className="game-overlay police-seizure-overlay" role="status" aria-live="assertive">
+            <div className="police-seizure-grid" aria-hidden="true" />
+            <div className="sega-police-car" aria-hidden="true">
+              <span className="cop-car-lightbar"><i /><i /></span>
+              <span className="cop-car-roof" />
+              <span className="cop-car-body"><b>POLICE</b></span>
+              <span className="cop-car-wheel cop-car-wheel-left" />
+              <span className="cop-car-wheel cop-car-wheel-right" />
+            </div>
+            <div className="police-seizure-copy">
+              <span>BADGE PATROL / 2 HITS</span>
+              <strong>COPS SEIZED<br />YOUR MIXER.</strong>
+              <em>WATCH OUT!</em>
+            </div>
+            {Array.from({ length: 8 }, (_, index) => <i key={index} className={`police-seizure-flash flash-${index % 4}`} aria-hidden="true" />)}
           </div>
         )}
 
