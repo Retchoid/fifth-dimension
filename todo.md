@@ -238,3 +238,9 @@
 
 - [x] Update client/index.html with rich Open Graph and Twitter card meta tags for 5th Dimension (Bobby Bass) and Selector Showdown.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## Custom social banner generation & integration
+
+- [x] Generate a custom 1200x630 social preview banner featuring the 5th Dimension graffiti logo and arcade cabinet.
+- [x] Integrate the banner URL into client/index.html Open Graph and Twitter metadata.
+- [x] Validate typecheck, production build, and checkpoint delivery.
