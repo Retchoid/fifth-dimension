@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy } from "lucide-react";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
+const REQUIRED_RECORDS = 5;
 
 interface FallingItem {
   id: number;
@@ -12,10 +13,16 @@ interface FallingItem {
   size: number;
 }
 
-export default function DjMiniGame() {
+interface DjMiniGameProps {
+  onUnlockDownload?: () => void;
+}
+
+export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
+  const [recordsCaught, setRecordsCaught] = useState(0);
   const [highScore, setHighScore] = useState(0);
+  const [isNewRecord, setIsNewRecord] = useState(false);
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
   const [djX, setDjX] = useState(50); // percentage 0-90
@@ -24,6 +31,7 @@ export default function DjMiniGame() {
   const lastTimeRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
   const scoreRef = useRef(0);
+  const recordsCaughtRef = useRef(0);
   const highScoreRef = useRef(0);
   const livesRef = useRef(3);
   const itemsRef = useRef<FallingItem[]>([]);
@@ -47,8 +55,11 @@ export default function DjMiniGame() {
   }, []);
 
   const recordHighScore = (candidate: number) => {
-    const bestScore = Math.max(highScoreRef.current, candidate);
+    const previousBest = highScoreRef.current;
+    const isRecord = candidate > previousBest;
+    const bestScore = Math.max(previousBest, candidate);
     highScoreRef.current = bestScore;
+    setIsNewRecord(isRecord);
     setHighScore(bestScore);
     if (bestScore > candidate || bestScore === 0) return;
     try {
@@ -91,10 +102,13 @@ export default function DjMiniGame() {
   const startGame = () => {
     isPlayingRef.current = true;
     scoreRef.current = 0;
+    recordsCaughtRef.current = 0;
     livesRef.current = 3;
     setIsPlaying(true);
     setGameOver(false);
+    setIsNewRecord(false);
     setScore(0);
+    setRecordsCaught(0);
     setLives(3);
     setDjX(50);
     itemsRef.current = [];
@@ -148,6 +162,12 @@ export default function DjMiniGame() {
           if (item.type === "record") {
             currentScore += 100;
             scoreRef.current = currentScore;
+            const nextRecordsCaught = recordsCaughtRef.current + 1;
+            recordsCaughtRef.current = nextRecordsCaught;
+            setRecordsCaught(nextRecordsCaught);
+            if (nextRecordsCaught === REQUIRED_RECORDS) {
+              onUnlockDownload?.();
+            }
             setScore(currentScore);
             // play catch chime if possible
           } else {
@@ -213,7 +233,7 @@ export default function DjMiniGame() {
           <p className="eyebrow"><Disc size={15} /> ARCADE PORTAL / 06</p>
           <h2 id="minigame-title">SELECTOR<br /><em>SHOWDOWN.</em></h2>
         </div>
-        <p>Catch the heavy 5D dubplates and dodge the badge patrol. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
+        <p>Catch the heavy 5D dubplates and dodge the badge patrol. Collect 5 records to unlock the free “Jersh in Case” download. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
       </div>
 
       <div
@@ -231,6 +251,7 @@ export default function DjMiniGame() {
         <div className="game-grid-bg" aria-hidden="true" />
         <div className="game-hud">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
+          <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{REQUIRED_RECORDS}</strong></div>
           <div className="hud-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
           <div className="hud-badge lives-badge">LIVES: <strong>{"❤️".repeat(lives)}</strong></div>
         </div>
@@ -239,7 +260,7 @@ export default function DjMiniGame() {
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
-              <p>Catch spinning vinyl records (+100pts). Avoid the cop badges! Missed records or caught badges cost lives.</p>
+              <p>Catch spinning vinyl records (+100pts). Collect 5 records to unlock the free “Jersh in Case” download. Avoid the cop badges—missed records and caught badges cost lives.</p>
               <button type="button" className="neon-button magenta" onClick={startGame}>
                 <Play size={18} /> Start Session
               </button>
@@ -250,6 +271,11 @@ export default function DjMiniGame() {
         {gameOver && (
           <div className="game-overlay game-over-overlay">
             <div className="overlay-box">
+              {isNewRecord && (
+                <div className="new-record-badge" role="status" aria-live="polite">
+                  <Trophy size={17} /> NEW RECORD!
+                </div>
+              )}
               <h3>SESSION TERMINATED</h3>
               <p>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</p>
               <p className="game-over-best"><Trophy size={15} /> Best score saved locally: <strong>{highScore}</strong></p>

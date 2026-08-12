@@ -14,6 +14,7 @@ import {
   Menu,
   Music2,
   Radio,
+  ShieldAlert,
   Volume2,
   X,
   Zap,
@@ -99,6 +100,7 @@ export default function Home() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [bookingSubject, setBookingSubject] = useState("");
   const [bookingMessage, setBookingMessage] = useState("");
+  const [downloadUnlocked, setDownloadUnlocked] = useState(false);
   const [bookingEventDate, setBookingEventDate] = useState("");
   const [bookingEventLocation, setBookingEventLocation] = useState("");
   const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
@@ -332,10 +334,16 @@ export default function Home() {
               <p className="exclusive-artist">{EXCLUSIVE_RELEASE.artist}</p>
             </div>
             <div className="exclusive-track">
-              <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. The complete track is available as an exclusive file drop.</p>
-              <a className="exclusive-download" href={EXCLUSIVE_RELEASE.url} download="Jersh in Case — 5th Dimension, Skavo featuring MestUp.mp3">
-                <span>Download Jersh in Case</span><ArrowDownRight size={19} />
-              </a>
+              <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 5 records in Selector Showdown to unlock the free complete track download.</p>
+              {downloadUnlocked ? (
+                <a className="exclusive-download" href={EXCLUSIVE_RELEASE.url} download="Jersh in Case — 5th Dimension, Skavo featuring MestUp.mp3">
+                  <span>Download Jersh in Case</span><ArrowDownRight size={19} />
+                </a>
+              ) : (
+                <div className="exclusive-locked" role="status">
+                  <ShieldAlert size={18} /> <span>Collect 5 records in Selector Showdown to unlock the free download.</span>
+                </div>
+              )}
               <span className="exclusive-file-info">MP3 / {EXCLUSIVE_RELEASE.duration} / DIRECT DOWNLOAD</span>
             </div>
           </article>
@@ -401,6 +409,8 @@ export default function Home() {
           </Dialog>
         </section>
 
+        <DjMiniGame onUnlockDownload={() => setDownloadUnlocked(true)} />
+
         <section id="booking" className="booking-section" aria-labelledby="booking-title">
           <div className="booking-signal" aria-hidden="true"><span>GIG</span><strong>5D</strong><span>CALL</span></div>
           <div className="booking-copy">
@@ -451,47 +461,6 @@ export default function Home() {
           </form>
         </section>
 
-        <section id="social-feed" className="social-feed-section" aria-labelledby="social-feed-title">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow"><Radio size={15} /> LIVE SOCIAL FEEDS / 05</p>
-              <h2 id="social-feed-title">INSTAGRAM &amp;<br /><em>SOUNDCLOUD STREAM.</em></h2>
-            </div>
-            <p>Direct feeds from the 5th Dimension channels. Tap through to explore recent posts, sets, and live drops.</p>
-          </div>
-          <div className="social-feed-grid">
-            <article className="social-feed-card instagram-card">
-              <div className="deck-topline"><span>IG / LIVE FEED</span><span className="live-chip"><i /> ACTIVE FEED</span></div>
-              <h3>Instagram<br /><em>@5th_dimension_aka_bobbybass</em></h3>
-              <p className="social-card-desc">Follow for behind-the-scenes studio sessions, flyer drops, and rave snapshots from the front line.</p>
-              <div className="social-embed-preview">
-                <div className="social-preview-art">
-                  <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="Instagram preview visual" />
-                  <div className="social-preview-overlay">
-                    <Instagram size={36} />
-                    <span>View latest posts &amp; reels</span>
-                  </div>
-                </div>
-              </div>
-              <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="deck-link">Open Instagram Profile <ArrowUpRight size={17} /></a>
-            </article>
-            <article className="social-feed-card soundcloud-feed-card">
-              <div className="deck-topline"><span>SC / RECENT SETS</span><span className="live-chip"><i /> AUDIO STREAM</span></div>
-              <h3>SoundCloud<br /><em>Latest Releases</em></h3>
-              <p className="social-card-desc">Stream the newest jungle transmissions, hip-hop refixes, and heavy bassline workouts directly.</p>
-              <div className="social-embed-preview">
-                <div className="social-preview-art">
-                  <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="SoundCloud preview visual" />
-                  <div className="social-preview-overlay">
-                    <Music2 size={36} />
-                    <span>Listen on SoundCloud</span>
-                  </div>
-                </div>
-              </div>
-              <a href={SOUND_CLOUD_PROFILE} target="_blank" rel="noreferrer" className="deck-link">Open SoundCloud Profile <ArrowUpRight size={17} /></a>
-            </article>
-          </div>
-        </section>
 
         <section id="contact" className="contact-section" aria-labelledby="contact-title">
           <div className="contact-grid-bg" aria-hidden="true" />
@@ -510,7 +479,6 @@ export default function Home() {
           </div>
         </section>
 
-        <DjMiniGame />
       </main>
 
       <footer className="dj-footer">

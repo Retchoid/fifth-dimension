@@ -82,3 +82,16 @@
 
 - [x] Remove the yellow square behind the first hero 5 without removing the number or neon treatment.
 - [x] Finish local high-score persistence and game-over display validation.
+
+## New Record badge
+
+- [x] Detect when the completed score exceeds the previously saved local high score.
+- [x] Display a flashing accessible `NEW RECORD!` badge on the game-over screen only for a new best.
+- [x] Validate score transitions, build, tests, responsive rendering, and save a checkpoint.
+
+## Game placement and download unlock
+
+- [x] Remove the Instagram/SoundCloud live-feed section from the page.
+- [x] Move Selector Showdown directly above the booking form.
+- [x] Require five collected records before revealing the free download and explain the unlock in the game description.
+- [x] Remove the yellow square treatment behind the first hero 5 and validate all changes.
