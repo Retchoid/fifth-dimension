@@ -340,3 +340,18 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
     box-shadow: 4px 4px 0 #ff007a, 8px 8px 0 #00e7ff, 0 0 15px rgba(198, 255, 0, .55);
   }
 }
+
+.booking-optional-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .7rem;
+}
+.booking-optional-grid > div {
+  display: grid;
+  gap: .55rem;
+}
+@media (max-width: 650px) {
+  .booking-optional-grid {
+    grid-template-columns: 1fr;
+  }
+}

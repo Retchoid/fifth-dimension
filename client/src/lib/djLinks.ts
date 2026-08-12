@@ -7,10 +7,20 @@ export const FACEBOOK_URL = "https://www.facebook.com/share/1YU9Mvk8SQ/";
 export const INSTAGRAM_URL = "https://www.instagram.com/5th_dimension_aka_bobbybass?igsh=eXhpa3V2dmV1YXcy";
 export const BOOKING_EMAIL = "bobbyjackets.one@gmail.com";
 
-export function createBookingMailto(subject: string, message: string) {
+export function createBookingMailto(
+  subject: string,
+  message: string,
+  eventDate = "",
+  eventLocation = "",
+) {
   const normalizedSubject = subject.trim();
   const emailSubject = `BOOKING! — ${normalizedSubject || "Inquiry"}`;
-  const body = message.trim() || "Hello 5th Dimension,\n\n";
+  const bodySections = [
+    message.trim() || "Hello 5th Dimension,",
+    eventDate.trim() ? `Proposed event date: ${eventDate.trim()}` : "",
+    eventLocation.trim() ? `Proposed event location: ${eventLocation.trim()}` : "",
+  ].filter(Boolean);
+  const body = `${bodySections.join("\n\n")}\n\n`;
   return `mailto:${BOOKING_EMAIL}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(body)}`;
 }
 

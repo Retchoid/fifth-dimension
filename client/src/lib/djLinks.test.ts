@@ -43,6 +43,13 @@ describe("5th Dimension public channel configuration", () => {
     expect(draft).toContain("Hello%20from%20the%20promoter");
   });
 
+  it("includes optional event date and location details in the booking email body", () => {
+    const draft = createBookingMailto("Festival set", "Hello from the promoter", "2026-09-12", "Hamilton, ON");
+    const decodedDraft = decodeURIComponent(draft);
+    expect(decodedDraft).toContain("Proposed event date: 2026-09-12");
+    expect(decodedDraft).toContain("Proposed event location: Hamilton, ON");
+  });
+
   it("preserves the requested title, credit, and managed download URL for the exclusive release", () => {
     expect(EXCLUSIVE_RELEASE.title).toBe("Jersh in Case");
     expect(EXCLUSIVE_RELEASE.artist).toBe("5th Dimension, Skavo featuring MestUp");

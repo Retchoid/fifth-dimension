@@ -98,6 +98,8 @@ export default function Home() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [bookingSubject, setBookingSubject] = useState("");
   const [bookingMessage, setBookingMessage] = useState("");
+  const [bookingEventDate, setBookingEventDate] = useState("");
+  const [bookingEventLocation, setBookingEventLocation] = useState("");
   const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
 
   useEffect(() => {
@@ -116,7 +118,7 @@ export default function Home() {
 
   const openBookingEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    window.location.href = createBookingMailto(bookingSubject, bookingMessage);
+    window.location.href = createBookingMailto(bookingSubject, bookingMessage, bookingEventDate, bookingEventLocation);
   };
 
   return (
@@ -415,16 +417,36 @@ export default function Home() {
               onChange={(event) => setBookingSubject(event.target.value)}
               placeholder="e.g. Friday night booking"
             />
+            <div className="booking-optional-grid">
+              <div>
+                <label htmlFor="booking-event-date">Proposed event date <span>(optional)</span></label>
+                <input
+                  id="booking-event-date"
+                  type="date"
+                  value={bookingEventDate}
+                  onChange={(event) => setBookingEventDate(event.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="booking-event-location">Event location <span>(optional)</span></label>
+                <input
+                  id="booking-event-location"
+                  value={bookingEventLocation}
+                  onChange={(event) => setBookingEventLocation(event.target.value)}
+                  placeholder="City, venue, or region"
+                />
+              </div>
+            </div>
             <label htmlFor="booking-message">Your message <span>(optional)</span></label>
             <textarea
               id="booking-message"
               rows={5}
               value={bookingMessage}
               onChange={(event) => setBookingMessage(event.target.value)}
-              placeholder="Date, venue, set time, and any key details."
+              placeholder="Set time, crowd, budget, and any key details."
             />
             <button type="submit" className="booking-submit">Create booking email <ArrowUpRight size={18} /></button>
-            <p className="booking-note">Generated subject: <b>BOOKING! — {bookingSubject || "Your subject"}</b></p>
+            <p className="booking-note">Generated subject: <b>BOOKING! — {bookingSubject || "Your subject"}</b><br />Date and location are optional and will be added to the email body.</p>
           </form>
         </section>
 

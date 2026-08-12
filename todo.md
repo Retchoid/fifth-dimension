@@ -58,3 +58,9 @@
 - [x] Update the booking mailto subject prefix to `BOOKING!` while retaining the user-entered subject.
 - [x] Ensure the booking inquiry link and form target bobbyjackets.one@gmail.com.
 - [x] Validate encoded subject/body behavior, typecheck, build, tests, and save a checkpoint.
+
+## Optional booking details
+
+- [x] Add optional proposed event date and event location fields to the booking form.
+- [x] Include provided date and location values in the generated booking email body.
+- [x] Validate optional-field encoding, typecheck, build, tests, responsive rendering, and save a checkpoint.
