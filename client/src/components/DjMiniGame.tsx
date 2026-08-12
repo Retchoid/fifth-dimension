@@ -798,10 +798,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               ) : (
                 <>
                   <div className="unlock-download-drop" role="status" aria-live="polite">
-                    <span className="achievement-chain chain-top" aria-hidden="true" />
-                    <span className="achievement-chain chain-bottom" aria-hidden="true" />
-                    <span className="achievement-chain chain-left" aria-hidden="true" />
-                    <span className="achievement-chain chain-right" aria-hidden="true" />
+                    <div className="achievement-chain-wrap" aria-hidden="true">
+                      {(["top", "bottom", "left", "right"] as const).map((edge) => (
+                        <span key={edge} className={`chain-run chain-run-${edge}`}>
+                          {Array.from({ length: edge === "top" || edge === "bottom" ? 12 : 7 }, (_, index) => (
+                            <i key={index} className="chain-link" />
+                          ))}
+                        </span>
+                      ))}
+                      <span className="chain-padlock" />
+                    </div>
                     <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
                     <strong>JERSH IN CASE</strong>
                     <span>THE SIGNAL IS YOURS — 25 DUBPLATES CAUGHT.</span>
@@ -828,9 +834,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       </div>
                       <p>You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
                     </>
-                  ) : (
-                    <p className="chain-break-status" role="status" aria-live="polite">CHAIN LOCKED — BREAKING FREE...</p>
-                  )}
+                  ) : <span className="chain-break-visual-only" aria-label="Achievement chain is breaking" />}
                 </>
               )}
             </div>

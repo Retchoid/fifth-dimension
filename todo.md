@@ -400,3 +400,9 @@
 - [x] Keep the chained download achievement visibly present on the Level 1 splash screen after it lands.
 - [x] Run a distinct two-second chain-break animation before enabling Level 2 continuation.
 - [x] Validate the splash timing, Level 2 handoff, build, and checkpoint delivery.
+
+## Visual chain-link unlock sequence
+
+- [x] Replace textual chain status with visible linked-chain segments around the Level 1 achievement.
+- [x] Animate chain links separating and flying apart before Level 2 continuation becomes available.
+- [x] Validate the animation, handoff, build, and checkpoint delivery.
