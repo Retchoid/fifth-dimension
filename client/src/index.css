@@ -2527,6 +2527,45 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   .rewind-splash-drip { opacity: .82; }
 }
 
+/* 5D design: the 20× reward is a larger selector salute, with an oversized
+   record, rushing laser rays, and a distinct cyan/magenta turntable palette. */
+.wheel-it-up-overlay {
+  z-index: 25;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: radial-gradient(ellipse at center, rgba(0,231,255,.48) 0%, rgba(255,0,122,.4) 38%, rgba(6,4,12,.96) 76%);
+}
+.wheel-turntable {
+  position: absolute;
+  width: clamp(165px, 34vw, 285px);
+  aspect-ratio: 1;
+  border: clamp(9px, 1.7vw, 15px) solid #ffe600;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, #14101e 0 4px, #3d2a55 5px 8px, #09070f 9px 12px);
+  box-shadow: 0 0 0 7px #ff007a, 0 0 0 13px #33f3ff, 0 0 55px rgba(255,230,0,.96);
+  animation: wheel-vinyl-run 2.05s cubic-bezier(.12,.86,.25,1) both;
+}
+.wheel-vinyl { position: absolute; inset: 13%; border: 2px dashed rgba(255,255,255,.58); border-radius: 50%; box-shadow: 0 0 0 13px rgba(255,0,122,.24), 0 0 0 27px rgba(51,243,255,.18); }
+.wheel-center-label { position: absolute; inset: 34%; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(#c6ff00, #ff007a, #33f3ff, #c6ff00); color: #09070f; font: 900 clamp(1.75rem, 5vw, 3.2rem)/1 "Bungee", Impact, sans-serif; text-shadow: 2px 2px 0 #fff5a9; box-shadow: inset 0 0 0 7px #120b1e; }
+.wheel-tonearm { position: absolute; top: 8%; right: 6%; width: 48%; height: 9px; border-radius: 99px; background: linear-gradient(90deg, #fff5a9, #a0a5b9 52%, #33f3ff); box-shadow: 0 0 8px #33f3ff; transform-origin: 100% 50%; animation: wheel-tonearm-drop 2.05s ease-out both; }
+.wheel-tonearm::after { content: ""; position: absolute; left: -3px; top: -5px; width: 15px; height: 19px; border: 3px solid #09070f; background: #ff007a; }
+.wheel-copy { position: relative; z-index: 2; display: grid; justify-items: center; max-width: min(90%, 720px); text-align: center; animation: wheel-copy-cut 2.05s cubic-bezier(.11,.86,.22,1) both; }
+.wheel-copy span { padding: .2rem .6rem; background: #ffe600; color: #09070f; font: 900 clamp(.55rem, 1.4vw, .82rem)/1 monospace; letter-spacing: .15em; box-shadow: 4px 4px 0 #ff007a; }
+.wheel-copy strong { margin-top: .25rem; color: #fff5a9; font: 900 clamp(2.6rem, 10vw, 6.2rem)/.8 "Bungee", Impact, sans-serif; letter-spacing: -.055em; -webkit-text-stroke: 2px #09070f; paint-order: stroke fill; text-shadow: 6px 6px 0 #ff007a, 12px 12px 0 rgba(0,0,0,.55), 0 0 24px #33f3ff; transform: skewX(-7deg); }
+.wheel-copy em { margin-top: .25rem; color: #c6ff00; font: 900 clamp(.68rem, 1.85vw, 1rem)/1 "Bungee", sans-serif; letter-spacing: .09em; text-shadow: 2px 2px 0 #09070f; }
+.wheel-ray { position: absolute; z-index: 0; width: 140%; height: 5px; left: -20%; top: 50%; background: linear-gradient(90deg, transparent, #33f3ff 18%, #ffe600 50%, #ff007a 82%, transparent); box-shadow: 0 0 10px currentColor; transform-origin: 50% 50%; animation: wheel-ray-fire 2.05s ease-out both; }
+.wheel-ray-0 { transform: rotate(0deg); }.wheel-ray-1 { transform: rotate(26deg); }.wheel-ray-2 { transform: rotate(52deg); }.wheel-ray-3 { transform: rotate(78deg); }.wheel-ray-4 { transform: rotate(104deg); }.wheel-ray-5 { transform: rotate(130deg); }.wheel-ray-6 { transform: rotate(156deg); }
+@keyframes wheel-vinyl-run { 0% { opacity: 0; transform: scale(.5) rotate(0); } 17% { opacity: 1; transform: scale(1.12) rotate(420deg); } 75% { opacity: 1; transform: scale(1) rotate(1500deg); } 100% { opacity: 0; transform: scale(1.25) rotate(1860deg); } }
+@keyframes wheel-tonearm-drop { 0%, 15% { transform: rotate(-55deg); } 38%, 78% { transform: rotate(-7deg); } 100% { transform: rotate(12deg); } }
+@keyframes wheel-copy-cut { 0% { opacity: 0; transform: translateX(120%) skewX(-16deg); } 16% { opacity: 1; transform: translateX(-4%) skewX(2deg); } 74% { opacity: 1; transform: translateX(0) skewX(0); } 100% { opacity: 0; transform: translateX(-120%) skewX(16deg); } }
+@keyframes wheel-ray-fire { 0% { opacity: 0; filter: blur(6px); } 16% { opacity: 1; filter: blur(0); } 78% { opacity: .85; } 100% { opacity: 0; filter: blur(4px); } }
+@media (prefers-reduced-motion: reduce) {
+  .wheel-turntable, .wheel-tonearm, .wheel-copy, .wheel-ray { animation: none; opacity: 1; }
+  .wheel-turntable { transform: none; }
+}
+
 /* Level 2: dense, late-90s arcade concert scene; the rear-view DJ booth,
    crowd, incoming records, bottles, apple cores, and sirens stay unchanged. */
 .game-grid-bg.level-two-grid-bg {

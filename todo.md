@@ -422,3 +422,9 @@
 - [x] Detect the 10× combo threshold and award a five-point rewind bonus once per streak.
 - [x] Pause gameplay for a “REWIND ACHIEVED” / “BOH MY SELECTAH” dripping-graffiti splash, then resume automatically.
 - [x] Validate score, gameplay continuation, responsive splash presentation, build, and checkpoint delivery.
+
+## Twenty-combo Wheel It Up reward
+
+- [x] Detect the 20× combo threshold and award a ten-point bonus once per uninterrupted streak.
+- [x] Pause gameplay for a distinct “WHEEL IT UP” visual, then resume automatically.
+- [x] Validate reward precedence with the 10× rewind, score continuity, responsive display, build, and checkpoint delivery.

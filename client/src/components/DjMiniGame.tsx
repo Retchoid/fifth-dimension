@@ -72,6 +72,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [shared, setShared] = useState(false);
   const [showComboBurst, setShowComboBurst] = useState(false);
   const [isRewindPaused, setIsRewindPaused] = useState(false);
+  const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
@@ -90,6 +91,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const chainBreakImpactPlayedRef = useRef(false);
   const rewindAwardedRef = useRef(false);
   const rewindPauseTimerRef = useRef<number>(0);
+  const wheelItUpAwardedRef = useRef(false);
+  const wheelItUpPauseTimerRef = useRef<number>(0);
   const highScoreRef = useRef(0);
   const livesRef = useRef(4);
   const finaleRef = useRef(false);
@@ -422,6 +425,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     recordsCaughtRef.current = 0;
     livesRef.current = 4;
     comboRef.current = 1;
+    rewindAwardedRef.current = false;
+    wheelItUpAwardedRef.current = false;
     scoreRef.current = scoreRef.current;
     setRecordsCaught(0);
     setLives(4);
@@ -429,6 +434,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsPlaying(true);
     setIsUnlockPaused(false);
     setIsRewindPaused(false);
+    setIsWheelItUpPaused(false);
     setGameOver(false);
     setLevelTwoComplete(false);
     setFinale(false);
@@ -480,6 +486,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     return () => window.clearTimeout(rewindPauseTimerRef.current);
   }, [isRewindPaused]);
 
+  useEffect(() => {
+    if (!isWheelItUpPaused) return;
+    wheelItUpPauseTimerRef.current = window.setTimeout(() => {
+      setIsWheelItUpPaused(false);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      requestRef.current = requestAnimationFrame(updateGame);
+    }, 2050);
+    return () => window.clearTimeout(wheelItUpPauseTimerRef.current);
+  }, [isWheelItUpPaused]);
+
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const safeName = playerName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
@@ -529,7 +547,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     unlockJinglePlayedRef.current = false;
     chainBreakImpactPlayedRef.current = false;
     rewindAwardedRef.current = false;
+    wheelItUpAwardedRef.current = false;
     window.clearTimeout(rewindPauseTimerRef.current);
+    window.clearTimeout(wheelItUpPauseTimerRef.current);
     levelRef.current = 1;
     setLevel(1);
     setLevelTwoComplete(false);
@@ -549,6 +569,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setLevelTwoComplete(false);
     setIsUnlockPaused(false);
     setIsRewindPaused(false);
+    setIsWheelItUpPaused(false);
     setUnlockRevealReady(false);
     setChainBreakComplete(false);
     setIsCabinetVibrating(false);
@@ -614,6 +635,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const nextItems: FallingItem[] = [];
     let pauseAfterUnlock = false;
     let pauseForRewind = false;
+    let pauseForWheelItUp = false;
     let advanceToLevelTwo = false;
     let completeLevelTwo = false;
     let currentLives = livesRef.current;
@@ -636,7 +658,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : 1;
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
           currentScore += pointsEarned;
-          if (nextCombo >= 10 && !rewindAwardedRef.current) {
+          if (nextCombo >= 20 && !wheelItUpAwardedRef.current) {
+            // 5D design: Wheel It Up is the higher-streak selector salute—larger
+            // reward, unique turntable visual, then a fast return to the chase.
+            wheelItUpAwardedRef.current = true;
+            currentScore += 10;
+            pauseForWheelItUp = true;
+          } else if (nextCombo >= 10 && !rewindAwardedRef.current) {
             // 5D design: a rare arcade interruption—one tiny reward, one graffiti hit,
             // then a rapid return to the running session.
             rewindAwardedRef.current = true;
@@ -669,6 +697,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           playCopSiren();
           comboRef.current = 1;
           rewindAwardedRef.current = false;
+          wheelItUpAwardedRef.current = false;
           setCombo(1);
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
@@ -699,6 +728,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         if (item.type === "record" || item.type === "lion" || item.type === "cdj") {
           comboRef.current = 1;
           rewindAwardedRef.current = false;
+          wheelItUpAwardedRef.current = false;
           setCombo(1);
         }
         continue;
@@ -725,6 +755,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       isPlayingRef.current = false;
       setIsPlaying(false);
       setIsRewindPaused(true);
+      return;
+    }
+    if (pauseForWheelItUp) {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      setIsWheelItUpPaused(true);
       return;
     }
     if (advanceToLevelTwo) {
@@ -762,6 +798,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         void audioContextRef.current.close();
       }
       window.clearTimeout(rewindPauseTimerRef.current);
+      window.clearTimeout(wheelItUpPauseTimerRef.current);
     };
   }, []);
 
@@ -856,7 +893,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && (
+        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -885,6 +922,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <em>BOH MY SELECTAH!</em>
             </div>
             {Array.from({ length: 10 }, (_, index) => <i key={index} className={`rewind-splash-drip rewind-drip-${index % 5}`} aria-hidden="true" />)}
+          </div>
+        )}
+
+        {isWheelItUpPaused && !gameOver && (
+          <div className="game-overlay wheel-it-up-overlay" role="status" aria-live="assertive">
+            <div className="wheel-turntable" aria-hidden="true">
+              <span className="wheel-vinyl" />
+              <span className="wheel-center-label">5D</span>
+              <i className="wheel-tonearm" />
+            </div>
+            <div className="wheel-copy">
+              <span>20× COMBO / +10 PTS</span>
+              <strong>WHEEL IT UP!</strong>
+              <em>SELECTOR RUN THE TRACK BACK</em>
+            </div>
+            {Array.from({ length: 14 }, (_, index) => <i key={index} className={`wheel-ray wheel-ray-${index % 7}`} aria-hidden="true" />)}
           </div>
         )}
 
