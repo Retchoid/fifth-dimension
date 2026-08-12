@@ -95,3 +95,9 @@
 - [x] Move Selector Showdown directly above the booking form.
 - [x] Require five collected records before revealing the free download and explain the unlock in the game description.
 - [x] Remove the yellow square treatment behind the first hero 5 and validate all changes.
+
+## Selector Showdown arcade audio
+
+- [x] Add a user-gesture-safe vinyl scratch effect for caught records and a siren effect for cop-badge hits.
+- [x] Add a visible mute/unmute control and ensure effects never autoplay before the game starts.
+- [x] Validate audio lifecycle, gameplay, build, tests, responsive rendering, and save a checkpoint.

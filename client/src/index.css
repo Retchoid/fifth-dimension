@@ -613,3 +613,23 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
     font-size: .61rem;
   }
 }
+
+.audio-toggle {
+  border: 1px solid rgba(0,231,255,.42);
+  background: rgba(0,231,255,.06);
+  color: #00e7ff;
+  font: inherit;
+  cursor: pointer;
+  transition: background 160ms var(--ease-out), color 160ms var(--ease-out), transform 160ms var(--ease-out);
+}
+.audio-toggle:hover,
+.audio-toggle:focus-visible {
+  background: #00e7ff;
+  color: #09070f;
+  transform: translateY(-1px);
+}
+@media (max-width: 650px) {
+  .audio-toggle {
+    margin-left: auto;
+  }
+}

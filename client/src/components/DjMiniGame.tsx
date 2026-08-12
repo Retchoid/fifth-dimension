@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Disc, ShieldAlert, Play, RotateCcw, Trophy } from "lucide-react";
+import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX } from "lucide-react";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const REQUIRED_RECORDS = 5;
@@ -23,6 +23,7 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
   const [recordsCaught, setRecordsCaught] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [isNewRecord, setIsNewRecord] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
   const [djX, setDjX] = useState(50); // percentage 0-90
@@ -30,6 +31,8 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const soundEnabledRef = useRef(true);
   const scoreRef = useRef(0);
   const recordsCaughtRef = useRef(0);
   const highScoreRef = useRef(0);
@@ -42,6 +45,67 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
 
   // Key state for smooth movement
   const keysRef = useRef<{ [key: string]: boolean }>({});
+
+  const getAudioContext = () => {
+    if (typeof window === "undefined" || !soundEnabledRef.current) return null;
+    const browserWindow = window as typeof window & { webkitAudioContext?: typeof AudioContext };
+    const AudioContextClass = window.AudioContext || browserWindow.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    const context = audioContextRef.current ?? new AudioContextClass();
+    audioContextRef.current = context;
+    if (context.state === "suspended") void context.resume();
+    return context;
+  };
+
+  const primeAudio = () => {
+    getAudioContext();
+  };
+
+  const playRecordScratch = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const oscillator = context.createOscillator();
+    const filter = context.createBiquadFilter();
+    const gain = context.createGain();
+    oscillator.type = "sawtooth";
+    oscillator.frequency.setValueAtTime(380, now);
+    oscillator.frequency.exponentialRampToValueAtTime(95, now + 0.13);
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(1700, now);
+    filter.frequency.exponentialRampToValueAtTime(480, now + 0.13);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.13, now + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+    oscillator.connect(filter).connect(gain).connect(context.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.15);
+  };
+
+  const playCopSiren = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = "square";
+    oscillator.frequency.setValueAtTime(460, now);
+    oscillator.frequency.linearRampToValueAtTime(760, now + 0.16);
+    oscillator.frequency.linearRampToValueAtTime(460, now + 0.32);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.11, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.35);
+  };
+
+  const toggleSound = () => {
+    const nextEnabled = !soundEnabledRef.current;
+    soundEnabledRef.current = nextEnabled;
+    setSoundEnabled(nextEnabled);
+    if (nextEnabled) primeAudio();
+  };
 
   useEffect(() => {
     try {
@@ -100,6 +164,7 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
   }, [isPlaying]);
 
   const startGame = () => {
+    primeAudio();
     isPlayingRef.current = true;
     scoreRef.current = 0;
     recordsCaughtRef.current = 0;
@@ -160,6 +225,7 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
         // DJ catch zone roughly x between djX and djX + 16
         if (item.x >= currentX - 4 && item.x <= currentX + 18) {
           if (item.type === "record") {
+            playRecordScratch();
             currentScore += 100;
             scoreRef.current = currentScore;
             const nextRecordsCaught = recordsCaughtRef.current + 1;
@@ -171,6 +237,7 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
             setScore(currentScore);
             // play catch chime if possible
           } else {
+            playCopSiren();
             currentLives = Math.max(0, currentLives - 1);
             livesRef.current = currentLives;
             setLives(currentLives);
@@ -215,6 +282,9 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
     return () => {
       isPlayingRef.current = false;
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (audioContextRef.current && audioContextRef.current.state !== "closed") {
+        void audioContextRef.current.close();
+      }
     };
   }, []);
 
@@ -254,6 +324,16 @@ export default function DjMiniGame({ onUnlockDownload }: DjMiniGameProps) {
           <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{REQUIRED_RECORDS}</strong></div>
           <div className="hud-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
           <div className="hud-badge lives-badge">LIVES: <strong>{"❤️".repeat(lives)}</strong></div>
+          <button
+            type="button"
+            className="hud-badge audio-toggle"
+            aria-pressed={soundEnabled}
+            aria-label={soundEnabled ? "Mute game sounds" : "Enable game sounds"}
+            onClick={toggleSound}
+          >
+            {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+            {soundEnabled ? "SOUND ON" : "MUTED"}
+          </button>
         </div>
 
         {!isPlaying && !gameOver && (
