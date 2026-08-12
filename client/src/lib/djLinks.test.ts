@@ -1,0 +1,59 @@
+import { describe, expect, it } from "vitest";
+import {
+  BOOKING_EMAIL,
+  createBookingMailto,
+  EXCLUSIVE_RELEASE,
+  FACEBOOK_URL,
+  FUTURE_MIX_CHANNELS,
+  MIXCLOUD_EMBED,
+  MIXCLOUD_FEATURED_MIX,
+  MIXCLOUD_PROFILE,
+  FUTURE_CHANNELS,
+  INSTAGRAM_URL,
+  SOUND_CLOUD_EMBED,
+  SOUND_CLOUD_PROFILE,
+} from "./djLinks";
+
+describe("5th Dimension public channel configuration", () => {
+  it("keeps the SoundCloud profile and supported player URL aligned", () => {
+    expect(SOUND_CLOUD_PROFILE).toBe("https://soundcloud.com/user6777884");
+    expect(SOUND_CLOUD_EMBED).toContain("api.soundcloud.com%2Fusers%2F1855303");
+  });
+
+  it("retains the supplied Facebook and Instagram destinations", () => {
+    expect(FACEBOOK_URL).toContain("facebook.com/share/1YU9Mvk8SQ");
+    expect(INSTAGRAM_URL).toContain("instagram.com/5th_dimension_aka_bobbybass");
+  });
+
+  it("keeps only unavailable music services visibly marked as future channels", () => {
+    expect(FUTURE_CHANNELS.bandcamp).toBe("Link pending");
+  });
+
+  it("uses the supplied Mixcloud profile and a supported player for its latest public upload", () => {
+    expect(MIXCLOUD_PROFILE).toBe("https://www.mixcloud.com/fingerbanginfaderz/");
+    expect(MIXCLOUD_FEATURED_MIX).toBe("https://www.mixcloud.com/fingerbanginfaderz/logikal-grinder/");
+    expect(MIXCLOUD_EMBED).toContain("mixcloud.com/widget/iframe");
+    expect(decodeURIComponent(MIXCLOUD_EMBED)).toContain("/fingerbanginfaderz/logikal-grinder/");
+  });
+
+  it("creates booking emails with a predictable bookings subject prefix", () => {
+    const draft = createBookingMailto("Festival set", "Hello from the promoter");
+    expect(draft).toContain(`mailto:${BOOKING_EMAIL}`);
+    expect(draft).toContain("subject=Bookings%20%E2%80%94%20Festival%20set");
+    expect(draft).toContain("Hello%20from%20the%20promoter");
+  });
+
+  it("preserves the requested title, credit, and managed download URL for the exclusive release", () => {
+    expect(EXCLUSIVE_RELEASE.title).toBe("Jersh in Case");
+    expect(EXCLUSIVE_RELEASE.artist).toBe("5th Dimension, Skavo featuring MestUp");
+    expect(EXCLUSIVE_RELEASE.url).toContain("jersh-in-case_5th-dimension_skavo-featuring-mestup");
+  });
+
+  it("keeps unlinked house and genre mix slots ready for future releases", () => {
+    expect(FUTURE_MIX_CHANNELS.map((channel) => channel.title)).toEqual([
+      "House Mixes",
+      "Other Frequencies",
+      "Future Sessions",
+    ]);
+  });
+});
