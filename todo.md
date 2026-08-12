@@ -64,3 +64,10 @@
 - [x] Add optional proposed event date and event location fields to the booking form.
 - [x] Include provided date and location values in the generated booking email body.
 - [x] Validate optional-field encoding, typecheck, build, tests, responsive rendering, and save a checkpoint.
+
+## DJ Catch-and-Dodge Mini-Game
+
+- [x] Create a playable 5D DJ mini-game component with smooth movement, falling records, and cop-badge hazards.
+- [x] Embed the mini-game section at the bottom of the page right before the footer.
+- [x] Support keyboard arrow/A-D keys and touch/drag controls, score tracking, lives, and game over state.
+- [x] Run typecheck, build, unit tests, and save an updated checkpoint.

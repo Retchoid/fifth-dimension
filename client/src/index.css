@@ -355,3 +355,182 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
     grid-template-columns: 1fr;
   }
 }
+
+/* Selector Showdown Mini-Game */
+.minigame-section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(5rem, 10vw, 9rem) max(1.5rem, calc((100vw - 1320px) / 2));
+  background: radial-gradient(circle at 18% 72%, rgba(0, 231, 255, .15), transparent 22rem), #0b0713;
+  border-top: 1px solid rgba(0, 231, 255, .32);
+}
+.game-viewport {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  margin-top: 2.5rem;
+  overflow: hidden;
+  background: #06040a;
+  border: 2px solid #00e7ff;
+  box-shadow: 10px 10px 0 #ff007a, inset 0 0 40px rgba(0, 231, 255, .15);
+  touch-action: none;
+  cursor: ew-resize;
+}
+.game-grid-bg {
+  position: absolute;
+  inset: 0;
+  opacity: .25;
+  background-image: linear-gradient(rgba(0, 231, 255, .25) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 231, 255, .25) 1px, transparent 1px);
+  background-size: 36px 36px;
+  transform: perspective(450px) rotateX(55deg) scale(1.3);
+  transform-origin: bottom;
+}
+.game-hud {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  pointer-events: none;
+}
+.hud-badge {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .45rem .85rem;
+  background: rgba(9, 7, 15, .88);
+  border: 1px solid #00e7ff;
+  color: #c6ff00;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 #ff007a;
+}
+.hud-badge strong {
+  color: #fff;
+}
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: rgba(9, 7, 15, .85);
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  text-align: center;
+}
+.overlay-box {
+  max-width: 440px;
+  padding: 2rem;
+  background: #171022;
+  border: 2px solid #ff007a;
+  box-shadow: 8px 8px 0 #00e7ff;
+}
+.overlay-box h3 {
+  margin: 0 0 .75rem;
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: 2.5rem;
+  color: #c6ff00;
+  letter-spacing: .06em;
+}
+.overlay-box p {
+  margin: 0 0 1.5rem;
+  color: #d1c8d7;
+  font-size: .9rem;
+  line-height: 1.6;
+}
+.falling-object {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px currentColor);
+}
+.falling-object.record {
+  color: #c6ff00;
+  animation: spin 3s linear infinite;
+}
+.falling-object.cop {
+  color: #ff007a;
+}
+.dj-catcher {
+  position: absolute;
+  bottom: 4px;
+  z-index: 8;
+  width: clamp(100px, 14vw, 168px);
+  height: clamp(112px, 18vw, 188px);
+  transform: translateX(-50%);
+  transition: left 50ms linear;
+  pointer-events: none;
+}
+.dj-catcher-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 14px rgba(255, 0, 122, .75)) drop-shadow(5px 5px 0 rgba(0, 231, 255, .65));
+  animation: selector-bob 1.7s ease-in-out infinite;
+}
+.turntable-deck {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  background: #251c36;
+  border: 2px solid #00e7ff;
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 #ff007a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.platter {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #09070f;
+  border: 2px solid #c6ff00;
+  position: relative;
+  animation: spin 2.5s linear infinite;
+  display: grid;
+  place-items: center;
+}
+.turntable-label {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff007a;
+}
+.dj-character-head {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: .1rem .45rem;
+  background: #ff007a;
+  color: #fff;
+  border: 1px solid #c6ff00;
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: .85rem;
+  letter-spacing: .08em;
+  box-shadow: 2px 2px 0 #00e7ff;
+}
+@keyframes selector-bob {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+@media (max-width: 650px) {
+  .game-viewport {
+    height: 380px;
+  }
+  .dj-catcher {
+    width: 108px;
+    height: 122px;
+  }
+}

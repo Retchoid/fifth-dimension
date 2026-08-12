@@ -30,6 +30,7 @@ import {
   SOUND_CLOUD_EMBED,
   SOUND_CLOUD_PROFILE,
 } from "@/lib/djLinks";
+import DjMiniGame from "@/components/DjMiniGame";
 import {
   Dialog,
   DialogContent,
@@ -508,6 +509,8 @@ export default function Home() {
             <img src="/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png" alt="5th Dimension graffiti mark" />
           </div>
         </section>
+
+        <DjMiniGame />
       </main>
 
       <footer className="dj-footer">
