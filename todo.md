@@ -416,3 +416,9 @@
 
 - [x] Trigger a restrained cabinet shake at the exact start of the metallic chain-break impact.
 - [x] Respect reduced-motion preferences and validate the animation, build, and checkpoint delivery.
+
+## Ten-combo rewind reward
+
+- [x] Detect the 10× combo threshold and award a five-point rewind bonus once per streak.
+- [x] Pause gameplay for a “REWIND ACHIEVED” / “BOH MY SELECTAH” dripping-graffiti splash, then resume automatically.
+- [x] Validate score, gameplay continuation, responsive splash presentation, build, and checkpoint delivery.

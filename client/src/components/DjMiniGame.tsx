@@ -71,6 +71,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [musicStatus, setMusicStatus] = useState<"loading" | "ready" | "playing" | "paused" | "blocked" | "error">("loading");
   const [shared, setShared] = useState(false);
   const [showComboBurst, setShowComboBurst] = useState(false);
+  const [isRewindPaused, setIsRewindPaused] = useState(false);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
@@ -87,6 +88,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const downloadUnlockedRef = useRef(downloadUnlocked);
   const unlockJinglePlayedRef = useRef(false);
   const chainBreakImpactPlayedRef = useRef(false);
+  const rewindAwardedRef = useRef(false);
+  const rewindPauseTimerRef = useRef<number>(0);
   const highScoreRef = useRef(0);
   const livesRef = useRef(4);
   const finaleRef = useRef(false);
@@ -425,6 +428,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setCombo(1);
     setIsPlaying(true);
     setIsUnlockPaused(false);
+    setIsRewindPaused(false);
     setGameOver(false);
     setLevelTwoComplete(false);
     setFinale(false);
@@ -463,6 +467,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(breakTimer);
     };
   }, [isUnlockPaused, unlockRevealReady]);
+
+  useEffect(() => {
+    if (!isRewindPaused) return;
+    rewindPauseTimerRef.current = window.setTimeout(() => {
+      setIsRewindPaused(false);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      requestRef.current = requestAnimationFrame(updateGame);
+    }, 1900);
+    return () => window.clearTimeout(rewindPauseTimerRef.current);
+  }, [isRewindPaused]);
 
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -512,6 +528,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (ctx && ctx.state === "suspended") void ctx.resume();
     unlockJinglePlayedRef.current = false;
     chainBreakImpactPlayedRef.current = false;
+    rewindAwardedRef.current = false;
+    window.clearTimeout(rewindPauseTimerRef.current);
     levelRef.current = 1;
     setLevel(1);
     setLevelTwoComplete(false);
@@ -530,6 +548,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setGameOver(false);
     setLevelTwoComplete(false);
     setIsUnlockPaused(false);
+    setIsRewindPaused(false);
     setUnlockRevealReady(false);
     setChainBreakComplete(false);
     setIsCabinetVibrating(false);
@@ -594,6 +613,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     const nextItems: FallingItem[] = [];
     let pauseAfterUnlock = false;
+    let pauseForRewind = false;
     let advanceToLevelTwo = false;
     let completeLevelTwo = false;
     let currentLives = livesRef.current;
@@ -616,6 +636,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : 1;
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
           currentScore += pointsEarned;
+          if (nextCombo >= 10 && !rewindAwardedRef.current) {
+            // 5D design: a rare arcade interruption—one tiny reward, one graffiti hit,
+            // then a rapid return to the running session.
+            rewindAwardedRef.current = true;
+            currentScore += 5;
+            pauseForRewind = true;
+          }
           scoreRef.current = currentScore;
           const nextRecordsCaught = recordsCaughtRef.current + pickupValue;
           recordsCaughtRef.current = nextRecordsCaught;
@@ -641,6 +668,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         } else {
           playCopSiren();
           comboRef.current = 1;
+          rewindAwardedRef.current = false;
           setCombo(1);
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
@@ -670,6 +698,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         // the combo, while only a caught hazard removes a life.
         if (item.type === "record" || item.type === "lion" || item.type === "cdj") {
           comboRef.current = 1;
+          rewindAwardedRef.current = false;
           setCombo(1);
         }
         continue;
@@ -691,6 +720,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         setUnlockRevealReady(true);
       }, 3000);
       return () => clearTimeout(revealTimer);
+    }
+    if (pauseForRewind) {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      setIsRewindPaused(true);
+      return;
     }
     if (advanceToLevelTwo) {
       startLevelTwo();
@@ -726,6 +761,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       if (audioContextRef.current && audioContextRef.current.state !== "closed") {
         void audioContextRef.current.close();
       }
+      window.clearTimeout(rewindPauseTimerRef.current);
     };
   }, []);
 
@@ -820,7 +856,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && (
+        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -834,6 +870,21 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <span className="tape-play-copy">Start Session</span>
               </button>
             </div>
+          </div>
+        )}
+
+        {isRewindPaused && !gameOver && (
+          <div className="game-overlay rewind-reward-overlay" role="status" aria-live="assertive">
+            <div className="rewind-record-splash" aria-hidden="true">
+              <span className="rewind-record-ring" />
+              <span className="rewind-record-label">5D</span>
+            </div>
+            <div className="rewind-graffiti-copy">
+              <span className="rewind-kicker">10× COMBO / +5 PTS</span>
+              <strong>REWIND ACHIEVED</strong>
+              <em>BOH MY SELECTAH!</em>
+            </div>
+            {Array.from({ length: 10 }, (_, index) => <i key={index} className={`rewind-splash-drip rewind-drip-${index % 5}`} aria-hidden="true" />)}
           </div>
         )}
 
