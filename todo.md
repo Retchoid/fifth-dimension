@@ -411,3 +411,8 @@
 
 - [x] Add a synthesized metallic impact for the first frame of the linked-chain release.
 - [x] Verify muted and standard audio paths, compile, and save a checkpoint.
+
+## Chain-break cabinet vibration
+
+- [x] Trigger a restrained cabinet shake at the exact start of the metallic chain-break impact.
+- [x] Respect reduced-motion preferences and validate the animation, build, and checkpoint delivery.

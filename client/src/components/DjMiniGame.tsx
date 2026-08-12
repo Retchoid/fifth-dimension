@@ -61,6 +61,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isUnlockPaused, setIsUnlockPaused] = useState(false);
   const [unlockRevealReady, setUnlockRevealReady] = useState(false);
   const [chainBreakComplete, setChainBreakComplete] = useState(false);
+  const [isCabinetVibrating, setIsCabinetVibrating] = useState(false);
   const [preLevelTwoHighScore, setPreLevelTwoHighScore] = useState(false);
   const [levelTwoComplete, setLevelTwoComplete] = useState(false);
   const [finale, setFinale] = useState(false);
@@ -451,11 +452,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const chainImpactTimer = window.setTimeout(() => {
       if (chainBreakImpactPlayedRef.current) return;
       chainBreakImpactPlayedRef.current = true;
+      setIsCabinetVibrating(true);
       playChainBreakImpact();
     }, 5000);
+    const cabinetSettleTimer = window.setTimeout(() => setIsCabinetVibrating(false), 5360);
     const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 7000);
     return () => {
       window.clearTimeout(chainImpactTimer);
+      window.clearTimeout(cabinetSettleTimer);
       window.clearTimeout(breakTimer);
     };
   }, [isUnlockPaused, unlockRevealReady]);
@@ -528,6 +532,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsUnlockPaused(false);
     setUnlockRevealReady(false);
     setChainBreakComplete(false);
+    setIsCabinetVibrating(false);
     setPreLevelTwoHighScore(false);
     setIsNewRecord(false);
     setScoreSubmitted(false);
@@ -755,7 +760,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         playsInline
         aria-label="16-bit jungle background soundtrack"
       />
-      <div className="arcade-cabinet-bezel">
+      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}`}>
         <div className="arcade-marquee">
           <span className="marquee-light" />
           <span className="marquee-seal" aria-hidden="true">5D</span>

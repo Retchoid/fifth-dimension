@@ -1850,6 +1850,26 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 }
 .arcade-cabinet-bezel::before { left: 4px; }
 .arcade-cabinet-bezel::after { right: 4px; }
+@media (prefers-reduced-motion: no-preference) {
+  .arcade-cabinet-bezel.is-impact-vibrating {
+    animation: cabinet-impact-vibrate 360ms steps(2, end) both;
+    will-change: transform;
+  }
+}
+@keyframes cabinet-impact-vibrate {
+  0% { transform: translate3d(0, 0, 0) rotate(0); }
+  9% { transform: translate3d(-3px, 1px, 0) rotate(-.16deg); }
+  22% { transform: translate3d(4px, -1px, 0) rotate(.2deg); }
+  38% { transform: translate3d(-3px, 1px, 0) rotate(-.13deg); }
+  56% { transform: translate3d(2px, 0, 0) rotate(.1deg); }
+  76% { transform: translate3d(-1px, 0, 0) rotate(-.05deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcade-cabinet-bezel.is-impact-vibrating {
+    filter: brightness(1.12) saturate(1.2);
+  }
+}
 .arcade-marquee {
   padding: 7px 14px;
   margin-bottom: 10px;
