@@ -74,6 +74,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isRewindPaused, setIsRewindPaused] = useState(false);
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
+  const [isCrowdAngerPaused, setIsCrowdAngerPaused] = useState(false);
   const [mixerDamaged, setMixerDamaged] = useState(false);
   const [recoveryProgress, setRecoveryProgress] = useState(0);
   const [mixerRepairBurst, setMixerRepairBurst] = useState(false);
@@ -99,6 +100,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const wheelItUpPauseTimerRef = useRef<number>(0);
   const policeBadgeHitsRef = useRef(0);
   const policeSeizurePauseTimerRef = useRef<number>(0);
+  const bottleHitsRef = useRef(0);
+  const appleCoreHitsRef = useRef(0);
+  const crowdAngerPauseTimerRef = useRef<number>(0);
   const mixerDamagedRef = useRef(false);
   const recoveryProgressRef = useRef(0);
   const mixerRepairTimerRef = useRef<number>(0);
@@ -517,6 +521,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
     policeBadgeHitsRef.current = 0;
+    bottleHitsRef.current = 0;
+    appleCoreHitsRef.current = 0;
     mixerDamagedRef.current = false;
     recoveryProgressRef.current = 0;
     scoreRef.current = scoreRef.current;
@@ -528,6 +534,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
+    setIsCrowdAngerPaused(false);
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
@@ -554,7 +561,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   useEffect(() => {
     if (!isUnlockPaused || !unlockRevealReady) return;
     // The download reaches its resting position after five seconds, then its
-    // chains break apart for a distinct two-second splash-screen phase.
+    // silver chain gives a tight, realistic one-second break before handoff.
     const chainImpactTimer = window.setTimeout(() => {
       if (chainBreakImpactPlayedRef.current) return;
       chainBreakImpactPlayedRef.current = true;
@@ -562,7 +569,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       playChainBreakImpact();
     }, 5000);
     const cabinetSettleTimer = window.setTimeout(() => setIsCabinetVibrating(false), 5360);
-    const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 7000);
+    const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 6000);
     return () => {
       window.clearTimeout(chainImpactTimer);
       window.clearTimeout(cabinetSettleTimer);
@@ -605,6 +612,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }, 2150);
     return () => window.clearTimeout(policeSeizurePauseTimerRef.current);
   }, [isPoliceSeizurePaused]);
+
+  useEffect(() => {
+    if (!isCrowdAngerPaused) return;
+    crowdAngerPauseTimerRef.current = window.setTimeout(() => {
+      setIsCrowdAngerPaused(false);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      requestRef.current = requestAnimationFrame(updateGame);
+    }, 2100);
+    return () => window.clearTimeout(crowdAngerPauseTimerRef.current);
+  }, [isCrowdAngerPaused]);
 
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -657,11 +676,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
     policeBadgeHitsRef.current = 0;
+    bottleHitsRef.current = 0;
+    appleCoreHitsRef.current = 0;
     mixerDamagedRef.current = false;
     recoveryProgressRef.current = 0;
     window.clearTimeout(rewindPauseTimerRef.current);
     window.clearTimeout(wheelItUpPauseTimerRef.current);
     window.clearTimeout(policeSeizurePauseTimerRef.current);
+    window.clearTimeout(crowdAngerPauseTimerRef.current);
     window.clearTimeout(mixerRepairTimerRef.current);
     levelRef.current = 1;
     setLevel(1);
@@ -684,6 +706,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
+    setIsCrowdAngerPaused(false);
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
@@ -754,6 +777,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     let pauseForRewind = false;
     let pauseForWheelItUp = false;
     let pauseForPoliceSeizure = false;
+    let pauseForCrowdAnger = false;
     let advanceToLevelTwo = false;
     let completeLevelTwo = false;
     let currentLives = livesRef.current;
@@ -865,6 +889,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               pauseForPoliceSeizure = true;
             }
           }
+          if (item.type === "bottle" || item.type === "apple") {
+            const hazardHitsRef = item.type === "bottle" ? bottleHitsRef : appleCoreHitsRef;
+            hazardHitsRef.current += 1;
+            if (hazardHitsRef.current >= 2) {
+              // Two hits of the same thrown crowd hazard trigger the selector
+              // warning; mixed bottles and cores do not prematurely fire it.
+              bottleHitsRef.current = 0;
+              appleCoreHitsRef.current = 0;
+              pauseForCrowdAnger = true;
+            }
+          }
         }
         continue;
       }
@@ -926,6 +961,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setIsPoliceSeizurePaused(true);
       return;
     }
+    if (pauseForCrowdAnger) {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      setIsCrowdAngerPaused(true);
+      return;
+    }
     if (advanceToLevelTwo) {
       startLevelTwo();
       return;
@@ -963,6 +1004,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(rewindPauseTimerRef.current);
       window.clearTimeout(wheelItUpPauseTimerRef.current);
       window.clearTimeout(policeSeizurePauseTimerRef.current);
+      window.clearTimeout(crowdAngerPauseTimerRef.current);
       window.clearTimeout(mixerRepairTimerRef.current);
     };
   }, []);
@@ -1058,7 +1100,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && (
+        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -1130,6 +1172,21 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <em>WATCH OUT!</em>
             </div>
             {Array.from({ length: 8 }, (_, index) => <i key={index} className={`police-seizure-flash flash-${index % 4}`} aria-hidden="true" />)}
+          </div>
+        )}
+
+        {isCrowdAngerPaused && !gameOver && (
+          <div className="game-overlay crowd-anger-overlay" role="status" aria-live="assertive">
+            <div className="angry-crowd-line" aria-hidden="true">
+              {Array.from({ length: 15 }, (_, index) => <i key={index} className={`angry-crowd-head angry-head-${index % 5}`} />)}
+            </div>
+            <div className="broken-record-warning" aria-hidden="true"><span /><b /></div>
+            <div className="crowd-anger-copy">
+              <span>RAVE FLOOR RESPONSE / 2 HITS</span>
+              <strong>BAD SELECTION</strong>
+              <em>BROKEN RECORD — SWITCH IT UP!</em>
+            </div>
+            {Array.from({ length: 8 }, (_, index) => <i key={index} className={`crowd-boo boo-${index % 4}`}>BOO!</i>)}
           </div>
         )}
 

@@ -485,3 +485,10 @@
 - [x] Apply a damaged-mixer visual state after a police seizure and track the required three recovered dubplates.
 - [x] Repair the mixer with a visible completion effect and award a recovery score bonus.
 - [x] Validate score accounting, reset rules, responsive visuals, build, and checkpoint delivery.
+
+## Cross-level hazard and chain-release refinement
+
+- [x] Ensure the two-badge police seizure sequence triggers in both Level 1 and Level 2.
+- [x] Shorten the full silver-chain release to a more realistic one-second break choreography.
+- [x] Trigger an angry crowd “BAD SELECTION / BROKEN RECORD — SWITCH IT UP!” splash after two bottle or apple-core hits.
+- [x] Validate thresholds, resets, score/life continuity, responsive animation, build, and checkpoint delivery.
