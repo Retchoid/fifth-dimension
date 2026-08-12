@@ -201,3 +201,9 @@
 - [x] Implement DJ booth and speaker-drop lowering animation on unlock celebration.
 - [x] Add the animated waveform pulse and unlocked download confirmation near the release card.
 - [x] Validate scoring, build checks, and checkpoint delivery.
+
+## Confetti celebration particle burst
+
+- [x] Add confetti particle layer to DjMiniGame.tsx during unlock celebration.
+- [x] Implement floating confetti keyframe animations in index.css.
+- [x] Validate typecheck, build checks, and checkpoint delivery.

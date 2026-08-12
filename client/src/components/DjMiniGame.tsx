@@ -16,9 +16,10 @@ interface FallingItem {
 interface DjMiniGameProps {
   onUnlockDownload?: () => void;
   downloadUnlocked?: boolean;
+  isUnlockCelebrating?: boolean;
 }
 
-export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false }: DjMiniGameProps) {
+export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false, isUnlockCelebrating = false }: DjMiniGameProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
   const [recordsCaught, setRecordsCaught] = useState(0);
@@ -513,6 +514,13 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
           <div className="speaker-tower speaker-tower-right">
             <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
           </div>
+          {isUnlockCelebrating && (
+            <div className="confetti-burst-layer" aria-hidden="true">
+              {Array.from({ length: 18 }, (_, index) => (
+                <i key={index} className={`confetti-particle confetti-${index % 5}`} />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* DJ selector with turntable at bottom */}

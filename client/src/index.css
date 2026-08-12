@@ -560,6 +560,44 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   from { transform: scale(0.96); box-shadow: 0 0 6px #ff007a; }
   to { transform: scale(1.04); box-shadow: 0 0 16px #33f3ff; }
 }
+
+.confetti-burst-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  overflow: hidden;
+}
+.confetti-particle {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: confetti-drift 1.4s ease-out forwards;
+}
+.confetti-0 { background: #33f3ff; animation-delay: 0s; transform: translate(-50%, -50%) rotate(15deg); }
+.confetti-1 { background: #ff007a; animation-delay: 0.1s; transform: translate(-50%, -50%) rotate(45deg); }
+.confetti-2 { background: #00ff66; animation-delay: 0.2s; transform: translate(-50%, -50%) rotate(75deg); }
+.confetti-3 { background: #ffe600; animation-delay: 0.05s; transform: translate(-50%, -50%) rotate(30deg); }
+.confetti-4 { background: #ffffff; animation-delay: 0.15s; transform: translate(-50%, -50%) rotate(60deg); }
+
+@keyframes confetti-drift {
+  0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx, random-offset)), -140px) scale(1.1); opacity: 0; }
+}
+.confetti-0 { --dx: -130px; animation-name: confetti-drift-0; }
+.confetti-1 { --dx: 140px; animation-name: confetti-drift-1; }
+.confetti-2 { --dx: -90px; animation-name: confetti-drift-2; }
+.confetti-3 { --dx: 110px; animation-name: confetti-drift-3; }
+.confetti-4 { --dx: 10px; animation-name: confetti-drift-4; }
+
+@keyframes confetti-drift-0 { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-140px, -150px) rotate(220deg) scale(1.1); opacity: 0; } }
+@keyframes confetti-drift-1 { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(150px, -130px) rotate(-180deg) scale(1.1); opacity: 0; } }
+@keyframes confetti-drift-2 { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-80px, -170px) rotate(140deg) scale(1.1); opacity: 0; } }
+@keyframes confetti-drift-3 { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(90px, -160px) rotate(-240deg) scale(1.1); opacity: 0; } }
+@keyframes confetti-drift-4 { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(20px, -180px) rotate(90deg) scale(1.1); opacity: 0; } }
 .vinyl-record-sprite {
   position: relative;
   width: 100%;

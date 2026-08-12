@@ -394,7 +394,7 @@ export default function Home() {
           </article>
         </section>
 
-        <DjMiniGame downloadUnlocked={downloadUnlocked} onUnlockDownload={unlockDownload} />
+        <DjMiniGame downloadUnlocked={downloadUnlocked} onUnlockDownload={unlockDownload} isUnlockCelebrating={isUnlockCelebrating} />
 
         <section id="visuals" className="visuals-section" aria-labelledby="visuals-title">
           <div className="section-heading">
