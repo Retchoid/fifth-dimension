@@ -107,3 +107,170 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 @media (max-width: 900px) {
   .social-feed-grid { grid-template-columns: 1fr; }
 }
+
+/* Vaporwave sunset grid and scanlines */
+.hero-bg-signal {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 0, 122, 0.35) 0%, rgba(113, 24, 232, 0.4) 45%, #09070f 85%),
+              linear-gradient(180deg, #1b0826 0%, #09070f 60%);
+}
+.hero-bg-signal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 29, 0) 50%, rgba(0, 231, 255, 0.12) 50%),
+              repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 0, 0, 0.35) 3px, rgba(0, 0, 0, 0.35) 6px);
+  pointer-events: none;
+}
+.hero-bg-signal::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, transparent, rgba(255, 0, 122, 0.25)),
+              repeating-linear-gradient(90deg, rgba(0, 231, 255, 0.25) 0 2px, transparent 2px 40px),
+              repeating-linear-gradient(0deg, rgba(0, 231, 255, 0.25) 0 2px, transparent 2px 30px);
+  transform: perspective(350px) rotateX(62deg);
+  transform-origin: bottom;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Graffiti drip & neon flare accents */
+.section-heading h2::after {
+  content: "";
+  display: block;
+  width: 120px;
+  height: 6px;
+  margin-top: .6rem;
+  background: linear-gradient(90deg, #ff007a, #c6ff00, #00e7ff);
+  box-shadow: 0 0 12px #ff007a;
+  transform: skew(-12deg);
+}
+
+/* Lightbox dialog styling */
+.lightbox-dialog {
+  background: #0d0a15 !important;
+  border: 2px solid #00e7ff !important;
+  box-shadow: 12px 12px 0 #ff007a !important;
+  color: #fff !important;
+  max-width: min(880px, 92vw) !important;
+  padding: 1.75rem !important;
+}
+.lightbox-title {
+  font-family: "Bebas Neue", Impact, sans-serif !important;
+  font-size: 2.1rem !important;
+  letter-spacing: .06em !important;
+  color: #c6ff00 !important;
+  margin: 0 !important;
+}
+.lightbox-description {
+  color: #ab9fb5 !important;
+  font-size: .82rem !important;
+  margin-top: .2rem !important;
+}
+.lightbox-stage {
+  position: relative;
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+.lightbox-image {
+  width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  background: #050408;
+  border: 1px solid rgba(0, 231, 255, 0.35);
+  box-shadow: 0 0 25px rgba(255, 0, 122, 0.25);
+}
+.lightbox-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .75rem 1rem;
+  background: #171022;
+  border: 1px solid #392d4b;
+  color: #00e7ff;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.lightbox-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #ff007a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: transform 150ms var(--ease-out), background 150ms var(--ease-out);
+}
+.lightbox-nav:hover {
+  background: #c6ff00;
+  color: #09070f;
+  transform: scale(1.08);
+}
+.art-lightbox-trigger {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.vapor-sun {
+  position: absolute;
+  z-index: -1;
+  top: 8%;
+  right: 20%;
+  width: clamp(230px, 34vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: repeating-linear-gradient(0deg, rgba(9, 7, 15, .78) 0 5px, transparent 5px 12px),
+              linear-gradient(180deg, #ff4aab 0%, #ff007a 42%, #7118e8 100%);
+  box-shadow: 0 0 70px rgba(255, 0, 122, .55), 0 0 150px rgba(113, 24, 232, .35);
+  opacity: .72;
+  mix-blend-mode: screen;
+}
+.graffiti-flare {
+  position: absolute;
+  z-index: 3;
+  display: inline-block;
+  padding: .42rem .6rem;
+  border: 2px solid #09070f;
+  background: #c6ff00;
+  color: #09070f;
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: clamp(.9rem, 1.5vw, 1.35rem);
+  letter-spacing: .1em;
+  line-height: .9;
+  box-shadow: 4px 4px 0 #ff007a, 8px 8px 0 rgba(0, 231, 255, .75);
+  transform: rotate(-8deg) skew(-9deg);
+}
+.graffiti-flare::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 16%;
+  width: 3px;
+  height: 15px;
+  background: #ff007a;
+  box-shadow: 12px 5px 0 #ff007a, 25px -2px 0 #ff007a;
+}
+.flare-left { top: 17%; left: 4%; }
+.flare-right { right: 4%; bottom: 26%; background: #00e7ff; transform: rotate(8deg) skew(-9deg); box-shadow: 4px 4px 0 #ff007a, 8px 8px 0 rgba(198, 255, 0, .75); }
+@media(max-width:650px){
+  .vapor-sun { top: 12%; right: -10%; width: 360px; opacity: .54; }
+  .graffiti-flare { font-size: .82rem; }
+  .flare-left { top: 12%; left: 1rem; }
+  .flare-right { right: 1rem; bottom: 27%; }
+}

@@ -1,10 +1,12 @@
 /**
  * Archive-faithful 5th Dimension transmission: street-poster collage, bass-first hierarchy, and signal-colour motion.
  */
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
   Disc3,
   Facebook,
   Instagram,
@@ -28,6 +30,12 @@ import {
   SOUND_CLOUD_EMBED,
   SOUND_CLOUD_PROFILE,
 } from "@/lib/djLinks";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const projects = [
   {
@@ -35,7 +43,7 @@ const projects = [
     title: "New frequency loading",
     detail: "A fresh 5th Dimension mix is taking shape between breakbeat pressure, bassline weight, and late-night jungle heat.",
     status: "In the lab",
-    image: "/manus-storage/5th-dimension-character_a901a681.jpg",
+    image: "/manus-storage/graffiti-collage_bac19afe.png",
   },
   {
     id: "LIVE SIGNAL",
@@ -79,12 +87,6 @@ const art = [
   },
   {
     src: "/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png",
-    alt: "5th Dimension graffiti illustration in cyan, magenta and black",
-    label: "ORBIT TAG / 5D",
-    className: "art-round",
-  },
-  {
-    src: "/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png",
     alt: "5th Dimension graffiti logo on cyan paint texture",
     label: "DIMENSION TAG",
     className: "art-tall art-tag",
@@ -93,8 +95,24 @@ const art = [
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [bookingSubject, setBookingSubject] = useState("");
   const [bookingMessage, setBookingMessage] = useState("");
+  const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowRight") {
+        setLightboxIndex((current) => (current === null ? 0 : (current + 1) % art.length));
+      }
+      if (event.key === "ArrowLeft") {
+        setLightboxIndex((current) => (current === null ? art.length - 1 : (current - 1 + art.length) % art.length));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxIndex]);
 
   const openBookingEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -148,22 +166,21 @@ export default function Home() {
 
       <main id="top">
         <section className="hero" aria-labelledby="hero-title">
-          <img
-            src="/manus-storage/5th-dimension-character_a901a681.jpg"
-            alt=""
-            className="hero-bg"
-          />
+          <div className="hero-bg hero-bg-signal" aria-hidden="true" />
           <div className="hero-overlay" />
           <div className="hero-orbit orbit-a" aria-hidden="true" />
           <div className="hero-orbit orbit-b" aria-hidden="true" />
           <div className="hero-noise" aria-hidden="true" />
+          <div className="vapor-sun" aria-hidden="true" />
+          <span className="graffiti-flare flare-left" aria-hidden="true">DUBPLATE</span>
+          <span className="graffiti-flare flare-right" aria-hidden="true">RAGGA / AMEN / BASS</span>
           <div className="hero-content">
-            <p className="signal-label"><Zap size={15} fill="currentColor" /> DEEP JUNGLE / HIP-HOP GROOVES / UK BASSLINE DNA</p>
+            <p className="signal-label"><Zap size={15} fill="currentColor" /> DANCEHALL VIBES / DEEP JUNGLE BREAKS / SOUND SYSTEM WEIGHT</p>
             <h1 id="hero-title">
               <span>5TH</span>
               <em>DIMENSION</em>
             </h1>
-            <p className="hero-copy">Where breakbeats bend, low-end speaks, and the floor finds its next frequency.</p>
+            <p className="hero-copy">Heavy sound-system pressure, ragga-infused breakbeats, and dubplate pressure direct from the low end.</p>
             <div className="hero-links">
               <a className="neon-button magenta" href="#listen"><Volume2 size={18} /> Enter the mixes <ArrowDownRight size={18} /></a>
               <a className="neon-text-link" href="#bio">Read the signal <ArrowDownRight size={17} /></a>
@@ -260,9 +277,9 @@ export default function Home() {
           <div className="bio-copy">
             <p className="eyebrow"><Zap size={15} fill="currentColor" /> SELECTOR PROFILE / 02</p>
             <h2 id="bio-title">BASS ISN’T A GENRE.<br /><em>IT’S A GRAVITY FIELD.</em></h2>
-            <p className="bio-lead"><strong>5th Dimension is the signal name of Bobby Bass</strong>—also known across the airwaves as Bobby Jackets and Hi Deaf. He builds sets where jungle breaks collide with hip-hop groove, UK bassline weight, and deep-rooted low-end pressure.</p>
-            <p>Every mix travels from dusty percussion to full-spectrum rave energy: house, d&amp;b, and the volatile territory between them. The goal is simple—rewire the dancefloor, then let the subs tell the story.</p>
-            <div className="tags"><span>#BASSADDICT</span><span>#JUNGLEREVIVAL</span><span>#BREAKBEATALCHEMIST</span></div>
+            <p className="bio-lead"><strong>5th Dimension is the sonic alter-ego of Bobby Bass</strong> (aka Bobby Jackets / Hi Deaf)—shaping a heavy sound-system discipline where raw dancehall attitude, ragga-steppa pressure, and intricate jungle breakbeats collide.</p>
+            <p>Rooted in sound-system culture and late-night rave frequency, every transmission moves from heavyweight basslines to hypnotic ragga vocal chops and hypnotic amen pressure. Selector rules: select the heaviest plate, test the stack, and let the bass take control.</p>
+            <div className="tags"><span>#DANCEHALLVIBES</span><span>#JUNGLEREVIVAL</span><span>#SOUNDSYSTEMWEIGHT</span><span>#BREAKBEATALCHEMIST</span></div>
           </div>
           <div className="bio-art-panel">
             <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
@@ -330,13 +347,55 @@ export default function Home() {
             <p>Fragments from the 5D visual universe: tags, tape, static, and midnight colour.</p>
           </div>
           <div className="art-grid">
-            {art.map((item) => (
+            {art.map((item, index) => (
               <figure className={`art-card ${item.className}`} key={item.label}>
-                <img src={item.src} alt={item.alt} />
+                <button
+                  type="button"
+                  className="art-lightbox-trigger"
+                  aria-haspopup="dialog"
+                  aria-label={`Open ${item.label} artwork`}
+                  onClick={() => setLightboxIndex(index)}
+                >
+                  <img src={item.src} alt={item.alt} />
+                </button>
                 <figcaption>{item.label}<ArrowUpRight size={15} /></figcaption>
               </figure>
             ))}
           </div>
+          <Dialog open={lightboxIndex !== null} onOpenChange={(open) => !open && setLightboxIndex(null)}>
+            <DialogContent className="lightbox-dialog" showCloseButton>
+              {activeArt && lightboxIndex !== null && (
+                <>
+                  <DialogTitle className="lightbox-title">{activeArt.label}</DialogTitle>
+                  <DialogDescription className="lightbox-description">
+                    Artwork {lightboxIndex + 1} of {art.length}. Use the arrow buttons or keyboard arrows to browse.
+                  </DialogDescription>
+                  <div className="lightbox-stage">
+                    <img src={activeArt.src} alt={activeArt.alt} className="lightbox-image" />
+                    <div className="lightbox-controls" aria-label="Artwork navigation">
+                      <button
+                        type="button"
+                        className="lightbox-nav"
+                        aria-label="Previous artwork"
+                        onClick={() => setLightboxIndex((lightboxIndex - 1 + art.length) % art.length)}
+                      >
+                        <ChevronLeft size={22} />
+                      </button>
+                      <span>{activeArt.label}</span>
+                      <button
+                        type="button"
+                        className="lightbox-nav"
+                        aria-label="Next artwork"
+                        onClick={() => setLightboxIndex((lightboxIndex + 1) % art.length)}
+                      >
+                        <ChevronRight size={22} />
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </DialogContent>
+          </Dialog>
         </section>
 
         <section id="booking" className="booking-section" aria-labelledby="booking-title">
