@@ -366,3 +366,10 @@
 - [x] Keep the existing bottom arcade share widget and add a matching direct-game share widget beside the unlocked player.
 - [x] Implement an honest, persistent supporter confirmation flow for shared-game visitors; do not falsely claim to verify a Facebook Like.
 - [x] Validate both sharing widgets, local persistence, unlock gating, build, and checkpoint delivery.
+
+## Level 1 staged sound-system progression
+
+- [x] Upgrade the Level 1 setting into a detailed late-1990s pixel-art street-stage scene while preserving its existing subjects and gameplay lanes.
+- [x] Raise speaker towers halfway at 10 records and to full size at 15 records, with debris effects on each growth milestone.
+- [x] Drop a side turntable/deck set at 20 records for the Level 2 setup and preserve the 25-record unlock.
+- [x] Validate all milestones, responsive gameplay, build, and checkpoint delivery.

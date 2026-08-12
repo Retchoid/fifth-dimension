@@ -1011,14 +1011,31 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {/* Speaker towers and lowering DJ booth celebration elements */}
-        <div className={`dj-booth-stage${recordsCaught >= 3 ? " is-unlocked-celebrating" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
+        {/* Level 1 sound-system assembly: half stack at 10, full stack at 15, side decks at 20. */}
+        <div className={`dj-booth-stage${level === 1 && recordsCaught >= 10 ? " speakers-half-raised" : ""}${level === 1 && recordsCaught >= 15 ? " speakers-full-raised" : ""}${level === 1 && recordsCaught >= 20 ? " side-decks-dropped" : ""}${level === 2 ? " level-two-decks-ready" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
           <div className="speaker-tower speaker-tower-left">
             <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
           </div>
           <div className="speaker-tower speaker-tower-right">
             <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
           </div>
+          {level === 1 && recordsCaught >= 10 && recordsCaught < 15 && (
+            <div className="speaker-growth-debris half-stack-debris">
+              {Array.from({ length: 14 }, (_, index) => <i key={`half-debris-${index}`} className={`debris-chip chip-${index % 5}`} />)}
+            </div>
+          )}
+          {level === 1 && recordsCaught >= 15 && recordsCaught < 20 && (
+            <div className="speaker-growth-debris full-stack-debris">
+              {Array.from({ length: 20 }, (_, index) => <i key={`full-debris-${index}`} className={`debris-chip chip-${index % 5}`} />)}
+            </div>
+          )}
+          {(level === 1 && recordsCaught >= 20 || level === 2) && (
+            <div className="side-deck-drop">
+              <div className="side-deck side-deck-left"><i className="deck-platter" /><b /></div>
+              <div className="side-deck side-deck-right"><i className="deck-platter" /><b /></div>
+              <span className="side-deck-cable cable-left" /><span className="side-deck-cable cable-right" />
+            </div>
+          )}
           {isUnlockCelebrating && (
             <>
               <div className="celebration-dancers" aria-hidden="true">

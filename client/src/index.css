@@ -665,7 +665,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   inset: 0;
   z-index: 4;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0;
   transition: opacity 0.5s ease;
 }
 .dj-booth-stage.is-unlocked-celebrating {
@@ -685,7 +685,8 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   align-items: center;
   justify-content: space-around;
   padding: 8px 4px;
-  transform: translateY(24px);
+  transform: translateY(154px) scale(.56);
+  opacity: 0;
   transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .dj-booth-stage.is-unlocked-celebrating .speaker-tower {
@@ -2510,4 +2511,125 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   margin-top: .75rem;
   color: #a9a0ae;
   font: .58rem/1.45 monospace;
+}
+
+/* Level 1: hand-drawn late-1990s arcade street-stage depth. */
+.game-grid-bg:not(.level-two-grid-bg) {
+  background-image:
+    linear-gradient(to top, rgba(3,4,9,.84) 0 20%, transparent 57%),
+    radial-gradient(ellipse at 50% 4%, rgba(255,0,122,.44), transparent 38%),
+    linear-gradient(90deg, rgba(0,231,255,.16) 1px, transparent 1px),
+    linear-gradient(rgba(255,0,122,.12) 1px, transparent 1px),
+    url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png");
+  background-size: auto, auto, 24px 24px, 24px 24px, cover;
+  background-position: center, center, center, center, center;
+}
+.game-grid-bg:not(.level-two-grid-bg)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(255,255,255,.065) 24px 25px),
+    repeating-linear-gradient(90deg, transparent 0 47px, rgba(0,0,0,.32) 48px 51px),
+    linear-gradient(116deg, transparent 0 15%, rgba(0,231,255,.2) 15.5% 16%, transparent 16.5% 83%, rgba(255,0,122,.24) 83.5% 84%, transparent 84.5%);
+  mix-blend-mode: screen;
+  opacity: .78;
+}
+.game-grid-bg:not(.level-two-grid-bg)::after {
+  content: "";
+  position: absolute;
+  inset: 12% 6% 28%;
+  border-top: 2px solid rgba(0,231,255,.52);
+  border-bottom: 2px solid rgba(255,0,122,.36);
+  background: repeating-linear-gradient(90deg, rgba(9,7,15,.05) 0 8%, rgba(255,255,255,.08) 8.5% 9%, rgba(9,7,15,.05) 9.5% 18%);
+  box-shadow: 0 0 24px rgba(0,231,255,.2), inset 0 0 22px rgba(255,0,122,.12);
+  opacity: .6;
+}
+
+/* 10 / 15 / 20 dubplate sound-system assembly. */
+.dj-booth-stage.speakers-half-raised { opacity: .78; }
+.dj-booth-stage.speakers-half-raised .speaker-tower {
+  transform: translateY(82px) scale(.78);
+  opacity: .86;
+}
+.dj-booth-stage.speakers-full-raised { opacity: .96; }
+.dj-booth-stage.speakers-full-raised .speaker-tower {
+  width: 62px;
+  height: 188px;
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  border-color: #c6ff00;
+  box-shadow: 0 0 21px rgba(198,255,0,.38), 0 0 38px rgba(0,231,255,.22);
+}
+.dj-booth-stage.speakers-full-raised .speaker-cone { width: 38px; height: 38px; }
+.dj-booth-stage.level-two-decks-ready { opacity: .78; }
+.speaker-growth-debris {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+}
+.debris-chip {
+  position: absolute;
+  top: 67%;
+  left: 18%;
+  width: 8px;
+  height: 6px;
+  background: #8e9497;
+  border: 1px solid rgba(0,0,0,.5);
+  opacity: 0;
+  animation: speaker-debris-fly .95s cubic-bezier(.19,.8,.28,1) forwards;
+}
+.full-stack-debris .debris-chip { top: 43%; animation-duration: 1.08s; }
+.debris-chip:nth-child(n + 8) { left: 82%; }
+.debris-chip:nth-child(3n) { width: 5px; height: 5px; background: #ff007a; animation-delay: .06s; }
+.debris-chip:nth-child(4n) { background: #00e7ff; animation-delay: .11s; }
+.debris-chip:nth-child(5n) { background: #c6ff00; animation-delay: .16s; }
+@keyframes speaker-debris-fly {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(.4); }
+  16% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--debris-x, 48px), var(--debris-y, -78px)) rotate(240deg) scale(1.1); }
+}
+.debris-chip:nth-child(2n) { --debris-x: -54px; --debris-y: -58px; }
+.debris-chip:nth-child(3n) { --debris-x: 68px; --debris-y: -108px; }
+.debris-chip:nth-child(4n) { --debris-x: -76px; --debris-y: -118px; }
+.debris-chip:nth-child(5n) { --debris-x: 36px; --debris-y: -138px; }
+.side-deck-drop { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+.side-deck {
+  position: absolute;
+  bottom: 8px;
+  width: 74px;
+  height: 46px;
+  border: 3px solid #0a0a0d;
+  background: linear-gradient(135deg, #d4d8db, #565c63 48%, #20242b 49%);
+  box-shadow: 4px 5px 0 rgba(0,0,0,.72), 0 0 14px rgba(0,231,255,.24);
+  opacity: 0;
+}
+.side-deck-left { left: 18%; transform: translateY(-210px) rotate(-14deg); }
+.side-deck-right { right: 18%; transform: translateY(-230px) rotate(14deg); }
+.deck-platter { position: absolute; top: 7px; left: 22px; width: 28px; height: 28px; border: 3px solid #09070f; border-radius: 50%; background: radial-gradient(circle, #c6ff00 0 12%, #171022 14% 54%, #ff007a 56% 61%, #09070f 63%); }
+.side-deck b { position: absolute; right: 8px; top: 8px; width: 3px; height: 27px; background: #ff007a; transform: rotate(35deg); transform-origin: bottom; }
+.side-deck-cable { position: absolute; top: 49%; width: 20%; border-top: 2px dashed rgba(0,231,255,.5); opacity: 0; }
+.cable-left { left: 24%; transform: rotate(14deg); }
+.cable-right { right: 24%; transform: rotate(-14deg); }
+.side-decks-dropped .side-deck-left { animation: side-deck-drop-left 1.05s cubic-bezier(.18,.86,.24,1.16) both; }
+.side-decks-dropped .side-deck-right { animation: side-deck-drop-right 1.15s cubic-bezier(.18,.86,.24,1.16) .08s both; }
+.side-decks-dropped .side-deck-cable { animation: side-deck-cable-in .4s ease-out .88s forwards; }
+.level-two-decks-ready .side-deck { opacity: .8; transform: translateY(0) rotate(0); }
+.level-two-decks-ready .side-deck-cable { opacity: .6; }
+@keyframes side-deck-drop-left { 0% { opacity: 0; transform: translateY(-210px) rotate(-14deg); } 68% { opacity: 1; transform: translateY(7px) rotate(3deg); } 100% { opacity: .9; transform: translateY(0) rotate(0); } }
+@keyframes side-deck-drop-right { 0% { opacity: 0; transform: translateY(-230px) rotate(14deg); } 68% { opacity: 1; transform: translateY(7px) rotate(-3deg); } 100% { opacity: .9; transform: translateY(0) rotate(0); } }
+@keyframes side-deck-cable-in { to { opacity: .62; } }
+@media (max-width: 640px) {
+  .dj-booth-stage.speakers-half-raised .speaker-tower { transform: translateY(96px) scale(.68); }
+  .dj-booth-stage.speakers-full-raised .speaker-tower { width: 48px; height: 148px; }
+  .side-deck { width: 57px; height: 38px; }
+  .deck-platter { top: 5px; left: 16px; width: 23px; height: 23px; }
+  .side-deck-left { left: 11%; }
+  .side-deck-right { right: 11%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .debris-chip, .side-decks-dropped .side-deck-left, .side-decks-dropped .side-deck-right, .side-decks-dropped .side-deck-cable { animation: none; }
+  .debris-chip { display: none; }
+  .side-decks-dropped .side-deck, .side-decks-dropped .side-deck-cable { opacity: .85; transform: translateY(0) rotate(0); }
 }
