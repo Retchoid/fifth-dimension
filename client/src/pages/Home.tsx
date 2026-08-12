@@ -486,9 +486,24 @@ export default function Home() {
         <div className="arcade-flow-shell">
           <div className="arcade-graffiti-flow" aria-hidden="true">
             <span className="arcade-flow-stamp">EXCLUSIVE DROP → PLAY THE ARCADE</span>
-            <span className="arcade-flow-arrow arcade-flow-arrow-left">↘</span>
-            <span className="arcade-flow-arrow arcade-flow-arrow-right">↙</span>
-            <span className="arcade-flow-arrow arcade-flow-arrow-base">⇣</span>
+            <span className="arcade-ribbon arcade-ribbon-left">
+              <svg viewBox="0 0 320 610" focusable="false">
+                <path className="ribbon-shadow" d="M292 18C227 21 184 44 171 84c-15 45 42 65 10 120-31 54-106 54-109 124-2 58 54 78 104 98l-15 71 47-33 9 82 53-66-46-10 47-34-60-16c-32-40-71-78-58-123 15-52 91-52 104-117 11-55-18-97-65-115z" />
+                <path className="ribbon-main" d="M286 26C225 30 194 49 184 88c-11 41 43 61 11 113-30 49-96 51-99 113-2 54 49 71 95 90l-11 50 35-24 7 61 38-48-36-9 35-25-47-12c-31-38-66-72-55-113 13-48 83-49 96-108 10-46-13-81-57-100z" />
+                <path className="ribbon-accent" d="M281 40c-46 8-65 28-69 53-5 34 37 52 18 91-17 36-78 43-82 93-3 41 33 61 69 79" />
+              </svg>
+            </span>
+            <span className="arcade-ribbon arcade-ribbon-right">
+              <svg viewBox="0 0 320 610" focusable="false">
+                <path className="ribbon-shadow" d="M292 18C227 21 184 44 171 84c-15 45 42 65 10 120-31 54-106 54-109 124-2 58 54 78 104 98l-15 71 47-33 9 82 53-66-46-10 47-34-60-16c-32-40-71-78-58-123 15-52 91-52 104-117 11-55-18-97-65-115z" />
+                <path className="ribbon-main" d="M286 26C225 30 194 49 184 88c-11 41 43 61 11 113-30 49-96 51-99 113-2 54 49 71 95 90l-11 50 35-24 7 61 38-48-36-9 35-25-47-12c-31-38-66-72-55-113 13-48 83-49 96-108 10-46-13-81-57-100z" />
+                <path className="ribbon-accent" d="M281 40c-46 8-65 28-69 53-5 34 37 52 18 91-17 36-78 43-82 93-3 41 33 61 69 79" />
+              </svg>
+            </span>
+            <i className="arcade-paint-drip drip-cyan" />
+            <i className="arcade-paint-drip drip-lime" />
+            <i className="arcade-paint-drip drip-pink" />
+            <i className="arcade-paint-drip drip-yellow" />
           </div>
           <DjMiniGame
             downloadUnlocked={downloadUnlocked}

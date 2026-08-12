@@ -5,6 +5,7 @@ const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
 const REQUIRED_RECORDS = 25;
 const LEVEL_TWO_REQUIRED_RECORDS = 50;
+const LEVEL_TWO_TRACK_OFFSET_SECONDS = 46;
 type GameLevel = 1 | 2;
 
 interface LeaderboardEntry {
@@ -547,6 +548,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     spawnTimerRef.current = 0;
     lastTimeRef.current = performance.now();
     isPlayingRef.current = true;
+    if (bgMusicRef.current) {
+      const trackDuration = bgMusicRef.current.duration;
+      const levelTwoOffset = Number.isFinite(trackDuration) && trackDuration > LEVEL_TWO_TRACK_OFFSET_SECONDS
+        ? Math.min(LEVEL_TWO_TRACK_OFFSET_SECONDS, trackDuration * 0.65)
+        : LEVEL_TWO_TRACK_OFFSET_SECONDS;
+      bgMusicRef.current.currentTime = levelTwoOffset;
+    }
     primeAudio();
     playBackgroundMusic();
     requestRef.current = requestAnimationFrame(updateGame);

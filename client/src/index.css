@@ -364,58 +364,18 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   background: radial-gradient(circle at 18% 72%, rgba(0, 231, 255, .15), transparent 22rem), #0b0713;
   border-top: 1px solid rgba(0, 231, 255, .32);
 }
-/* 5D design: hand-painted arrow marks carry the exclusive drop into the arcade,
-   framing the cabinet from its sides instead of interrupting the game surface. */
-.arcade-flow-shell { position: relative; overflow: visible; background: #0b0713; }
+/* 5D style: twin graffiti ribbons begin at the exclusive-drop stamp, then sweep
+   out and down around either side of the cabinet like a painted arcade route. */
+.arcade-flow-shell { position: relative; overflow: hidden; background: #0b0713; }
 .arcade-flow-shell .minigame-section { position: relative; z-index: 1; }
 .arcade-graffiti-flow { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
-.arcade-flow-stamp {
-  position: absolute;
-  top: clamp(.85rem, 2vw, 1.5rem);
-  left: 50%;
-  padding: .32rem .62rem;
-  border: 2px solid #09070f;
-  background: #c6ff00;
-  color: #09070f;
-  font: 900 clamp(.52rem, 1.1vw, .68rem)/1 "Bungee", Impact, sans-serif;
-  letter-spacing: .1em;
-  text-align: center;
-  box-shadow: 4px 4px 0 #ff007a, 7px 7px 0 rgba(0,231,255,.8);
-  transform: translateX(-50%) rotate(-2deg);
-}
-.arcade-flow-arrow {
-  position: absolute;
-  display: block;
-  color: #c6ff00;
-  font: 900 clamp(4.2rem, 8vw, 7.2rem)/.68 "Rubik Wet Paint", "Bungee", Impact, cursive;
-  text-shadow: 4px 4px 0 #09070f, 7px 7px 0 #ff007a, 0 0 18px rgba(0,231,255,.9);
-  -webkit-text-stroke: 1px #09070f;
-  paint-order: stroke fill;
-  filter: saturate(1.15);
-}
-.arcade-flow-arrow::after { content: "PLAY"; position: absolute; top: 52%; left: 52%; color: #fff; font: 900 clamp(.5rem, 1vw, .73rem)/1 "Bungee", Impact, sans-serif; letter-spacing: .08em; text-shadow: 2px 2px 0 #09070f; transform: rotate(-18deg); }
-.arcade-flow-arrow-left { left: max(.65rem, calc(50% - 540px)); top: 42%; transform: rotate(-15deg); }
-.arcade-flow-arrow-right { right: max(.65rem, calc(50% - 540px)); top: 54%; transform: rotate(19deg) scaleX(-1); }
-.arcade-flow-arrow-right::after { transform: scaleX(-1) rotate(-18deg); }
-.arcade-flow-arrow-base { left: 50%; bottom: clamp(1rem, 3vw, 2.5rem); color: #00e7ff; font-size: clamp(3.4rem, 6vw, 5.4rem); transform: translateX(-50%) rotate(7deg); text-shadow: 4px 4px 0 #09070f, 7px 7px 0 #ff007a, 0 0 18px rgba(198,255,0,.9); }
-.arcade-flow-arrow-base::after { content: "SELECTOR SHOWDOWN"; top: 42%; left: 53%; width: 120px; color: #fff5a9; font-size: clamp(.43rem, .8vw, .62rem); transform: rotate(-7deg); }
-@media (prefers-reduced-motion: no-preference) { .arcade-flow-arrow-left { animation: arcade-arrow-sway 2.4s ease-in-out infinite alternate; } .arcade-flow-arrow-right { animation: arcade-arrow-sway 2.7s ease-in-out .15s infinite alternate-reverse; } }
-@keyframes arcade-arrow-sway { from { filter: saturate(1.05) brightness(.92); } to { filter: saturate(1.28) brightness(1.2); } }
-@media (max-width: 900px) {
-  .arcade-flow-arrow-left { left: .65rem; top: 46%; }
-  .arcade-flow-arrow-right { right: .65rem; top: 58%; }
-}
-@media (max-width: 650px) {
-  .arcade-flow-shell { overflow: hidden; }
-  .arcade-flow-stamp { top: .6rem; max-width: calc(100% - 2rem); }
-  .arcade-flow-arrow { font-size: clamp(3rem, 15vw, 4.3rem); opacity: .84; }
-  .arcade-flow-arrow::after { display: none; }
-  .arcade-flow-arrow-left { left: -.2rem; top: 34%; }
-  .arcade-flow-arrow-right { right: -.2rem; top: 62%; }
-  .arcade-flow-arrow-base { bottom: .7rem; }
-  .arcade-flow-arrow-base::after { display: block; width: 105px; }
-}
-@media (prefers-reduced-motion: reduce) { .arcade-flow-arrow-left, .arcade-flow-arrow-right { animation: none; } }
+.arcade-flow-stamp { position: absolute; top: clamp(.85rem, 2vw, 1.5rem); left: 50%; z-index: 5; padding: .32rem .62rem; border: 2px solid #09070f; background: #c6ff00; color: #09070f; font: 900 clamp(.52rem, 1.1vw, .68rem)/1 "Bungee", Impact, sans-serif; letter-spacing: .1em; text-align: center; box-shadow: 4px 4px 0 #ff007a; transform: translateX(-50%) rotate(-2deg); }
+.arcade-ribbon { position: absolute; top: clamp(1.8rem, 4vw, 3.4rem); z-index: 3; display: block; width: min(46vw, 470px); height: min(66vw, 610px); --ribbon-main: #00e7ff; --ribbon-accent: #c6ff00; filter: drop-shadow(6px 6px 0 rgba(9,7,15,.9)) drop-shadow(0 0 10px color-mix(in srgb, var(--ribbon-main) 72%, transparent)); transform-origin: top center; }.arcade-ribbon svg { display: block; width: 100%; height: 100%; overflow: visible; }.arcade-ribbon path { stroke-linejoin: round; }.arcade-ribbon .ribbon-shadow { fill: #09070f; stroke: #09070f; stroke-width: 13; }.arcade-ribbon .ribbon-main { fill: var(--ribbon-main); stroke: #09070f; stroke-width: 8; }.arcade-ribbon .ribbon-accent { fill: none; stroke: var(--ribbon-accent); stroke-width: 15; stroke-linecap: round; filter: drop-shadow(2px 2px 0 #09070f); }.arcade-ribbon-left { left: max(-.9rem, calc(50% - 465px)); }.arcade-ribbon-right { right: max(-.9rem, calc(50% - 465px)); --ribbon-main: #ff007a; --ribbon-accent: #ffea79; transform: scaleX(-1); }
+.arcade-paint-drip { position: absolute; top: clamp(2.6rem, 5vw, 4rem); z-index: 4; display: block; width: clamp(6px, .9vw, 11px); border: 2px solid #09070f; border-radius: 0 0 12px 12px; box-shadow: 2px 2px 0 rgba(9,7,15,.85); transform-origin: top; }.drip-cyan { left: calc(50% - 6.5rem); height: clamp(28px, 6vw, 60px); background: #00e7ff; }.drip-lime { left: calc(50% - 4.2rem); height: clamp(16px, 3.4vw, 34px); background: #c6ff00; }.drip-pink { right: calc(50% - 4.1rem); height: clamp(34px, 7vw, 70px); background: #ff007a; }.drip-yellow { right: calc(50% - 6.4rem); height: clamp(18px, 4.2vw, 42px); background: #ffea79; }
+@media (prefers-reduced-motion: no-preference) { .arcade-ribbon-left { animation: ribbon-paint-pulse 2.5s ease-in-out infinite alternate; }.arcade-ribbon-right { animation: ribbon-paint-pulse 2.8s ease-in-out .15s infinite alternate-reverse; }.arcade-paint-drip { animation: paint-drip-tremble 1.7s steps(2,end) infinite alternate; } } @keyframes ribbon-paint-pulse { from { filter: saturate(1) brightness(.9) drop-shadow(6px 6px 0 rgba(9,7,15,.9)); } to { filter: saturate(1.24) brightness(1.15) drop-shadow(6px 6px 0 rgba(9,7,15,.9)) drop-shadow(0 0 10px rgba(0,231,255,.55)); } } @keyframes paint-drip-tremble { from { transform: scaleY(.92); } to { transform: scaleY(1.06); } }
+@media (max-width: 900px) { .arcade-ribbon { width: min(48vw, 390px); height: min(72vw, 520px); }.arcade-ribbon-left { left: calc(50% - 385px); }.arcade-ribbon-right { right: calc(50% - 385px); } }
+@media (max-width: 650px) { .arcade-flow-stamp { top: .6rem; max-width: calc(100% - 2rem); }.arcade-ribbon { top: 3.1rem; width: 44vw; height: 86vw; opacity: .92; }.arcade-ribbon-left { left: calc(50% - 160px); }.arcade-ribbon-right { right: calc(50% - 160px); }.arcade-paint-drip { top: 2.45rem; }.drip-cyan { left: calc(50% - 5.9rem); }.drip-lime { left: calc(50% - 3.8rem); }.drip-pink { right: calc(50% - 3.8rem); }.drip-yellow { right: calc(50% - 5.9rem); } }
+@media (prefers-reduced-motion: reduce) { .arcade-ribbon, .arcade-paint-drip { animation: none; } }
 .arcade-cabinet-bezel {
   position: relative;
   width: 100%;

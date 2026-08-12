@@ -492,3 +492,10 @@
 - [x] Shorten the full silver-chain release to a more realistic one-second break choreography.
 - [x] Trigger an angry crowd “BAD SELECTION / BROKEN RECORD — SWITCH IT UP!” splash after two bottle or apple-core hits.
 - [x] Validate thresholds, resets, score/life continuity, responsive animation, build, and checkpoint delivery.
+
+## Complementary arcade-arrow ribbons and Level 2 music cue
+
+- [x] Restyle the release-to-arcade arrows as complementary-color graffiti ribbons on both sides of the release box.
+- [x] Start the ribbons at the release-box center, wrap them around the cabinet, and add paint drips without obscuring controls.
+- [x] Start Level 2 from a later section of the jungle track to make the level transition audible.
+- [x] Validate desktop/mobile wrapping, audio behavior, build, and checkpoint delivery.
