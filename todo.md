@@ -130,3 +130,9 @@
 - [x] Add a subtle animated waveform inside the free-download unlock banner.
 - [x] Synchronize the waveform with the unlock celebration and disable motion for reduced-motion users.
 - [x] Validate the waveform, build, tests, responsive rendering, and save a checkpoint.
+
+## Unlock waveform synchronization
+
+- [x] Align the waveform pulse phases and duration with the four-note unlock jingle.
+- [x] Preserve the mute control and reduced-motion behavior while tightening audiovisual timing.
+- [x] Validate the synchronized celebration, build, tests, responsive rendering, and save a checkpoint.

@@ -745,14 +745,16 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 .unlock-waveform i:nth-child(3n) { height: 20px; }
 .unlock-waveform i:nth-child(4n) { height: 11px; }
 .unlock-waveform.is-active i {
-  animation: unlock-waveform-pulse 520ms ease-in-out infinite alternate;
+  animation: unlock-waveform-beat 180ms ease-out both;
 }
-.unlock-waveform.is-active i:nth-child(2n) { animation-delay: -110ms; }
-.unlock-waveform.is-active i:nth-child(3n) { animation-delay: -220ms; }
-.unlock-waveform.is-active i:nth-child(4n) { animation-delay: -330ms; }
-@keyframes unlock-waveform-pulse {
-  from { transform: scaleY(.48); opacity: .55; }
-  to { transform: scaleY(1.18); opacity: 1; }
+.unlock-waveform.is-active i:nth-child(-n + 3) { animation-delay: 0ms; }
+.unlock-waveform.is-active i:nth-child(n + 4):nth-child(-n + 6) { animation-delay: 90ms; }
+.unlock-waveform.is-active i:nth-child(n + 7):nth-child(-n + 9) { animation-delay: 180ms; }
+.unlock-waveform.is-active i:nth-child(n + 10) { animation-delay: 270ms; }
+@keyframes unlock-waveform-beat {
+  0% { transform: scaleY(.52); opacity: .55; }
+  35% { transform: scaleY(1.25); opacity: 1; }
+  100% { transform: scaleY(.68); opacity: .65; }
 }
 @media (prefers-reduced-motion: reduce) {
   .unlock-waveform.is-active i {
