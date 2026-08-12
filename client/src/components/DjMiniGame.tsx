@@ -1070,6 +1070,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="cop-car-wheel cop-car-wheel-left" />
               <span className="cop-car-wheel cop-car-wheel-right" />
             </div>
+            <div className="police-dj-reaction" aria-hidden="true">
+              <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" />
+            </div>
             <div className="police-seizure-copy">
               <span>BADGE PATROL / 2 HITS</span>
               <strong>COPS SEIZED<br />YOUR MIXER.</strong>

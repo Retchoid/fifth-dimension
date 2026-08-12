@@ -468,3 +468,9 @@
 
 - [x] Add a distinct radio-squelch click immediately before the police voice-style burst.
 - [x] Preserve mute-aware timing and validate build and checkpoint delivery.
+
+## Post-seizure DJ reaction sprite
+
+- [x] Add a brief expressive DJ sprite beat after the cop-car sequence.
+- [x] Keep the reaction inside the seizure pause window, responsive, and clear before automatic gameplay resumption.
+- [x] Validate presentation, continuation, build, and checkpoint delivery.
