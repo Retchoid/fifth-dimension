@@ -336,3 +336,9 @@
 - [x] Diagnose and repair the path that terminates Level 1 before the 25-record unlock target.
 - [x] Keep the existing Level 2 rear-view DJ booth, crowd, and hazard subjects while rebuilding the scene with detailed pixel-art concert-stage depth.
 - [x] Validate 25-record Level 1 progression, 50-record Level 2 progression, visual composition, responsive gameplay, build, and checkpoint delivery.
+
+## Level 2 hazard clarity and automatic terminal finale
+
+- [x] Restyle apple-core hazards as visibly red apples and make bottle hazards visibly white and larger.
+- [x] Reuse the saved Level 1 selector tag on Level 2 completion so players do not enter their name a second time.
+- [x] Reveal the green terminal finale directly after the 50-record Level 2 completion and validate the complete flow.

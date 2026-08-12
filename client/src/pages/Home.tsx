@@ -377,20 +377,20 @@ export default function Home() {
                 >
                   <div className="unlock-sparks" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span><span>✦</span></div>
                   <Sparkles size={19} />
-                  <div><strong>FREE DOWNLOAD UNLOCKED</strong><span>5 RECORDS CAUGHT — THE SIGNAL IS YOURS.</span></div>
+                  <div><strong>FREE DOWNLOAD UNLOCKED</strong><span>25 RECORDS CAUGHT — THE SIGNAL IS YOURS.</span></div>
                   <div className={`unlock-waveform${isUnlockCelebrating ? " is-active" : ""}`} aria-hidden="true">
                     {Array.from({ length: 12 }, (_, index) => <i key={index} />)}
                   </div>
                 </div>
               )}
-              <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 5 records in Selector Showdown to unlock the free complete track download.</p>
+              <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 25 records in Selector Showdown to unlock the free complete track download.</p>
               {downloadUnlocked ? (
                 <a className={`exclusive-download${isUnlockCelebrating ? " is-revealing" : ""}`} href={EXCLUSIVE_RELEASE.url} download="Jersh in Case — 5th Dimension, Skavo featuring MestUp.mp3">
                   <span>Download Jersh in Case</span><ArrowDownRight size={19} />
                 </a>
               ) : (
                 <div className="exclusive-locked" role="status">
-                  <ShieldAlert size={18} /> <span>Collect 5 records in Selector Showdown to unlock the free download.</span>
+                  <ShieldAlert size={18} /> <span>Collect 25 records in Selector Showdown to unlock the free download.</span>
                 </div>
               )}
               <span className="exclusive-file-info">MP3 / {EXCLUSIVE_RELEASE.duration} / DIRECT DOWNLOAD</span>

@@ -619,14 +619,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (completeLevelTwo) {
       isPlayingRef.current = false;
       if (bgMusicRef.current) bgMusicRef.current.pause();
+      const finaleName = submittedName.trim() || playerName.trim() || "SELECTOR";
+      recordHighScore(currentScore, finaleName);
+      setSubmittedName(finaleName);
+      setScoreSubmitted(true);
       setIsPlaying(false);
       setLevelTwoComplete(true);
-      setGameOver(true);
+      setGameOver(false);
       setIsUnlockPaused(false);
       setIsNewRecord(currentScore > highScoreRef.current);
-      setScoreSubmitted(false);
-      setPlayerName("");
-      setSubmittedName("");
+      finaleRef.current = true;
+      setFinale(true);
       return;
     }
     if (isPlayingRef.current) requestRef.current = requestAnimationFrame(updateGame);
@@ -849,7 +852,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="finale-box" role="status" aria-live="polite">
               <span className="finale-kicker">5D TRANSMISSION COMPLETE</span>
               <div className="finale-copy">BIG UP BADMAN <strong>{submittedName || "SELECTOR"}</strong><br />JUNGLE IS MASSIVE.</div>
-              <span className="finale-subline">LEVEL 2 / 15 DUBPLATES CLEARED</span>
+              <span className="finale-subline">LEVEL 2 / 50 DUBPLATES CLEARED</span>
               <button type="button" className="finale-restart-button" onClick={startGame}>PLAY AGAIN</button>
             </div>
           </div>
