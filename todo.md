@@ -213,3 +213,9 @@
 - [x] Redesign the falling hazard into a classic golden/silver police shield badge topped with flashing red/blue patrol lights.
 - [x] Upgrade `playRecordScratch` to include a classic descending dancehall laser stab alongside the vinyl scratch chime.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## Retro arcade cabinet bezel wrapping
+
+- [x] Wrap the game viewport inside an authentic 90s Sega arcade cabinet bezel frame with marquee header and control panel base.
+- [x] Implement responsive cabinet bezel styling and metallic/neon accents in index.css.
+- [x] Validate typecheck, build checks, and checkpoint delivery.

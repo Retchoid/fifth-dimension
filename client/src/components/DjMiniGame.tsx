@@ -414,9 +414,15 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
         loop
         preload="auto"
       />
-      <div
-        ref={containerRef}
-        className="game-viewport"
+      <div className="arcade-cabinet-bezel">
+        <div className="arcade-marquee">
+          <span className="marquee-light" />
+          <strong>5TH DIMENSION ARCADE</strong>
+          <span className="marquee-light" />
+        </div>
+        <div
+          ref={containerRef}
+          className="game-viewport"
         onPointerMove={handlePointerMove}
         onPointerDown={(e) => {
           if (e.pointerType === "touch") updateDjPositionFromClientX(e.clientX);
@@ -560,6 +566,12 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
               </span>
             </div>
           </div>
+        </div>
+      </div>
+        <div className="arcade-control-panel">
+          <div className="arcade-coin-slot"><span className="coin-slot-slit" /><strong>25¢</strong></div>
+          <div className="arcade-joystick-hint"><span>◄ ► ARROWS / A-D TO SCRATCH</span></div>
+          <div className="arcade-coin-slot"><span className="coin-slot-slit" /><strong>PLAYER 1</strong></div>
         </div>
       </div>
     </section>
