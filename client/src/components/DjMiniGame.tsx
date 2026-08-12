@@ -218,6 +218,64 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     osc2.stop(now + 0.4);
   };
 
+  const playPoliceRadioBurst = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const voiceBus = context.createGain();
+    const radioBand = context.createBiquadFilter();
+    const staticGain = context.createGain();
+    const staticBuffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.44), context.sampleRate);
+    const staticData = staticBuffer.getChannelData(0);
+
+    // Narrow-band static plus short pitched syllable pulses evokes a 16-bit
+    // police-radio dispatch without using an external voice or media asset.
+    for (let index = 0; index < staticData.length; index += 1) {
+      const envelope = 1 - index / staticData.length;
+      staticData[index] = (Math.random() * 2 - 1) * envelope;
+    }
+    const radioStatic = context.createBufferSource();
+    radioStatic.buffer = staticBuffer;
+    radioBand.type = "bandpass";
+    radioBand.frequency.setValueAtTime(1550, now);
+    radioBand.Q.setValueAtTime(1.7, now);
+    staticGain.gain.setValueAtTime(0.0001, now);
+    staticGain.gain.exponentialRampToValueAtTime(0.095, now + 0.012);
+    staticGain.gain.setValueAtTime(0.072, now + 0.16);
+    staticGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+    radioStatic.connect(radioBand);
+    radioBand.connect(staticGain);
+    staticGain.connect(voiceBus);
+
+    [188, 236, 204].forEach((frequency, index) => {
+      const syllable = context.createOscillator();
+      const syllableGain = context.createGain();
+      const syllableFormant = context.createBiquadFilter();
+      const start = now + 0.055 + index * 0.105;
+      syllable.type = "sawtooth";
+      syllable.frequency.setValueAtTime(frequency, start);
+      syllable.frequency.linearRampToValueAtTime(frequency * 0.79, start + 0.07);
+      syllableFormant.type = "bandpass";
+      syllableFormant.frequency.setValueAtTime(760 + index * 95, start);
+      syllableFormant.Q.setValueAtTime(4.6, start);
+      syllableGain.gain.setValueAtTime(0.0001, start);
+      syllableGain.gain.exponentialRampToValueAtTime(0.11, start + 0.008);
+      syllableGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.085);
+      syllable.connect(syllableFormant);
+      syllableFormant.connect(syllableGain);
+      syllableGain.connect(voiceBus);
+      syllable.start(start);
+      syllable.stop(start + 0.1);
+    });
+
+    voiceBus.gain.setValueAtTime(0.0001, now);
+    voiceBus.gain.exponentialRampToValueAtTime(0.82, now + 0.012);
+    voiceBus.gain.exponentialRampToValueAtTime(0.0001, now + 0.46);
+    voiceBus.connect(context.destination);
+    radioStatic.start(now);
+    radioStatic.stop(now + 0.45);
+  };
+
   const playUnlockJingle = () => {
     const context = getAudioContext();
     if (!context) return;
@@ -796,6 +854,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (pauseForPoliceSeizure) {
       isPlayingRef.current = false;
       setIsPlaying(false);
+      playPoliceRadioBurst();
       setIsPoliceSeizurePaused(true);
       return;
     }
