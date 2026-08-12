@@ -386,3 +386,11 @@
 - [x] Identify and repair the current blank white-page runtime regression.
 - [x] Verify the page, arcade entry, and production build render normally.
 - [x] Save a corrective checkpoint only after the live preview is restored.
+
+## Level 2 special pickups and chained achievement reveal
+
+- [x] Ensure Level 2 dancer sprites remain visibly animated behind the active game layers.
+- [x] Add rare Level 2 lion-head pickups worth 2 points and CDJ pickups worth 5 points.
+- [x] Replace the combo feedback copy with the requested five dancehall phrases in a graffiti-like display treatment.
+- [x] Add a chain-wrapped Level 1 download achievement that arrives at its destination and breaks free over two seconds.
+- [x] Validate gameplay values, visual layering, timing, build, and checkpoint delivery.

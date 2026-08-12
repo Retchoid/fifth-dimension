@@ -25,11 +25,13 @@ const CELEBRATION_DANCERS = [
   { className: "dancer-magenta", src: "/manus-storage/5d-jungle-dancer-magenta_da5bea9b.png" },
 ] as const;
 
+const COMBO_CALLOUTS = ["Big Up!", "Rewind Achieved", "Gun Finger Massive", "Maximum Boost", "Maximum Respect"] as const;
+
 interface FallingItem {
   id: number;
   x: number; // percentage 0-92
   y: number; // percentage 0-90
-  type: "record" | "cop" | "bottle" | "apple";
+  type: "record" | "cop" | "bottle" | "apple" | "lion" | "cdj";
   speed: number;
   size: number;
 }
@@ -499,9 +501,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       // Level 1: records, cop sirens, and cop badges
       // Level 2: records, apple cores, bottles, and cop sirens
       const spawnedType: FallingItem["type"] = levelRef.current === 2
-        ? (roll < 0.64 ? "record" : roll < 0.78 ? "bottle" : roll < 0.90 ? "apple" : "cop")
+        ? (roll < 0.64 ? "record" : roll < 0.75 ? "bottle" : roll < 0.85 ? "apple" : roll < 0.93 ? "cop" : roll < 0.98 ? "lion" : "cdj")
         : (roll < 0.75 ? "record" : "cop");
-      const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : 30;
+      const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : spawnedType === "lion" ? 40 : spawnedType === "cdj" ? 48 : 30;
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 42 : 36;
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
@@ -532,15 +534,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
       if (newY >= 70 && newY <= 90 && item.x >= currentX - 8 && item.x <= currentX + 22) {
         structureChanged = true;
-        if (item.type === "record") {
+        if (item.type === "record" || item.type === "lion" || item.type === "cdj") {
           playRecordScratch();
           const nextCombo = comboRef.current + 1;
           comboRef.current = nextCombo;
           setCombo(nextCombo);
-          const pointsEarned = 100 * Math.min(4, nextCombo);
+          const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : 1;
+          const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
           currentScore += pointsEarned;
           scoreRef.current = currentScore;
-          const nextRecordsCaught = recordsCaughtRef.current + 1;
+          const nextRecordsCaught = recordsCaughtRef.current + pickupValue;
           recordsCaughtRef.current = nextRecordsCaught;
           setScore(currentScore);
           setRecordsCaught(nextRecordsCaught);
@@ -591,7 +594,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         structureChanged = true;
         // Extended 25/50-record sessions remain fair: a missed record breaks
         // the combo, while only a caught hazard removes a life.
-        if (item.type === "record") {
+        if (item.type === "record" || item.type === "lion" || item.type === "cdj") {
           comboRef.current = 1;
           setCombo(1);
         }
@@ -784,6 +787,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               ) : (
                 <>
                   <div className="unlock-download-drop" role="status" aria-live="polite">
+                    <span className="achievement-chain chain-top" aria-hidden="true" />
+                    <span className="achievement-chain chain-bottom" aria-hidden="true" />
+                    <span className="achievement-chain chain-left" aria-hidden="true" />
+                    <span className="achievement-chain chain-right" aria-hidden="true" />
                     <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
                     <strong>JERSH IN CASE</strong>
                     <span>THE SIGNAL IS YOURS — 25 DUBPLATES CAUGHT.</span>
@@ -881,7 +888,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {showComboBurst && (
           <div className="combo-burst-overlay" aria-hidden="true">
-            <span className="combo-burst-text">🔥 {combo}x COMBO BURST! 🔥</span>
+            <span className="combo-burst-text">{COMBO_CALLOUTS[Math.min(COMBO_CALLOUTS.length - 1, Math.max(0, combo - 5))]}</span>
+            <span className="combo-burst-count">{combo}x DUBPLATE COMBO</span>
             {Array.from({ length: 12 }, (_, i) => (
               <i key={i} className={`burst-particle particle-${i % 4}`} />
             ))}
@@ -988,6 +996,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       <span className="siren-beacon siren-beacon-right" />
                     </span>
                   </div>
+                ) : item.type === "lion" ? (
+                  <div className="lion-head-pickup" aria-label="Lion head pickup worth 2 records"><span className="lion-mane" /><span className="lion-face"><i /><i /><b /></span><strong>+2</strong></div>
+                ) : item.type === "cdj" ? (
+                  <div className="cdj-pickup" aria-label="CDJ pickup worth 5 records"><span className="cdj-platter" /><i className="cdj-display">5</i><b>+5</b></div>
                 ) : (
                   <div className={`crowd-throw-sprite ${item.type}`} aria-label={item.type === "bottle" ? "Thrown bottle" : "Thrown apple core"}>
                     {item.type === "bottle" ? <span className="bottle-neck" /> : <><span className="apple-core-seed" /><span className="apple-core-leaf" /></>}
