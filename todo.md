@@ -264,3 +264,8 @@
 - [x] Ensure background music play() promise is caught and guaranteed on startGame and unmute.
 - [x] Ensure Web Audio context is resumed on user gesture before synthesizing laser and scratch cues.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## Realistic arcade cabinet height & proportion redesign
+
+- [x] Reduce cabinet wrapper height, marquee padding, and viewport height in index.css for a realistic 90s tabletop/upright arcade proportion.
+- [x] Validate typecheck, production build, and checkpoint delivery.
