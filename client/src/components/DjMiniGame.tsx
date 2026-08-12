@@ -36,6 +36,8 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState(0);
   const [recordsCaught, setRecordsCaught] = useState(0);
+  const [combo, setCombo] = useState(1);
+  const comboRef = useRef(1);
   const [highScore, setHighScore] = useState(0);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(DEFAULT_LEADERBOARD);
   const [isNewRecord, setIsNewRecord] = useState(false);
@@ -285,12 +287,14 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     }
     scoreRef.current = 0;
     recordsCaughtRef.current = 0;
+    comboRef.current = 1;
     livesRef.current = 3;
     setIsPlaying(true);
     setGameOver(false);
     setIsNewRecord(false);
     setScore(0);
     setRecordsCaught(0);
+    setCombo(1);
     setLives(3);
     djXRef.current = 50;
     setVisibleItems([]);
@@ -346,7 +350,11 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
         structureChanged = true;
         if (item.type === "record") {
           playRecordScratch();
-          currentScore += 100;
+          const nextCombo = comboRef.current + 1;
+          comboRef.current = nextCombo;
+          setCombo(nextCombo);
+          const pointsEarned = 100 * Math.min(4, nextCombo);
+          currentScore += pointsEarned;
           scoreRef.current = currentScore;
           const nextRecordsCaught = recordsCaughtRef.current + 1;
           recordsCaughtRef.current = nextRecordsCaught;
@@ -366,6 +374,8 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
           }
         } else {
           playCopSiren();
+          comboRef.current = 1;
+          setCombo(1);
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
           setLives(currentLives);
@@ -384,11 +394,13 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
       }
 
       if (newY > 105) {
-        structureChanged = true;
-        if (item.type === "record") {
-          currentLives = Math.max(0, currentLives - 1);
-          livesRef.current = currentLives;
-          setLives(currentLives);
+            structureChanged = true;
+            if (item.type === "record") {
+              comboRef.current = 1;
+              setCombo(1);
+              currentLives = Math.max(0, currentLives - 1);
+              livesRef.current = currentLives;
+              setLives(currentLives);
           if (currentLives === 0) {
             isPlayingRef.current = false;
             if (bgMusicRef.current) bgMusicRef.current.pause();
@@ -477,6 +489,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
         <div className="game-hud">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
           <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{REQUIRED_RECORDS}</strong></div>
+          <div className="hud-badge combo-badge" aria-label={`Combo multiplier: ${combo}x`}>COMBO: <strong>{combo}x</strong></div>
           <div className="hud-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
           <div className="hud-badge lives-badge">LIVES: <strong>{"❤️".repeat(lives)}</strong></div>
           <button

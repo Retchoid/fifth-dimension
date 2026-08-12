@@ -518,6 +518,16 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   gap: 1rem;
   pointer-events: none;
 }
+.combo-badge {
+  border-color: #ffe600;
+  color: #ffe600;
+  background: rgba(255, 230, 0, .15);
+  animation: combo-pulse 0.5s infinite alternate;
+}
+@keyframes combo-pulse {
+  from { transform: scale(0.97); }
+  to { transform: scale(1.03); filter: brightness(1.2); }
+}
 .hud-badge {
   display: flex;
   align-items: center;

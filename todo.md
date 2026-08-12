@@ -244,3 +244,10 @@
 - [x] Generate a custom 1200x630 social preview banner featuring the 5th Dimension graffiti logo and arcade cabinet.
 - [x] Integrate the banner URL into client/index.html Open Graph and Twitter metadata.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## Arcade combo multiplier ticker
+
+- [x] Implement combo streak count and multiplier calculation in DjMiniGame.tsx.
+- [x] Render combo badge / multiplier ticker in the game HUD.
+- [x] Add combo badge styling in index.css.
+- [x] Validate typecheck, production build, and checkpoint delivery.
