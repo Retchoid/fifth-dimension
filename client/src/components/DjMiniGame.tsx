@@ -3,8 +3,8 @@ import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, C
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
-const REQUIRED_RECORDS = 5;
-const LEVEL_TWO_REQUIRED_RECORDS = 15;
+const REQUIRED_RECORDS = 25;
+const LEVEL_TWO_REQUIRED_RECORDS = 50;
 type GameLevel = 1 | 2;
 
 interface LeaderboardEntry {
@@ -64,6 +64,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
   const [musicStatus, setMusicStatus] = useState<"loading" | "ready" | "playing" | "paused" | "blocked" | "error">("loading");
   const [shared, setShared] = useState(false);
+  const [showComboBurst, setShowComboBurst] = useState(false);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
@@ -541,6 +542,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           recordsCaughtRef.current = nextRecordsCaught;
           setScore(currentScore);
           setRecordsCaught(nextRecordsCaught);
+          if (nextCombo >= 5) {
+            setShowComboBurst(true);
+            setTimeout(() => setShowComboBurst(false), 800);
+          }
           if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS) {
             if (!downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
               unlockJinglePlayedRef.current = true;
@@ -691,6 +696,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div className="arcade-marquee">
           <span className="marquee-light" />
           <strong>5TH DIMENSION ARCADE</strong>
+          <div className={`marquee-visualizer${musicStatus === "playing" ? " active" : ""}`} aria-hidden="true">
+            <span /><span /><span /><span /><span /><span /><span />
+          </div>
           <span className="marquee-light" />
         </div>
         <div
@@ -860,6 +868,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
+        {showComboBurst && (
+          <div className="combo-burst-overlay" aria-hidden="true">
+            <span className="combo-burst-text">🔥 {combo}x COMBO BURST! 🔥</span>
+            {Array.from({ length: 12 }, (_, i) => (
+              <i key={i} className={`burst-particle particle-${i % 4}`} />
+            ))}
+          </div>
+        )}
         {gameOver && !finale && (
           <div className="game-overlay game-over-overlay">
             <div className="overlay-box game-over-box-wide">

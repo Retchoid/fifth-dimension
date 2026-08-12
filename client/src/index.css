@@ -2189,3 +2189,68 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   background-size: auto, auto, auto, 100% 100%, cover;
   filter: saturate(1.25) contrast(1.12);
 }
+
+/* Marquee Audio Visualizer */
+.arcade-marquee {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 1rem;
+}
+.marquee-visualizer {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 14px;
+}
+.marquee-visualizer span {
+  display: block;
+  width: 3px;
+  background: #33f3ff;
+  height: 3px;
+  transition: height 0.15s ease;
+}
+.marquee-visualizer.active span:nth-child(1) { animation: marquee-bar 0.4s infinite alternate; }
+.marquee-visualizer.active span:nth-child(2) { animation: marquee-bar 0.3s infinite alternate 0.1s; }
+.marquee-visualizer.active span:nth-child(3) { animation: marquee-bar 0.5s infinite alternate 0.05s; }
+.marquee-visualizer.active span:nth-child(4) { animation: marquee-bar 0.35s infinite alternate 0.15s; }
+.marquee-visualizer.active span:nth-child(5) { animation: marquee-bar 0.45s infinite alternate 0.08s; }
+.marquee-visualizer.active span:nth-child(6) { animation: marquee-bar 0.3s infinite alternate 0.2s; }
+.marquee-visualizer.active span:nth-child(7) { animation: marquee-bar 0.4s infinite alternate 0.12s; }
+
+@keyframes marquee-bar {
+  from { height: 3px; background: #00e7ff; box-shadow: 0 0 2px #00e7ff; }
+  to { height: 14px; background: #ff007a; box-shadow: 0 0 8px #ff007a; }
+}
+
+/* Combo Burst Overlay */
+.combo-burst-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255,0,122,.25) 0%, transparent 70%);
+  animation: burst-fade 0.8s ease-out forwards;
+}
+.combo-burst-text {
+  font-family: var(--font-display, monospace);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #33f3ff;
+  text-shadow: 0 0 12px #ff007a, 0 0 24px #33f3ff;
+  letter-spacing: 0.1em;
+  animation: burst-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes burst-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes burst-fade {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
