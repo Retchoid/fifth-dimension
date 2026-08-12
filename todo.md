@@ -479,3 +479,9 @@
 
 - [x] Add a recovery-combo encouragement prompt immediately after the DJ reaction beat.
 - [x] Keep the prompt inside the seizure pause window and validate responsive presentation, continuation, build, and checkpoint delivery.
+
+## Damaged-mixer recovery objective
+
+- [x] Apply a damaged-mixer visual state after a police seizure and track the required three recovered dubplates.
+- [x] Repair the mixer with a visible completion effect and award a recovery score bonus.
+- [x] Validate score accounting, reset rules, responsive visuals, build, and checkpoint delivery.

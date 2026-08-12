@@ -74,6 +74,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isRewindPaused, setIsRewindPaused] = useState(false);
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
+  const [mixerDamaged, setMixerDamaged] = useState(false);
+  const [recoveryProgress, setRecoveryProgress] = useState(0);
+  const [mixerRepairBurst, setMixerRepairBurst] = useState(false);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
@@ -96,6 +99,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const wheelItUpPauseTimerRef = useRef<number>(0);
   const policeBadgeHitsRef = useRef(0);
   const policeSeizurePauseTimerRef = useRef<number>(0);
+  const mixerDamagedRef = useRef(false);
+  const recoveryProgressRef = useRef(0);
+  const mixerRepairTimerRef = useRef<number>(0);
   const highScoreRef = useRef(0);
   const livesRef = useRef(4);
   const finaleRef = useRef(false);
@@ -511,6 +517,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
     policeBadgeHitsRef.current = 0;
+    mixerDamagedRef.current = false;
+    recoveryProgressRef.current = 0;
     scoreRef.current = scoreRef.current;
     setRecordsCaught(0);
     setLives(4);
@@ -520,6 +528,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
+    setMixerDamaged(false);
+    setRecoveryProgress(0);
+    setMixerRepairBurst(false);
     setGameOver(false);
     setLevelTwoComplete(false);
     setFinale(false);
@@ -646,9 +657,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
     policeBadgeHitsRef.current = 0;
+    mixerDamagedRef.current = false;
+    recoveryProgressRef.current = 0;
     window.clearTimeout(rewindPauseTimerRef.current);
     window.clearTimeout(wheelItUpPauseTimerRef.current);
     window.clearTimeout(policeSeizurePauseTimerRef.current);
+    window.clearTimeout(mixerRepairTimerRef.current);
     levelRef.current = 1;
     setLevel(1);
     setLevelTwoComplete(false);
@@ -670,6 +684,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
+    setMixerDamaged(false);
+    setRecoveryProgress(0);
+    setMixerRepairBurst(false);
     setUnlockRevealReady(false);
     setChainBreakComplete(false);
     setIsCabinetVibrating(false);
@@ -772,6 +789,23 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             currentScore += 5;
             pauseForRewind = true;
           }
+          if (mixerDamagedRef.current) {
+            const nextRecoveryProgress = Math.min(3, recoveryProgressRef.current + pickupValue);
+            recoveryProgressRef.current = nextRecoveryProgress;
+            setRecoveryProgress(nextRecoveryProgress);
+            if (nextRecoveryProgress >= 3) {
+              // 5D design: three recovered dubplates repair the seized mixer,
+              // paying out a clear arcade bonus and one short repair flourish.
+              mixerDamagedRef.current = false;
+              recoveryProgressRef.current = 0;
+              currentScore += 500;
+              setMixerDamaged(false);
+              setRecoveryProgress(0);
+              setMixerRepairBurst(true);
+              window.clearTimeout(mixerRepairTimerRef.current);
+              mixerRepairTimerRef.current = window.setTimeout(() => setMixerRepairBurst(false), 1050);
+            }
+          }
           scoreRef.current = currentScore;
           const nextRecordsCaught = recordsCaughtRef.current + pickupValue;
           recordsCaughtRef.current = nextRecordsCaught;
@@ -800,6 +834,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
           setCombo(1);
+          if (mixerDamagedRef.current) {
+            recoveryProgressRef.current = 0;
+            setRecoveryProgress(0);
+          }
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
           setLives(currentLives);
@@ -839,6 +877,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           comboRef.current = 1;
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
+          if (mixerDamagedRef.current) {
+            recoveryProgressRef.current = 0;
+            setRecoveryProgress(0);
+          }
           setCombo(1);
         }
         continue;
@@ -876,6 +918,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (pauseForPoliceSeizure) {
       isPlayingRef.current = false;
       setIsPlaying(false);
+      mixerDamagedRef.current = true;
+      recoveryProgressRef.current = 0;
+      setMixerDamaged(true);
+      setRecoveryProgress(0);
       playPoliceRadioBurst();
       setIsPoliceSeizurePaused(true);
       return;
@@ -917,6 +963,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(rewindPauseTimerRef.current);
       window.clearTimeout(wheelItUpPauseTimerRef.current);
       window.clearTimeout(policeSeizurePauseTimerRef.current);
+      window.clearTimeout(mixerRepairTimerRef.current);
     };
   }, []);
 
@@ -1401,7 +1448,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
 
         {/* DJ selector with turntable at bottom */}
-        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}`} style={{ left: `${djXRef.current}%` }}>
+        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
               className="dj-sprite"
@@ -1412,6 +1459,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 event.currentTarget.parentElement?.classList.add("sprite-failed");
               }}
             />
+            {(mixerDamaged || mixerRepairBurst) && (
+              <div className="mixer-recovery-status" aria-live="polite">
+                <strong>{mixerRepairBurst ? "MIXER REPAIRED +500" : "MIXER DAMAGED"}</strong>
+                {!mixerRepairBurst && <span>RECOVERY {recoveryProgress}/3</span>}
+              </div>
+            )}
             <div className="dj-sprite-fallback" aria-hidden="true">
               <span className="dj-selector-head">5D</span>
               <span className="dj-selector-body" />
