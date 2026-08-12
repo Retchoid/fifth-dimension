@@ -46,7 +46,7 @@ describe("5th Dimension public channel configuration", () => {
   it("preserves the requested title, credit, and managed download URL for the exclusive release", () => {
     expect(EXCLUSIVE_RELEASE.title).toBe("Jersh in Case");
     expect(EXCLUSIVE_RELEASE.artist).toBe("5th Dimension, Skavo featuring MestUp");
-    expect(EXCLUSIVE_RELEASE.url).toContain("jersh-in-case_5th-dimension_skavo-featuring-mestup");
+    expect(EXCLUSIVE_RELEASE.url).toBe("/manus-storage/jersh-in-case-5th-dimension_36de0a4f.mp3");
   });
 
   it("keeps unlinked house and genre mix slots ready for future releases", () => {

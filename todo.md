@@ -12,3 +12,9 @@
 - [x] Restore the original magenta/cyan/black character-led hero and artwork treatment using the supplied references.
 - [x] Replace generic fallback visuals in the hero, projects, bio, gallery, social previews, and contact surfaces.
 - [x] Recheck desktop/mobile rendering, typecheck, build, tests, and naming before saving the amendment checkpoint.
+
+## Audio restoration
+
+- [x] Upload the supplied MP3 to project-scoped storage.
+- [x] Reconnect the “Jersh in Case” download action to the uploaded file.
+- [x] Validate the audio URL, typecheck, build, and tests, then save a checkpoint.

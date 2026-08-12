@@ -40,5 +40,5 @@ export const EXCLUSIVE_RELEASE = {
   title: "Jersh in Case",
   artist: "5th Dimension, Skavo featuring MestUp",
   duration: "5:01",
-  url: "/manus-storage/jersh-in-case_5th-dimension_skavo-featuring-mestup_a95e2700.mp3",
+  url: "/manus-storage/jersh-in-case-5th-dimension_36de0a4f.mp3",
 } as const;
