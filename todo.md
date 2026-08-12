@@ -342,3 +342,9 @@
 - [x] Restyle apple-core hazards as visibly red apples and make bottle hazards visibly white and larger.
 - [x] Reuse the saved Level 1 selector tag on Level 2 completion so players do not enter their name a second time.
 - [x] Reveal the green terminal finale directly after the 50-record Level 2 completion and validate the complete flow.
+
+## Level 2 terminal respect ticker
+
+- [x] Add a bottom-centered green scrolling terminal message: “MAXIMUM RESPEKT BOH! BOH!”
+- [x] Preserve the existing personalized terminal finale text, CTA, and reduced-motion support.
+- [x] Validate the terminal layout, build, and checkpoint delivery.

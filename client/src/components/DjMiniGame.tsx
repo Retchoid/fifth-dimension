@@ -855,6 +855,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="finale-subline">LEVEL 2 / 50 DUBPLATES CLEARED</span>
               <button type="button" className="finale-restart-button" onClick={startGame}>PLAY AGAIN</button>
             </div>
+            <div className="finale-respekt-ticker" aria-label="Maximum respekt boh boh">
+              <span>MAXIMUM RESPEKT BOH! BOH!</span>
+            </div>
           </div>
         )}
 

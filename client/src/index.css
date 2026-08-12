@@ -2110,6 +2110,38 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 }
 .finale-restart-button:hover { background: #145d24; transform: translate(-2px, -2px); }
 .finale-restart-button:active { transform: scale(.97); }
+.finale-respekt-ticker {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: clamp(.5rem, 3vw, 1.15rem);
+  width: min(88%, 500px);
+  overflow: hidden;
+  transform: translateX(-50%);
+  border-top: 1px solid rgba(99,255,99,.56);
+  border-bottom: 1px solid rgba(99,255,99,.28);
+  background: rgba(1,7,2,.88);
+  color: #63ff63;
+  font: 800 clamp(.62rem, 1.7vw, .84rem)/2.2 "Courier New", Courier, monospace;
+  letter-spacing: .15em;
+  text-align: left;
+  text-shadow: 0 0 6px #63ff63;
+  white-space: nowrap;
+}
+.finale-respekt-ticker span {
+  display: inline-block;
+  min-width: 100%;
+  padding-left: 100%;
+  animation: finale-respekt-scroll 6.5s linear infinite;
+}
+@keyframes finale-respekt-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-200%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .finale-respekt-ticker { text-align: center; }
+  .finale-respekt-ticker span { padding-left: 0; animation: none; }
+}
 @keyframes terminal-flicker {
   0%, 100% { opacity: 1; }
   48% { opacity: .96; }
