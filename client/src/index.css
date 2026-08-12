@@ -293,7 +293,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 @media(max-width:650px){
   .vapor-cityscape { opacity: .82; }
   .graffiti-flare { font-size: .82rem; }
-  .flare-left { top: 4%; left: 1rem; }
+  .flare-left { top: 2%; left: 1rem; }
   .flare-right { right: 1rem; bottom: 27%; }
 }
 

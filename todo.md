@@ -141,3 +141,8 @@
 
 - [x] Remove the yellow square behind the first 5 in the title.
 - [x] Preserve the neon title shadows and validate desktop/mobile rendering, build, tests, and save a checkpoint.
+
+## Mobile flare spacing refinement
+
+- [x] Increase the mobile breathing room between the DUBPLATE flare and signal label.
+- [x] Preserve the clear first 5 and desktop layout while validating screenshots, build, and checkpoint.
