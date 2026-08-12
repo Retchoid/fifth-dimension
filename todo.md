@@ -406,3 +406,8 @@
 - [x] Replace textual chain status with visible linked-chain segments around the Level 1 achievement.
 - [x] Animate chain links separating and flying apart before Level 2 continuation becomes available.
 - [x] Validate the animation, handoff, build, and checkpoint delivery.
+
+## Chain-break impact audio
+
+- [x] Add a synthesized metallic impact for the first frame of the linked-chain release.
+- [x] Verify muted and standard audio paths, compile, and save a checkpoint.

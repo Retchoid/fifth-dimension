@@ -85,6 +85,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const recordsCaughtRef = useRef(0);
   const downloadUnlockedRef = useRef(downloadUnlocked);
   const unlockJinglePlayedRef = useRef(false);
+  const chainBreakImpactPlayedRef = useRef(false);
   const highScoreRef = useRef(0);
   const livesRef = useRef(4);
   const finaleRef = useRef(false);
@@ -246,6 +247,55 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     laser2.stop(now + 0.5);
   };
 
+  const playChainBreakImpact = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const master = context.createGain();
+    const impactFilter = context.createBiquadFilter();
+    const noiseGain = context.createGain();
+    const noiseBuffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.075), context.sampleRate);
+    const noiseData = noiseBuffer.getChannelData(0);
+
+    // Short inharmonic FM-style cluster with a bright noise transient: a compact
+    // Sega-like metal-chain snap that lands on the first flying link frame.
+    [238, 487, 913, 1460].forEach((frequency, index) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = index % 2 === 0 ? "triangle" : "square";
+      oscillator.frequency.setValueAtTime(frequency, now);
+      oscillator.frequency.exponentialRampToValueAtTime(frequency * 0.72, now + 0.16);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(index === 0 ? 0.16 : 0.095, now + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18 + index * 0.018);
+      oscillator.connect(gain);
+      gain.connect(impactFilter);
+      oscillator.start(now);
+      oscillator.stop(now + 0.27);
+    });
+
+    for (let index = 0; index < noiseData.length; index += 1) {
+      noiseData[index] = (Math.random() * 2 - 1) * (1 - index / noiseData.length);
+    }
+    const noise = context.createBufferSource();
+    noise.buffer = noiseBuffer;
+    noiseGain.gain.setValueAtTime(0.09, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+    noise.connect(noiseGain);
+    noiseGain.connect(impactFilter);
+
+    impactFilter.type = "bandpass";
+    impactFilter.frequency.setValueAtTime(1760, now);
+    impactFilter.Q.setValueAtTime(2.8, now);
+    master.gain.setValueAtTime(0.0001, now);
+    master.gain.exponentialRampToValueAtTime(0.72, now + 0.005);
+    master.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+    impactFilter.connect(master);
+    master.connect(context.destination);
+    noise.start(now);
+    noise.stop(now + 0.09);
+  };
+
   const toggleSound = () => {
     // During active play, a direct tap should always retry the real looping MP3
     // before toggling the whole sound system off. This is separate from the
@@ -398,8 +448,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isUnlockPaused || !unlockRevealReady) return;
     // The download reaches its resting position after five seconds, then its
     // chains break apart for a distinct two-second splash-screen phase.
+    const chainImpactTimer = window.setTimeout(() => {
+      if (chainBreakImpactPlayedRef.current) return;
+      chainBreakImpactPlayedRef.current = true;
+      playChainBreakImpact();
+    }, 5000);
     const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 7000);
-    return () => window.clearTimeout(breakTimer);
+    return () => {
+      window.clearTimeout(chainImpactTimer);
+      window.clearTimeout(breakTimer);
+    };
   }, [isUnlockPaused, unlockRevealReady]);
 
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
@@ -449,6 +507,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const ctx = getAudioContext();
     if (ctx && ctx.state === "suspended") void ctx.resume();
     unlockJinglePlayedRef.current = false;
+    chainBreakImpactPlayedRef.current = false;
     levelRef.current = 1;
     setLevel(1);
     setLevelTwoComplete(false);
