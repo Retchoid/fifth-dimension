@@ -1677,6 +1677,52 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 @keyframes chain-padlock-open { 0%, 11% { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); } 26% { opacity: 1; transform: translate(-50%, -50%) rotate(-13deg); } 100% { opacity: 0; transform: translate(110px, -74px) rotate(210deg) scale(.4); } }
 @keyframes silver-chain-glint { 0% { opacity: 0; transform: translateX(0) skewX(-18deg); } 13% { opacity: .92; } 77% { opacity: .8; } 100% { opacity: 0; transform: translateX(510%) skewX(-18deg); } }
 @media (prefers-reduced-motion: reduce) { .chain-run-text::after { animation: none; opacity: 0; } }
+.chain-link-debris {
+  position: absolute;
+  inset: 0;
+  z-index: 26;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* 5D style: the broken silver links travel to the arcade floor, bounce once or
+   twice against the cabinet base, then clear exactly with the unlock handoff. */
+.chain-link-fragment {
+  position: absolute;
+  bottom: 12px;
+  left: var(--fragment-left);
+  display: block;
+  width: clamp(20px, 4.6vw, 31px);
+  height: clamp(11px, 2.45vw, 17px);
+  border: clamp(3px, .58vw, 5px) solid #dce7f2;
+  border-radius: 50%;
+  background: rgba(7,18,11,.14);
+  box-shadow: 0 0 0 2px #52606d, 0 0 0 4px #151b23, inset 0 0 0 1px rgba(255,255,255,.92), 0 0 9px rgba(217,237,255,.82);
+  filter: drop-shadow(2px 3px 0 rgba(1,3,7,.92));
+  opacity: 0;
+  animation: chain-fragment-drop 1.82s cubic-bezier(.22,.75,.32,1) var(--fragment-delay) both;
+  will-change: transform, opacity;
+}
+.chain-fragment-0 { --fragment-left: 8%; --fragment-launch-x: 34px; --fragment-bounce-x: -18px; --fragment-delay: 5s; }
+.chain-fragment-1 { --fragment-left: 17%; --fragment-launch-x: -41px; --fragment-bounce-x: 15px; --fragment-delay: 5.03s; transform: rotate(90deg); }
+.chain-fragment-2 { --fragment-left: 27%; --fragment-launch-x: 18px; --fragment-bounce-x: -13px; --fragment-delay: 5.06s; }
+.chain-fragment-3 { --fragment-left: 38%; --fragment-launch-x: -30px; --fragment-bounce-x: 18px; --fragment-delay: 5.1s; transform: rotate(90deg); }
+.chain-fragment-4 { --fragment-left: 49%; --fragment-launch-x: 12px; --fragment-bounce-x: -17px; --fragment-delay: 5.12s; }
+.chain-fragment-5 { --fragment-left: 59%; --fragment-launch-x: -17px; --fragment-bounce-x: 12px; --fragment-delay: 5.08s; transform: rotate(90deg); }
+.chain-fragment-6 { --fragment-left: 69%; --fragment-launch-x: 37px; --fragment-bounce-x: -19px; --fragment-delay: 5.14s; }
+.chain-fragment-7 { --fragment-left: 78%; --fragment-launch-x: -29px; --fragment-bounce-x: 16px; --fragment-delay: 5.16s; transform: rotate(90deg); }
+.chain-fragment-8 { --fragment-left: 86%; --fragment-launch-x: 20px; --fragment-bounce-x: -11px; --fragment-delay: 5.09s; }
+.chain-fragment-9 { --fragment-left: 93%; --fragment-launch-x: -26px; --fragment-bounce-x: 13px; --fragment-delay: 5.13s; transform: rotate(90deg); }
+@keyframes chain-fragment-drop {
+  0% { opacity: 0; transform: translate(var(--fragment-launch-x), -235px) rotate(-320deg) scale(.48); }
+  12% { opacity: 1; }
+  43% { opacity: 1; transform: translate(0, 0) rotate(52deg) scale(1); }
+  58% { transform: translate(var(--fragment-bounce-x), -34px) rotate(122deg) scale(.92); }
+  71% { transform: translate(0, 0) rotate(176deg) scale(.96); }
+  82% { transform: translate(var(--fragment-bounce-x), -13px) rotate(218deg) scale(.9); }
+  92% { opacity: .86; transform: translate(0, 0) rotate(250deg) scale(.84); }
+  100% { opacity: 0; transform: translate(8px, 7px) rotate(300deg) scale(.62); }
+}
+@media (prefers-reduced-motion: reduce) { .chain-link-fragment { animation: none; opacity: 0; } }
 .unlock-download-drop-label,
 .unlock-download-drop > span:last-child {
   font-family: monospace;

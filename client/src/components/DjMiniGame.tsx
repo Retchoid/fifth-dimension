@@ -955,6 +955,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   <i key={index} className={`confetti-particle confetti-${index % 5}`} />
                 ))}
               </div>
+              {unlockRevealReady && !chainBreakComplete && (
+                <div className="chain-link-debris" aria-hidden="true">
+                  {Array.from({ length: 10 }, (_, index) => <i key={index} className={`chain-link-fragment chain-fragment-${index}`} />)}
+                </div>
+              )}
             </div>
             <div className="overlay-box unlock-overlay-box">
               <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>

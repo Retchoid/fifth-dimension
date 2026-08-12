@@ -439,3 +439,9 @@
 
 - [x] Add a brief reflective silver glint sweep just before the chain-break phase.
 - [x] Preserve the chain impact timing, reduced-motion behavior, build, and checkpoint delivery.
+
+## Broken silver-link cabinet debris
+
+- [x] Add silver link fragments that fall from the release chain after it breaks.
+- [x] Bounce fragments along the cabinet base, clear them before continuation, and preserve reduced-motion behavior.
+- [x] Validate layering, timing, build, and checkpoint delivery.
