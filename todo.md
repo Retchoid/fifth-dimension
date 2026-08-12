@@ -124,3 +124,9 @@
 - [x] Add a short retro unlock jingle that plays once when the fifth record unlocks the free download.
 - [x] Respect the existing sound toggle and avoid replaying the jingle on refresh restoration.
 - [x] Validate the unlock audio path, build, tests, responsive rendering, and save a checkpoint.
+
+## Unlock waveform
+
+- [x] Add a subtle animated waveform inside the free-download unlock banner.
+- [x] Synchronize the waveform with the unlock celebration and disable motion for reduced-motion users.
+- [x] Validate the waveform, build, tests, responsive rendering, and save a checkpoint.

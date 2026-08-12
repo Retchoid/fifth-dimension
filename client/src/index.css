@@ -722,3 +722,50 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
     font-size: .52rem;
   }
 }
+
+.unlock-waveform {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  width: 92px;
+  height: 24px;
+  margin-left: auto;
+  opacity: .62;
+}
+.unlock-waveform i {
+  display: block;
+  width: 3px;
+  height: 8px;
+  background: #c6ff00;
+  box-shadow: 0 0 7px rgba(198,255,0,.55);
+  transform-origin: center;
+}
+.unlock-waveform i:nth-child(2n) { height: 14px; }
+.unlock-waveform i:nth-child(3n) { height: 20px; }
+.unlock-waveform i:nth-child(4n) { height: 11px; }
+.unlock-waveform.is-active i {
+  animation: unlock-waveform-pulse 520ms ease-in-out infinite alternate;
+}
+.unlock-waveform.is-active i:nth-child(2n) { animation-delay: -110ms; }
+.unlock-waveform.is-active i:nth-child(3n) { animation-delay: -220ms; }
+.unlock-waveform.is-active i:nth-child(4n) { animation-delay: -330ms; }
+@keyframes unlock-waveform-pulse {
+  from { transform: scaleY(.48); opacity: .55; }
+  to { transform: scaleY(1.18); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .unlock-waveform.is-active i {
+    animation: none;
+    transform: none;
+  }
+}
+@media (max-width: 650px) {
+  .unlock-waveform {
+    width: 66px;
+    gap: 2px;
+  }
+  .unlock-waveform i {
+    width: 2px;
+  }
+}

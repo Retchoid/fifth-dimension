@@ -372,6 +372,9 @@ export default function Home() {
                   <div className="unlock-sparks" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span><span>✦</span></div>
                   <Sparkles size={19} />
                   <div><strong>FREE DOWNLOAD UNLOCKED</strong><span>5 RECORDS CAUGHT — THE SIGNAL IS YOURS.</span></div>
+                  <div className={`unlock-waveform${isUnlockCelebrating ? " is-active" : ""}`} aria-hidden="true">
+                    {Array.from({ length: 12 }, (_, index) => <i key={index} />)}
+                  </div>
                 </div>
               )}
               <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 5 records in Selector Showdown to unlock the free complete track download.</p>
