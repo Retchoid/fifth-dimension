@@ -504,6 +504,12 @@ export default function Home() {
             <i className="arcade-paint-drip drip-lime" />
             <i className="arcade-paint-drip drip-pink" />
             <i className="arcade-paint-drip drip-yellow" />
+            <span className="arcade-splatter arcade-splatter-left">
+              {Array.from({ length: 8 }, (_, index) => <i key={`left-splat-${index}`} className={`splat-dot splat-${index}`} />)}
+            </span>
+            <span className="arcade-splatter arcade-splatter-right">
+              {Array.from({ length: 8 }, (_, index) => <i key={`right-splat-${index}`} className={`splat-dot splat-${index}`} />)}
+            </span>
           </div>
           <DjMiniGame
             downloadUnlocked={downloadUnlocked}

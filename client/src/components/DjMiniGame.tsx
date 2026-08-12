@@ -76,6 +76,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
   const [isCrowdAngerPaused, setIsCrowdAngerPaused] = useState(false);
+  const [isLevelTwoMarqueeVisible, setIsLevelTwoMarqueeVisible] = useState(false);
   const [mixerDamaged, setMixerDamaged] = useState(false);
   const [recoveryProgress, setRecoveryProgress] = useState(0);
   const [mixerRepairBurst, setMixerRepairBurst] = useState(false);
@@ -104,6 +105,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bottleHitsRef = useRef(0);
   const appleCoreHitsRef = useRef(0);
   const crowdAngerPauseTimerRef = useRef<number>(0);
+  const levelTwoMusicTimerRef = useRef<number>(0);
+  const levelTwoMarqueeTimerRef = useRef<number>(0);
   const mixerDamagedRef = useRef(false);
   const recoveryProgressRef = useRef(0);
   const mixerRepairTimerRef = useRef<number>(0);
@@ -548,15 +551,23 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     spawnTimerRef.current = 0;
     lastTimeRef.current = performance.now();
     isPlayingRef.current = true;
-    if (bgMusicRef.current) {
-      const trackDuration = bgMusicRef.current.duration;
-      const levelTwoOffset = Number.isFinite(trackDuration) && trackDuration > LEVEL_TWO_TRACK_OFFSET_SECONDS
-        ? Math.min(LEVEL_TWO_TRACK_OFFSET_SECONDS, trackDuration * 0.65)
-        : LEVEL_TWO_TRACK_OFFSET_SECONDS;
-      bgMusicRef.current.currentTime = levelTwoOffset;
-    }
+    window.clearTimeout(levelTwoMusicTimerRef.current);
+    window.clearTimeout(levelTwoMarqueeTimerRef.current);
+    setIsLevelTwoMarqueeVisible(true);
+    levelTwoMarqueeTimerRef.current = window.setTimeout(() => setIsLevelTwoMarqueeVisible(false), 1850);
     primeAudio();
-    playBackgroundMusic();
+    playRecordScratch();
+    if (bgMusicRef.current) bgMusicRef.current.pause();
+    levelTwoMusicTimerRef.current = window.setTimeout(() => {
+      if (bgMusicRef.current) {
+        const trackDuration = bgMusicRef.current.duration;
+        const levelTwoOffset = Number.isFinite(trackDuration) && trackDuration > LEVEL_TWO_TRACK_OFFSET_SECONDS
+          ? Math.min(LEVEL_TWO_TRACK_OFFSET_SECONDS, trackDuration * 0.65)
+          : LEVEL_TWO_TRACK_OFFSET_SECONDS;
+        bgMusicRef.current.currentTime = levelTwoOffset;
+      }
+      playBackgroundMusic();
+    }, 165);
     requestRef.current = requestAnimationFrame(updateGame);
   };
 
@@ -692,6 +703,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(wheelItUpPauseTimerRef.current);
     window.clearTimeout(policeSeizurePauseTimerRef.current);
     window.clearTimeout(crowdAngerPauseTimerRef.current);
+    window.clearTimeout(levelTwoMusicTimerRef.current);
+    window.clearTimeout(levelTwoMarqueeTimerRef.current);
     window.clearTimeout(mixerRepairTimerRef.current);
     levelRef.current = 1;
     setLevel(1);
@@ -715,6 +728,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
     setIsCrowdAngerPaused(false);
+    setIsLevelTwoMarqueeVisible(false);
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
@@ -1013,6 +1027,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(wheelItUpPauseTimerRef.current);
       window.clearTimeout(policeSeizurePauseTimerRef.current);
       window.clearTimeout(crowdAngerPauseTimerRef.current);
+      window.clearTimeout(levelTwoMusicTimerRef.current);
+      window.clearTimeout(levelTwoMarqueeTimerRef.current);
       window.clearTimeout(mixerRepairTimerRef.current);
     };
   }, []);
@@ -1091,6 +1107,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             {soundEnabled ? (musicStatus === "playing" ? "MUSIC ON" : "PLAY MUSIC") : "MUTED"}
           </button>
         </div>
+
+        {isLevelTwoMarqueeVisible && level === 2 && !gameOver && (
+          <div className="level-two-transition-marquee" role="status" aria-live="polite">
+            <span>LEVEL 2</span>
+            <strong>CROWD PRESSURE</strong>
+            <i aria-hidden="true">◀ ◆ ▶</i>
+          </div>
+        )}
 
         {supporterGateRequired && (
           <div className="game-overlay supporter-gate-overlay">

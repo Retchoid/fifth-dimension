@@ -499,3 +499,10 @@
 - [x] Start the ribbons at the release-box center, wrap them around the cabinet, and add paint drips without obscuring controls.
 - [x] Start Level 2 from a later section of the jungle track to make the level transition audible.
 - [x] Validate desktop/mobile wrapping, audio behavior, build, and checkpoint delivery.
+
+## Level 2 scratch cue and Crowd Pressure marquee
+
+- [x] Play a short record-scratch cue immediately before the Level 2 jungle-track section begins.
+- [x] Display a clear “LEVEL 2 — CROWD PRESSURE” marquee through the Level 2 transition.
+- [x] Add subtle complementary paint-splatter particles along both graffiti ribbon arrows.
+- [x] Validate timing, mute behavior, responsive marquee, build, and checkpoint delivery.
