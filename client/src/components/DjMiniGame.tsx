@@ -52,7 +52,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(DEFAULT_LEADERBOARD);
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [lives, setLives] = useState(3);
+  const [lives, setLives] = useState(4);
   const [gameOver, setGameOver] = useState(false);
   const [isUnlockPaused, setIsUnlockPaused] = useState(false);
   const [unlockRevealReady, setUnlockRevealReady] = useState(false);
@@ -81,7 +81,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const downloadUnlockedRef = useRef(downloadUnlocked);
   const unlockJinglePlayedRef = useRef(false);
   const highScoreRef = useRef(0);
-  const livesRef = useRef(3);
+  const livesRef = useRef(4);
   const finaleRef = useRef(false);
   const itemsRef = useRef<FallingItem[]>([]);
   const nextIdRef = useRef(1);
@@ -361,11 +361,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     levelRef.current = 2;
     setLevel(2);
     recordsCaughtRef.current = 0;
-    livesRef.current = 3;
+    livesRef.current = 4;
     comboRef.current = 1;
     scoreRef.current = scoreRef.current;
     setRecordsCaught(0);
-    setLives(3);
+    setLives(4);
     setCombo(1);
     setIsPlaying(true);
     setIsUnlockPaused(false);
@@ -449,7 +449,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     scoreRef.current = 0;
     recordsCaughtRef.current = 0;
     comboRef.current = 1;
-    livesRef.current = 3;
+    livesRef.current = 4;
     setIsPlaying(true);
     setGameOver(false);
     setLevelTwoComplete(false);
@@ -463,7 +463,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setScore(0);
     setRecordsCaught(0);
     setCombo(1);
-    setLives(3);
+    setLives(4);
     djXRef.current = 50;
     setVisibleItems([]);
     itemsRef.current = [];
@@ -497,8 +497,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       // Level 1: records, cop sirens, and cop badges
       // Level 2: records, apple cores, bottles, and cop sirens
       const spawnedType: FallingItem["type"] = levelRef.current === 2
-        ? (roll < 0.55 ? "record" : roll < 0.72 ? "bottle" : roll < 0.88 ? "apple" : "cop")
-        : (roll < 0.62 ? "record" : roll < 0.82 ? "cop" : "cop");
+        ? (roll < 0.64 ? "record" : roll < 0.78 ? "bottle" : roll < 0.90 ? "apple" : "cop")
+        : (roll < 0.75 ? "record" : "cop");
       const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : 30;
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 42 : 36;
@@ -586,27 +586,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       }
 
       if (newY > 105) {
-            structureChanged = true;
-            if (item.type === "record") {
-              comboRef.current = 1;
-              setCombo(1);
-              currentLives = Math.max(0, currentLives - 1);
-              livesRef.current = currentLives;
-              setLives(currentLives);
-          if (currentLives === 0) {
-            isPlayingRef.current = false;
-            if (bgMusicRef.current) bgMusicRef.current.pause();
-            itemsRef.current = [];
-            setVisibleItems([]);
-            setGameOver(true);
-            setIsUnlockPaused(false);
-            setIsPlaying(false);
-            setIsNewRecord(currentScore > highScoreRef.current);
-            setScoreSubmitted(false);
-            setPlayerName("");
-            setSubmittedName("");
-            return;
-          }
+        structureChanged = true;
+        // Extended 25/50-record sessions remain fair: a missed record breaks
+        // the combo, while only a caught hazard removes a life.
+        if (item.type === "record") {
+          comboRef.current = 1;
+          setCombo(1);
         }
         continue;
       }
@@ -681,7 +666,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <p className="eyebrow"><Disc size={15} /> ARCADE PORTAL / 06</p>
           <h2 id="minigame-title">SELECTOR<br /><em>SHOWDOWN.</em></h2>
         </div>
-        <p>Catch the heavy 5D dubplates and dodge the badge patrol. Clear Level 1 to unlock the free “Jersh in Case” download, then keep playing through the crowd level and catch 15 records. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
+          <p>Catch 25 heavy 5D dubplates and dodge the badge patrol to unlock “Jersh In Case.” Then command the crowd through a 50-record Level 2 run. Missed records reset your combo; hazards cost lives. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
       </div>
 
       <audio
@@ -695,7 +680,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       <div className="arcade-cabinet-bezel">
         <div className="arcade-marquee">
           <span className="marquee-light" />
+          <span className="marquee-seal" aria-hidden="true">5D</span>
           <strong>5TH DIMENSION ARCADE</strong>
+          <span className="marquee-transmission-meta">PIRATE SIGNAL / DUBPLATE TEST</span>
           <div className={`marquee-visualizer${musicStatus === "playing" ? " active" : ""}`} aria-hidden="true">
             <span /><span /><span /><span /><span /><span /><span />
           </div>
@@ -738,7 +725,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
-              <p>{level === 2 ? "Level 2: command the crowd from the booth. Catch 15 records while avoiding bottles and apple cores thrown from the rave floor." : "Catch spinning vinyl records (+100pts). Collect 5 records to unlock the free “Jersh in Case” download. Avoid the cop badges—missed records and caught badges cost lives."}</p>
+              <p>{level === 2 ? "Level 2: command the crowd from the booth. Catch 50 records while avoiding bottles, apple cores, and police sirens thrown from the rave floor." : "Catch spinning vinyl records (+100pts). Collect 25 records to unlock the free “Jersh In Case” download. Avoid the cop sirens and badge patrol—missed records reset your combo, while hazards cost lives."}</p>
               <button type="button" className="tape-play-button" onClick={startGame}>
                 <span className="tape-play-face" aria-hidden="true">
                   <i className="tape-reel tape-reel-left" />
@@ -780,7 +767,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                     <strong>JERSH IN CASE</strong>
                     <span>THE SIGNAL IS YOURS — 5 DUBPLATES CAUGHT.</span>
                   </div>
-                  <p>You caught all 5 dubplates. The free “Jersh in Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
+                  <p>You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
                   <div className="unlock-decision-actions">
                     <button type="button" className="tape-play-button" onClick={startGame}>
                       <span className="tape-play-face" aria-hidden="true">

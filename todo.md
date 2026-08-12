@@ -330,3 +330,9 @@
 - [x] Implement a 3-second celebration delay before the download unlock and decision actions appear.
 - [x] Add a pre-Level-2 name-entry high-score screen when the player chooses Keep Playing after Level 1.
 - [x] Validate the revised 3-second delay, front-layer dancers, pre-Level-2 high score entry, Level 2 transition, build, and checkpoint delivery.
+
+## Level 1 progression repair and detailed Level 2 scene
+
+- [x] Diagnose and repair the path that terminates Level 1 before the 25-record unlock target.
+- [x] Keep the existing Level 2 rear-view DJ booth, crowd, and hazard subjects while rebuilding the scene with detailed pixel-art concert-stage depth.
+- [x] Validate 25-record Level 1 progression, 50-record Level 2 progression, visual composition, responsive gameplay, build, and checkpoint delivery.

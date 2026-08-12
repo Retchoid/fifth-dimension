@@ -2197,6 +2197,30 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   justify-content: space-between;
   padding: 0.4rem 1rem;
 }
+.marquee-seal {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-right: .45rem;
+  border: 2px solid var(--signal-orange);
+  border-radius: 50%;
+  background: #111;
+  color: var(--signal-orange);
+  font-size: .7rem;
+  font-weight: 900;
+  box-shadow: 2px 2px 0 rgba(0,0,0,.8), 0 0 8px rgba(255,90,31,.34);
+  transform: rotate(-8deg);
+}
+.marquee-transmission-meta {
+  margin-left: auto;
+  margin-right: .75rem;
+  color: var(--signal-orange);
+  font-size: clamp(.42rem, 1vw, .56rem);
+  font-weight: 800;
+  letter-spacing: .09em;
+  white-space: nowrap;
+}
 .marquee-visualizer {
   display: flex;
   align-items: flex-end;
@@ -2253,4 +2277,77 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   0% { opacity: 1; }
   80% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* Level 2: dense, late-90s arcade concert scene; the rear-view DJ booth,
+   crowd, incoming records, bottles, apple cores, and sirens stay unchanged. */
+.game-grid-bg.level-two-grid-bg {
+  opacity: 1;
+  background-image:
+    linear-gradient(180deg, rgba(7, 2, 18, .12) 0%, rgba(4, 1, 8, .58) 100%),
+    url("/manus-storage/5d-selector-level-two-detailed-stage_89e2157b.png");
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.12) contrast(1.09) brightness(.93);
+}
+.game-grid-bg.level-two-grid-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(112deg, transparent 0 24%, rgba(0,231,255,.11) 25% 26%, transparent 27% 58%, rgba(255,0,122,.13) 59% 60%, transparent 61%),
+    repeating-linear-gradient(90deg, transparent 0 82px, rgba(255,255,255,.035) 83px 84px),
+    radial-gradient(ellipse at 50% 8%, rgba(198,255,0,.15), transparent 28%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.game-grid-bg.level-two-grid-bg::after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  right: 5%;
+  height: 18%;
+  border-top: 3px solid rgba(0,231,255,.52);
+  border-bottom: 1px solid rgba(255,0,122,.46);
+  background: repeating-linear-gradient(90deg, rgba(0,0,0,.36) 0 9%, transparent 9.5% 19%);
+  box-shadow: 0 0 18px rgba(0,231,255,.22), inset 0 0 16px rgba(255,0,122,.12);
+  opacity: .8;
+  pointer-events: none;
+}
+.level-two-booth {
+  background:
+    linear-gradient(to top, rgba(0,0,0,.72), transparent 42%),
+    radial-gradient(ellipse at 50% 20%, transparent 0 26%, rgba(0,0,0,.24) 72%);
+}
+.level-two-booth::before {
+  content: "";
+  position: absolute;
+  top: 12%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ff007a 12%, #00e7ff 28%, #c6ff00 50%, #00e7ff 72%, #ff007a 88%, transparent);
+  box-shadow: 0 0 18px #00e7ff, 0 0 32px rgba(255,0,122,.75);
+  opacity: .8;
+}
+.level-two-booth::after {
+  content: "";
+  position: absolute;
+  inset: 35% 8% 29%;
+  background: repeating-linear-gradient(90deg, transparent 0 9%, rgba(0,231,255,.12) 9.25% 9.5%, transparent 9.75% 19%);
+  border-top: 1px solid rgba(0,231,255,.36);
+  border-bottom: 1px solid rgba(255,0,122,.28);
+  opacity: .55;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .game-grid-bg.level-two-grid-bg::before { animation: level-two-haze 4.8s ease-in-out infinite alternate; }
+  .level-two-booth::before { animation: level-two-truss-pulse 1.8s ease-in-out infinite alternate; }
+}
+@keyframes level-two-haze { from { opacity: .48; } to { opacity: .92; } }
+@keyframes level-two-truss-pulse { from { filter: brightness(.72); } to { filter: brightness(1.28); } }
+@media (max-width: 640px) {
+  .marquee-transmission-meta { display: none; }
+  .marquee-seal { width: 22px; height: 22px; margin-right: .25rem; }
 }
