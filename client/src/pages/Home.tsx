@@ -1,7 +1,7 @@
 /**
  * Archive-faithful 5th Dimension transmission: street-poster collage, bass-first hierarchy, and signal-colour motion.
  */
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -13,6 +13,8 @@ import {
   Mail,
   Menu,
   Music2,
+  Pause,
+  Play,
   Radio,
   ShieldAlert,
   Sparkles,
@@ -107,6 +109,8 @@ export default function Home() {
   const [isUnlockCelebrating, setIsUnlockCelebrating] = useState(false);
   const [bookingEventDate, setBookingEventDate] = useState("");
   const [bookingEventLocation, setBookingEventLocation] = useState("");
+  const [isExclusivePlaying, setIsExclusivePlaying] = useState(false);
+  const exclusiveAudioRef = useRef<HTMLAudioElement>(null);
   const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
 
   useEffect(() => {
@@ -131,6 +135,20 @@ export default function Home() {
   const settleAchievementFlow = () => {
     setIsUnlockCelebrating(false);
   };
+
+  const toggleExclusivePlayback = () => {
+    const audio = exclusiveAudioRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      void audio.play().catch(() => setIsExclusivePlaying(false));
+    } else {
+      audio.pause();
+    }
+  };
+
+  useEffect(() => {
+    return () => exclusiveAudioRef.current?.pause();
+  }, []);
 
   useEffect(() => {
     if (!isUnlockCelebrating) return;
@@ -385,15 +403,35 @@ export default function Home() {
               )}
               <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 25 records in Selector Showdown to unlock the free complete track download.</p>
               {downloadUnlocked ? (
-                <a className={`exclusive-download${isUnlockCelebrating ? " is-revealing" : ""}`} href={EXCLUSIVE_RELEASE.url} download="Jersh in Case — 5th Dimension, Skavo featuring MestUp.mp3">
-                  <span>Download Jersh in Case</span><ArrowDownRight size={19} />
-                </a>
+                <div className="exclusive-listen-actions">
+                  <audio
+                    ref={exclusiveAudioRef}
+                    src={EXCLUSIVE_RELEASE.url}
+                    preload="metadata"
+                    onPlay={() => setIsExclusivePlaying(true)}
+                    onPause={() => setIsExclusivePlaying(false)}
+                    onEnded={() => setIsExclusivePlaying(false)}
+                  />
+                  <button
+                    type="button"
+                    className={`exclusive-listen-button${isExclusivePlaying ? " is-playing" : ""}`}
+                    onClick={toggleExclusivePlayback}
+                    aria-pressed={isExclusivePlaying}
+                    aria-label={isExclusivePlaying ? "Pause Jersh In Case" : "Play Jersh In Case"}
+                  >
+                    {isExclusivePlaying ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                    <span>{isExclusivePlaying ? "Pause track" : "Listen now"}</span>
+                  </button>
+                  <a className={`exclusive-download${isUnlockCelebrating ? " is-revealing" : ""}`} href={EXCLUSIVE_RELEASE.url} download="Jersh In Case — 5th Dimension, Skavo featuring MC Mestup.mp3">
+                    <span>Download MP3</span><ArrowDownRight size={19} />
+                  </a>
+                </div>
               ) : (
                 <div className="exclusive-locked" role="status">
                   <ShieldAlert size={18} /> <span>Collect 25 records in Selector Showdown to unlock the free download.</span>
                 </div>
               )}
-              <span className="exclusive-file-info">MP3 / {EXCLUSIVE_RELEASE.duration} / DIRECT DOWNLOAD</span>
+              <span className="exclusive-file-info">MP3 / {EXCLUSIVE_RELEASE.duration} / LISTEN OR DOWNLOAD</span>
             </div>
           </article>
         </section>

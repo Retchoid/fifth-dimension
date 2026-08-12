@@ -2427,3 +2427,39 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 @media (prefers-reduced-motion: reduce) {
   .level-two-dancer { animation: none; }
 }
+
+/* Exclusive release playback and download controls */
+.exclusive-listen-actions {
+  display: grid;
+  grid-template-columns: minmax(0, .82fr) minmax(0, 1fr);
+  gap: .65rem;
+  align-items: stretch;
+}
+.exclusive-listen-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  min-height: 100%;
+  border: 2px solid #00e7ff;
+  background: #111522;
+  color: #00e7ff;
+  font: 800 .7rem/1 var(--font-sans, sans-serif);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #09070f;
+  transition: transform 160ms var(--ease-out), background 160ms var(--ease-out), color 160ms var(--ease-out);
+}
+.exclusive-listen-button:hover,
+.exclusive-listen-button.is-playing {
+  background: #00e7ff;
+  color: #09070f;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 #c6ff00;
+}
+.exclusive-listen-button:active { transform: scale(.97); }
+@media (max-width: 650px) {
+  .exclusive-listen-actions { grid-template-columns: 1fr; }
+  .exclusive-listen-button { min-height: 48px; }
+}

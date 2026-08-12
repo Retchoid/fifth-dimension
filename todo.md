@@ -354,3 +354,9 @@
 - [x] Raise the Keep Playing action so it is visible in the Level 1 unlock decision without scrolling.
 - [x] Retain the dancer sprites during Level 2 as a low-priority background layer that does not obscure playable objects.
 - [x] Validate unlock decision visibility, Level 2 visual layering, build, and checkpoint delivery.
+
+## Exclusive MP3 listening control
+
+- [x] Add an in-page Play/Pause control for the unlocked Jersh In Case MP3.
+- [x] Preserve the locked state and direct download action after the 25-record unlock.
+- [x] Validate listen, pause, unlock gating, download behavior, build, and checkpoint delivery.
