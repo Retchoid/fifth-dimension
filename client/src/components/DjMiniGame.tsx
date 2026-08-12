@@ -210,8 +210,10 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     soundEnabledRef.current = nextEnabled;
     setSoundEnabled(nextEnabled);
     if (nextEnabled) {
-      primeAudio();
+      const ctx = getAudioContext();
+      if (ctx && ctx.state === "suspended") void ctx.resume();
       if (isPlayingRef.current && bgMusicRef.current) {
+        bgMusicRef.current.muted = false;
         bgMusicRef.current.play().catch(() => {});
       }
     } else {
@@ -297,12 +299,16 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
 
   const startGame = () => {
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
-    primeAudio();
+    const ctx = getAudioContext();
+    if (ctx && ctx.state === "suspended") void ctx.resume();
     unlockJinglePlayedRef.current = false;
     isPlayingRef.current = true;
     if (soundEnabledRef.current && bgMusicRef.current) {
+      bgMusicRef.current.muted = false;
       bgMusicRef.current.currentTime = 0;
-      bgMusicRef.current.play().catch(() => {});
+      bgMusicRef.current.play().catch((err) => {
+        console.warn("Background audio play interrupted:", err);
+      });
     }
     scoreRef.current = 0;
     recordsCaughtRef.current = 0;

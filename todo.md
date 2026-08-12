@@ -257,3 +257,10 @@
 - [x] Audit and ensure background music element is unmuted, looping, and reliably triggered on startGame gesture in DjMiniGame.tsx.
 - [x] Upgrade playUnlockJingle to an authentic multi-octave descending dancehall laser burst.
 - [x] Validate typecheck, production build, and checkpoint delivery.
+
+## Audio troubleshooting & reliable gameplay playback
+
+- [x] Audit audio asset path and test network fetch in DjMiniGame.tsx.
+- [x] Ensure background music play() promise is caught and guaranteed on startGame and unmute.
+- [x] Ensure Web Audio context is resumed on user gesture before synthesizing laser and scratch cues.
+- [x] Validate typecheck, production build, and checkpoint delivery.
