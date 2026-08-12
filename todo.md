@@ -136,3 +136,8 @@
 - [x] Align the waveform pulse phases and duration with the four-note unlock jingle.
 - [x] Preserve the mute control and reduced-motion behavior while tightening audiovisual timing.
 - [x] Validate the synchronized celebration, build, tests, responsive rendering, and save a checkpoint.
+
+## Hero title first-5 cleanup
+
+- [x] Remove the yellow square behind the first 5 in the title.
+- [x] Preserve the neon title shadows and validate desktop/mobile rendering, build, tests, and save a checkpoint.
