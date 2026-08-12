@@ -207,3 +207,9 @@
 - [x] Add confetti particle layer to DjMiniGame.tsx during unlock celebration.
 - [x] Implement floating confetti keyframe animations in index.css.
 - [x] Validate typecheck, build checks, and checkpoint delivery.
+
+## Police badge hazard & dancehall laser sound upgrade
+
+- [x] Redesign the falling hazard into a classic golden/silver police shield badge topped with flashing red/blue patrol lights.
+- [x] Upgrade `playRecordScratch` to include a classic descending dancehall laser stab alongside the vinyl scratch chime.
+- [x] Validate typecheck, production build, and checkpoint delivery.

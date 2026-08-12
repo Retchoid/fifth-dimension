@@ -72,14 +72,16 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     const context = getAudioContext();
     if (!context) return;
     const now = context.currentTime;
-    // 16-bit Sega Genesis dual-chip scratch chime + punchy square lead
+    // 16-bit Sega Genesis dual-chip scratch chime + classic descending dancehall laser stab
     const osc1 = context.createOscillator();
     const osc2 = context.createOscillator();
+    const laser = context.createOscillator();
     const filter = context.createBiquadFilter();
     const gain = context.createGain();
 
     osc1.type = "sawtooth";
     osc2.type = "square";
+    laser.type = "sawtooth";
 
     osc1.frequency.setValueAtTime(880, now);
     osc1.frequency.exponentialRampToValueAtTime(220, now + 0.16);
@@ -87,23 +89,30 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
     osc2.frequency.setValueAtTime(440, now);
     osc2.frequency.exponentialRampToValueAtTime(110, now + 0.16);
 
+    // Classic dancehall laser stab sweep
+    laser.frequency.setValueAtTime(1450, now);
+    laser.frequency.exponentialRampToValueAtTime(180, now + 0.15);
+
     filter.type = "bandpass";
-    filter.frequency.setValueAtTime(2400, now);
-    filter.Q.setValueAtTime(3.5, now);
+    filter.frequency.setValueAtTime(2800, now);
+    filter.Q.setValueAtTime(4.0, now);
 
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.16, now + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.18, now + 0.012);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
 
     osc1.connect(filter);
     osc2.connect(filter);
+    laser.connect(filter);
     filter.connect(gain);
     gain.connect(context.destination);
 
     osc1.start(now);
     osc2.start(now);
+    laser.start(now);
     osc1.stop(now + 0.19);
     osc2.stop(now + 0.19);
+    laser.stop(now + 0.19);
   };
 
   const playCopSiren = () => {
@@ -497,10 +506,15 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false,
                     <span className="vinyl-spindle" />
                   </div>
                 ) : (
-                  <div className="cop-siren-sprite" aria-hidden="true">
-                    <span className="siren-housing" />
-                    <span className="siren-beacon siren-beacon-left" />
-                    <span className="siren-beacon siren-beacon-right" />
+                  <div className="police-badge-sprite" aria-hidden="true">
+                    <span className="badge-shield">
+                      <span className="badge-star">★</span>
+                      <span className="badge-text">POLICE</span>
+                    </span>
+                    <span className="badge-siren-top">
+                      <span className="siren-beacon siren-beacon-left" />
+                      <span className="siren-beacon siren-beacon-right" />
+                    </span>
                   </div>
                 )}
               </div>

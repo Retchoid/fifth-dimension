@@ -642,48 +642,76 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   to { transform: rotate(360deg); }
 }
 
-.cop-siren-sprite {
+.police-badge-sprite {
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+.badge-shield {
+  position: absolute;
+  bottom: 0;
+  width: 86%;
+  height: 72%;
+  background: linear-gradient(135deg, #ffe600 0%, #b8860b 50%, #ffd700 100%);
+  border: 2px solid #fff;
+  border-radius: 6px 6px 24px 24px;
+  box-shadow: 0 0 14px rgba(255, 230, 0, .85), inset 0 0 8px rgba(0,0,0,.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
-.siren-housing {
+.badge-star {
+  font-size: 14px;
+  color: #000;
+  line-height: 1;
+  text-shadow: 0 0 2px #fff;
+}
+.badge-text {
+  font-size: 7px;
+  font-weight: 800;
+  color: #000;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.badge-siren-top {
   position: absolute;
-  bottom: 2px;
-  width: 82%;
-  height: 52%;
-  background: #111;
-  border: 2px solid #ff007a;
-  border-radius: 4px;
-  box-shadow: 0 0 12px rgba(255, 0, 122, .85);
+  top: 0;
+  left: 50%;
+  width: 72%;
+  height: 34%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
 }
 .siren-beacon {
   position: absolute;
-  top: 4px;
-  width: 38%;
-  height: 58%;
-  border-radius: 50% 50% 20% 20%;
+  top: -2px;
+  width: 44%;
+  height: 90%;
+  border-radius: 50% 50% 30% 30%;
   border: 1px solid #fff;
-  animation: siren-flash 0.32s infinite alternate;
+  animation: siren-flash 0.24s infinite alternate;
 }
 .siren-beacon-left {
-  left: 6%;
+  left: 2%;
   background: #ff0033;
-  box-shadow: 0 0 14px #ff0033;
+  box-shadow: 0 0 12px #ff0033;
   animation-delay: 0s;
 }
 .siren-beacon-right {
-  right: 6%;
+  right: 2%;
   background: #0066ff;
-  box-shadow: 0 0 14px #0066ff;
-  animation-delay: 0.16s;
+  box-shadow: 0 0 12px #0066ff;
+  animation-delay: 0.12s;
 }
 @keyframes siren-flash {
-  from { opacity: 0.3; transform: scale(0.92); }
-  to { opacity: 1; transform: scale(1.08); filter: brightness(1.4); }
+  from { opacity: 0.25; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.1); filter: brightness(1.5); }
 }
 .dj-catcher-art {
   position: relative;
