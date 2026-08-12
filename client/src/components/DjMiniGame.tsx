@@ -241,7 +241,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const toggleSound = () => {
-    if (soundEnabledRef.current && isPlayingRef.current && (musicStatus === "blocked" || musicStatus === "error")) {
+    // During active play, a direct tap should always retry the real looping MP3
+    // before toggling the whole sound system off. This is separate from the
+    // Web Audio scratch, siren, and unlock cues.
+    if (soundEnabledRef.current && isPlayingRef.current && musicStatus !== "playing") {
       primeAudio();
       playBackgroundMusic();
       return;
@@ -483,6 +486,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     const nextItems: FallingItem[] = [];
     let pauseAfterUnlock = false;
+    let advanceToLevelTwo = false;
     let completeLevelTwo = false;
     let currentLives = livesRef.current;
     let currentScore = scoreRef.current;
@@ -508,11 +512,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           recordsCaughtRef.current = nextRecordsCaught;
           setScore(currentScore);
           setRecordsCaught(nextRecordsCaught);
-          if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS && !downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
-            unlockJinglePlayedRef.current = true;
-            playUnlockJingle();
-            onUnlockDownload?.();
-            pauseAfterUnlock = true;
+          if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS) {
+            if (!downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
+              unlockJinglePlayedRef.current = true;
+              playUnlockJingle();
+              onUnlockDownload?.();
+              pauseAfterUnlock = true;
+            } else {
+              // A replay after the download is already unlocked should not
+              // inflate Level 1 past 5/5. Route cleanly into Level 2 instead.
+              advanceToLevelTwo = true;
+            }
           }
           if (levelRef.current === 2 && nextRecordsCaught >= LEVEL_TWO_REQUIRED_RECORDS) {
             completeLevelTwo = true;
@@ -579,6 +589,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       if (bgMusicRef.current) bgMusicRef.current.pause();
       setIsPlaying(false);
       setIsUnlockPaused(true);
+      return;
+    }
+    if (advanceToLevelTwo) {
+      startLevelTwo();
       return;
     }
     if (completeLevelTwo) {
@@ -677,7 +691,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             onClick={toggleSound}
           >
             {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
-            {soundEnabled ? (musicStatus === "playing" ? "MUSIC ON" : musicStatus === "blocked" ? "TAP FOR MUSIC" : "SOUND READY") : "MUTED"}
+            {soundEnabled ? (musicStatus === "playing" ? "MUSIC ON" : "PLAY MUSIC") : "MUTED"}
           </button>
         </div>
 

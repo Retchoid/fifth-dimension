@@ -293,3 +293,11 @@
 - [x] Preserve the same jungle music style and keep gameplay smooth across the level transition.
 - [x] Add the dark green 1980s end screen using the submitted leaderboard username: “Big Up Badman [username] Jungle is Massive.”
 - [x] Refine the arcade cabinet geometry and validate the full user journey, responsive behavior, audio, typecheck, production build, and checkpoint delivery.
+
+## Final experience and site-wide design audit
+
+- [x] Verify audible looping background music during active gameplay separately from synthesized effects.
+- [x] Verify the achievement celebration uses matching female raver sprites, lasts five seconds, and includes the slow download-box descent.
+- [x] Audit the full site against established hierarchy, contrast, readability, accessibility, responsive, and conversion principles.
+- [x] Fix any discovered gameplay, visual, accessibility, metadata, or marketing-flow issues.
+- [x] Validate the complete site, build, audio, and responsive behavior, then save a checkpoint.
