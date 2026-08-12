@@ -71,39 +71,72 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
     const context = getAudioContext();
     if (!context) return;
     const now = context.currentTime;
-    const oscillator = context.createOscillator();
+    // 16-bit Sega Genesis dual-chip scratch chime + punchy square lead
+    const osc1 = context.createOscillator();
+    const osc2 = context.createOscillator();
     const filter = context.createBiquadFilter();
     const gain = context.createGain();
-    oscillator.type = "sawtooth";
-    oscillator.frequency.setValueAtTime(380, now);
-    oscillator.frequency.exponentialRampToValueAtTime(95, now + 0.13);
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(1700, now);
-    filter.frequency.exponentialRampToValueAtTime(480, now + 0.13);
+
+    osc1.type = "sawtooth";
+    osc2.type = "square";
+
+    osc1.frequency.setValueAtTime(880, now);
+    osc1.frequency.exponentialRampToValueAtTime(220, now + 0.16);
+
+    osc2.frequency.setValueAtTime(440, now);
+    osc2.frequency.exponentialRampToValueAtTime(110, now + 0.16);
+
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(2400, now);
+    filter.Q.setValueAtTime(3.5, now);
+
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.13, now + 0.015);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
-    oscillator.connect(filter).connect(gain).connect(context.destination);
-    oscillator.start(now);
-    oscillator.stop(now + 0.15);
+    gain.gain.exponentialRampToValueAtTime(0.16, now + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+    filter.connect(gain);
+    gain.connect(context.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.19);
+    osc2.stop(now + 0.19);
   };
 
   const playCopSiren = () => {
     const context = getAudioContext();
     if (!context) return;
     const now = context.currentTime;
-    const oscillator = context.createOscillator();
+    // 16-bit FM police siren alarm sweep with dual square pulse waves
+    const osc1 = context.createOscillator();
+    const osc2 = context.createOscillator();
     const gain = context.createGain();
-    oscillator.type = "square";
-    oscillator.frequency.setValueAtTime(460, now);
-    oscillator.frequency.linearRampToValueAtTime(760, now + 0.16);
-    oscillator.frequency.linearRampToValueAtTime(460, now + 0.32);
+
+    osc1.type = "square";
+    osc2.type = "square";
+
+    osc1.frequency.setValueAtTime(520, now);
+    osc1.frequency.linearRampToValueAtTime(880, now + 0.18);
+    osc1.frequency.linearRampToValueAtTime(520, now + 0.36);
+
+    osc2.frequency.setValueAtTime(260, now);
+    osc2.frequency.linearRampToValueAtTime(440, now + 0.18);
+    osc2.frequency.linearRampToValueAtTime(260, now + 0.36);
+
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.11, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start(now);
-    oscillator.stop(now + 0.35);
+    gain.gain.exponentialRampToValueAtTime(0.14, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(context.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.4);
+    osc2.stop(now + 0.4);
   };
 
   const playUnlockJingle = () => {

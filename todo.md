@@ -188,3 +188,9 @@
 - [x] Redesign cop badges into flashing Sega-style twin cop sirens with animated beacon domes.
 - [x] Expand the DJ catcher’s horizontal catch surface for fair, responsive gameplay.
 - [x] Audit all code, styles, and audio hooks to guarantee a professional 16-bit arcade finish.
+
+## 16-bit arcade sound effects upgrade
+
+- [x] Upgrade `playRecordScratch` to a multi-oscillator 16-bit scratch chime with chip-lead resonance.
+- [x] Upgrade `playCopSiren` to an authentic multi-octave Sega Genesis alarm sweep with square-wave pulse distortion.
+- [x] Validate audio synchronization, mute control, typecheck, build, and checkpoint.
