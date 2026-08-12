@@ -49,3 +49,7 @@ A clean reload returned the arcade to the locked Level 1 start overlay with the 
 A live hot-update check confirmed `.unlock-overlay` contained all three dancer images with `display: block`, opacity 0.98, and non-zero dimensions: lime 129×185, cyan 130×187, and magenta 133×189. The unlock box and both Reset Game / Keep Playing actions were present concurrently.
 
 After a real Keep Playing click, the DOM reported `LVL 2`, no `.unlock-overlay`, zero remaining celebration dancers, the `.level-two-grid-bg` scene, and exactly the Level 1 DJ sprite URL in the active game viewport. The separate jungle MP3 element remained valid and looped; the later paused state was consistent with the deterministic test reaching the Level 2 completion branch during the observation window.
+
+## Achievement delay and pre-Level-2 high-score validation
+
+A clean parent-locked Level 1 run was traced from the live DOM. At overlay insertion the dancer layer was present above the box layer (`z-index: 30` versus `10`) and the waiting message was visible with no download card or decision buttons. At 2.8 seconds the waiting message remained and all three dancers had non-zero rendered dimensions; at 3.3 seconds the green download card and Reset Game / Keep Playing buttons appeared. A real Keep Playing click then opened `LEVEL 1 HIGH SCORE` with selector tag input, leaderboard, and `SAVE & LAUNCH LVL 2`. Submitting `TRACE TAG` started Level 2 with the same DJ sprite, `0/15` records initially, the pre-Level-2 gate removed, and the looping MP3 playing.

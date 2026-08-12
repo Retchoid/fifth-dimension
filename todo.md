@@ -323,3 +323,10 @@
 - [x] Cleanly clear the raver sprites and celebration state when transitioning to Level 2 or resetting the game.
 - [x] Style the dancers on either side of the unlock box within the arcade overlay.
 - [x] Validate Level 1 unlock celebration, dancer persistence, Level 2 cleanup, typecheck, build, and checkpoint delivery.
+
+## Level 1 achievement polish & pre-Level-2 name entry
+
+- [x] Elevate the celebration dancer z-index so the raver sprites render in front of the unlock box overlay.
+- [x] Implement a 3-second celebration delay before the download unlock and decision actions appear.
+- [x] Add a pre-Level-2 name-entry high-score screen when the player chooses Keep Playing after Level 1.
+- [x] Validate the revised 3-second delay, front-layer dancers, pre-Level-2 high score entry, Level 2 transition, build, and checkpoint delivery.

@@ -55,6 +55,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
   const [isUnlockPaused, setIsUnlockPaused] = useState(false);
+  const [unlockRevealReady, setUnlockRevealReady] = useState(false);
+  const [preLevelTwoHighScore, setPreLevelTwoHighScore] = useState(false);
   const [levelTwoComplete, setLevelTwoComplete] = useState(false);
   const [finale, setFinale] = useState(false);
   const [playerName, setPlayerName] = useState("");
@@ -382,6 +384,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const keepPlayingAfterUnlock = () => {
     if (!isUnlockPaused) return;
+    setIsUnlockPaused(false);
+    setPreLevelTwoHighScore(true);
+  };
+
+  const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const safeName = playerName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
+    recordHighScore(score, safeName);
+    setPlayerName(safeName);
+    setSubmittedName(safeName);
+    setScoreSubmitted(true);
+    setPreLevelTwoHighScore(false);
     onAchievementFlowComplete?.();
     startLevelTwo();
   };
@@ -439,6 +453,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setGameOver(false);
     setLevelTwoComplete(false);
     setIsUnlockPaused(false);
+    setUnlockRevealReady(false);
+    setPreLevelTwoHighScore(false);
     setIsNewRecord(false);
     setScoreSubmitted(false);
     setSubmittedName("");
@@ -595,7 +611,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       if (bgMusicRef.current) bgMusicRef.current.pause();
       setIsPlaying(false);
       setIsUnlockPaused(true);
-      return;
+      setUnlockRevealReady(false);
+      const revealTimer = window.setTimeout(() => {
+        setUnlockRevealReady(true);
+      }, 3000);
+      return () => clearTimeout(revealTimer);
     }
     if (advanceToLevelTwo) {
       startLevelTwo();
@@ -721,7 +741,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {isUnlockPaused && !gameOver && (
           <div className="game-overlay unlock-overlay is-celebrating">
             <div className="unlock-celebration-layer" aria-hidden="true">
-              <div className="celebration-dancers">
+              <div className="celebration-dancers front-layer-dancers">
                 <img className="celebration-dancer dancer-lime" src={CELEBRATION_DANCERS[0].src} alt="" />
                 <img className="celebration-dancer dancer-cyan" src={CELEBRATION_DANCERS[1].src} alt="" />
                 <img className="celebration-dancer dancer-magenta" src={CELEBRATION_DANCERS[2].src} alt="" />
@@ -735,29 +755,90 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="overlay-box unlock-overlay-box">
               <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
               <h3>LEVEL CLEARED</h3>
-              <div className="unlock-download-drop" role="status" aria-live="polite">
-                <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
-                <strong>JERSH IN CASE</strong>
-                <span>THE SIGNAL IS YOURS — 5 DUBPLATES CAUGHT.</span>
-              </div>
-              <p>You caught all 5 dubplates. The free “Jersh in Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
-              <div className="unlock-decision-actions">
-                <button type="button" className="tape-play-button" onClick={startGame}>
-                  <span className="tape-play-face" aria-hidden="true">
-                    <i className="tape-reel tape-reel-left" />
-                    <span className="tape-window"><RotateCcw size={15} /></span>
-                    <i className="tape-reel tape-reel-right" />
-                  </span>
-                  <span className="tape-play-copy">Reset Game</span>
-                </button>
-                <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
-                  <span className="tape-play-face" aria-hidden="true">
-                    <i className="tape-reel tape-reel-left" />
-                    <span className="tape-window"><Play size={15} fill="currentColor" /></span>
-                    <i className="tape-reel tape-reel-right" />
-                  </span>
-                  <span className="tape-play-copy">Keep Playing</span>
-                </button>
+              {!unlockRevealReady ? (
+                <div className="unlock-waiting-message" role="status" aria-live="polite">
+                  <div className="unlock-waiting-spinner" />
+                  <span>TRANSMITTING DUBPLATE VIBES...</span>
+                </div>
+              ) : (
+                <>
+                  <div className="unlock-download-drop" role="status" aria-live="polite">
+                    <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
+                    <strong>JERSH IN CASE</strong>
+                    <span>THE SIGNAL IS YOURS — 5 DUBPLATES CAUGHT.</span>
+                  </div>
+                  <p>You caught all 5 dubplates. The free “Jersh in Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
+                  <div className="unlock-decision-actions">
+                    <button type="button" className="tape-play-button" onClick={startGame}>
+                      <span className="tape-play-face" aria-hidden="true">
+                        <i className="tape-reel tape-reel-left" />
+                        <span className="tape-window"><RotateCcw size={15} /></span>
+                        <i className="tape-reel tape-reel-right" />
+                      </span>
+                      <span className="tape-play-copy">Reset Game</span>
+                    </button>
+                    <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
+                      <span className="tape-play-face" aria-hidden="true">
+                        <i className="tape-reel tape-reel-left" />
+                        <span className="tape-window"><Play size={15} fill="currentColor" /></span>
+                        <i className="tape-reel tape-reel-right" />
+                      </span>
+                      <span className="tape-play-copy">Keep Playing</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {preLevelTwoHighScore && !gameOver && (
+          <div className="game-overlay pre-level-two-overlay">
+            <div className="overlay-box game-over-box-wide">
+              <h3>LEVEL 1 HIGH SCORE</h3>
+              <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
+              {!scoreSubmitted ? (
+                <form className="score-entry-form" onSubmit={submitPreLevelTwoScore}>
+                  <label htmlFor="pre-level-selector-name">ENTER YOUR SELECTOR TAG</label>
+                  <div className="score-entry-row">
+                    <input
+                      id="pre-level-selector-name"
+                      value={playerName}
+                      onChange={(event) => setPlayerName(event.target.value.toUpperCase().slice(0, 12))}
+                      maxLength={12}
+                      autoComplete="nickname"
+                      placeholder="YOUR NAME"
+                    />
+                    <button type="submit" className="score-submit-button">SAVE & LAUNCH LVL 2</button>
+                  </div>
+                </form>
+              ) : (
+                <div className="score-saved-badge" role="status" aria-live="polite">
+                  <Trophy size={15} /> TAG RECORDED AS <strong>{submittedName}</strong>
+                </div>
+              )}
+              <div className="arcade-leaderboard-container">
+                <h4>TOP ARCADE SELECTORS</h4>
+                <div className="arcade-table-wrap">
+                  <table className="arcade-score-table">
+                    <thead>
+                      <tr>
+                        <th>RANK</th>
+                        <th>SELECTOR</th>
+                        <th>SCORE</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {leaderboard.map((entry, idx) => (
+                        <tr key={`${entry.name}-${entry.score}-${idx}`}>
+                          <td>#{idx + 1}</td>
+                          <td>{entry.name}</td>
+                          <td>{entry.score}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
