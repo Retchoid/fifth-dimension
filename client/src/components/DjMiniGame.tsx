@@ -368,8 +368,13 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
               <p>Catch spinning vinyl records (+100pts). Collect 5 records to unlock the free “Jersh in Case” download. Avoid the cop badges—missed records and caught badges cost lives.</p>
-              <button type="button" className="neon-button magenta" onClick={startGame}>
-                <Play size={18} /> Start Session
+              <button type="button" className="tape-play-button" onClick={startGame}>
+                <span className="tape-play-face" aria-hidden="true">
+                  <i className="tape-reel tape-reel-left" />
+                  <span className="tape-window"><Play size={16} fill="currentColor" /></span>
+                  <i className="tape-reel tape-reel-right" />
+                </span>
+                <span className="tape-play-copy">Start Session</span>
               </button>
             </div>
           </div>
@@ -386,8 +391,13 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
               <h3>SESSION TERMINATED</h3>
               <p>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</p>
               <p className="game-over-best"><Trophy size={15} /> Best score saved locally: <strong>{highScore}</strong></p>
-              <button type="button" className="neon-button magenta" onClick={startGame}>
-                <RotateCcw size={18} /> Play Again
+              <button type="button" className="tape-play-button" onClick={startGame}>
+                <span className="tape-play-face" aria-hidden="true">
+                  <i className="tape-reel tape-reel-left" />
+                  <span className="tape-window"><RotateCcw size={15} /></span>
+                  <i className="tape-reel tape-reel-right" />
+                </span>
+                <span className="tape-play-copy">Play Again</span>
               </button>
             </div>
           </div>

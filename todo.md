@@ -152,3 +152,14 @@
 - [x] Replace the Frequency Loading section artwork with a generic 1980s cartoon boombox.
 - [x] Reorder the artist-site sections and navigation into a clearer visitor flow.
 - [x] Validate the new artwork, lightbox/game/download/booking interactions, responsive layouts, build, and checkpoint.
+
+## Selector Showdown mobile loading repair
+
+- [x] Reproduce the mobile start-state issue and inspect game initialization, canvas sizing, and touch controls.
+- [x] Fix the blocker so Start Game reliably opens the playable arena on mobile.
+- [x] Validate mobile and desktop start/game-over flows, existing sound/unlock behavior, build, and checkpoint.
+
+## Retro boombox tape play button
+
+- [x] Restyle the Selector Showdown start/play control as a retro tape-deck play button.
+- [x] Preserve accessibility, mobile visibility, game start behavior, and validate build before checkpoint.

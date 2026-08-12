@@ -544,6 +544,24 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   .game-viewport {
     height: 380px;
   }
+  .game-overlay {
+    overflow-y: auto;
+    align-items: center;
+    padding: .8rem;
+  }
+  .overlay-box {
+    width: min(100%, 360px);
+    padding: 1.15rem;
+  }
+  .overlay-box h3 {
+    margin-bottom: .55rem;
+    font-size: 2rem;
+  }
+  .overlay-box p {
+    margin-bottom: .9rem;
+    font-size: .78rem;
+    line-height: 1.42;
+  }
   .dj-catcher {
     width: 108px;
     height: 122px;
@@ -566,6 +584,91 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   text-transform: uppercase;
   animation: new-record-flash .72s steps(2, jump-none) infinite;
 }
+.tape-play-button {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  min-height: 52px;
+  padding: .45rem .85rem .45rem .55rem;
+  border: 2px solid #00e7ff;
+  background: #ff007a;
+  color: #fff;
+  box-shadow: 5px 5px 0 #c6ff00, inset 0 0 0 3px #09070f;
+  cursor: pointer;
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: .95rem;
+  letter-spacing: .1em;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: transform 160ms var(--ease-out), background 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
+}
+.tape-play-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .28rem;
+  width: 78px;
+  height: 34px;
+  padding: .25rem;
+  background: #251c36;
+  border: 2px solid #09070f;
+  box-shadow: inset 0 0 0 1px rgba(0,231,255,.65), inset 0 -4px 0 rgba(255,0,122,.45);
+}
+.tape-reel {
+  position: relative;
+  display: block;
+  width: 17px;
+  height: 17px;
+  border: 2px solid #c6ff00;
+  border-radius: 50%;
+  background: #09070f;
+  box-shadow: 0 0 5px rgba(198,255,0,.6);
+}
+.tape-reel::before,
+.tape-reel::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid #ff007a;
+  border-radius: 50%;
+}
+.tape-reel::after {
+  inset: 7px;
+  background: #00e7ff;
+  border: 0;
+}
+.tape-window {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 22px;
+  color: #c6ff00;
+  background: #09070f;
+  border: 1px solid #00e7ff;
+}
+.tape-play-copy {
+  white-space: nowrap;
+  text-shadow: 2px 2px 0 #7118e8;
+}
+.tape-play-button:hover {
+  background: #ff238c;
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 #00e7ff, inset 0 0 0 3px #09070f;
+}
+.tape-play-button:active {
+  transform: scale(.97);
+}
+.tape-play-button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+}
+@media (max-width: 650px) {
+  .tape-play-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @keyframes new-record-flash {
   0%, 100% { opacity: 1; transform: translateY(0) rotate(-1deg); }
   50% { opacity: .45; transform: translateY(-2px) rotate(1deg); }
