@@ -394,3 +394,9 @@
 - [x] Replace the combo feedback copy with the requested five dancehall phrases in a graffiti-like display treatment.
 - [x] Add a chain-wrapped Level 1 download achievement that arrives at its destination and breaks free over two seconds.
 - [x] Validate gameplay values, visual layering, timing, build, and checkpoint delivery.
+
+## Level 1 visible chain-break splash phase
+
+- [x] Keep the chained download achievement visibly present on the Level 1 splash screen after it lands.
+- [x] Run a distinct two-second chain-break animation before enabling Level 2 continuation.
+- [x] Validate the splash timing, Level 2 handoff, build, and checkpoint delivery.

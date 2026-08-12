@@ -1624,8 +1624,10 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   display: block;
   pointer-events: none;
   border: 3px dashed #f4dc7b;
+  background: repeating-linear-gradient(90deg, #5d4519 0 5px, #f4dc7b 5px 9px, #896826 9px 13px);
   box-shadow: 0 0 0 2px #6d5520, 0 0 11px rgba(255,230,0,.7), inset 0 0 4px rgba(0,0,0,.85);
   opacity: .98;
+  will-change: transform, opacity;
 }
 .chain-top, .chain-bottom { left: -10px; right: -10px; height: 7px; }
 .chain-top { top: -9px; animation: chain-break-top 2s cubic-bezier(.21,.9,.32,1) 5s both; }
@@ -1637,6 +1639,16 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 @keyframes chain-break-bottom { 0%, 22% { opacity: 1; transform: translate(0,0) rotate(0); } 48% { opacity: 1; transform: translate(7px,9px) rotate(4deg); } 100% { opacity: 0; transform: translate(60px,72px) rotate(32deg) scale(.7); } }
 @keyframes chain-break-left { 0%, 22% { opacity: 1; transform: translate(0,0) rotate(0); } 48% { opacity: 1; transform: translate(-8px,3px) rotate(-4deg); } 100% { opacity: 0; transform: translate(-52px,42px) rotate(-36deg) scale(.7); } }
 @keyframes chain-break-right { 0%, 22% { opacity: 1; transform: translate(0,0) rotate(0); } 48% { opacity: 1; transform: translate(8px,-3px) rotate(4deg); } 100% { opacity: 0; transform: translate(52px,-42px) rotate(36deg) scale(.7); } }
+.chain-break-status {
+  margin: .75rem 0 .2rem;
+  color: #f4dc7b;
+  font: 900 .68rem/1.35 monospace;
+  letter-spacing: .1em;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255,230,0,.85);
+  animation: chain-lock-pulse .45s steps(2, end) infinite alternate;
+}
+@keyframes chain-lock-pulse { from { opacity: .55; } to { opacity: 1; } }
 .unlock-download-drop-label,
 .unlock-download-drop > span:last-child {
   font-family: monospace;

@@ -60,6 +60,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [gameOver, setGameOver] = useState(false);
   const [isUnlockPaused, setIsUnlockPaused] = useState(false);
   const [unlockRevealReady, setUnlockRevealReady] = useState(false);
+  const [chainBreakComplete, setChainBreakComplete] = useState(false);
   const [preLevelTwoHighScore, setPreLevelTwoHighScore] = useState(false);
   const [levelTwoComplete, setLevelTwoComplete] = useState(false);
   const [finale, setFinale] = useState(false);
@@ -388,10 +389,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const keepPlayingAfterUnlock = () => {
-    if (!isUnlockPaused) return;
+    if (!isUnlockPaused || !chainBreakComplete) return;
     setIsUnlockPaused(false);
     setPreLevelTwoHighScore(true);
   };
+
+  useEffect(() => {
+    if (!isUnlockPaused || !unlockRevealReady) return;
+    // The download reaches its resting position after five seconds, then its
+    // chains break apart for a distinct two-second splash-screen phase.
+    const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 7000);
+    return () => window.clearTimeout(breakTimer);
+  }, [isUnlockPaused, unlockRevealReady]);
 
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -459,6 +468,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setLevelTwoComplete(false);
     setIsUnlockPaused(false);
     setUnlockRevealReady(false);
+    setChainBreakComplete(false);
     setPreLevelTwoHighScore(false);
     setIsNewRecord(false);
     setScoreSubmitted(false);
@@ -612,6 +622,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setIsPlaying(false);
       setIsUnlockPaused(true);
       setUnlockRevealReady(false);
+      setChainBreakComplete(false);
       const revealTimer = window.setTimeout(() => {
         setUnlockRevealReady(true);
       }, 3000);
@@ -795,25 +806,31 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                     <strong>JERSH IN CASE</strong>
                     <span>THE SIGNAL IS YOURS — 25 DUBPLATES CAUGHT.</span>
                   </div>
-                  <div className="unlock-decision-actions">
-                    <button type="button" className="tape-play-button" onClick={startGame}>
-                      <span className="tape-play-face" aria-hidden="true">
-                        <i className="tape-reel tape-reel-left" />
-                        <span className="tape-window"><RotateCcw size={15} /></span>
-                        <i className="tape-reel tape-reel-right" />
-                      </span>
-                      <span className="tape-play-copy">Reset Game</span>
-                    </button>
-                    <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
-                      <span className="tape-play-face" aria-hidden="true">
-                        <i className="tape-reel tape-reel-left" />
-                        <span className="tape-window"><Play size={15} fill="currentColor" /></span>
-                        <i className="tape-reel tape-reel-right" />
-                      </span>
-                      <span className="tape-play-copy">Keep Playing</span>
-                    </button>
-                  </div>
-                  <p>You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
+                  {chainBreakComplete ? (
+                    <>
+                      <div className="unlock-decision-actions">
+                        <button type="button" className="tape-play-button" onClick={startGame}>
+                          <span className="tape-play-face" aria-hidden="true">
+                            <i className="tape-reel tape-reel-left" />
+                            <span className="tape-window"><RotateCcw size={15} /></span>
+                            <i className="tape-reel tape-reel-right" />
+                          </span>
+                          <span className="tape-play-copy">Reset Game</span>
+                        </button>
+                        <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
+                          <span className="tape-play-face" aria-hidden="true">
+                            <i className="tape-reel tape-reel-left" />
+                            <span className="tape-window"><Play size={15} fill="currentColor" /></span>
+                            <i className="tape-reel tape-reel-right" />
+                          </span>
+                          <span className="tape-play-copy">Keep Playing</span>
+                        </button>
+                      </div>
+                      <p>You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
+                    </>
+                  ) : (
+                    <p className="chain-break-status" role="status" aria-live="polite">CHAIN LOCKED — BREAKING FREE...</p>
+                  )}
                 </>
               )}
             </div>
