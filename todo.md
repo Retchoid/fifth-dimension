@@ -175,3 +175,9 @@
 - [x] Create and integrate a 2-bit Sega Genesis-inspired jungle DJ sprite and rave-stage background.
 - [x] Rebuild movement/rendering for responsive mobile touch and keyboard play with smoother frame updates.
 - [x] Validate score, lives, high score, sound, five-record unlock, mobile/desktop play, build, and checkpoint.
+
+## 16-bit jungle soundtrack integration
+
+- [x] Enter generate mode and produce an authentic 16-bit Sega Genesis jungle / drum and bass background track.
+- [x] Wire the looping track into Selector Showdown with user-gesture safety, pause/resume, and volume controls.
+- [x] Validate playback, build checks, and checkpoint delivery.

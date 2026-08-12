@@ -36,6 +36,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
   const isPlayingRef = useRef(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const soundEnabledRef = useRef(true);
+  const bgMusicRef = useRef<HTMLAudioElement | null>(null);
   const scoreRef = useRef(0);
   const recordsCaughtRef = useRef(0);
   const downloadUnlockedRef = useRef(downloadUnlocked);
@@ -129,7 +130,16 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
     const nextEnabled = !soundEnabledRef.current;
     soundEnabledRef.current = nextEnabled;
     setSoundEnabled(nextEnabled);
-    if (nextEnabled) primeAudio();
+    if (nextEnabled) {
+      primeAudio();
+      if (isPlayingRef.current && bgMusicRef.current) {
+        bgMusicRef.current.play().catch(() => {});
+      }
+    } else {
+      if (bgMusicRef.current) {
+        bgMusicRef.current.pause();
+      }
+    }
   };
 
   useEffect(() => {
@@ -193,6 +203,10 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
     primeAudio();
     unlockJinglePlayedRef.current = false;
     isPlayingRef.current = true;
+    if (soundEnabledRef.current && bgMusicRef.current) {
+      bgMusicRef.current.currentTime = 0;
+      bgMusicRef.current.play().catch(() => {});
+    }
     scoreRef.current = 0;
     recordsCaughtRef.current = 0;
     livesRef.current = 3;
@@ -274,6 +288,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
           setLives(currentLives);
           if (currentLives === 0) {
             isPlayingRef.current = false;
+            if (bgMusicRef.current) bgMusicRef.current.pause();
             itemsRef.current = [];
             setVisibleItems([]);
             setGameOver(true);
@@ -293,6 +308,7 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
           setLives(currentLives);
           if (currentLives === 0) {
             isPlayingRef.current = false;
+            if (bgMusicRef.current) bgMusicRef.current.pause();
             itemsRef.current = [];
             setVisibleItems([]);
             setGameOver(true);
@@ -316,6 +332,10 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
     return () => {
       isPlayingRef.current = false;
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (bgMusicRef.current) {
+        bgMusicRef.current.pause();
+        bgMusicRef.current = null;
+      }
       if (audioContextRef.current && audioContextRef.current.state !== "closed") {
         void audioContextRef.current.close();
       }
@@ -345,6 +365,12 @@ export default function DjMiniGame({ onUnlockDownload, downloadUnlocked = false 
         <p>Catch the heavy 5D dubplates and dodge the badge patrol. Collect 5 records to unlock the free “Jersh in Case” download. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
       </div>
 
+      <audio
+        ref={bgMusicRef}
+        src="/manus-storage/5d-jungle-genesis-track_5b23d949.mp3"
+        loop
+        preload="auto"
+      />
       <div
         ref={containerRef}
         className="game-viewport"
