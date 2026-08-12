@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy } from "lucide-react";
 
+const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
+
 interface FallingItem {
   id: number;
   x: number; // percentage 0-92
@@ -22,6 +24,7 @@ export default function DjMiniGame() {
   const lastTimeRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
   const scoreRef = useRef(0);
+  const highScoreRef = useRef(0);
   const livesRef = useRef(3);
   const itemsRef = useRef<FallingItem[]>([]);
   const nextIdRef = useRef(1);
@@ -31,6 +34,29 @@ export default function DjMiniGame() {
 
   // Key state for smooth movement
   const keysRef = useRef<{ [key: string]: boolean }>({});
+
+  useEffect(() => {
+    try {
+      const storedScore = Number(window.localStorage.getItem(HIGH_SCORE_STORAGE_KEY) || 0);
+      const savedScore = Number.isFinite(storedScore) ? Math.max(0, Math.floor(storedScore)) : 0;
+      highScoreRef.current = savedScore;
+      setHighScore(savedScore);
+    } catch {
+      // Local storage may be unavailable in private or restricted browser contexts.
+    }
+  }, []);
+
+  const recordHighScore = (candidate: number) => {
+    const bestScore = Math.max(highScoreRef.current, candidate);
+    highScoreRef.current = bestScore;
+    setHighScore(bestScore);
+    if (bestScore > candidate || bestScore === 0) return;
+    try {
+      window.localStorage.setItem(HIGH_SCORE_STORAGE_KEY, String(bestScore));
+    } catch {
+      // Keep the in-session score when local storage is unavailable.
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -132,7 +158,7 @@ export default function DjMiniGame() {
               isPlayingRef.current = false;
               setGameOver(true);
               setIsPlaying(false);
-              setHighScore((prev) => Math.max(prev, currentScore));
+              recordHighScore(currentScore);
               return;
             }
           }
@@ -226,6 +252,7 @@ export default function DjMiniGame() {
             <div className="overlay-box">
               <h3>SESSION TERMINATED</h3>
               <p>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</p>
+              <p className="game-over-best"><Trophy size={15} /> Best score saved locally: <strong>{highScore}</strong></p>
               <button type="button" className="neon-button magenta" onClick={startGame}>
                 <RotateCcw size={18} /> Play Again
               </button>

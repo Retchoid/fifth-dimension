@@ -71,3 +71,14 @@
 - [x] Embed the mini-game section at the bottom of the page right before the footer.
 - [x] Support keyboard arrow/A-D keys and touch/drag controls, score tracking, lives, and game over state.
 - [x] Run typecheck, build, unit tests, and save an updated checkpoint.
+
+## Selector Showdown high score
+
+- [x] Load and persist the player’s best score with browser local storage.
+- [x] Show the saved best score on the game-over screen and preserve it across restart/reload.
+- [x] Validate first-play, persistence, typecheck, build, tests, responsive rendering, and save a checkpoint.
+
+## Hero 5 mark cleanup
+
+- [x] Remove the yellow square behind the first hero 5 without removing the number or neon treatment.
+- [x] Finish local high-score persistence and game-over display validation.

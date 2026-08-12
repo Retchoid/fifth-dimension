@@ -54,7 +54,7 @@ button, a[href] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .hero-orbit { position:absolute; border:1px solid; border-radius:50%; pointer-events:none; }.orbit-a{width:740px;height:740px;right:8%;top:-160px;border-color:rgba(0,231,255,.38);box-shadow:inset 0 0 50px rgba(0,231,255,.06),0 0 50px rgba(0,231,255,.05);}.orbit-b{width:500px;height:500px;right:18%;top:-42px;border-color:rgba(255,0,122,.42);}
 .hero-content { position:relative; z-index:4; width:min(690px,100%); padding:clamp(6rem,12vh,9rem) 2rem clamp(5.8rem,10vh,8rem) max(2rem,calc((100vw - 1320px)/2)); }
 .signal-label,.eyebrow { display:flex; align-items:center; gap:.45rem; margin:0; color:#c6ff00; font-size:.67rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }.signal-label{color:#00e7ff}
-h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight:400; letter-spacing:.02em; }h1 { display:grid; margin:1.4rem 0 1.6rem; font-size:clamp(5.5rem,12vw,12rem); line-height:.72; }.hero h1 span{color:#fff;text-shadow:5px 5px 0 #ff007a,-2px -2px 0 #00e7ff}.hero h1 em{color:#ff007a;font-style:normal;text-shadow:4px 4px 0 rgba(0,231,255,.8)}
+h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight:400; letter-spacing:.02em; }h1 { display:grid; margin:1.4rem 0 1.6rem; font-size:clamp(5.5rem,12vw,12rem); line-height:.72; }.hero h1 span{color:#fff;background:transparent;text-shadow:5px 5px 0 #ff007a,-2px -2px 0 #00e7ff}.hero h1 em{color:#ff007a;font-style:normal;text-shadow:4px 4px 0 rgba(0,231,255,.8)}
 .hero-copy { max-width:440px; color:#ddd4e4; font-size:1.05rem; line-height:1.65; }.hero-links { display:flex; align-items:center; flex-wrap:wrap; gap:1.3rem; margin-top:2.1rem; }.neon-button{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 1.15rem;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform 160ms var(--ease-out),box-shadow 160ms var(--ease-out)}.neon-button.magenta{background:#ff007a;color:#fff;box-shadow:5px 5px 0 #00e7ff}.neon-button:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 #c6ff00}.neon-button:active{transform:scale(.97)}.neon-text-link{display:inline-flex;align-items:center;gap:.35rem;border-bottom:1px solid #00e7ff;padding-bottom:.35rem;color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.neon-text-link:hover{color:#00e7ff}
 .hero-logo-stage { position:relative; z-index:2; align-self:center; justify-self:center; width:min(630px,92%); margin-top:4rem; }.logo-grid { position:absolute; inset:7% 11% 2%; opacity:.7; background:linear-gradient(rgba(0,231,255,.32) 1px,transparent 1px),linear-gradient(90deg,rgba(0,231,255,.32) 1px,transparent 1px); background-size:30px 30px; transform:perspective(460px) rotateX(56deg) scale(.9); transform-origin:bottom; }.hero-logo{position:relative;width:100%;display:block;filter:drop-shadow(13px 17px 0 rgba(9,7,15,.75)) drop-shadow(-2px 0 0 #00e7ff)}.dimension-stamp{position:absolute;right:-.6rem;bottom:14%;padding:.66rem .7rem;background:#c6ff00;color:#09070f;font-family:"Bebas Neue",sans-serif;font-size:1.1rem;line-height:.82;letter-spacing:.08em;transform:rotate(8deg);box-shadow:4px 4px 0 #ff007a}
 .hero-footer-strip { position:absolute; bottom:0; left:0; right:0; z-index:3; display:flex; justify-content:space-between; gap:1rem; padding:.82rem max(2rem,calc((100vw - 1320px)/2)); border-top:1px solid rgba(0,231,255,.36); color:#aaa0b1; background:rgba(9,7,15,.82); font-size:.6rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase; }.hero-footer-strip span{display:flex;align-items:center;gap:.45rem}.hero-footer-strip i,.live-chip i,.project-status i{width:7px;height:7px;display:block;border-radius:50%;background:#c6ff00;box-shadow:0 0 10px #c6ff00}
@@ -444,6 +444,21 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   color: #d1c8d7;
   font-size: .9rem;
   line-height: 1.6;
+}
+.game-over-best {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin-top: -.6rem !important;
+  color: #c6ff00 !important;
+  font-size: .75rem !important;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.game-over-best strong {
+  color: #fff;
+  font-size: 1rem;
 }
 .falling-object {
   position: absolute;
