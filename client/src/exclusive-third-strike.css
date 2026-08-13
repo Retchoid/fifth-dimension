@@ -1,0 +1,98 @@
+/* 5D exclusive card — Street Fighter III: Third Strike reference alignment.
+   Presentation only: hand-painted stage planes, expressive dark contours, and cel-shaded depth. */
+.exclusive-release {
+  border: 4px solid #1b1620;
+  background: #202738;
+  box-shadow: 8px 9px 0 #1a141d, 14px 15px 0 rgba(60, 40, 49, .42);
+}
+.exclusive-release::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: auto 0 0;
+  height: 46%;
+  pointer-events: none;
+  background:
+    linear-gradient(172deg, transparent 0 32%, rgba(241, 205, 151, .18) 33% 35%, transparent 36%),
+    repeating-linear-gradient(86deg, rgba(34, 29, 40, .3) 0 2px, transparent 2px 21px),
+    linear-gradient(12deg, #263443 0 38%, #4c4a4e 39% 41%, #2e3946 42% 100%);
+  clip-path: polygon(0 32%, 100% 0, 100% 100%, 0 100%);
+}
+.exclusive-band {
+  z-index: 1;
+  overflow: hidden;
+  border-bottom: 4px solid #1b1620;
+  background:
+    linear-gradient(104deg, transparent 0 42%, rgba(255, 223, 159, .22) 43% 44%, transparent 45%),
+    repeating-linear-gradient(169deg, rgba(35, 25, 41, .2) 0 2px, transparent 2px 10px),
+    linear-gradient(118deg, #65738a 0 54%, #48556e 55% 72%, #6f496a 73% 100%);
+  box-shadow: inset 0 5px 0 rgba(249, 229, 186, .28), inset 0 -6px 0 rgba(29, 25, 35, .28);
+}
+.exclusive-band::after {
+  content: "";
+  position: absolute;
+  right: 4%;
+  bottom: -14px;
+  width: 30%;
+  height: 34px;
+  border: 3px solid rgba(30, 24, 34, .72);
+  border-radius: 50% 43% 0 0;
+  background: rgba(241, 181, 103, .28);
+  box-shadow: -1.8rem -.45rem 0 -.65rem rgba(86, 207, 206, .43), 1.7rem -.15rem 0 -.72rem rgba(241, 214, 151, .38);
+  transform: rotate(-3deg);
+}
+.exclusive-meta { color: #ffe08d; text-shadow: 1px 1px 0 #253145; }
+.exclusive-meta i { background: #ffbf59; box-shadow: 0 0 0 2px rgba(41,32,39,.55); }
+.exclusive-band h3 {
+  color: #fff1d0;
+  text-shadow: 3px 3px 0 #85455e, 6px 6px 0 rgba(35, 26, 35, .72);
+  -webkit-text-stroke: 1px rgba(34, 27, 35, .76);
+  paint-order: stroke fill;
+}
+.exclusive-artist span { color: #ffe08d; text-shadow: 1px 1px 0 #283345; }
+.exclusive-artist strong { color: #fff1d0; text-shadow: 2px 2px 0 #7f465d; }
+.exclusive-artist em { color: #b8eee2; text-shadow: 1px 1px 0 #24323d; }
+.exclusive-track {
+  z-index: 1;
+  overflow: visible;
+  padding-bottom: 1.7rem;
+  background:
+    radial-gradient(ellipse at 76% 21%, rgba(255, 207, 121, .2) 0 4%, transparent 15%),
+    radial-gradient(ellipse at 88% 36%, rgba(94, 199, 197, .23) 0 4%, transparent 20%),
+    repeating-linear-gradient(0deg, rgba(244, 225, 183, .035) 0 1px, transparent 1px 5px),
+    linear-gradient(166deg, #243240 0 59%, #334654 60% 63%, #202a35 64% 100%);
+}
+.exclusive-description {
+  color: #f0e4d2;
+  font-weight: 600;
+  text-shadow: 1px 1px 0 rgba(25, 20, 29, .72);
+}
+.exclusive-locked {
+  border: 3px solid #1d1720;
+  background: #4a5960;
+  color: #fff0af;
+  box-shadow: inset 0 3px 0 rgba(255,236,179,.24), 4px 4px 0 rgba(22,17,25,.62);
+}
+.exclusive-file-info { color: #b4eee3; text-shadow: 1px 1px 0 #21303b; }
+.exclusive-release .download-unlock-banner {
+  border-color: #1d1720;
+  background: #6d844f;
+  box-shadow: inset 0 4px 0 rgba(245,245,193,.32), 5px 5px 0 #1d1720;
+}
+.exclusive-release .download-unlock-banner strong { color: #fff1c8; text-shadow: 2px 2px 0 #3f5132; }
+.exclusive-release .exclusive-download {
+  border: 3px solid #1d1720;
+  background: #bf637a;
+  box-shadow: inset 0 3px 0 rgba(255,211,197,.35), 4px 4px 0 #1d1720;
+}
+.exclusive-release .exclusive-listen-button,
+.exclusive-release .exclusive-share-button {
+  border: 3px solid #1d1720;
+  box-shadow: inset 0 3px 0 rgba(211,246,224,.28), 4px 4px 0 #1d1720;
+}
+@media (max-width: 650px) {
+  .exclusive-release { border-width: 3px; box-shadow: 5px 6px 0 #1a141d, 9px 10px 0 rgba(60,40,49,.35); }
+  .exclusive-band { border-bottom-width: 3px; }
+  .exclusive-band::after { width: 44%; }
+  .exclusive-locked { border-width: 2px; }
+}

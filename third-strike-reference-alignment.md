@@ -1,0 +1,7 @@
+# Street Fighter III: Third Strike Reference Alignment
+
+The supplied reference calls for a late-1990s fighting-game presentation rather than a neon-graffiti interface treatment. Its applicable visual rules are **chunky dark contours**, **flat cel-shaded color planes**, **warm and cool paint volumes**, **irregular hand-drawn silhouettes**, and **grounded perspective/stage depth**. Glossy gradient bars, uniform geometric strips, bright glows, and free-floating decorative marks are excluded.
+
+For the Jersh release card, the paint now stays attached to the lower download-box seam as two separate, irregular pooled forms. Each descending run has a dark outline, a compact paint shoulder connected to its pool, a warm or cool base plane, a shaded edge, and a hand-painted highlight. The card’s content, lock condition, unlock sequence, controls, audio, and metadata remain outside this visual-only treatment.
+
+The final visual pass applies the same reference language to the card itself: a steel-blue and plum stage-header plane, warm highlight panels, dark inset contours, a textured deep-blue playfield, and a low angled stage-floor treatment. The former saturated purple/neon card treatment has been replaced rather than layered over. A live browser view and full-page preview confirmed that the release card remains readable, its lock notice is unobstructed, and the paint forms are edge-attached. TypeScript and the production build passed; the latest console review reported no warnings or errors.

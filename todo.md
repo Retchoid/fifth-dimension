@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## Third Strike reference alignment
+
+- [x] Replace the glossy neon-bar paint effect with hand-drawn, cel-shaded Third Strike-inspired paint forms.
+- [x] Use the supplied reference’s visual grammar: chunky dark contours, warm shadow planes, irregular brush silhouettes, textured highlights, and grounded stage depth.
+- [x] Keep the release card’s content, controls, locked-state behavior, and social metadata unchanged.
+- [x] Validate the revised card against the reference on desktop and mobile, then publish.
+
 ## Authentic download-box paint drips
 
 - [x] Identify the exact lower-edge element of the exclusive download box to use as the paint-flow source.

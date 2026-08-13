@@ -1,93 +1,96 @@
-/* 5D release-card paint: every drip begins in the pooled lower edge of the download box.
-   Visual-only treatment; no release, chain, audio, or interaction behavior is touched. */
+/* Third Strike-inspired release-card paint: separated hand-painted pools with flat cel-shaded planes.
+   The form language is deliberately irregular and brush-like, avoiding neon UI bars or continuous strips. */
 .exclusive-release { overflow: visible; isolation: isolate; }
 .download-box-edge-paint {
   position: absolute;
   z-index: 4;
-  left: 8%;
-  right: 8%;
-  bottom: clamp(-5.25rem, -6vw, -3.8rem);
-  height: clamp(5.3rem, 8vw, 7.6rem);
+  left: 10%;
+  right: 10%;
+  bottom: clamp(-5rem, -5.8vw, -3.7rem);
+  height: clamp(5.1rem, 7.7vw, 7.25rem);
   pointer-events: none;
+  filter: drop-shadow(4px 5px 0 rgba(16, 12, 20, .86));
 }
+/* Two separate paint pools kiss the download-box seam. They are chunky brush forms, not a bottom border. */
 .download-box-edge-paint::before {
   content: "";
   position: absolute;
-  top: -5px;
-  left: 4%;
-  width: 92%;
-  height: 22px;
-  border: 3px solid #100918;
-  border-top: 0;
-  border-radius: 0 0 42% 36% / 0 0 78% 82%;
-  background:
-    linear-gradient(90deg, #ee116d 0 19%, #ff6ea8 20% 31%, #0bdcec 32% 54%, #9af7fa 55% 59%, #f36a2d 60% 80%, #ffc079 81% 100%);
-  box-shadow: 3px 4px 0 rgba(8, 5, 12, .84), inset 0 3px 0 rgba(255, 255, 255, .46), inset 0 -4px 0 rgba(0, 0, 0, .2);
-  clip-path: polygon(0 0, 8% 13%, 19% 0, 31% 17%, 47% 1%, 60% 20%, 76% 0, 89% 16%, 100% 2%, 100% 100%, 0 100%);
+  top: -13px;
+  left: 13%;
+  width: 38%;
+  height: 43px;
+  border: 4px solid #1d1721;
+  border-radius: 47% 53% 44% 56% / 61% 52% 48% 39%;
+  background: linear-gradient(105deg, #bf637a 0 50%, #4aa8aa 51% 100%);
+  box-shadow: inset 0 5px 0 rgba(255,236,203,.38), inset -4px -5px 0 rgba(38,68,78,.30);
+  clip-path: polygon(0 41%, 8% 15%, 21% 24%, 31% 4%, 42% 18%, 55% 0, 66% 22%, 80% 8%, 92% 30%, 100% 20%, 96% 73%, 84% 93%, 68% 82%, 55% 100%, 41% 76%, 25% 94%, 12% 78%, 3% 83%);
+  transform: rotate(-3deg);
 }
 .download-box-edge-paint::after {
   content: "";
   position: absolute;
-  top: 16px;
-  left: 18%;
-  width: 52%;
-  height: 13px;
-  border: 2px solid #100918;
-  border-top: 0;
-  border-radius: 0 0 60% 42%;
-  background: linear-gradient(90deg, #ce084f, #ff4d90 32%, #00bad1 58%, #ff8d49 100%);
-  box-shadow: 2px 3px 0 rgba(8, 5, 12, .74);
+  top: -11px;
+  right: 15%;
+  width: 25%;
+  height: 38px;
+  border: 4px solid #1d1721;
+  border-radius: 56% 44% 48% 52% / 52% 59% 41% 48%;
+  background: #d5804d;
+  box-shadow: inset 0 5px 0 rgba(255,222,169,.5), inset -4px -5px 0 rgba(111,53,37,.32);
+  clip-path: polygon(0 35%, 11% 11%, 27% 25%, 42% 0, 57% 22%, 73% 7%, 89% 32%, 100% 20%, 96% 77%, 82% 94%, 66% 80%, 50% 100%, 35% 77%, 19% 91%, 7% 69%);
+  transform: rotate(3.5deg);
 }
 .download-box-drip {
   position: absolute;
-  top: 12px;
+  top: 15px;
   width: var(--drip-width);
   height: var(--drip-height);
-  border: 3px solid #100918;
+  border: 4px solid #1d1721;
   border-top: 0;
-  border-radius: 0 0 44% 56% / 0 0 86% 92%;
-  background: linear-gradient(90deg, var(--paint-dark), var(--paint) 53%, var(--paint-light));
-  box-shadow: 3px 4px 0 rgba(8, 5, 12, .82), inset 3px 0 0 rgba(255,255,255,.34), inset -3px 0 0 rgba(0,0,0,.14);
+  border-radius: 8% 12% 47% 55% / 0 0 89% 94%;
+  background: var(--paint-base);
+  box-shadow: inset 4px 0 0 var(--paint-light), inset -4px 0 0 var(--paint-shadow), 3px 3px 0 rgba(18,12,20,.76);
+  transform: rotate(var(--tilt));
   transform-origin: top;
 }
+/* A short, round shoulder visibly joins every run to a paint pool on the box seam. */
 .download-box-drip::before {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: calc(100% - 4px);
-  width: calc(var(--drip-width) + 14px);
-  height: 17px;
-  border: 3px solid #100918;
+  bottom: calc(100% - 3px);
+  width: calc(var(--drip-width) + 18px);
+  height: 18px;
+  border: 4px solid #1d1721;
   border-bottom: 0;
-  border-radius: 62% 38% 0 0 / 78% 72% 0 0;
-  background: linear-gradient(90deg, var(--paint-dark), var(--paint) 53%, var(--paint-light));
-  box-shadow: inset 2px 2px 0 rgba(255,255,255,.26);
-  transform: translateX(-50%) rotate(var(--tilt, 0deg));
+  border-radius: 60% 40% 0 0 / 84% 82% 0 0;
+  background: var(--paint-base);
+  box-shadow: inset 3px 3px 0 var(--paint-light);
+  transform: translateX(-50%) rotate(calc(var(--tilt) * -1));
 }
 .download-box-drip::after {
   content: "";
   position: absolute;
-  left: 22%;
-  bottom: 13%;
+  left: 26%;
+  top: 18%;
   width: 24%;
-  height: 22%;
-  border-radius: 50%;
-  background: rgba(255,255,255,.52);
-  filter: blur(.3px);
+  height: 42%;
+  border-radius: 50% 44% 52% 42%;
+  background: rgba(255,242,207,.58);
+  transform: rotate(-11deg);
 }
-.box-drip-magenta { left: 13%; --drip-width: 22px; --drip-height: 66px; --paint-dark: #b4044f; --paint: #ff147e; --paint-light: #ff92bc; --tilt: -4deg; }
-.box-drip-cyan { left: 32%; --drip-width: 16px; --drip-height: 43px; --paint-dark: #008da3; --paint: #00ddeb; --paint-light: #9bf9ff; --tilt: 3deg; }
-.box-drip-orange { right: 26%; --drip-width: 25px; --drip-height: 76px; --paint-dark: #bb3b11; --paint: #ff6a21; --paint-light: #ffc07c; --tilt: -2deg; }
-.box-drip-pink { right: 11%; --drip-width: 14px; --drip-height: 38px; --paint-dark: #bd0753; --paint: #f8408b; --paint-light: #ff9fc6; --tilt: 5deg; }
+.box-drip-magenta { left: 23%; --drip-width: 25px; --drip-height: 64px; --paint-base: #bf637a; --paint-light: rgba(255,211,197,.50); --paint-shadow: rgba(99,42,62,.46); --tilt: -4deg; }
+.box-drip-cyan { left: 45%; --drip-width: 17px; --drip-height: 40px; --paint-base: #4aa8aa; --paint-light: rgba(211,246,224,.54); --paint-shadow: rgba(30,75,84,.48); --tilt: 3deg; }
+.box-drip-orange { right: 24%; --drip-width: 27px; --drip-height: 75px; --paint-base: #d5804d; --paint-light: rgba(255,219,158,.58); --paint-shadow: rgba(111,52,35,.46); --tilt: -2deg; }
+.box-drip-pink { right: 17%; --drip-width: 16px; --drip-height: 36px; --paint-base: #bf637a; --paint-light: rgba(255,211,197,.52); --paint-shadow: rgba(99,42,62,.46); --tilt: 5deg; }
 @media (max-width: 650px) {
-  .download-box-edge-paint { left: 11%; right: 11%; bottom: -4.45rem; height: 5.8rem; }
-  .download-box-edge-paint::before { height: 17px; border-width: 2px; }
-  .download-box-edge-paint::after { top: 12px; height: 10px; border-width: 2px; }
-  .download-box-drip { top: 9px; border-width: 2px; box-shadow: 2px 3px 0 rgba(8,5,12,.82), inset 2px 0 0 rgba(255,255,255,.34); }
-  .download-box-drip::before { height: 13px; border-width: 2px; }
-  .box-drip-magenta { --drip-width: 17px; --drip-height: 55px; }
-  .box-drip-cyan { --drip-width: 12px; --drip-height: 35px; }
-  .box-drip-orange { --drip-width: 19px; --drip-height: 62px; }
-  .box-drip-pink { --drip-width: 11px; --drip-height: 30px; }
+  .download-box-edge-paint { left: 11%; right: 11%; bottom: -4.35rem; height: 5.4rem; filter: drop-shadow(3px 4px 0 rgba(16,12,20,.86)); }
+  .download-box-edge-paint::before { height: 25px; border-width: 3px; }
+  .download-box-edge-paint::after { height: 22px; border-width: 3px; }
+  .download-box-drip { top: 12px; border-width: 3px; box-shadow: inset 3px 0 0 var(--paint-light), inset -3px 0 0 var(--paint-shadow), 2px 3px 0 rgba(18,12,20,.76); }
+  .download-box-drip::before { height: 13px; border-width: 3px; }
+  .box-drip-magenta { --drip-width: 18px; --drip-height: 53px; }
+  .box-drip-cyan { --drip-width: 13px; --drip-height: 34px; }
+  .box-drip-orange { --drip-width: 20px; --drip-height: 61px; }
+  .box-drip-pink { --drip-width: 12px; --drip-height: 29px; }
 }
-@media (prefers-reduced-motion: reduce) { .download-box-drip { transform: none; } }
