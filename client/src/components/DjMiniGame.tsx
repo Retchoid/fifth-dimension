@@ -1796,7 +1796,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <p className="eyebrow"><Disc size={15} /> DUBPLATE AUTHENTICATION / 06</p>
           <h2 id="minigame-title">SELECTOR<br /><em>SHOWDOWN.</em></h2>
         </div>
-          <p>Catch 25 heavy 5D dubplates and dodge the badge patrol to unlock “Jersh In Case.” Then command the crowd through a 50-record Level 2 run. Missed records reset your combo; hazards cost lives. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
+          <p>Catch 25 heavy 5D dubplates to trigger the chained “Jersh In Case” release, then command a 50-record Level 2 crowd run. Missed records reset a streak and hazards remove hearts. Use A/D keys or pointer movement to position the turntable; the bonus uses tap and swipe gestures.</p>
       </div>
 
       <audio
@@ -1808,6 +1808,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         aria-label="16-bit jungle background soundtrack"
       />
       <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}${isRespectShaking ? " is-respect-shaking" : ""}${damageFeedback ? " is-damage-shaking" : ""}`}>
+        <div className="cabinet-corner-bolts" aria-hidden="true"><i /><i /><i /><i /></div>
         <div className="arcade-marquee">
           <span className="marquee-light" />
           <span className="marquee-seal" aria-hidden="true">5D</span>
@@ -1818,6 +1819,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
           <span className="marquee-light" />
         </div>
+        <div className="cabinet-service-plate" aria-hidden="true"><span>5D MODEL 95</span><b>INSERT 25¢</b></div>
         <div
           ref={containerRef}
           className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding ? " is-bonus-scene" : ""}`}
@@ -1945,7 +1947,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
-              <p>{level === 2 ? "Level 2: command the crowd from the booth. Catch 50 records while avoiding bottles, apple cores, and police sirens thrown from the rave floor." : "Catch spinning vinyl records (+100pts). Collect 25 records to unlock the free “Jersh In Case” download. Avoid the cop sirens and badge patrol—missed records reset your combo, while hazards cost lives."}</p>
+              <div className="arcade-instruction-brief">
+                {level === 2 ? <><span>LEVEL 2 / CROWD PRESSURE</span><p>Collect 50 dubplates to complete the transmission. Bottles and apple cores join the sirens, pills, and phones as hazards. At 25 dubplates the crowd cheers; keep the booth alive to reach the terminal finale.</p><small>Mixers, turntables, adapters, CDJs, and the Lion of Judah add value. Three mixers or three decks trigger bonus scenes.</small></> : <><span>LEVEL 1 / DUBPLATE TEST</span><p>Collect 25 dubplates. The release stays locked until the chain lands and breaks. Missed dubplates reset a streak; sirens, pills, and phones remove hearts.</p><small>Six clean catches deploy the sub, 12 shakes the set, 18 rewinds with dancers, and 24 breaks open the deck floor. A clean run can enter the No Request Bonus.</small></>}
+              </div>
               <button type="button" className="tape-play-button" onClick={startGame}>
                 <span className="tape-play-face" aria-hidden="true">
                   <i className="tape-reel tape-reel-left" />
@@ -2255,8 +2259,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <div className="finale-copy">BIG UP BADMAN <strong>{submittedName || "SELECTOR"}</strong><br />JUNGLE IS MASSIVE.</div>
               <span className="finale-subline">LEVEL 2 / 50 DUBPLATES CLEARED</span>
               <div className="finale-actions">
-                <a className="facebook-like-button finale-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
                 <button type="button" className="finale-restart-button" onClick={startGame}>PLAY AGAIN</button>
+                <a className="facebook-like-button finale-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
               </div>
             </div>
             <div className="finale-respekt-ticker" aria-label="Maximum respekt boh boh">
@@ -2289,6 +2293,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               )}
               <h3>{levelTwoComplete ? "LEVEL 2 CLEARED" : "SESSION TERMINATED"}</h3>
               <p>{levelTwoComplete ? `Final Score: ${score} — Save your selector tag to send the transmission.` : <>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</>}</p>
+              <button type="button" className="tape-play-button reset-first-action" onClick={startGame}>
+                <span className="tape-play-face" aria-hidden="true"><i className="tape-reel tape-reel-left" /><span className="tape-window"><RotateCcw size={15} /></span><i className="tape-reel tape-reel-right" /></span>
+                <span className="tape-play-copy">PLAY AGAIN / RESET</span>
+              </button>
 
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitScore}>
@@ -2337,14 +2345,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 </div>
               </div>
 
-              <button type="button" className="tape-play-button" onClick={startGame}>
-                <span className="tape-play-face" aria-hidden="true">
-                  <i className="tape-reel tape-reel-left" />
-                  <span className="tape-window"><RotateCcw size={15} /></span>
-                  <i className="tape-reel tape-reel-right" />
-                </span>
-                <span className="tape-play-copy">Play Again</span>
-              </button>
             </div>
           </div>
         )}
@@ -2486,7 +2486,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       </div>
         <div className="arcade-control-panel">
           <div className="arcade-coin-slot"><span className="coin-slot-slit" /><strong>25¢</strong></div>
-          <div className="arcade-joystick-hint"><span>◄ ► ARROWS / A-D TO SCRATCH</span></div>
+          <div className="cabinet-physical-controls" aria-hidden="true"><span className="arcade-joystick"><i /></span><span className="arcade-action-button action-pink" /><span className="arcade-action-button action-cyan" /></div>
+          <div className="arcade-joystick-hint"><span>SCRATCH PAD / TOUCH + POINTER</span></div>
           <div className="arcade-coin-slot"><span className="coin-slot-slit" /><strong>PLAYER 1</strong></div>
         </div>
       </div>

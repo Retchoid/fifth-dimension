@@ -697,3 +697,10 @@
 - [x] Place the Start/Play Again/Reset action before the pickup-value legend in every relevant arcade panel.
 - [x] Add a compact visual bonus-control guide and order Level 1 handoff controls as replay first, then controls, Facebook Like, and selector tag entry.
 - [x] Validate fresh-session flow, local unlock persistence after achievement, responsive panel order, build, and checkpoint delivery.
+
+## Full Selector Showdown audit and cabinet refinement
+
+- [x] Audit the coded game flow and presentation against the established requirements, excluding all arrow-related treatments.
+- [x] Refine the cabinet as a more convincing 90s arcade machine with readable functional controls and physical detail.
+- [x] Rewrite the initial pre-play instructions to match the actual Level 1, Level 2, bonus, reward, punishment, and unlock behavior.
+- [x] Repair any verified gaps found in the audit, then validate fresh progression, desktop/mobile controls, audio state, build, and checkpoint delivery.
