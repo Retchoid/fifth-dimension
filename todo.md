@@ -562,3 +562,26 @@
 - [x] Verify and prepare supplied Google Drive audio sources for direct site playback, including the repeated Festival Live Mix Part C/Part D link.
 - [x] Add the supplied mixes to the Listen section with the stated titles, artists, descriptions, and native on-site players; place Deep On Rolling and Minianimilism 2 in the DnB/jungle archive rather than the house grouping.
 - [x] Validate game flow, audio playback, mobile usability, metadata, build, and checkpoint delivery.
+
+## Mix-cover artwork exploration
+
+- [x] Develop one coherent archive-broadcast cover direction with a distinct genre-specific concept for each of the nine supplied mixes.
+- [x] Generate and lightly validate nine standalone square cover thumbnails.
+- [x] Present every titled cover to the user for approval or amendment before integrating any into the site.
+
+## PNG cover-set re-delivery
+
+- [x] Locate the generated cover files and attach them as standard PNGs for direct user review.
+
+## Approved mix-cover integration and downloads
+
+- [x] Map all nine approved cover PNGs to their corresponding archive MP3 files and player entries, preserving every provided title and artist credit exactly.
+- [x] Embed each approved cover as album artwork in the matching MP3 metadata and upload the finalized downloadable file with the supplied title and artist credit.
+- [x] Show each approved cover, exact title, exact artist credit, and a direct download control beside every native audio player.
+- [x] Validate cover display, downloadable artwork/title/artist metadata, playback, responsive layout, build, and checkpoint delivery.
+
+## Individual mix sharing
+
+- [x] Add a share control to each archive mix with its approved cover, exact title, and artist credit.
+- [x] Include the exact call to action: “check out 5th Dimension music official site for more content, games and upcoming events”.
+- [x] Validate the native-share and copy-link fallback behavior, responsive share-card display, build, and checkpoint delivery.

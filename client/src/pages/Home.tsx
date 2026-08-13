@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Disc3,
+  Download,
   Facebook,
   Instagram,
   Mail,
@@ -105,71 +106,93 @@ const MIX_ARCHIVE = {
   jungle: [
     {
       id: "JUNGLE / 01",
-      title: "CFMU Hostile Airwaves — May 9",
-      artist: "DJ Hideaf",
+      title: "CFMU Hostile Airwaves May 9",
+      artist: "Dj Hideaf",
       description: "Hostile Airwaves archive recording. Date: May 9; year not listed.",
-      file: "/manus-storage/cfmu-hostile-airwaves-may-9_f0a61120.mp3",
+      file: "/manus-storage/cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3",
+      downloadName: "CFMU Hostile Airwaves May 9 - Dj Hideaf.mp3",
+      cover: "/manus-storage/mix-cover-cfmu-hostile-airwaves_9603abc2.png",
     },
     {
       id: "DNB / 02",
       title: "Deep On Rolling",
       artist: "Bobbyjackets",
       description: "Liquid funk feature recorded for Red.fm.",
-      file: "/manus-storage/deep-on-rolling_a780ced9.mp3",
+      file: "/manus-storage/deep-on-rolling-bobbyjackets-final_0c567ad7.mp3",
+      downloadName: "Deep On Rolling - Bobbyjackets.mp3",
+      cover: "/manus-storage/png-review-deep-on-rolling_481214e6.png",
     },
     {
       id: "DNB / 03",
       title: "Minianimilism 2",
       artist: "5th Dimension",
       description: "Drum-and-bass transmission from the 5D archive.",
-      file: "/manus-storage/minianimilism-2_587c1ce0.mp3",
+      file: "/manus-storage/minianimilism-2-5th-dimension-final_567b354e.mp3",
+      downloadName: "Minianimilism 2 - 5th Dimension.mp3",
+      cover: "/manus-storage/png-review-minianimilism-2_f8c55f62.png",
     },
   ],
   house: [
     {
       id: "HOUSE / 01",
-      title: "Live Festival House Mix 2022",
+      title: "Live festival house mix 2022",
       artist: "Bobbyjackets",
       description: "Live festival house broadcast from 2022.",
-      file: "/manus-storage/live-festival-house-mix-2022_87800888.mp3",
+      file: "/manus-storage/live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3",
+      downloadName: "Live festival house mix 2022 - Bobbyjackets.mp3",
+      cover: "/manus-storage/png-review-live-festival-house-2022_4dd116a7.png",
     },
     {
       id: "HOUSE / 02",
       title: "Holes in Our Souls",
       artist: "Bobbyjackets",
       description: "Multi-style downtempo and deep-house session.",
-      file: "/manus-storage/holes-in-our-souls_0caf2c04.mp3",
+      file: "/manus-storage/holes-in-our-souls-bobbyjackets-final_9ab83342.mp3",
+      downloadName: "Holes in Our Souls - Bobbyjackets.mp3",
+      cover: "/manus-storage/png-review-holes-in-our-souls_ec90b79e.png",
     },
     {
       id: "LIVE HOUSE / A",
-      title: "Festival Live Mix House — Side A",
+      title: "Festival live mix house — Side A",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part A: techy electro bass house.",
-      file: "/manus-storage/festival-live-house-side-a_7de07c37.mp3",
+      file: "/manus-storage/festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3",
+      downloadName: "Festival live mix house - Side A - Bobbyjackets.mp3",
+      cover: "/manus-storage/png-review-festival-house-side-a_b1083694.png",
     },
     {
       id: "LIVE HOUSE / B",
-      title: "Festival Live Mix House — Side B",
+      title: "Festival live mix house — Side B",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part B: slightly harder bass.",
-      file: "/manus-storage/festival-live-house-side-b_731b09ed.mp3",
+      file: "/manus-storage/festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3",
+      downloadName: "Festival live mix house - Side B - Bobbyjackets.mp3",
+      cover: "/manus-storage/png-review-festival-house-side-b_9e1003bf.png",
     },
     {
       id: "LIVE HOUSE / C",
-      title: "Festival Live Mix House — Side C",
+      title: "Festival live mix house — Side C",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part C: keep it moving on the dancefloor.",
-      file: "/manus-storage/festival-live-house-side-c_a8c81233.mp3",
+      file: "/manus-storage/festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3",
+      downloadName: "Festival live mix house - Side C - Bobbyjackets.mp3",
+      cover: "/manus-storage/png-review-festival-house-side-c_dc39199f.png",
     },
     {
       id: "LIVE HOUSE / D",
-      title: "Festival Live Mix House — Side D",
+      title: "Festival live mix house — Side D",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part D: sun coming up, totally turnt.",
-      file: "/manus-storage/festival-live-house-side-d_9e6f78e5.mp3",
+      file: "/manus-storage/festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3",
+      downloadName: "Festival live mix house - Side D - Bobbyjackets.mp3",
+      cover: "/manus-storage/png-review-festival-house-side-d_a5ceb8e8.png",
     },
   ],
 } as const;
+
+type ArchiveMix = (typeof MIX_ARCHIVE.jungle)[number] | (typeof MIX_ARCHIVE.house)[number];
+const ARCHIVE_MIXES: ArchiveMix[] = [...MIX_ARCHIVE.jungle, ...MIX_ARCHIVE.house];
+const MIX_SHARE_CALL_TO_ACTION = "check out 5th Dimension music official site for more content, games and upcoming events";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -182,6 +205,8 @@ export default function Home() {
   const [bookingEventLocation, setBookingEventLocation] = useState("");
   const [isExclusivePlaying, setIsExclusivePlaying] = useState(false);
   const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
+  const [sharedMixId, setSharedMixId] = useState<string | null>(null);
+  const [mixShareStatus, setMixShareStatus] = useState<"idle" | "copied">("idle");
   const [requiresSupporterConfirmation, setRequiresSupporterConfirmation] = useState(false);
   const exclusiveAudioRef = useRef<HTMLAudioElement>(null);
   const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
@@ -240,6 +265,29 @@ export default function Home() {
       window.setTimeout(() => setShareStatus("idle"), 2600);
     } catch {
       // Closing a system share sheet is not an error state worth surfacing.
+    }
+  };
+
+  const activeShareMix = sharedMixId ? ARCHIVE_MIXES.find((mix) => mix.id === sharedMixId) ?? null : null;
+
+  const shareArchiveMix = async (mix: ArchiveMix) => {
+    const archiveUrl = `${window.location.origin}${window.location.pathname}#other-mixes`;
+    const shareData = {
+      title: `${mix.title} — ${mix.artist}`,
+      text: `${mix.title} — ${mix.artist}. ${MIX_SHARE_CALL_TO_ACTION}`,
+      url: archiveUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+      await navigator.clipboard.writeText(`${shareData.text}\n${archiveUrl}`);
+      setMixShareStatus("copied");
+      window.setTimeout(() => setMixShareStatus("idle"), 2600);
+    } catch {
+      // Closing a native share sheet does not require an error message.
     }
   };
 
@@ -444,12 +492,12 @@ export default function Home() {
               <div className="mix-archive-grid">
                 {MIX_ARCHIVE.jungle.map((mix) => (
                   <article className="mix-archive-card" key={mix.id}>
-                    <span className="mix-archive-id">{mix.id}</span>
-                    <div className="mix-archive-titleline"><Disc3 size={25} /><div><h4>{mix.title}</h4><strong>{mix.artist}</strong></div></div>
+                    <div className="mix-archive-card-head">
+                      <img className="mix-archive-cover" src={mix.cover} alt={`Cover artwork for ${mix.title}`} />
+                      <div><span className="mix-archive-id">{mix.id}</span><div className="mix-archive-titleline"><Disc3 size={25} /><div><h4>{mix.title}</h4><strong>{mix.artist}</strong></div></div></div>
+                    </div>
                     <p>{mix.description}</p>
-                    <audio controls preload="metadata" src={mix.file} aria-label={`Play ${mix.title} by ${mix.artist}`}>
-                      Your browser does not support direct audio playback.
-                    </audio>
+                    <div className="mix-archive-actions"><audio controls preload="metadata" src={mix.file} aria-label={`Play ${mix.title} by ${mix.artist}`}>Your browser does not support direct audio playback.</audio><a href={mix.file} download={mix.downloadName} className="mix-download" aria-label={`Download ${mix.title} by ${mix.artist}`}><Download size={15} /><span>MP3</span></a><button type="button" className="mix-share" onClick={() => { setSharedMixId(mix.id); setMixShareStatus("idle"); }} aria-label={`Open share card for ${mix.title} by ${mix.artist}`}><Share2 size={15} /><span>SHARE</span></button></div>
                   </article>
                 ))}
               </div>
@@ -459,18 +507,36 @@ export default function Home() {
               <div className="mix-archive-grid mix-archive-grid-house">
                 {MIX_ARCHIVE.house.map((mix) => (
                   <article className="mix-archive-card" key={mix.id}>
-                    <span className="mix-archive-id">{mix.id}</span>
-                    <div className="mix-archive-titleline"><Music2 size={24} /><div><h4>{mix.title}</h4><strong>{mix.artist}</strong></div></div>
+                    <div className="mix-archive-card-head">
+                      <img className="mix-archive-cover" src={mix.cover} alt={`Cover artwork for ${mix.title}`} />
+                      <div><span className="mix-archive-id">{mix.id}</span><div className="mix-archive-titleline"><Music2 size={24} /><div><h4>{mix.title}</h4><strong>{mix.artist}</strong></div></div></div>
+                    </div>
                     <p>{mix.description}</p>
-                    <audio controls preload="metadata" src={mix.file} aria-label={`Play ${mix.title} by ${mix.artist}`}>
-                      Your browser does not support direct audio playback.
-                    </audio>
+                    <div className="mix-archive-actions"><audio controls preload="metadata" src={mix.file} aria-label={`Play ${mix.title} by ${mix.artist}`}>Your browser does not support direct audio playback.</audio><a href={mix.file} download={mix.downloadName} className="mix-download" aria-label={`Download ${mix.title} by ${mix.artist}`}><Download size={15} /><span>MP3</span></a><button type="button" className="mix-share" onClick={() => { setSharedMixId(mix.id); setMixShareStatus("idle"); }} aria-label={`Open share card for ${mix.title} by ${mix.artist}`}><Share2 size={15} /><span>SHARE</span></button></div>
                   </article>
                 ))}
               </div>
             </div>
           </div>
         </section>
+
+        <Dialog open={Boolean(activeShareMix)} onOpenChange={(open) => { if (!open) setSharedMixId(null); }}>
+          {activeShareMix && (
+            <DialogContent className="mix-share-dialog" aria-describedby={undefined}>
+              <DialogTitle className="sr-only">Share {activeShareMix.title}</DialogTitle>
+              <article className="mix-share-card">
+                <img src={activeShareMix.cover} alt={`Cover artwork for ${activeShareMix.title}`} />
+                <div className="mix-share-card-copy">
+                  <span>5D / SHARED TRANSMISSION</span>
+                  <h3>{activeShareMix.title}</h3>
+                  <strong>{activeShareMix.artist}</strong>
+                  <a href="#top">{MIX_SHARE_CALL_TO_ACTION}</a>
+                  <button type="button" onClick={() => void shareArchiveMix(activeShareMix)}><Share2 size={17} />{mixShareStatus === "copied" ? "LINK COPIED" : "SHARE THIS MIX"}</button>
+                </div>
+              </article>
+            </DialogContent>
+          )}
+        </Dialog>
 
         <section id="projects" className="projects-section" aria-labelledby="projects-title">
           <div className="section-heading section-heading-dark">

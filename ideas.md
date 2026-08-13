@@ -86,3 +86,6 @@ Generated fallback assets prepared for this project live outside the project dir
 - Graphite, parchment, and Signal Orange now carry the listening archive and arcade frame; magenta/cyan are retained for imported artwork and contained gameplay energy rather than the general interface base.
 - The mix archive and arcade cabinet use printed-paper texture, thin technical rules, label-like metadata, and Signal Orange shadows as the default non-art material language.
 - Selector Showdown is explicitly labeled as a 5D dubplate-authentication challenge, nesting its arcade mechanics inside the release-label and pirate-radio ritual.
+- Bright non-art bands now resolve to graphite, parchment, and Signal Orange broadcast fields; full magenta, cyan, and purple are reserved for imported artwork or contained feature moments.
+- The archive, projects, booking, contact, and arcade zones repeat a 5D authentication label, seal, signal or graffiti mark so the street-art broadcast identity leads the system.
+- Functional interface actions, including mix playback-adjacent downloads and share actions, default to Signal Orange; acid green remains a live/status accent only.
