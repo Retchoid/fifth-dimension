@@ -545,3 +545,8 @@
 
 - [x] Add distinct mute-aware 16-bit sound effects for turntable and 45-adapter pickups.
 - [x] Validate pickup routing, build, and checkpoint delivery.
+
+## Pickup-value HUD feedback
+
+- [x] Add a subtle HUD-side flash that identifies the value of each positive pickup when collected.
+- [x] Validate feedback timing, responsive presentation, build, and checkpoint delivery.

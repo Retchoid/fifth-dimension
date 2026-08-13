@@ -40,6 +40,10 @@ const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maxim
 const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["pill", "cd", "raver", "bracelet", "bottle"];
 const BONUS_REWARD = 250;
 type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
+interface PickupFlash {
+  key: number;
+  label: string;
+}
 
 interface FallingItem {
   id: number;
@@ -87,6 +91,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [showComboBurst, setShowComboBurst] = useState(false);
   const [comboReaction, setComboReaction] = useState<ComboReaction>(null);
   const [isGunFingerShaking, setIsGunFingerShaking] = useState(false);
+  const [pickupFlash, setPickupFlash] = useState<PickupFlash | null>(null);
   const [isRewindPaused, setIsRewindPaused] = useState(false);
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
@@ -159,6 +164,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusRewindTimerRef = useRef<number>(0);
   const comboBurstTimerRef = useRef<number>(0);
   const gunFingerShakeTimerRef = useRef<number>(0);
+  const pickupFlashTimerRef = useRef<number>(0);
   downloadUnlockedRef.current = downloadUnlocked;
 
   // Key state for smooth movement
@@ -1183,8 +1189,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           comboRef.current = nextCombo;
           setCombo(nextCombo);
           const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : item.type === "turntable" ? 3 : item.type === "adapter" ? 2 : 1;
+          const pickupLabel = item.type === "lion" ? "LION +2" : item.type === "cdj" ? "CDJ +5" : item.type === "turntable" ? "DECK +3" : item.type === "adapter" ? "45 +2" : "DUB +1";
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
           currentScore += pointsEarned;
+          window.clearTimeout(pickupFlashTimerRef.current);
+          setPickupFlash({ key: item.id, label: pickupLabel });
+          pickupFlashTimerRef.current = window.setTimeout(() => setPickupFlash(null), 820);
           if (nextCombo >= 30 && !wheelItUpAwardedRef.current) {
             // The rarest selector salute is deliberately deep in the streak so it
             // remains special through both 25- and 50-record level targets.
@@ -1422,6 +1432,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(bonusRewindTimerRef.current);
       window.clearTimeout(comboBurstTimerRef.current);
       window.clearTimeout(gunFingerShakeTimerRef.current);
+      window.clearTimeout(pickupFlashTimerRef.current);
       if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     };
   }, []);
@@ -1514,6 +1525,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{level === 2 ? LEVEL_TWO_REQUIRED_RECORDS : REQUIRED_RECORDS}</strong></div>
           <div className="hud-badge combo-badge" aria-label={`Combo multiplier: ${combo}x`}>COMBO: <strong>{combo}x</strong></div>
           <div className="hud-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
+          <div className="pickup-flash-slot" aria-live="polite" aria-atomic="true">
+            {pickupFlash && <span key={pickupFlash.key}>{pickupFlash.label}</span>}
+          </div>
           <div className="hud-badge lives-badge">LIVES: <strong>{"❤️".repeat(lives)}</strong></div>
           <button
             type="button"
