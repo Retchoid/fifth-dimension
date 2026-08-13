@@ -590,3 +590,18 @@
 
 - [x] Remove the Level 2 Rave Etiquette box and place the Crowd Hype meter in its unobstructed in-world location.
 - [x] Validate the Level 2 playfield layout, build, and checkpoint delivery.
+
+## No Request Bonus rebuild
+
+- [x] Replace the unreliable bonus movement/jump interaction with arrow-key movement plus Space jump on desktop and tap-to-jump mobile controls.
+- [x] Enrich the dawn bonus scene with a visibly angry club-owner sprite throwing bottles near the top door, while keeping the doorway passable.
+- [x] Change the DJ to a camo outfit after completing the bonus level.
+- [x] Restrict bottles and apple cores to Level 2 and start the Level 1 jungle music with gameplay.
+- [x] Validate desktop and mobile bonus gameplay, visual clarity, level hazard routing, audio timing, build, and checkpoint delivery.
+
+## Mixer, turntable, and rewind bonus events
+
+- [x] Trigger a record-crate splash after collecting three mixers: “A DJ accidentally put his records in your crate!”
+- [x] Trigger a headphones splash after collecting three turntables: “You remembered to bring your headphones to the rave!”
+- [x] Make rewind transitions spin visibly back into live gameplay.
+- [x] Validate bonus-event timing, resume behavior, build, and checkpoint delivery.

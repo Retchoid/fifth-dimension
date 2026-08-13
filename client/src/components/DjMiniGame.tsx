@@ -49,7 +49,7 @@ interface FallingItem {
   id: number;
   x: number; // percentage 0-92
   y: number; // percentage 0-90
-  type: "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "turntable" | "adapter" | "pill" | "phone";
+  type: "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
   speed: number;
   size: number;
 }
@@ -72,6 +72,7 @@ function PickupLegend({ level }: { level: GameLevel }) {
         <span className="pickup-legend-chip positive"><i className="legend-icon record" />DUB +1</span>
         {isLevelTwo && <span className="pickup-legend-chip positive"><i className="legend-icon lion" />LION +2</span>}
         <span className="pickup-legend-chip positive"><i className="legend-icon adapter" />45 +2</span>
+        <span className="pickup-legend-chip positive"><i className="legend-icon mixer" />MIXER +4</span>
         <span className="pickup-legend-chip positive"><i className="legend-icon deck" />DECK +3</span>
         <span className="pickup-legend-chip positive"><i className="legend-icon cdj" />CDJ +5</span>
       </div>
@@ -119,6 +120,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
   const [isCrowdAngerPaused, setIsCrowdAngerPaused] = useState(false);
+  const [isCrateBonusPaused, setIsCrateBonusPaused] = useState(false);
+  const [isHeadphonesBonusPaused, setIsHeadphonesBonusPaused] = useState(false);
   const [isLevelTwoMarqueeVisible, setIsLevelTwoMarqueeVisible] = useState(false);
   const [mixerDamaged, setMixerDamaged] = useState(false);
   const [recoveryProgress, setRecoveryProgress] = useState(0);
@@ -131,6 +134,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [bonusLives, setBonusLives] = useState(3);
   const [bonusIsJumping, setBonusIsJumping] = useState(false);
   const [bonusDoorOpen, setBonusDoorOpen] = useState(false);
+  const [bonusCamoUnlocked, setBonusCamoUnlocked] = useState(false);
   const [bonusObstacles, setBonusObstacles] = useState<BonusObstacle[]>([]);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -157,6 +161,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bottleHitsRef = useRef(0);
   const appleCoreHitsRef = useRef(0);
   const crowdAngerPauseTimerRef = useRef<number>(0);
+  const crateBonusPauseTimerRef = useRef<number>(0);
+  const headphonesBonusPauseTimerRef = useRef<number>(0);
   const crowdCheerPlayedRef = useRef(false);
   const levelTwoMusicTimerRef = useRef<number>(0);
   const levelTwoMarqueeTimerRef = useRef<number>(0);
@@ -185,6 +191,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusInvulnerableUntilRef = useRef(0);
   const bonusSplashTimerRef = useRef<number>(0);
   const bonusRewindTimerRef = useRef<number>(0);
+  const mixerPickupCountRef = useRef(0);
+  const turntablePickupCountRef = useRef(0);
   const comboBurstTimerRef = useRef<number>(0);
   const gunFingerShakeTimerRef = useRef<number>(0);
   const pickupFlashTimerRef = useRef<number>(0);
@@ -218,6 +226,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       .then(() => setMusicStatus("playing"))
       .catch((error: unknown) => {
         console.warn("Background jungle track could not start:", error);
+        setMusicStatus("blocked");
+      });
+  };
+
+  const startLevelOneMusic = () => {
+    const audio = bgMusicRef.current;
+    if (!audio || !soundEnabledRef.current) return;
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = 0.34;
+    audio.muted = false;
+    const playPromise = audio.play();
+    playPromise
+      .then(() => setMusicStatus("playing"))
+      .catch((error: unknown) => {
+        console.warn("Level 1 jungle track could not start:", error);
         setMusicStatus("blocked");
       });
   };
@@ -731,6 +755,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
     appleCoreHitsRef.current = 0;
+    mixerPickupCountRef.current = 0;
+    turntablePickupCountRef.current = 0;
     crowdCheerPlayedRef.current = false;
     mixerDamagedRef.current = false;
     recoveryProgressRef.current = 0;
@@ -744,6 +770,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
     setIsCrowdAngerPaused(false);
+    setIsCrateBonusPaused(false);
+    setIsHeadphonesBonusPaused(false);
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
@@ -820,6 +848,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       scoreRef.current = rewardScore;
       setScore(rewardScore);
       setBonusDoorOpen(true);
+      setBonusCamoUnlocked(true);
     }
     setIsBonusLevelActive(false);
     setIsBonusRewinding(true);
@@ -845,6 +874,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     bonusLastTimeRef.current = time;
 
     let nextProgress = bonusProgressRef.current;
+    const touchAutoAdvance = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+    if (touchAutoAdvance) nextProgress = Math.min(100, nextProgress + 10 * dt);
     if (keysRef.current["left"]) nextProgress = Math.max(0, nextProgress - 20 * dt);
     if (keysRef.current["right"]) nextProgress = Math.min(100, nextProgress + 23 * dt);
     if (nextProgress !== bonusProgressRef.current) {
@@ -853,11 +884,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
 
     bonusSpawnTimerRef.current += dt;
-    if (bonusSpawnTimerRef.current >= 1.25) {
+    if (bonusSpawnTimerRef.current >= 1.45) {
       bonusSpawnTimerRef.current = 0;
       const lane = Math.min(3, Math.floor(Math.random() * 4));
-      const type = BONUS_OBSTACLE_TYPES[Math.floor(Math.random() * BONUS_OBSTACLE_TYPES.length)];
-      bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, x: 104, lane, type, speed: 16 + Math.floor(Math.random() * 7) });
+      const type = lane === 3 && Math.random() < 0.42
+        ? "bottle"
+        : BONUS_OBSTACLE_TYPES[Math.floor(Math.random() * BONUS_OBSTACLE_TYPES.length)];
+      bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, x: 104, lane, type, speed: 12 + Math.floor(Math.random() * 5) });
     }
 
     const currentLane = Math.min(3, Math.floor(nextProgress / 25));
@@ -868,10 +901,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const nextObstacles: BonusObstacle[] = [];
     for (const obstacle of bonusObstaclesRef.current) {
       const moved = { ...obstacle, x: obstacle.x - obstacle.speed * dt };
-      const collides = moved.lane === currentLane && Math.abs(moved.x - playerX) < 8;
+      const collides = moved.lane === currentLane && Math.abs(moved.x - playerX) < 6.5;
       if (collides && !bonusIsJumpingRef.current && now > bonusInvulnerableUntilRef.current) {
         wasHit = true;
-        bonusInvulnerableUntilRef.current = now + 950;
+        bonusInvulnerableUntilRef.current = now + 1100;
         continue;
       }
       if (moved.x > -14) nextObstacles.push(moved);
@@ -999,6 +1032,30 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     return () => window.clearTimeout(crowdAngerPauseTimerRef.current);
   }, [isCrowdAngerPaused]);
 
+  useEffect(() => {
+    if (!isCrateBonusPaused) return;
+    crateBonusPauseTimerRef.current = window.setTimeout(() => {
+      setIsCrateBonusPaused(false);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      requestRef.current = requestAnimationFrame(updateGame);
+    }, 2050);
+    return () => window.clearTimeout(crateBonusPauseTimerRef.current);
+  }, [isCrateBonusPaused]);
+
+  useEffect(() => {
+    if (!isHeadphonesBonusPaused) return;
+    headphonesBonusPauseTimerRef.current = window.setTimeout(() => {
+      setIsHeadphonesBonusPaused(false);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      requestRef.current = requestAnimationFrame(updateGame);
+    }, 2050);
+    return () => window.clearTimeout(headphonesBonusPauseTimerRef.current);
+  }, [isHeadphonesBonusPaused]);
+
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const safeName = playerName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
@@ -1013,7 +1070,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isBonusLevelActive && (e.key === " " || e.key === "ArrowUp" || e.key.toLowerCase() === "w")) {
+      if (isBonusLevelActive && e.key === " ") {
         e.preventDefault();
         triggerBonusJump();
         return;
@@ -1065,6 +1122,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(wheelItUpPauseTimerRef.current);
     window.clearTimeout(policeSeizurePauseTimerRef.current);
     window.clearTimeout(crowdAngerPauseTimerRef.current);
+    window.clearTimeout(crateBonusPauseTimerRef.current);
+    window.clearTimeout(headphonesBonusPauseTimerRef.current);
     window.clearTimeout(levelTwoMusicTimerRef.current);
     window.clearTimeout(levelTwoMarqueeTimerRef.current);
     window.clearTimeout(mixerRepairTimerRef.current);
@@ -1077,10 +1136,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setFinale(false);
     finaleRef.current = false;
     isPlayingRef.current = true;
-    if (soundEnabledRef.current && bgMusicRef.current) {
-      bgMusicRef.current.currentTime = 0;
-      playBackgroundMusic();
-    }
+    startLevelOneMusic();
     scoreRef.current = 0;
     recordsCaughtRef.current = 0;
     comboRef.current = 1;
@@ -1093,6 +1149,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
     setIsCrowdAngerPaused(false);
+    setIsCrateBonusPaused(false);
+    setIsHeadphonesBonusPaused(false);
     setIsLevelTwoMarqueeVisible(false);
     setMixerDamaged(false);
     setRecoveryProgress(0);
@@ -1107,6 +1165,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     bonusProgressRef.current = 0;
     bonusLivesRef.current = 3;
     bonusObstaclesRef.current = [];
+    mixerPickupCountRef.current = 0;
+    turntablePickupCountRef.current = 0;
     setIsBonusEligible(false);
     setIsBonusSplashVisible(false);
     setIsBonusLevelActive(false);
@@ -1116,6 +1176,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     bonusIsJumpingRef.current = false;
     setBonusIsJumping(false);
     setBonusDoorOpen(false);
+    setBonusCamoUnlocked(false);
     setBonusObstacles([]);
     setUnlockRevealReady(false);
     setChainBreakComplete(false);
@@ -1159,12 +1220,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (spawnTimerRef.current >= spawnInterval) {
       spawnTimerRef.current = 0;
       const roll = Math.random();
-      // Both levels carry collectible deck gear and fair falling distractions.
-      // Level 2 keeps its crowd-pressure hazards and Lion of Judah rarity.
+      // Level 1 stays free of bottles and apple cores; only the Level 2 crowd throws them.
       const spawnedType: FallingItem["type"] = levelRef.current === 2
-        ? (roll < 0.56 ? "record" : roll < 0.65 ? "bottle" : roll < 0.73 ? "apple" : roll < 0.80 ? "cop" : roll < 0.85 ? "pill" : roll < 0.90 ? "phone" : roll < 0.935 ? "lion" : roll < 0.96 ? "cdj" : roll < 0.98 ? "turntable" : "adapter")
-        : (roll < 0.66 ? "record" : roll < 0.78 ? "cop" : roll < 0.84 ? "pill" : roll < 0.89 ? "phone" : roll < 0.94 ? "cdj" : roll < 0.975 ? "turntable" : "adapter");
-      const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : spawnedType === "lion" ? 46 : spawnedType === "cdj" || spawnedType === "turntable" ? 48 : spawnedType === "adapter" ? 30 : spawnedType === "phone" ? 28 : 30;
+        ? (roll < 0.55 ? "record" : roll < 0.64 ? "bottle" : roll < 0.72 ? "apple" : roll < 0.79 ? "cop" : roll < 0.84 ? "pill" : roll < 0.89 ? "phone" : roll < 0.925 ? "lion" : roll < 0.95 ? "cdj" : roll < 0.965 ? "mixer" : roll < 0.985 ? "turntable" : "adapter")
+        : (roll < 0.66 ? "record" : roll < 0.78 ? "cop" : roll < 0.84 ? "pill" : roll < 0.89 ? "phone" : roll < 0.94 ? "cdj" : roll < 0.955 ? "mixer" : roll < 0.98 ? "turntable" : "adapter");
+      const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : spawnedType === "lion" ? 46 : spawnedType === "cdj" || spawnedType === "mixer" || spawnedType === "turntable" ? 48 : spawnedType === "adapter" ? 30 : spawnedType === "phone" ? 28 : 30;
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 42 : 36;
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
@@ -1185,6 +1245,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     let pauseForWheelItUp = false;
     let pauseForPoliceSeizure = false;
     let pauseForCrowdAnger = false;
+    let pauseForCrateBonus = false;
+    let pauseForHeadphonesBonus = false;
     let launchBonus = false;
     let advanceToLevelTwo = false;
     let completeLevelTwo = false;
@@ -1200,7 +1262,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
       if (newY >= 70 && newY <= 90 && item.x >= currentX - 8 && item.x <= currentX + 22) {
         structureChanged = true;
-        if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "turntable" || item.type === "adapter") {
+        if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
           if (item.type === "turntable") {
             playTurntablePickup();
           } else if (item.type === "adapter") {
@@ -1211,8 +1273,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const nextCombo = comboRef.current + 1;
           comboRef.current = nextCombo;
           setCombo(nextCombo);
-          const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : item.type === "turntable" ? 3 : item.type === "adapter" ? 2 : 1;
-          const pickupLabel = item.type === "lion" ? "LION +2" : item.type === "cdj" ? "CDJ +5" : item.type === "turntable" ? "DECK +3" : item.type === "adapter" ? "45 +2" : "DUB +1";
+          const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : item.type === "mixer" ? 4 : item.type === "turntable" ? 3 : item.type === "adapter" ? 2 : 1;
+          const pickupLabel = item.type === "lion" ? "LION +2" : item.type === "cdj" ? "CDJ +5" : item.type === "mixer" ? "MIX +4" : item.type === "turntable" ? "DECK +3" : item.type === "adapter" ? "45 +2" : "DUB +1";
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
           currentScore += pointsEarned;
           window.clearTimeout(pickupFlashTimerRef.current);
@@ -1230,6 +1292,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             rewindAwardedRef.current = true;
             currentScore += 5;
             pauseForRewind = true;
+          }
+          if (item.type === "mixer") {
+            mixerPickupCountRef.current += 1;
+            if (mixerPickupCountRef.current >= 3) {
+              mixerPickupCountRef.current = 0;
+              pauseForCrateBonus = true;
+            }
+          }
+          if (item.type === "turntable") {
+            turntablePickupCountRef.current += 1;
+            if (turntablePickupCountRef.current >= 3) {
+              turntablePickupCountRef.current = 0;
+              pauseForHeadphonesBonus = true;
+            }
           }
           if (mixerDamagedRef.current) {
             const nextRecoveryProgress = Math.min(3, recoveryProgressRef.current + pickupValue);
@@ -1346,7 +1422,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         structureChanged = true;
         // Extended 25/50-record sessions remain fair: a missed record breaks
         // the combo, while only a caught hazard removes a life.
-        if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "turntable" || item.type === "adapter") {
+        if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
           comboRef.current = 1;
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
@@ -1405,6 +1481,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setIsCrowdAngerPaused(true);
       return;
     }
+    if (pauseForCrateBonus && !pauseForWheelItUp && !pauseForRewind) {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      setIsCrateBonusPaused(true);
+      return;
+    }
+    if (pauseForHeadphonesBonus && !pauseForWheelItUp && !pauseForRewind) {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      setIsHeadphonesBonusPaused(true);
+      return;
+    }
     if (advanceToLevelTwo) {
       startLevelTwo();
       return;
@@ -1447,6 +1535,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(wheelItUpPauseTimerRef.current);
       window.clearTimeout(policeSeizurePauseTimerRef.current);
       window.clearTimeout(crowdAngerPauseTimerRef.current);
+      window.clearTimeout(crateBonusPauseTimerRef.current);
+      window.clearTimeout(headphonesBonusPauseTimerRef.current);
       window.clearTimeout(levelTwoMusicTimerRef.current);
       window.clearTimeout(levelTwoMarqueeTimerRef.current);
       window.clearTimeout(mixerRepairTimerRef.current);
@@ -1526,6 +1616,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding ? " is-bonus-scene" : ""}`}
           onPointerMove={handlePointerMove}
           onPointerDown={(e) => {
+            if (isBonusLevelActive) {
+              if (e.pointerType === "touch" || e.pointerType === "pen") {
+                e.preventDefault();
+                triggerBonusJump();
+              }
+              return;
+            }
             if (e.pointerType === "touch") {
               e.currentTarget.setPointerCapture(e.pointerId);
               updateDjPositionFromClientX(e.clientX);
@@ -1597,7 +1694,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
+        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isCrateBonusPaused && !isHeadphonesBonusPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -1638,19 +1735,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="bonus-ladder ladder-one" aria-hidden="true" />
             <div className="bonus-ladder ladder-two" aria-hidden="true" />
             <div className="bonus-ladder ladder-three" aria-hidden="true" />
-            <div className={`bonus-club-door${bonusDoorOpen ? " is-open" : ""}`} aria-label="Club owner guarding the dawn door"><span className="club-owner">OWNER</span><i>NO GUESTLIST?</i></div>
+            <div className={`bonus-club-door${bonusDoorOpen ? " is-open" : ""}`} aria-label="Angry club owner throwing bottles beside the open dawn door">
+              <span className="club-owner-sprite" aria-hidden="true"><i /><b /><em /><strong /></span>
+              <span className="club-owner-label">OWNER</span>
+              <span className="club-owner-bottle bottle-one" aria-hidden="true" /><span className="club-owner-bottle bottle-two" aria-hidden="true" />
+              <i>NO GUESTLIST?</i>
+            </div>
             <div className="bonus-hud"><span>NO REQUEST BONUS</span><strong>DOOR {Math.round(bonusProgress)}%</strong><b>♥ {bonusLives}</b></div>
-            <div className="bonus-tip">◀ ▶ CLIMB / SPACE TO JUMP</div>
+            <div className="bonus-tip">DESKTOP: ◀ ▶ MOVE / SPACE JUMPS · MOBILE: TAP TO JUMP</div>
             <div className={`bonus-dj-runner lane-${bonusLane}${bonusIsJumping ? " is-jumping" : ""}`} style={{ "--runner-left": `${bonusRunnerLeft}%`, "--runner-bottom": `${bonusRunnerBottom}%` } as React.CSSProperties}>
               <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ climbing toward the club door" />
             </div>
             <div className="bonus-obstacle-layer" aria-hidden="true">
               {bonusObstacles.map((obstacle) => <span key={obstacle.id} className={`bonus-obstacle ${obstacle.type} lane-${obstacle.lane}`} style={{ left: `${obstacle.x}%` }}><i /></span>)}
             </div>
-            <div className="bonus-touch-controls" aria-label="No Request Bonus controls">
-              <button type="button" onPointerDown={() => { keysRef.current.left = true; }} onPointerUp={() => { keysRef.current.left = false; }} onPointerLeave={() => { keysRef.current.left = false; }}>◀</button>
-              <button type="button" className="bonus-jump-button" onClick={triggerBonusJump}>JUMP</button>
-              <button type="button" onPointerDown={() => { keysRef.current.right = true; }} onPointerUp={() => { keysRef.current.right = false; }} onPointerLeave={() => { keysRef.current.right = false; }}>▶</button>
+            <div className="bonus-touch-controls" aria-label="No Request Bonus mobile controls">
+              <button type="button" className="bonus-jump-button" onClick={triggerBonusJump}>TAP TO JUMP</button>
             </div>
           </div>
         )}
@@ -1678,6 +1778,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <em>BOH MY SELECTAH!</em>
             </div>
             {Array.from({ length: 10 }, (_, index) => <i key={index} className={`rewind-splash-drip rewind-drip-${index % 5}`} aria-hidden="true" />)}
+          </div>
+        )}
+
+        {isCrateBonusPaused && !gameOver && (
+          <div className="game-overlay crate-bonus-overlay" role="status" aria-live="assertive">
+            <div className="crate-stack" aria-hidden="true"><span className="crate-record crate-record-one" /><span className="crate-record crate-record-two" /><span className="crate-record crate-record-three" /><i>5D<br />DUBS</i></div>
+            <div className="pickup-bonus-copy"><span>3 MIXERS COLLECTED</span><strong>RECORD CRATE<br />BONUS!</strong><em>A DJ ACCIDENTALLY PUT HIS RECORDS<br />IN YOUR CRATE!</em></div>
+          </div>
+        )}
+
+        {isHeadphonesBonusPaused && !gameOver && (
+          <div className="game-overlay headphones-bonus-overlay" role="status" aria-live="assertive">
+            <div className="rave-headphones" aria-hidden="true"><i /><b /><em /></div>
+            <div className="pickup-bonus-copy"><span>3 TURNTABLES COLLECTED</span><strong>HEADPHONES<br />READY!</strong><em>YOU REMEMBERED TO BRING YOUR<br />HEADPHONES TO THE RAVE!</em></div>
           </div>
         )}
 
@@ -1995,6 +2109,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   <div className="lion-head-pickup" aria-label="Lion of Judah pickup worth 2 records"><span className="lion-crown-rays" /><img src="/manus-storage/selector-showdown-lion-of-judah-pickup_36a45652.png" alt="" /><strong>+2</strong></div>
                 ) : item.type === "cdj" ? (
                   <div className="cdj-pickup" aria-label="CDJ pickup worth 5 records"><span className="cdj-platter" /><i className="cdj-display">5</i><b>+5</b></div>
+                ) : item.type === "mixer" ? (
+                  <div className="mixer-pickup" aria-label="Mixer pickup worth 4 records"><span /><i /><b>+4</b></div>
                 ) : item.type === "turntable" ? (
                   <div className="turntable-pickup" aria-label="Turntable pickup worth 3 records"><span className="turntable-pickup-platter" /><i className="turntable-pickup-arm" /><b>+3</b></div>
                 ) : item.type === "adapter" ? (
@@ -2064,7 +2180,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
 
         {/* DJ selector with turntable at bottom */}
-        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}`} style={{ left: `${djXRef.current}%` }}>
+        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
               className="dj-sprite"
@@ -2075,6 +2191,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 event.currentTarget.parentElement?.classList.add("sprite-failed");
               }}
             />
+            {bonusCamoUnlocked && <span className="bonus-camo-outfit" aria-label="Bonus camo outfit unlocked"><i /><b /><em /></span>}
             {(mixerDamaged || mixerRepairBurst) && (
               <div className="mixer-recovery-status" aria-live="polite">
                 <strong>{mixerRepairBurst ? "MIXER REPAIRED +500" : "MIXER DAMAGED"}</strong>
