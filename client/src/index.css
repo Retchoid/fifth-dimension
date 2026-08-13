@@ -2348,6 +2348,14 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 }
 .finale-restart-button:hover { background: #145d24; transform: translate(-2px, -2px); }
 .finale-restart-button:active { transform: scale(.97); }
+.finale-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .62rem; margin-top: .85rem; }
+.finale-actions .finale-restart-button { margin-top: 0; }
+.facebook-like-button { display: inline-flex; align-items: center; justify-content: center; min-height: 2.55rem; padding: .68rem 1rem; border: 2px solid #08090f; background: #1877f2; color: #fff; box-shadow: 4px 4px 0 #08090f; font: 900 .66rem/1 "Bungee", Impact, sans-serif; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; transition: transform 160ms var(--ease-out), background 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
+.facebook-like-button::before { content: "f"; display: grid; place-items: center; width: 1.1rem; height: 1.1rem; margin-right: .38rem; border-radius: 2px; background: #fff; color: #1877f2; font: 900 1rem/1 Arial, sans-serif; text-transform: lowercase; }
+.facebook-like-button:hover { background: #0f63cf; box-shadow: 6px 6px 0 #08090f; transform: translate(-2px, -2px); }
+.facebook-like-button:focus-visible { outline: 3px solid #c6ff00; outline-offset: 3px; }.facebook-like-button:active { transform: scale(.97); }
+.between-level-like { margin: .4rem auto .12rem; background: #1877f2; }.between-level-like:hover { background: #0f63cf; }.finale-like { border-color: #63ff63; box-shadow: 4px 4px 0 #63ff63; }.finale-like:hover { box-shadow: 6px 6px 0 #63ff63; }
+@media (max-width: 650px) { .facebook-like-button { min-height: 2.35rem; padding: .6rem .78rem; font-size: .58rem; }.finale-actions { width: 100%; gap: .5rem; }.finale-actions > * { flex: 1 1 10rem; }.between-level-like { width: min(100%, 252px); } }
 .finale-respekt-ticker {
   position: absolute;
   z-index: 2;

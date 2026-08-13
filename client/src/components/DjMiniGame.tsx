@@ -2072,6 +2072,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="overlay-box game-over-box-wide">
               <h3>LEVEL 1 HIGH SCORE</h3>
               <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
+              <a className="facebook-like-button between-level-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
               <PickupLegend level={2} />
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitPreLevelTwoScore}>
@@ -2126,7 +2127,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="finale-kicker">5D TRANSMISSION COMPLETE</span>
               <div className="finale-copy">BIG UP BADMAN <strong>{submittedName || "SELECTOR"}</strong><br />JUNGLE IS MASSIVE.</div>
               <span className="finale-subline">LEVEL 2 / 50 DUBPLATES CLEARED</span>
-              <button type="button" className="finale-restart-button" onClick={startGame}>PLAY AGAIN</button>
+              <div className="finale-actions">
+                <a className="facebook-like-button finale-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
+                <button type="button" className="finale-restart-button" onClick={startGame}>PLAY AGAIN</button>
+              </div>
             </div>
             <div className="finale-respekt-ticker" aria-label="Maximum respekt boh boh">
               <span>MAXIMUM RESPEKT BOH! BOH!</span>

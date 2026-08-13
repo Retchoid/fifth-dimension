@@ -619,3 +619,9 @@
 - [x] Add a distinct mute-aware woozy 16-bit sound sequence to the three-pill dopey-DJ scene.
 - [x] Add a distinct mute-aware sparse empty-club / closing-time sound sequence to the bottle/apple crowd-exit scene.
 - [x] Validate scene-to-sound timing, mute behavior, typecheck, production build, and checkpoint delivery.
+
+## Arcade Facebook artist-page actions
+
+- [x] Add a “Big Up! (Like)” Facebook action to the between-level handoff.
+- [x] Add the same action to the end-of-game finale, pointing to the artist page already supplied by the user.
+- [x] Validate target URL, responsive presentation, build, and checkpoint delivery.
