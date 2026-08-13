@@ -80,5 +80,6 @@ Generated fallback assets prepared for this project live outside the project dir
 - Large background fields should default to graphite, parchment/cream, and Signal Orange; magenta and cyan may dominate imported artwork or one deliberate flyer band, but should not become the default site-wide atmosphere.
 - Selector Showdown uses Signal Orange for functional transmission moments and repeats a compact 5D authentication label across its marquee and controls, keeping pirate-radio/release-label character ahead of cabinet novelty.
 - The No Request Bonus may use sunrise pinks and cyan horizon light as a contained dawn-world exception, while tactile rails, signs, and metadata keep it part of the archive-broadcast system.
+- Selector Showdown’s active playfield is framed as a 5D dubplate-authentication ritual through parchment broadcast labels, Signal Orange functional edges, and release-log metadata; reactive effects remain expressive but are nested inside this printed-transmission frame.
 - Selector Showdown should read as a pirate-radio/release-label challenge first and an arcade second, using broadcast metadata, stamped labels, tactile controls, and a recurring 5D seal.
 - The graffiti/round 5D seal should recur across major page zones as the primary brand mark, with typed “5th Dimension” labels as secondary identifiers.

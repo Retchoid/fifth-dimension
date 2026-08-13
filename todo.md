@@ -532,3 +532,11 @@
 - [x] Build a dawn vaporwave side-scroller with the DJ sprite, jump controls, rolling pills/CDs/ravers/bracelets/bottles, and a club owner by the top door.
 - [x] Add a rewind transition back to the main game and make earned bonus rewards available across both main levels.
 - [x] Validate balance, desktop/mobile controls, progression, build, and checkpoint delivery.
+
+## Reactive combo and pickup expansion
+
+- [x] Make rare 10×/20× combo rewards and standard combo callouts visibly reactive in both game levels, including a rewind transition, dancers, screen shake, subwoofer, and broken-ground deck/mixer moments.
+- [x] Add positive CDJ, turntable, and 45-adapter pickups to both levels while retaining readable reward values.
+- [x] Add falling pills and mobile phones as fair negative hazards in both levels.
+- [x] Redraw the Level 2 lion pickup as a more recognizable Lion of Judah treatment.
+- [x] Validate pickup balance, special-event timing, desktop/mobile rendering, build, and checkpoint delivery.

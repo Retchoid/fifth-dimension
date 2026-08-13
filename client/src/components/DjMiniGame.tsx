@@ -39,12 +39,13 @@ const CELEBRATION_DANCERS = [
 const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maximum Respect"] as const;
 const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["pill", "cd", "raver", "bracelet", "bottle"];
 const BONUS_REWARD = 250;
+type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
 
 interface FallingItem {
   id: number;
   x: number; // percentage 0-92
   y: number; // percentage 0-90
-  type: "record" | "cop" | "bottle" | "apple" | "lion" | "cdj";
+  type: "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "turntable" | "adapter" | "pill" | "phone";
   speed: number;
   size: number;
 }
@@ -84,6 +85,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [musicStatus, setMusicStatus] = useState<"loading" | "ready" | "playing" | "paused" | "blocked" | "error">("loading");
   const [shared, setShared] = useState(false);
   const [showComboBurst, setShowComboBurst] = useState(false);
+  const [comboReaction, setComboReaction] = useState<ComboReaction>(null);
+  const [isGunFingerShaking, setIsGunFingerShaking] = useState(false);
   const [isRewindPaused, setIsRewindPaused] = useState(false);
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
@@ -154,6 +157,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusInvulnerableUntilRef = useRef(0);
   const bonusSplashTimerRef = useRef<number>(0);
   const bonusRewindTimerRef = useRef<number>(0);
+  const comboBurstTimerRef = useRef<number>(0);
+  const gunFingerShakeTimerRef = useRef<number>(0);
   downloadUnlockedRef.current = downloadUnlocked;
 
   // Key state for smooth movement
@@ -233,6 +238,24 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     osc1.stop(now + 0.19);
     osc2.stop(now + 0.19);
     laser.stop(now + 0.19);
+  };
+
+  const playSubwooferPop = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(105, now);
+    oscillator.frequency.exponentialRampToValueAtTime(42, now + 0.32);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.28, now + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.35);
   };
 
   const playCrowdCheer = () => {
@@ -632,6 +655,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
+    setComboReaction(null);
+    setIsGunFingerShaking(false);
+    window.clearTimeout(comboBurstTimerRef.current);
+    window.clearTimeout(gunFingerShakeTimerRef.current);
     setGameOver(false);
     setLevelTwoComplete(false);
     setFinale(false);
@@ -978,6 +1005,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
+    setComboReaction(null);
+    setIsGunFingerShaking(false);
+    window.clearTimeout(comboBurstTimerRef.current);
+    window.clearTimeout(gunFingerShakeTimerRef.current);
     bonusEligibleRef.current = false;
     bonusCompletedRef.current = false;
     bonusGameActiveRef.current = false;
@@ -1036,12 +1067,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (spawnTimerRef.current >= spawnInterval) {
       spawnTimerRef.current = 0;
       const roll = Math.random();
-      // Level 1: records, cop sirens, and cop badges
-      // Level 2: records, apple cores, bottles, and cop sirens
+      // Both levels carry collectible deck gear and fair falling distractions.
+      // Level 2 keeps its crowd-pressure hazards and Lion of Judah rarity.
       const spawnedType: FallingItem["type"] = levelRef.current === 2
-        ? (roll < 0.64 ? "record" : roll < 0.75 ? "bottle" : roll < 0.85 ? "apple" : roll < 0.93 ? "cop" : roll < 0.98 ? "lion" : "cdj")
-        : (roll < 0.75 ? "record" : "cop");
-      const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : spawnedType === "lion" ? 40 : spawnedType === "cdj" ? 48 : 30;
+        ? (roll < 0.56 ? "record" : roll < 0.65 ? "bottle" : roll < 0.73 ? "apple" : roll < 0.80 ? "cop" : roll < 0.85 ? "pill" : roll < 0.90 ? "phone" : roll < 0.935 ? "lion" : roll < 0.96 ? "cdj" : roll < 0.98 ? "turntable" : "adapter")
+        : (roll < 0.66 ? "record" : roll < 0.78 ? "cop" : roll < 0.84 ? "pill" : roll < 0.89 ? "phone" : roll < 0.94 ? "cdj" : roll < 0.975 ? "turntable" : "adapter");
+      const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : spawnedType === "lion" ? 46 : spawnedType === "cdj" || spawnedType === "turntable" ? 48 : spawnedType === "adapter" ? 30 : spawnedType === "phone" ? 28 : 30;
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 42 : 36;
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
@@ -1077,23 +1108,23 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
       if (newY >= 70 && newY <= 90 && item.x >= currentX - 8 && item.x <= currentX + 22) {
         structureChanged = true;
-        if (item.type === "record" || item.type === "lion" || item.type === "cdj") {
+        if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "turntable" || item.type === "adapter") {
           playRecordScratch();
           const nextCombo = comboRef.current + 1;
           comboRef.current = nextCombo;
           setCombo(nextCombo);
-          const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : 1;
+          const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : item.type === "turntable" ? 3 : item.type === "adapter" ? 2 : 1;
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
           currentScore += pointsEarned;
-          if (nextCombo >= 20 && !wheelItUpAwardedRef.current) {
-            // 5D design: Wheel It Up is the higher-streak selector salute—larger
-            // reward, unique turntable visual, then a fast return to the chase.
+          if (nextCombo >= 30 && !wheelItUpAwardedRef.current) {
+            // The rarest selector salute is deliberately deep in the streak so it
+            // remains special through both 25- and 50-record level targets.
             wheelItUpAwardedRef.current = true;
             currentScore += 10;
             pauseForWheelItUp = true;
-          } else if (nextCombo >= 10 && !rewindAwardedRef.current) {
-            // 5D design: a rare arcade interruption—one tiny reward, one graffiti hit,
-            // then a rapid return to the running session.
+          } else if (nextCombo >= 18 && !rewindAwardedRef.current) {
+            // Rewind now arrives later in a run, so its full-screen interruption
+            // feels earned rather than routine.
             rewindAwardedRef.current = true;
             currentScore += 5;
             pauseForRewind = true;
@@ -1124,9 +1155,21 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             crowdCheerPlayedRef.current = true;
             playCrowdCheer();
           }
-          if (nextCombo >= 5) {
+          const nextReaction: ComboReaction = nextCombo === 6 ? "subwoofer" : nextCombo === 12 ? "gun-fingers" : nextCombo === 24 ? "ground-decks" : null;
+          if (nextReaction) {
+            setComboReaction(nextReaction);
             setShowComboBurst(true);
-            setTimeout(() => setShowComboBurst(false), 800);
+            window.clearTimeout(comboBurstTimerRef.current);
+            comboBurstTimerRef.current = window.setTimeout(() => {
+              setShowComboBurst(false);
+              setComboReaction(null);
+            }, nextReaction === "ground-decks" ? 1350 : 1100);
+            if (nextReaction === "subwoofer" || nextReaction === "gun-fingers") playSubwooferPop();
+            if (nextReaction === "gun-fingers") {
+              setIsGunFingerShaking(true);
+              window.clearTimeout(gunFingerShakeTimerRef.current);
+              gunFingerShakeTimerRef.current = window.setTimeout(() => setIsGunFingerShaking(false), 980);
+            }
           }
           if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS) {
             const cleanLevelOne = livesRef.current >= 3;
@@ -1201,7 +1244,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         structureChanged = true;
         // Extended 25/50-record sessions remain fair: a missed record breaks
         // the combo, while only a caught hazard removes a life.
-        if (item.type === "record" || item.type === "lion" || item.type === "cdj") {
+        if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "turntable" || item.type === "adapter") {
           comboRef.current = 1;
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
@@ -1308,6 +1351,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(bonusJumpTimerRef.current);
       window.clearTimeout(bonusSplashTimerRef.current);
       window.clearTimeout(bonusRewindTimerRef.current);
+      window.clearTimeout(comboBurstTimerRef.current);
+      window.clearTimeout(gunFingerShakeTimerRef.current);
       if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     };
   }, []);
@@ -1362,7 +1407,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         playsInline
         aria-label="16-bit jungle background soundtrack"
       />
-      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}`}>
+      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}`}>
         <div className="arcade-marquee">
           <span className="marquee-light" />
           <span className="marquee-seal" aria-hidden="true">5D</span>
@@ -1511,12 +1556,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {isRewindPaused && !gameOver && (
           <div className="game-overlay rewind-reward-overlay" role="status" aria-live="assertive">
+            <div className="rewind-time-tunnel" aria-hidden="true">{Array.from({ length: 7 }, (_, index) => <i key={index} />)}</div>
             <div className="rewind-record-splash" aria-hidden="true">
               <span className="rewind-record-ring" />
               <span className="rewind-record-label">5D</span>
             </div>
+            <div className="rewind-dancer-flank" aria-hidden="true">
+              {CELEBRATION_DANCERS.map((dancer) => <img key={`rewind-${dancer.className}`} className={`rewind-dancer ${dancer.className}`} src={dancer.src} alt="" />)}
+            </div>
             <div className="rewind-graffiti-copy">
-              <span className="rewind-kicker">10× COMBO / +5 PTS</span>
+              <span className="rewind-kicker">18× COMBO / +5 PTS</span>
               <strong>REWIND ACHIEVED</strong>
               <em>BOH MY SELECTAH!</em>
             </div>
@@ -1719,10 +1768,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
 
         {showComboBurst && (
-          <div className="combo-burst-overlay" aria-hidden="true">
-            <span className="combo-burst-text">{COMBO_CALLOUTS[Math.min(COMBO_CALLOUTS.length - 1, Math.max(0, combo - 5))]}</span>
+          <div className={`combo-burst-overlay${comboReaction ? ` combo-reaction-${comboReaction}` : ""}`} aria-hidden="true">
+            {comboReaction === "subwoofer" && <div className="combo-subwoofer"><i /><b /><span>5D BASS</span></div>}
+            {comboReaction === "gun-fingers" && <div className="combo-gun-fingers"><i>☝</i><i>☝</i><i>☝</i></div>}
+            {comboReaction === "ground-decks" && <div className="combo-ground-decks"><span className="combo-ground-crack" /><div className="combo-emerging-mixer"><i /><b /><em /></div><div className="combo-emerging-deck combo-deck-left"><i /></div><div className="combo-emerging-deck combo-deck-right"><i /></div></div>}
+            {comboReaction === "ground-decks" && <div className="combo-dancer-pop">{CELEBRATION_DANCERS.map((dancer) => <img key={`ground-${dancer.className}`} className={`combo-dancer ${dancer.className}`} src={dancer.src} alt="" />)}</div>}
+            <span className="combo-burst-text">{comboReaction === "subwoofer" ? "BIG UP!" : comboReaction === "gun-fingers" ? "GUN FINGER MASSIVE" : comboReaction === "ground-decks" ? "MAXIMUM RESPECT" : COMBO_CALLOUTS[Math.min(COMBO_CALLOUTS.length - 1, Math.max(0, combo - 5))]}</span>
             <span className="combo-burst-count">{combo}x DUBPLATE COMBO</span>
-            <span className="combo-burst-quip">{level === 2 ? "CROWD RESPONSE: STINK FACE APPROVED" : "NO REQUESTS. JUST REWIND."}</span>
+            <span className="combo-burst-quip">{comboReaction === "subwoofer" ? "SUBWOOFER DEPLOYED — LOW END CHECK" : comboReaction === "gun-fingers" ? "SELECTOR SALUTE — CABINET UNDER PRESSURE" : comboReaction === "ground-decks" ? "DECKS + MIXER: RISEN FROM THE RAVE FLOOR" : level === 2 ? "CROWD RESPONSE: STINK FACE APPROVED" : "NO REQUESTS. JUST REWIND."}</span>
             {Array.from({ length: 12 }, (_, i) => (
               <i key={i} className={`burst-particle particle-${i % 4}`} />
             ))}
@@ -1830,12 +1883,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                     </span>
                   </div>
                 ) : item.type === "lion" ? (
-                  <div className="lion-head-pickup" aria-label="Lion head pickup worth 2 records"><span className="lion-mane" /><span className="lion-face"><i /><i /><b /></span><strong>+2</strong></div>
+                  <div className="lion-head-pickup" aria-label="Lion of Judah pickup worth 2 records"><span className="lion-crown-rays" /><img src="/manus-storage/selector-showdown-lion-of-judah-pickup_36a45652.png" alt="" /><strong>+2</strong></div>
                 ) : item.type === "cdj" ? (
                   <div className="cdj-pickup" aria-label="CDJ pickup worth 5 records"><span className="cdj-platter" /><i className="cdj-display">5</i><b>+5</b></div>
+                ) : item.type === "turntable" ? (
+                  <div className="turntable-pickup" aria-label="Turntable pickup worth 3 records"><span className="turntable-pickup-platter" /><i className="turntable-pickup-arm" /><b>+3</b></div>
+                ) : item.type === "adapter" ? (
+                  <div className="adapter-pickup" aria-label="45 adapter pickup worth 2 records"><span /><b>+2</b></div>
                 ) : (
-                  <div className={`crowd-throw-sprite ${item.type}`} aria-label={item.type === "bottle" ? "Thrown bottle" : "Thrown apple core"}>
-                    {item.type === "bottle" ? <span className="bottle-neck" /> : <><span className="apple-core-seed" /><span className="apple-core-leaf" /></>}
+                  <div className={`crowd-throw-sprite ${item.type}`} aria-label={item.type === "bottle" ? "Thrown bottle" : item.type === "apple" ? "Thrown apple core" : item.type === "pill" ? "Falling pill" : "Falling mobile phone"}>
+                    {item.type === "bottle" ? <span className="bottle-neck" /> : item.type === "apple" ? <><span className="apple-core-seed" /><span className="apple-core-leaf" /></> : item.type === "pill" ? <span className="pill-cap" /> : <><span className="phone-screen" /><span className="phone-antenna" /></>}
                   </div>
                 )}
               </div>
