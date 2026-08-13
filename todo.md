@@ -649,3 +649,11 @@
 - [x] Display the player’s saved selector tag in the RESPECT fist-bump splash.
 - [x] Make the tag flash with bright arcade colors and provide a clear fallback when no tag is saved.
 - [x] Validate motion preferences, build, and checkpoint delivery.
+
+## Bonus controls and Level 1 clarity pass
+
+- [x] Restyle the bonus club owner as a detailed character compatible with the DJ sprite language.
+- [x] Make bonus obstacles roll rather than float and support tap-to-jump, swipe-left/right movement, and swipe-up climb motion.
+- [x] Move the Level 1 selector-name handoff higher, remove the two unwanted brown bottom boxes, and correct Level 1 catch collisions.
+- [x] Add dancing sprites as a visible Level 1 reward at an 18-dub streak.
+- [x] Validate desktop/mobile controls, obstacle behavior, collision reliability, responsive presentation, build, and checkpoint delivery.

@@ -195,6 +195,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusSpawnTimerRef = useRef(0);
   const bonusNextIdRef = useRef(1);
   const bonusIsJumpingRef = useRef(false);
+  const bonusPointerStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
   const bonusJumpTimerRef = useRef<number>(0);
   const bonusInvulnerableUntilRef = useRef(0);
   const bonusSplashTimerRef = useRef<number>(0);
@@ -998,6 +999,32 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }, 540);
   };
 
+  const setBonusProgressSafely = (nextProgress: number) => {
+    const clampedProgress = Math.max(0, Math.min(100, nextProgress));
+    bonusProgressRef.current = clampedProgress;
+    setBonusProgress(clampedProgress);
+  };
+
+  const handleBonusGesture = (start: { x: number; y: number; time: number }, endX: number, endY: number) => {
+    const dx = endX - start.x;
+    const dy = endY - start.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance < 18) {
+      triggerBonusJump();
+      return;
+    }
+    if (Math.abs(dy) > Math.abs(dx) && dy < -24) {
+      const currentLane = Math.min(3, Math.floor(bonusProgressRef.current / 25));
+      setBonusProgressSafely(Math.min(100, (currentLane + 1) * 25 + 1));
+      return;
+    }
+    if (Math.abs(dx) > 22) {
+      const currentLane = Math.min(3, Math.floor(bonusProgressRef.current / 25));
+      const moveAlongPath = currentLane % 2 === 0 ? Math.sign(dx) : -Math.sign(dx);
+      setBonusProgressSafely(bonusProgressRef.current + moveAlongPath * 11);
+    }
+  };
+
   const updateBonusGame = (time: number) => {
     if (!bonusGameActiveRef.current) return;
     const elapsed = Math.max(0, time - bonusLastTimeRef.current);
@@ -1005,8 +1032,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     bonusLastTimeRef.current = time;
 
     let nextProgress = bonusProgressRef.current;
-    const touchAutoAdvance = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
-    if (touchAutoAdvance) nextProgress = Math.min(100, nextProgress + 10 * dt);
     if (keysRef.current["left"]) nextProgress = Math.max(0, nextProgress - 20 * dt);
     if (keysRef.current["right"]) nextProgress = Math.min(100, nextProgress + 23 * dt);
     if (nextProgress !== bonusProgressRef.current) {
@@ -1407,7 +1432,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const itemNode = itemNodes?.[index] as HTMLElement | undefined;
       if (itemNode) itemNode.style.top = `${newY}%`;
 
-      if (newY >= 70 && newY <= 90 && item.x >= currentX - 8 && item.x <= currentX + 22) {
+      const itemCatchReach = Math.max(8, Math.min(15, item.size / 3));
+      const catcherReach = 16 + itemCatchReach;
+      if (newY >= 64 && newY <= 96 && item.x >= currentX - catcherReach && item.x <= currentX + catcherReach) {
         structureChanged = true;
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
           if (item.type === "turntable") {
@@ -1783,7 +1810,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             if (isBonusLevelActive) {
               if (e.pointerType === "touch" || e.pointerType === "pen") {
                 e.preventDefault();
-                triggerBonusJump();
+                e.currentTarget.setPointerCapture(e.pointerId);
+                bonusPointerStartRef.current = { x: e.clientX, y: e.clientY, time: performance.now() };
               }
               return;
             }
@@ -1793,8 +1821,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             }
           }}
           onPointerUp={(e) => {
+            if (isBonusLevelActive && (e.pointerType === "touch" || e.pointerType === "pen")) {
+              e.preventDefault();
+              const start = bonusPointerStartRef.current;
+              bonusPointerStartRef.current = null;
+              if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+              if (start) handleBonusGesture(start, e.clientX, e.clientY);
+              return;
+            }
             if (e.pointerType === "touch" && e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
           }}
+          onPointerCancel={() => { bonusPointerStartRef.current = null; }}
         >
         <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
         <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
@@ -1909,21 +1946,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="bonus-ladder ladder-two" aria-hidden="true" />
             <div className="bonus-ladder ladder-three" aria-hidden="true" />
             <div className={`bonus-club-door${bonusDoorOpen ? " is-open" : ""}`} aria-label="Angry club owner throwing bottles beside the open dawn door">
-              <span className="club-owner-sprite" aria-hidden="true"><i /><b /><em /><strong /></span>
+              <span className="club-owner-sprite" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /></span>
               <span className="club-owner-label">OWNER</span>
               <span className="club-owner-bottle bottle-one" aria-hidden="true" /><span className="club-owner-bottle bottle-two" aria-hidden="true" />
               <i>NO GUESTLIST?</i>
             </div>
             <div className="bonus-hud"><span>NO REQUEST BONUS</span><strong>DOOR {Math.round(bonusProgress)}%</strong><b>♥ {bonusLives}</b></div>
-            <div className="bonus-tip">DESKTOP: ◀ ▶ MOVE / SPACE JUMPS · MOBILE: TAP TO JUMP</div>
+            <div className="bonus-tip">DESKTOP: ◀ ▶ MOVE / SPACE JUMPS · MOBILE: TAP JUMPS / SWIPE ← → MOVE / SWIPE ↑ CLIMBS</div>
             <div className={`bonus-dj-runner lane-${bonusLane}${bonusIsJumping ? " is-jumping" : ""}`} style={{ "--runner-left": `${bonusRunnerLeft}%`, "--runner-bottom": `${bonusRunnerBottom}%` } as React.CSSProperties}>
               <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ climbing toward the club door" />
             </div>
             <div className="bonus-obstacle-layer" aria-hidden="true">
               {bonusObstacles.map((obstacle) => <span key={obstacle.id} className={`bonus-obstacle ${obstacle.type} lane-${obstacle.lane}`} style={{ left: `${obstacle.x}%` }}><i /></span>)}
-            </div>
-            <div className="bonus-touch-controls" aria-label="No Request Bonus mobile controls">
-              <button type="button" className="bonus-jump-button" onClick={triggerBonusJump}>TAP TO JUMP</button>
             </div>
           </div>
         )}
@@ -2112,11 +2146,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {preLevelTwoHighScore && !gameOver && (
           <div className="game-overlay pre-level-two-overlay">
-            <div className="overlay-box game-over-box-wide">
+            <div className="overlay-box game-over-box-wide pre-level-two-score-box">
               <h3>LEVEL 1 HIGH SCORE</h3>
-              <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
-              <a className="facebook-like-button between-level-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
-              <PickupLegend level={2} />
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitPreLevelTwoScore}>
                   <label htmlFor="pre-level-selector-name">ENTER YOUR SELECTOR TAG</label>
@@ -2137,6 +2168,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   <Trophy size={15} /> TAG RECORDED AS <strong>{submittedName}</strong>
                 </div>
               )}
+              <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
+              <a className="facebook-like-button between-level-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
+              <PickupLegend level={2} />
               <div className="arcade-leaderboard-container">
                 <h4>TOP ARCADE SELECTORS</h4>
                 <div className="arcade-table-wrap">
@@ -2329,8 +2363,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {/* Level 1 sound-system assembly: half stack at 10, full stack at 15, side decks at 20. */}
-        <div className={`dj-booth-stage${level === 1 && recordsCaught >= 10 ? " speakers-half-raised" : ""}${level === 1 && recordsCaught >= 15 ? " speakers-full-raised" : ""}${level === 1 && recordsCaught >= 20 ? " side-decks-dropped" : ""}${level === 2 ? " level-two-decks-ready" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
+        {/* Level 1 sound-system assembly: half stack at 10, full stack at 15, and a dancer payoff at the 18-dub streak. */}
+        <div className={`dj-booth-stage${level === 1 && recordsCaught >= 10 ? " speakers-half-raised" : ""}${level === 1 && recordsCaught >= 15 ? " speakers-full-raised" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
           <div className="speaker-tower speaker-tower-left">
             <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
           </div>
@@ -2347,11 +2381,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               {Array.from({ length: 20 }, (_, index) => <i key={`full-debris-${index}`} className={`debris-chip chip-${index % 5}`} />)}
             </div>
           )}
-          {(level === 1 && recordsCaught >= 20 || level === 2) && (
-            <div className="side-deck-drop">
-              <div className="side-deck side-deck-left"><i className="deck-platter" /><b /></div>
-              <div className="side-deck side-deck-right"><i className="deck-platter" /><b /></div>
-              <span className="side-deck-cable cable-left" /><span className="side-deck-cable cable-right" />
+          {level === 1 && combo >= 18 && (
+            <div className="level-one-streak-dancers" aria-hidden="true">
+              {CELEBRATION_DANCERS.map((dancer) => <img key={`streak-${dancer.className}`} className={`level-one-streak-dancer ${dancer.className}`} src={dancer.src} alt="" />)}
             </div>
           )}
           {isUnlockCelebrating && (
