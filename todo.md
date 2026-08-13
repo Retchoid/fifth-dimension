@@ -676,3 +676,10 @@
 - [x] Add a red EXIT-beacon pulse when the bonus door opens.
 - [x] Cast a matching red rim light across the bonus DJ sprite during the open-door state.
 - [x] Validate timing, reduced-motion behavior, build, and checkpoint delivery.
+
+## Visible fire-escape street-stage effects
+
+- [x] Add a clearly visible sweeping searchlight behind the fire escape.
+- [x] Add prominent paint drips and splatter to the fire-exit structure.
+- [x] Add readable impact effects while keeping bonus-platform lanes unobstructed.
+- [x] Validate mobile/desktop clarity, build, and checkpoint delivery.

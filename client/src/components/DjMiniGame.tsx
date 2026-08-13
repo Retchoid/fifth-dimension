@@ -1962,6 +1962,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <i className="city-neon-window neon-window-one" /><i className="city-neon-window neon-window-two" /><i className="city-neon-window neon-window-three" /><i className="city-neon-window neon-window-four" />
               <b className="city-neon-sign">OPEN</b><em className="city-neon-antenna" />
             </div>
+            <div className="fire-escape-searchlight" aria-hidden="true"><i /><b /></div>
+            <div className="fire-exit-paint-effects" aria-hidden="true"><i className="paint-splash splash-cyan" /><i className="paint-splash splash-magenta" /><i className="paint-splash splash-orange" /><b className="paint-drip drip-one" /><b className="paint-drip drip-two" /><b className="paint-drip drip-three" /></div>
+            <div className="fire-escape-impact-lines" aria-hidden="true"><i /><i /><i /><i /><i /></div>
             <div className="bonus-platform bonus-platform-one" aria-hidden="true"><i /></div>
             <div className="bonus-platform bonus-platform-two" aria-hidden="true"><i /></div>
             <div className="bonus-platform bonus-platform-three" aria-hidden="true"><i /></div>
