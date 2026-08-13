@@ -1958,7 +1958,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="bonus-level-stage" role="application" aria-label="No Request Bonus. Climb to the club door and jump rolling obstacles.">
             <div className="bonus-dawn-backdrop" aria-hidden="true" />
             <div className="bonus-fire-escape-facade" aria-hidden="true"><i className="fire-escape-window window-one" /><i className="fire-escape-window window-two" /><i className="fire-escape-window window-three" /><i className="fire-escape-window window-four" /><b className="fire-escape-drainpipe" /></div>
-            <div className="bonus-city-silhouette" aria-hidden="true" />
+            <div className="bonus-city-silhouette" aria-hidden="true">
+              <i className="city-neon-window neon-window-one" /><i className="city-neon-window neon-window-two" /><i className="city-neon-window neon-window-three" /><i className="city-neon-window neon-window-four" />
+              <b className="city-neon-sign">OPEN</b><em className="city-neon-antenna" />
+            </div>
             <div className="bonus-platform bonus-platform-one" aria-hidden="true"><i /></div>
             <div className="bonus-platform bonus-platform-two" aria-hidden="true"><i /></div>
             <div className="bonus-platform bonus-platform-three" aria-hidden="true"><i /></div>

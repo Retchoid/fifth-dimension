@@ -664,3 +664,9 @@
 - [x] Synchronize speakers and other environmental entrances with stronger Street Fighter-inspired impact animations.
 - [x] Audit and repair shared reward/punishment overlay triggers and heart-loss feedback across both levels.
 - [x] Validate desktop/mobile gameplay feedback, visual sequencing, build, and checkpoint delivery.
+
+## Fire-escape neon skyline animation
+
+- [x] Add subtle flashing neon windows and distant sign glows to the fire-escape city silhouette.
+- [x] Preserve readable obstacle lanes and support reduced-motion preferences.
+- [x] Validate build, visual restraint, and checkpoint delivery.
