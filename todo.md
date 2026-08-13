@@ -683,3 +683,10 @@
 - [x] Add prominent paint drips and splatter to the fire-exit structure.
 - [x] Add readable impact effects while keeping bonus-platform lanes unobstructed.
 - [x] Validate mobile/desktop clarity, build, and checkpoint delivery.
+
+## Bonus cleanup and control reliability
+
+- [x] Remove paint splatter, drips, and related bonus-level effects; retain the established Jersh download-box paint treatment only.
+- [x] Remove the two lower gameplay text boxes and replace the club owner with a cleaner DJ-compatible pixel character treatment.
+- [x] Replace blocky bonus controls with reliable tap jump, swipe movement/climb, and periodic rolling obstacles that match the game’s item language.
+- [x] Validate mobile/desktop controls, object cadence, gameplay clarity, build, and checkpoint delivery.

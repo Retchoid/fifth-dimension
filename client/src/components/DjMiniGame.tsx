@@ -10,7 +10,7 @@ const REQUIRED_RECORDS = 25;
 const LEVEL_TWO_REQUIRED_RECORDS = 50;
 const LEVEL_TWO_TRACK_OFFSET_SECONDS = 46;
 type GameLevel = 1 | 2;
-type BonusObstacleType = "pill" | "cd" | "raver" | "bracelet" | "bottle";
+type BonusObstacleType = "record" | "pill" | "phone" | "apple" | "bottle";
 
 interface BonusObstacle {
   id: number;
@@ -39,7 +39,7 @@ const CELEBRATION_DANCERS = [
 ] as const;
 
 const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maximum Respect"] as const;
-const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["pill", "cd", "raver", "bracelet", "bottle"];
+const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["record", "record", "pill", "phone", "apple", "bottle"];
 const BONUS_REWARD = 250;
 type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
 interface PickupFlash {
@@ -197,6 +197,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusNextIdRef = useRef(1);
   const bonusIsJumpingRef = useRef(false);
   const bonusPointerStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const bonusGestureHandledRef = useRef(false);
   const bonusJumpTimerRef = useRef<number>(0);
   const bonusInvulnerableUntilRef = useRef(0);
   const bonusSplashTimerRef = useRef<number>(0);
@@ -1048,13 +1049,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
 
     bonusSpawnTimerRef.current += dt;
-    if (bonusSpawnTimerRef.current >= 1.45) {
+    if (bonusSpawnTimerRef.current >= 2.6 && bonusObstaclesRef.current.length < 2) {
       bonusSpawnTimerRef.current = 0;
       const lane = Math.min(3, Math.floor(Math.random() * 4));
-      const type = lane === 3 && Math.random() < 0.42
-        ? "bottle"
-        : BONUS_OBSTACLE_TYPES[Math.floor(Math.random() * BONUS_OBSTACLE_TYPES.length)];
-      bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, x: 104, lane, type, speed: 12 + Math.floor(Math.random() * 5) });
+      const type = BONUS_OBSTACLE_TYPES[Math.floor(Math.random() * BONUS_OBSTACLE_TYPES.length)];
+      bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, x: 104, lane, type, speed: 8 + Math.floor(Math.random() * 4) });
     }
 
     const currentLane = Math.min(3, Math.floor(nextProgress / 25));
@@ -1818,13 +1817,27 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div
           ref={containerRef}
           className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding ? " is-bonus-scene" : ""}`}
-          onPointerMove={handlePointerMove}
+          onPointerMove={(e) => {
+            if (!isBonusLevelActive) {
+              handlePointerMove(e);
+              return;
+            }
+            if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+            const start = bonusPointerStartRef.current;
+            if (!start || bonusGestureHandledRef.current) return;
+            const dx = e.clientX - start.x;
+            const dy = e.clientY - start.y;
+            if (Math.hypot(dx, dy) < 32) return;
+            handleBonusGesture(start, e.clientX, e.clientY);
+            bonusGestureHandledRef.current = true;
+          }}
           onPointerDown={(e) => {
             if (isBonusLevelActive) {
               if (e.pointerType === "touch" || e.pointerType === "pen") {
                 e.preventDefault();
                 e.currentTarget.setPointerCapture(e.pointerId);
                 bonusPointerStartRef.current = { x: e.clientX, y: e.clientY, time: performance.now() };
+                bonusGestureHandledRef.current = false;
               }
               return;
             }
@@ -1839,12 +1852,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               const start = bonusPointerStartRef.current;
               bonusPointerStartRef.current = null;
               if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
-              if (start) handleBonusGesture(start, e.clientX, e.clientY);
+              if (start && !bonusGestureHandledRef.current) handleBonusGesture(start, e.clientX, e.clientY);
+              bonusGestureHandledRef.current = false;
               return;
             }
             if (e.pointerType === "touch" && e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
           }}
-          onPointerCancel={() => { bonusPointerStartRef.current = null; }}
+          onPointerCancel={() => { bonusPointerStartRef.current = null; bonusGestureHandledRef.current = false; }}
         >
         {damageFeedback && !gameOver && (
           <div className="damage-feedback" role="status" aria-live="assertive">
@@ -1860,7 +1874,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <span className="rave-flyer-stack"><i>1997</i><b>ONE MORE TUNE?</b><em>ABSOLUTELY NOT.</em></span>
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>
-        {level !== 2 && <div className={`rave-banter-board${isPlaying ? " is-playing" : ""}`} role="status" aria-live="polite"><span>RAVE FAX</span><strong>{raveBanter}</strong></div>}
         <div className="game-hud">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
           <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>
@@ -1963,8 +1976,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <b className="city-neon-sign">OPEN</b><em className="city-neon-antenna" />
             </div>
             <div className="fire-escape-searchlight" aria-hidden="true"><i /><b /></div>
-            <div className="fire-exit-paint-effects" aria-hidden="true"><i className="paint-splash splash-cyan" /><i className="paint-splash splash-magenta" /><i className="paint-splash splash-orange" /><b className="paint-drip drip-one" /><b className="paint-drip drip-two" /><b className="paint-drip drip-three" /></div>
-            <div className="fire-escape-impact-lines" aria-hidden="true"><i /><i /><i /><i /><i /></div>
             <div className="bonus-platform bonus-platform-one" aria-hidden="true"><i /></div>
             <div className="bonus-platform bonus-platform-two" aria-hidden="true"><i /></div>
             <div className="bonus-platform bonus-platform-three" aria-hidden="true"><i /></div>
