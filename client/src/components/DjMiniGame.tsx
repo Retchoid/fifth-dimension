@@ -2,6 +2,7 @@
 /* 5D arcade style: readable late-90s fighting-game silhouettes, loud reactive cut-ins, and visible-but-nonblocking Level 2 dancers inside the vaporwave jungle cabinet. */
 import React, { useEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, Check } from "lucide-react";
+import type { ReleaseUnlockProof } from "@/lib/releaseGate";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
@@ -57,7 +58,7 @@ interface FallingItem {
 }
 
 interface DjMiniGameProps {
-  onUnlockDownload?: () => void;
+  onUnlockDownload?: (proof: ReleaseUnlockProof) => void;
   onAchievementFlowComplete?: () => void;
   downloadUnlocked?: boolean;
   isUnlockCelebrating?: boolean;
@@ -375,34 +376,36 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const playPickupToken = () => {
     const context = getAudioContext();
     if (!context) return;
-    const now = context.currentTime + 0.11;
+    // Land after the scratch/platter/transient so the universally applied token
+    // is heard as its own classic arcade coin strike instead of being masked.
+    const now = context.currentTime + 0.22;
     const coinPrimary = context.createOscillator();
     const coinHarmonic = context.createOscillator();
     const coinPing = context.createOscillator();
     const gain = context.createGain();
     coinPrimary.type = "square";
-    coinHarmonic.type = "square";
+    coinHarmonic.type = "triangle";
     coinPing.type = "sine";
-    coinPrimary.frequency.setValueAtTime(988, now);
-    coinPrimary.frequency.exponentialRampToValueAtTime(1319, now + 0.085);
-    coinHarmonic.frequency.setValueAtTime(1976, now);
-    coinHarmonic.frequency.exponentialRampToValueAtTime(2637, now + 0.095);
-    coinPing.frequency.setValueAtTime(2637, now + 0.07);
-    coinPing.frequency.exponentialRampToValueAtTime(1976, now + 0.26);
+    coinPrimary.frequency.setValueAtTime(1568, now);
+    coinPrimary.frequency.exponentialRampToValueAtTime(1976, now + 0.06);
+    coinHarmonic.frequency.setValueAtTime(2349, now);
+    coinHarmonic.frequency.exponentialRampToValueAtTime(1976, now + 0.095);
+    coinPing.frequency.setValueAtTime(2637, now + 0.055);
+    coinPing.frequency.exponentialRampToValueAtTime(2093, now + 0.2);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.29, now + 0.008);
-    gain.gain.exponentialRampToValueAtTime(0.13, now + 0.11);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.42, now + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.16, now + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.24);
     coinPrimary.connect(gain);
     coinHarmonic.connect(gain);
     coinPing.connect(gain);
     gain.connect(context.destination);
     coinPrimary.start(now);
     coinHarmonic.start(now);
-    coinPing.start(now + 0.07);
-    coinPrimary.stop(now + 0.31);
-    coinHarmonic.stop(now + 0.31);
-    coinPing.stop(now + 0.31);
+    coinPing.start(now + 0.055);
+    coinPrimary.stop(now + 0.25);
+    coinHarmonic.stop(now + 0.25);
+    coinPing.stop(now + 0.25);
   };
 
   const playSubwooferPop = () => {
@@ -1205,7 +1208,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   useEffect(() => {
     if (!chainBreakComplete || downloadUnlockedRef.current) return;
-    onUnlockDownload?.();
+    // The parent only accepts this proof after this exact one-second chain break.
+    // This prevents achievement, timer, or stale storage paths from exposing Jersh early.
+    onUnlockDownload?.("chain-break-complete");
   }, [chainBreakComplete, onUnlockDownload]);
 
   useEffect(() => {
@@ -1971,7 +1976,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="level-two-transition-marquee" role="status" aria-live="polite">
             <span>LEVEL 2</span>
             <strong>CROWD PRESSURE</strong>
-            <i aria-hidden="true">◀ ◆ ▶</i>
+            <i aria-hidden="true">◆ SOUND SYSTEM ◆</i>
           </div>
         )}
 
@@ -2029,7 +2034,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <em>DAWN DOOR RUSH — GET PAST THE CLUB OWNER</em>
             </div>
             <div className="bonus-control-visual" aria-label="Bonus controls: tap to jump, swipe sideways to move, swipe up to climb">
-              <span><b>●</b>TAP<br />JUMP</span><span><b>↔</b>SWIPE<br />MOVE</span><span><b>UP</b>SWIPE<br />CLIMB</span>
+              <span><b>●</b>TAP<br />JUMP</span><span><b>SIDE</b>SWIPE<br />MOVE</span><span><b>UP</b>SWIPE<br />CLIMB</span>
             </div>
             <div className="no-request-rewind-cue" aria-hidden="true"><i /><i /><i /></div>
           </div>
@@ -2259,7 +2264,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <span className="tape-play-face" aria-hidden="true"><i className="tape-reel tape-reel-left" /><span className="tape-window"><RotateCcw size={15} /></span><i className="tape-reel tape-reel-right" /></span>
                 <span className="tape-play-copy">PLAY AGAIN / RESET</span>
               </button>
-              <div className="arcade-quick-controls" aria-label="Arcade controls"><span>← →</span> MOVE <i>•</i> <span>SPACE</span> JUMP</div>
+              <div className="arcade-quick-controls" aria-label="Arcade controls"><span>A / D</span> MOVE <i>•</i> <span>SPACE</span> JUMP</div>
               <a className="facebook-like-button between-level-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
               <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
               {!scoreSubmitted ? (

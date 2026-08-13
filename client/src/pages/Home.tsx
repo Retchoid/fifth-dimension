@@ -35,6 +35,13 @@ import {
   SOUND_CLOUD_EMBED,
   SOUND_CLOUD_PROFILE,
 } from "@/lib/djLinks";
+import {
+  DOWNLOAD_UNLOCK_STORAGE_KEY,
+  DOWNLOAD_UNLOCK_STORAGE_VALUE,
+  isReleaseUnlockProof,
+  isReleaseUnlockStored,
+  type ReleaseUnlockProof,
+} from "@/lib/releaseGate";
 import DjMiniGame from "@/components/DjMiniGame";
 import {
   Dialog,
@@ -43,7 +50,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const DOWNLOAD_UNLOCK_STORAGE_KEY = "5d-selector-showdown-download-unlocked";
 const SUPPORTER_CONFIRMATION_STORAGE_KEY = "5d-selector-showdown-supporter-confirmed";
 
 const projects = [
@@ -213,7 +219,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      setDownloadUnlocked(window.localStorage.getItem(DOWNLOAD_UNLOCK_STORAGE_KEY) === "true");
+      setDownloadUnlocked(isReleaseUnlockStored(window.localStorage.getItem(DOWNLOAD_UNLOCK_STORAGE_KEY)));
       const hasConfirmedSupport = window.localStorage.getItem(SUPPORTER_CONFIRMATION_STORAGE_KEY) === "true";
       const arrivedViaSharedGameLink = new URLSearchParams(window.location.search).get("from") === "selector-share";
       setRequiresSupporterConfirmation(arrivedViaSharedGameLink && !hasConfirmedSupport);
@@ -222,12 +228,13 @@ export default function Home() {
     }
   }, []);
 
-  const unlockDownload = () => {
+  const unlockDownload = (proof: ReleaseUnlockProof) => {
+    if (!isReleaseUnlockProof(proof)) return;
     const wasAlreadyUnlocked = downloadUnlocked;
     setDownloadUnlocked(true);
     if (!wasAlreadyUnlocked) setIsUnlockCelebrating(true);
     try {
-      window.localStorage.setItem(DOWNLOAD_UNLOCK_STORAGE_KEY, "true");
+      window.localStorage.setItem(DOWNLOAD_UNLOCK_STORAGE_KEY, DOWNLOAD_UNLOCK_STORAGE_VALUE);
     } catch {
       // Keep the unlocked state for the current session when storage is unavailable.
     }
@@ -573,7 +580,7 @@ export default function Home() {
             </div>
             <div className="matrix-seal" aria-hidden="true"><strong>5D</strong><span>SEALED<br />SIGNAL</span></div>
           </article>
-          <article className="exclusive-release" aria-labelledby="exclusive-title">
+          <article id="exclusive" className="exclusive-release" aria-labelledby="exclusive-title">
             <div className="exclusive-band">
               <p className="exclusive-meta"><Music2 size={15} /> 5D EXCLUSIVE / 001 <i /> DIRECT FILE DROP</p>
               <h3 id="exclusive-title">{EXCLUSIVE_RELEASE.title}</h3>
@@ -641,7 +648,7 @@ export default function Home() {
             using graffiti direction marks that visually wrap the cabinet rather than a generic divider. */}
         <div className="arcade-flow-shell">
           <div className="arcade-graffiti-flow" aria-hidden="true">
-            <span className="arcade-flow-stamp">EXCLUSIVE DROP → PLAY THE ARCADE</span>
+            <span className="arcade-flow-stamp">EXCLUSIVE DROP / PLAY THE ARCADE</span>
             <span className="arcade-ribbon arcade-ribbon-left">
               <svg viewBox="0 0 320 610" focusable="false">
                 <path className="ribbon-shadow" d="M292 18C227 21 184 44 171 84c-15 45 42 65 10 120-31 54-106 54-109 124-2 58 54 78 104 98l-15 71 47-33 9 82 53-66-46-10 47-34-60-16c-32-40-71-78-58-123 15-52 91-52 104-117 11-55-18-97-65-115z" />
@@ -707,7 +714,7 @@ export default function Home() {
                 <>
                   <DialogTitle className="lightbox-title">{activeArt.label}</DialogTitle>
                   <DialogDescription className="lightbox-description">
-                    Artwork {lightboxIndex + 1} of {art.length}. Use the arrow buttons or keyboard arrows to browse.
+                    Artwork {lightboxIndex + 1} of {art.length}. Use the browse controls or keyboard direction keys to navigate.
                   </DialogDescription>
                   <div className="lightbox-stage">
                     <img src={activeArt.src} alt={activeArt.alt} className="lightbox-image" />

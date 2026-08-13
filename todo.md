@@ -1,5 +1,14 @@
 # Amendment tasks
 
+## Release-lock regression and evidence recheck
+
+- [x] Reproduce the unlocked release card in a clean mobile and desktop browser session with site storage cleared.
+- [x] Trace every state path that can expose the exclusive listen/download controls before a verified Level 1 chain break.
+- [x] Correct the default, persistence, and chain-completion logic so a new visitor always sees a locked release card.
+- [x] Validate that only a completed chain-break event persists the unlock and that refresh restoration works afterward.
+- [x] Recheck all previously agreed site and game requirements against a documented acceptance checklist rather than source inspection alone.
+- [x] Run clean-session desktop/mobile validation, TypeScript, production build, runtime-console review, and save evidence before reporting completion.
+
 - [ ] Locate the original character and artwork assets from the archive, previous workspace, or accessible project media.
 - [ ] Compare the original visual theme against the current fallback-based render and document the required replacements.
 - [ ] Restore original character-led artwork and theme assets without reintroducing former deployment identifiers.

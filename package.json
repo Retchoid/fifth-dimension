@@ -9,6 +9,7 @@
     "start": "NODE_ENV=production node dist/index.js",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
+    "audit:selector": "tsx scripts/release-gate-check.ts && tsx scripts/selector-requirements-check.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
