@@ -625,3 +625,9 @@
 - [x] Add a “Big Up! (Like)” Facebook action to the between-level handoff.
 - [x] Add the same action to the end-of-game finale, pointing to the artist page already supplied by the user.
 - [x] Validate target URL, responsive presentation, build, and checkpoint delivery.
+
+## Diagonal chained-unlock refinement
+
+- [x] Move the chained Level 1 unlock box from the top-right to the bottom-left before its release sequence.
+- [x] Restyle the chain as thick, dark, segmented 16-bit links inspired by the supplied reference image.
+- [x] Validate desktop/mobile travel path, chain readability, break timing, build, and checkpoint delivery.

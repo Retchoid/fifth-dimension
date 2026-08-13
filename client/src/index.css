@@ -1663,10 +1663,10 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   text-align: left;
   animation: unlock-download-drop-in 5s cubic-bezier(.23,1,.32,1) both;
 }
-/* 5D style: oversized silver arcade-chain links run across the full release title,
-   like a fast 16-bit platform-game lock, before bursting apart at the impact cue. */
+/* 5D style: thick dark pixel-chain links sweep diagonally across the unlock crate,
+   echoing the heavily outlined platform-game chain in the supplied reference. */
 .achievement-chain-wrap { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
-.chain-run-text { position: absolute; top: 49%; left: -7%; right: -7%; display: flex; align-items: center; justify-content: space-between; overflow: hidden; transform: translateY(-50%); }
+.chain-run-text { position: absolute; top: 50%; left: -32%; right: -32%; display: flex; align-items: center; justify-content: space-between; overflow: visible; transform: translateY(-50%) rotate(-34deg); }
 .chain-run-text::after {
   content: "";
   position: absolute;
@@ -1676,7 +1676,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   left: -38%;
   z-index: 3;
   pointer-events: none;
-  background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0) 24%, rgba(255,255,255,.96) 48%, rgba(219,240,255,.68) 58%, rgba(255,255,255,0) 78%, transparent 100%);
+  background: linear-gradient(105deg, transparent 0%, rgba(111,164,255,0) 24%, rgba(180,206,255,.88) 48%, rgba(78,111,184,.74) 58%, rgba(111,164,255,0) 78%, transparent 100%);
   filter: blur(1px);
   mix-blend-mode: screen;
   animation: silver-chain-glint .58s cubic-bezier(.22,.84,.28,1) 4.38s both;
@@ -1684,14 +1684,14 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 .chain-link {
   position: relative;
   display: block;
-  width: clamp(27px, 6.2vw, 39px);
-  height: clamp(14px, 3.15vw, 21px);
+  width: clamp(31px, 7.1vw, 46px);
+  height: clamp(18px, 3.8vw, 26px);
   flex: 0 0 auto;
-  border: clamp(4px, .8vw, 6px) solid #dce7f2;
-  border-radius: 50%;
-  background: rgba(7,18,11,.12);
-  box-shadow: 0 0 0 2px #52606d, 0 0 0 4px #151b23, inset 0 0 0 2px rgba(255,255,255,.92), 0 0 12px rgba(217,237,255,.88);
-  filter: drop-shadow(2px 3px 0 rgba(1,3,7,.92));
+  border: clamp(5px, 1.1vw, 8px) solid #29273c;
+  border-radius: 48%;
+  background: #090913;
+  box-shadow: 0 0 0 2px #07070d, 0 0 0 4px #4d5271, inset 2px 2px 0 rgba(154,169,214,.45), inset -3px -3px 0 rgba(2,2,7,.92), 0 0 11px rgba(83,112,214,.62);
+  filter: drop-shadow(3px 4px 0 rgba(0,0,0,.94));
   animation: chain-link-rattle .32s steps(2, end) infinite alternate, chain-link-break 1s cubic-bezier(.22,.82,.27,1) 5s forwards;
   will-change: transform, opacity;
 }
@@ -1709,14 +1709,14 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   left: 50%;
   width: clamp(30px, 7vw, 43px);
   height: clamp(24px, 5.4vw, 34px);
-  border: clamp(4px, .8vw, 6px) solid #e6f0f8;
-  border-radius: 5px;
-  background: linear-gradient(135deg, #52606d, #f9fcff 44%, #8997a6 68%, #2c3540);
-  box-shadow: 0 0 0 3px #1b222b, 0 0 0 5px #0a0e14, 0 0 16px rgba(207,231,255,.86);
+  border: clamp(4px, .9vw, 7px) solid #343451;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #171728, #686f9a 45%, #28293e 68%, #090912);
+  box-shadow: 0 0 0 3px #07070d, 0 0 0 5px #595f86, 0 0 16px rgba(102,135,255,.68);
   transform: translate(-50%, -50%);
   animation: chain-padlock-open 1s cubic-bezier(.22,.82,.27,1) 5s forwards;
 }
-.chain-padlock::before { content: ""; position: absolute; left: 50%; bottom: calc(100% - 5px); width: 58%; height: 70%; border: clamp(4px, .8vw, 6px) solid #dce7f2; border-bottom: 0; border-radius: 14px 14px 0 0; box-shadow: 0 -2px 0 #52606d; transform: translateX(-50%); }
+.chain-padlock::before { content: ""; position: absolute; left: 50%; bottom: calc(100% - 5px); width: 58%; height: 70%; border: clamp(4px, .9vw, 7px) solid #343451; border-bottom: 0; border-radius: 14px 14px 0 0; box-shadow: 0 -2px 0 #737ba8, inset 2px 0 0 #0b0b15; transform: translateX(-50%); }
 @keyframes chain-link-rattle { from { filter: brightness(.88) drop-shadow(2px 3px 0 rgba(1,3,7,.92)); } to { filter: brightness(1.32) drop-shadow(-2px 2px 0 rgba(1,3,7,.92)); } }
 @keyframes chain-link-break { 0%, 10% { opacity: 1; } 24% { opacity: 1; transform: translate(-3px, 3px) rotate(9deg) scale(1.06); } 100% { opacity: 0; transform: translate(var(--link-x, 96px), var(--link-y, -78px)) rotate(165deg) scale(.62); } }
 @keyframes chain-padlock-open { 0%, 12% { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); } 28% { opacity: 1; transform: translate(-50%, -50%) rotate(-7deg); } 100% { opacity: 0; transform: translate(84px, -58px) rotate(105deg) scale(.68); } }
@@ -1738,11 +1738,11 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   display: block;
   width: clamp(20px, 4.6vw, 31px);
   height: clamp(11px, 2.45vw, 17px);
-  border: clamp(3px, .58vw, 5px) solid #dce7f2;
-  border-radius: 50%;
-  background: rgba(7,18,11,.14);
-  box-shadow: 0 0 0 2px #52606d, 0 0 0 4px #151b23, inset 0 0 0 1px rgba(255,255,255,.92), 0 0 9px rgba(217,237,255,.82);
-  filter: drop-shadow(2px 3px 0 rgba(1,3,7,.92));
+  border: clamp(4px, .78vw, 6px) solid #29273c;
+  border-radius: 48%;
+  background: #090913;
+  box-shadow: 0 0 0 2px #07070d, 0 0 0 4px #4d5271, inset 1px 1px 0 rgba(154,169,214,.42), inset -2px -2px 0 rgba(2,2,7,.92), 0 0 9px rgba(83,112,214,.58);
+  filter: drop-shadow(3px 4px 0 rgba(0,0,0,.94));
   opacity: 0;
   animation: chain-fragment-drop .8s cubic-bezier(.22,.75,.32,1) var(--fragment-delay) both;
   will-change: transform, opacity;
@@ -1782,11 +1782,16 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   line-height: .9;
 }
 @keyframes unlock-download-drop-in {
-  0% { opacity: 0; transform: translateY(-190%) rotate(-1.5deg); }
-  22% { opacity: .12; transform: translateY(-110%) rotate(.8deg); }
-  62% { opacity: .92; transform: translateY(7%) rotate(-.3deg); }
-  80% { opacity: 1; transform: translateY(-1.5%) rotate(.1deg); }
-  100% { opacity: 1; transform: translateY(0) rotate(0); }
+  0% { opacity: 0; transform: translate(132%, -152%) rotate(13deg) scale(.68); }
+  16% { opacity: 1; transform: translate(104%, -122%) rotate(9deg) scale(.82); }
+  48% { opacity: 1; transform: translate(35%, -38%) rotate(3deg) scale(1.03); }
+  76% { opacity: 1; transform: translate(-44%, 63%) rotate(-4deg) scale(1); }
+  100% { opacity: 1; transform: translate(-102%, 132%) rotate(-8deg) scale(.94); }
+}
+@media (max-width: 650px) {
+  .chain-run-text { left: -42%; right: -42%; transform: translateY(-50%) rotate(-31deg); }
+  .chain-link { width: clamp(27px, 10vw, 35px); height: clamp(16px, 5vw, 21px); }
+  @keyframes unlock-download-drop-in { 0% { opacity: 0; transform: translate(58%, -112%) rotate(11deg) scale(.66); } 18% { opacity: 1; transform: translate(45%, -82%) rotate(8deg) scale(.8); } 50% { opacity: 1; transform: translate(14%, -24%) rotate(2deg) scale(1); } 78% { opacity: 1; transform: translate(-28%, 50%) rotate(-4deg) scale(.98); } 100% { opacity: 1; transform: translate(-54%, 102%) rotate(-7deg) scale(.9); } }
 }
 .unlock-overlay .celebration-dancer {
   width: clamp(68px, 11vw, 122px);
