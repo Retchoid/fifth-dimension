@@ -1,3 +1,4 @@
+/* 5D design: preserve the crafted Sega-jungle cabinet while treating the bonus stage as a dawn-vaporwave pirate-radio detour, never a separate visual system. */
 import React, { useEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, Check } from "lucide-react";
 
@@ -7,6 +8,15 @@ const REQUIRED_RECORDS = 25;
 const LEVEL_TWO_REQUIRED_RECORDS = 50;
 const LEVEL_TWO_TRACK_OFFSET_SECONDS = 46;
 type GameLevel = 1 | 2;
+type BonusObstacleType = "pill" | "cd" | "raver" | "bracelet" | "bottle";
+
+interface BonusObstacle {
+  id: number;
+  x: number;
+  lane: number;
+  speed: number;
+  type: BonusObstacleType;
+}
 
 interface LeaderboardEntry {
   name: string;
@@ -27,6 +37,8 @@ const CELEBRATION_DANCERS = [
 ] as const;
 
 const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maximum Respect"] as const;
+const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["pill", "cd", "raver", "bracelet", "bottle"];
+const BONUS_REWARD = 250;
 
 interface FallingItem {
   id: number;
@@ -80,6 +92,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [mixerDamaged, setMixerDamaged] = useState(false);
   const [recoveryProgress, setRecoveryProgress] = useState(0);
   const [mixerRepairBurst, setMixerRepairBurst] = useState(false);
+  const [isBonusEligible, setIsBonusEligible] = useState(false);
+  const [isBonusSplashVisible, setIsBonusSplashVisible] = useState(false);
+  const [isBonusLevelActive, setIsBonusLevelActive] = useState(false);
+  const [isBonusRewinding, setIsBonusRewinding] = useState(false);
+  const [bonusProgress, setBonusProgress] = useState(0);
+  const [bonusLives, setBonusLives] = useState(3);
+  const [bonusIsJumping, setBonusIsJumping] = useState(false);
+  const [bonusDoorOpen, setBonusDoorOpen] = useState(false);
+  const [bonusObstacles, setBonusObstacles] = useState<BonusObstacle[]>([]);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
@@ -118,6 +139,21 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const nextIdRef = useRef(1);
   const spawnTimerRef = useRef(0);
   const djXRef = useRef(50);
+  const bonusRequestRef = useRef<number>(0);
+  const bonusLastTimeRef = useRef(0);
+  const bonusGameActiveRef = useRef(false);
+  const bonusEligibleRef = useRef(false);
+  const bonusCompletedRef = useRef(false);
+  const bonusProgressRef = useRef(0);
+  const bonusLivesRef = useRef(3);
+  const bonusObstaclesRef = useRef<BonusObstacle[]>([]);
+  const bonusSpawnTimerRef = useRef(0);
+  const bonusNextIdRef = useRef(1);
+  const bonusIsJumpingRef = useRef(false);
+  const bonusJumpTimerRef = useRef<number>(0);
+  const bonusInvulnerableUntilRef = useRef(0);
+  const bonusSplashTimerRef = useRef<number>(0);
+  const bonusRewindTimerRef = useRef<number>(0);
   downloadUnlockedRef.current = downloadUnlocked;
 
   // Key state for smooth movement
@@ -625,10 +661,156 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     requestRef.current = requestAnimationFrame(updateGame);
   };
 
+  const startNoRequestBonus = () => {
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    isPlayingRef.current = false;
+    bonusCompletedRef.current = false;
+    bonusGameActiveRef.current = false;
+    bonusProgressRef.current = 0;
+    bonusLivesRef.current = 3;
+    bonusObstaclesRef.current = [];
+    bonusSpawnTimerRef.current = 0;
+    bonusNextIdRef.current = 1;
+    bonusInvulnerableUntilRef.current = 0;
+    window.clearTimeout(bonusJumpTimerRef.current);
+    window.clearTimeout(bonusSplashTimerRef.current);
+    window.clearTimeout(bonusRewindTimerRef.current);
+    setIsPlaying(false);
+    setIsUnlockPaused(false);
+    setPreLevelTwoHighScore(false);
+    setIsBonusEligible(true);
+    setIsBonusSplashVisible(true);
+    setIsBonusLevelActive(false);
+    setIsBonusRewinding(false);
+    setBonusProgress(0);
+    setBonusLives(3);
+    setBonusIsJumping(false);
+    setBonusDoorOpen(false);
+    setBonusObstacles([]);
+    primeAudio();
+    playRecordScratch();
+  };
+
+  const finishNoRequestBonus = (cleared: boolean) => {
+    if (!bonusGameActiveRef.current) return;
+    bonusGameActiveRef.current = false;
+    if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
+    if (cleared && !bonusCompletedRef.current) {
+      bonusCompletedRef.current = true;
+      const rewardScore = scoreRef.current + BONUS_REWARD;
+      scoreRef.current = rewardScore;
+      setScore(rewardScore);
+      setBonusDoorOpen(true);
+    }
+    setIsBonusLevelActive(false);
+    setIsBonusRewinding(true);
+    primeAudio();
+    playRecordScratch();
+  };
+
+  const triggerBonusJump = () => {
+    if (!bonusGameActiveRef.current || bonusIsJumpingRef.current) return;
+    bonusIsJumpingRef.current = true;
+    setBonusIsJumping(true);
+    window.clearTimeout(bonusJumpTimerRef.current);
+    bonusJumpTimerRef.current = window.setTimeout(() => {
+      bonusIsJumpingRef.current = false;
+      setBonusIsJumping(false);
+    }, 540);
+  };
+
+  const updateBonusGame = (time: number) => {
+    if (!bonusGameActiveRef.current) return;
+    const elapsed = Math.max(0, time - bonusLastTimeRef.current);
+    const dt = Math.min(0.032, elapsed / 1000);
+    bonusLastTimeRef.current = time;
+
+    let nextProgress = bonusProgressRef.current;
+    if (keysRef.current["left"]) nextProgress = Math.max(0, nextProgress - 20 * dt);
+    if (keysRef.current["right"]) nextProgress = Math.min(100, nextProgress + 23 * dt);
+    if (nextProgress !== bonusProgressRef.current) {
+      bonusProgressRef.current = nextProgress;
+      setBonusProgress(nextProgress);
+    }
+
+    bonusSpawnTimerRef.current += dt;
+    if (bonusSpawnTimerRef.current >= 1.25) {
+      bonusSpawnTimerRef.current = 0;
+      const lane = Math.min(3, Math.floor(Math.random() * 4));
+      const type = BONUS_OBSTACLE_TYPES[Math.floor(Math.random() * BONUS_OBSTACLE_TYPES.length)];
+      bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, x: 104, lane, type, speed: 16 + Math.floor(Math.random() * 7) });
+    }
+
+    const currentLane = Math.min(3, Math.floor(nextProgress / 25));
+    const laneProgress = nextProgress - currentLane * 25;
+    const playerX = currentLane % 2 === 0 ? 12 + laneProgress * 2.35 : 70 - laneProgress * 2.05;
+    const now = performance.now();
+    let wasHit = false;
+    const nextObstacles: BonusObstacle[] = [];
+    for (const obstacle of bonusObstaclesRef.current) {
+      const moved = { ...obstacle, x: obstacle.x - obstacle.speed * dt };
+      const collides = moved.lane === currentLane && Math.abs(moved.x - playerX) < 8;
+      if (collides && !bonusIsJumpingRef.current && now > bonusInvulnerableUntilRef.current) {
+        wasHit = true;
+        bonusInvulnerableUntilRef.current = now + 950;
+        continue;
+      }
+      if (moved.x > -14) nextObstacles.push(moved);
+    }
+    bonusObstaclesRef.current = nextObstacles;
+    setBonusObstacles(nextObstacles);
+
+    if (wasHit) {
+      const nextLives = Math.max(0, bonusLivesRef.current - 1);
+      bonusLivesRef.current = nextLives;
+      setBonusLives(nextLives);
+      // Generous per-platform checkpoints mean a surprise obstacle does not erase a full run.
+      const checkpoint = Math.max(0, Math.floor(nextProgress / 25) * 25);
+      bonusProgressRef.current = checkpoint;
+      setBonusProgress(checkpoint);
+      playCopSiren();
+      if (nextLives === 0) {
+        finishNoRequestBonus(false);
+        return;
+      }
+    }
+
+    if (nextProgress >= 100) {
+      finishNoRequestBonus(true);
+      return;
+    }
+    bonusRequestRef.current = requestAnimationFrame(updateBonusGame);
+  };
+
+  useEffect(() => {
+    if (!isBonusSplashVisible) return;
+    bonusSplashTimerRef.current = window.setTimeout(() => {
+      setIsBonusSplashVisible(false);
+      setIsBonusLevelActive(true);
+      bonusGameActiveRef.current = true;
+      bonusLastTimeRef.current = performance.now();
+      bonusRequestRef.current = requestAnimationFrame(updateBonusGame);
+    }, 1950);
+    return () => window.clearTimeout(bonusSplashTimerRef.current);
+  }, [isBonusSplashVisible]);
+
+  useEffect(() => {
+    if (!isBonusRewinding) return;
+    bonusRewindTimerRef.current = window.setTimeout(() => {
+      setIsBonusRewinding(false);
+      setPreLevelTwoHighScore(true);
+    }, 1450);
+    return () => window.clearTimeout(bonusRewindTimerRef.current);
+  }, [isBonusRewinding]);
+
   const keepPlayingAfterUnlock = () => {
     if (!isUnlockPaused || !chainBreakComplete) return;
     setIsUnlockPaused(false);
-    setPreLevelTwoHighScore(true);
+    if (bonusEligibleRef.current) {
+      startNoRequestBonus();
+    } else {
+      setPreLevelTwoHighScore(true);
+    }
   };
 
   useEffect(() => {
@@ -712,7 +894,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isPlaying) return;
+      if (isBonusLevelActive && (e.key === " " || e.key === "ArrowUp" || e.key.toLowerCase() === "w")) {
+        e.preventDefault();
+        triggerBonusJump();
+        return;
+      }
+      if (!isPlaying && !isBonusLevelActive) return;
       if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
         keysRef.current["left"] = true;
         e.preventDefault();
@@ -738,10 +925,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [isPlaying]);
+  }, [isPlaying, isBonusLevelActive, bonusIsJumping]);
 
   const startGame = () => {
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     const ctx = getAudioContext();
     if (ctx && ctx.state === "suspended") void ctx.resume();
     unlockJinglePlayedRef.current = false;
@@ -761,6 +949,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(levelTwoMusicTimerRef.current);
     window.clearTimeout(levelTwoMarqueeTimerRef.current);
     window.clearTimeout(mixerRepairTimerRef.current);
+    window.clearTimeout(bonusJumpTimerRef.current);
+    window.clearTimeout(bonusSplashTimerRef.current);
+    window.clearTimeout(bonusRewindTimerRef.current);
     levelRef.current = 1;
     setLevel(1);
     setLevelTwoComplete(false);
@@ -787,6 +978,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
+    bonusEligibleRef.current = false;
+    bonusCompletedRef.current = false;
+    bonusGameActiveRef.current = false;
+    bonusProgressRef.current = 0;
+    bonusLivesRef.current = 3;
+    bonusObstaclesRef.current = [];
+    setIsBonusEligible(false);
+    setIsBonusSplashVisible(false);
+    setIsBonusLevelActive(false);
+    setIsBonusRewinding(false);
+    setBonusProgress(0);
+    setBonusLives(3);
+    bonusIsJumpingRef.current = false;
+    setBonusIsJumping(false);
+    setBonusDoorOpen(false);
+    setBonusObstacles([]);
     setUnlockRevealReady(false);
     setChainBreakComplete(false);
     setIsCabinetVibrating(false);
@@ -855,6 +1062,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     let pauseForWheelItUp = false;
     let pauseForPoliceSeizure = false;
     let pauseForCrowdAnger = false;
+    let launchBonus = false;
     let advanceToLevelTwo = false;
     let completeLevelTwo = false;
     let currentLives = livesRef.current;
@@ -921,13 +1129,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             setTimeout(() => setShowComboBurst(false), 800);
           }
           if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS) {
+            const cleanLevelOne = livesRef.current >= 3;
+            bonusEligibleRef.current = cleanLevelOne;
+            setIsBonusEligible(cleanLevelOne);
             if (!downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
               unlockJinglePlayedRef.current = true;
               playUnlockJingle();
               onUnlockDownload?.();
               pauseAfterUnlock = true;
             } else {
-              advanceToLevelTwo = true;
+              launchBonus = cleanLevelOne;
+              advanceToLevelTwo = !cleanLevelOne;
             }
           }
           if (levelRef.current === 2 && nextRecordsCaught >= LEVEL_TWO_REQUIRED_RECORDS) {
@@ -1052,6 +1264,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       startLevelTwo();
       return;
     }
+    if (launchBonus) {
+      startNoRequestBonus();
+      return;
+    }
     if (completeLevelTwo) {
       isPlayingRef.current = false;
       if (bgMusicRef.current) bgMusicRef.current.pause();
@@ -1089,10 +1305,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(levelTwoMusicTimerRef.current);
       window.clearTimeout(levelTwoMarqueeTimerRef.current);
       window.clearTimeout(mixerRepairTimerRef.current);
+      window.clearTimeout(bonusJumpTimerRef.current);
+      window.clearTimeout(bonusSplashTimerRef.current);
+      window.clearTimeout(bonusRewindTimerRef.current);
+      if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     };
   }, []);
 
   const updateDjPositionFromClientX = (clientX: number) => {
+    if (isBonusLevelActive) return;
     if (!isPlayingRef.current || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const percentage = Math.max(4, Math.min(90, ((clientX - rect.left) / rect.width) * 100));
@@ -1101,6 +1322,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isBonusLevelActive) return;
     if (e.pointerType === "touch") return;
     updateDjPositionFromClientX(e.clientX);
   };
@@ -1116,6 +1338,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       : combo >= 5
         ? "CLEAN BLEND. NO REQUESTS TAKEN."
         : "BASS TOO LOUD? STAND CLOSER.";
+
+  const bonusLane = Math.min(3, Math.floor(bonusProgress / 25));
+  const bonusLaneProgress = bonusProgress - bonusLane * 25;
+  const bonusRunnerLeft = bonusLane % 2 === 0 ? 12 + bonusLaneProgress * 2.35 : 70 - bonusLaneProgress * 2.05;
+  const bonusRunnerBottom = 9 + bonusLane * 20.5;
 
   return (
     <section id="minigame" className="minigame-section" aria-labelledby="minigame-title">
@@ -1148,7 +1375,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
         <div
           ref={containerRef}
-          className={`game-viewport${level === 2 ? " is-level-two" : ""}`}
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding ? " is-bonus-scene" : ""}`}
         onPointerMove={handlePointerMove}
         onPointerDown={(e) => {
           if (e.pointerType === "touch") updateDjPositionFromClientX(e.clientX);
@@ -1218,7 +1445,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && (
+        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -1232,6 +1459,53 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <span className="tape-play-copy">Start Session</span>
               </button>
             </div>
+          </div>
+        )}
+
+        {isBonusSplashVisible && (
+          <div className="game-overlay no-request-splash-overlay" role="status" aria-live="assertive">
+            <div className="no-request-splash-sun" aria-hidden="true" />
+            <div className="no-request-splash-copy">
+              <span>LEVEL 1 CLEAN RUN / {lives} LIVES LEFT</span>
+              <strong>NO REQUEST<br />BONUS!</strong>
+              <em>DAWN DOOR RUSH — GET PAST THE CLUB OWNER</em>
+            </div>
+            <div className="no-request-rewind-cue" aria-hidden="true"><i /><i /><i /></div>
+          </div>
+        )}
+
+        {isBonusLevelActive && (
+          <div className="bonus-level-stage" role="application" aria-label="No Request Bonus. Climb to the club door and jump rolling obstacles.">
+            <div className="bonus-dawn-backdrop" aria-hidden="true" />
+            <div className="bonus-grid-horizon" aria-hidden="true" />
+            <div className="bonus-platform bonus-platform-one" aria-hidden="true" />
+            <div className="bonus-platform bonus-platform-two" aria-hidden="true" />
+            <div className="bonus-platform bonus-platform-three" aria-hidden="true" />
+            <div className="bonus-platform bonus-platform-four" aria-hidden="true" />
+            <div className="bonus-ladder ladder-one" aria-hidden="true" />
+            <div className="bonus-ladder ladder-two" aria-hidden="true" />
+            <div className="bonus-ladder ladder-three" aria-hidden="true" />
+            <div className={`bonus-club-door${bonusDoorOpen ? " is-open" : ""}`} aria-label="Club owner guarding the dawn door"><span className="club-owner">OWNER</span><i>NO GUESTLIST?</i></div>
+            <div className="bonus-hud"><span>NO REQUEST BONUS</span><strong>DOOR {Math.round(bonusProgress)}%</strong><b>♥ {bonusLives}</b></div>
+            <div className="bonus-tip">◀ ▶ CLIMB / SPACE TO JUMP</div>
+            <div className={`bonus-dj-runner lane-${bonusLane}${bonusIsJumping ? " is-jumping" : ""}`} style={{ "--runner-left": `${bonusRunnerLeft}%`, "--runner-bottom": `${bonusRunnerBottom}%` } as React.CSSProperties}>
+              <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ climbing toward the club door" />
+            </div>
+            <div className="bonus-obstacle-layer" aria-hidden="true">
+              {bonusObstacles.map((obstacle) => <span key={obstacle.id} className={`bonus-obstacle ${obstacle.type} lane-${obstacle.lane}`} style={{ left: `${obstacle.x}%` }}><i /></span>)}
+            </div>
+            <div className="bonus-touch-controls" aria-label="No Request Bonus controls">
+              <button type="button" onPointerDown={() => { keysRef.current.left = true; }} onPointerUp={() => { keysRef.current.left = false; }} onPointerLeave={() => { keysRef.current.left = false; }}>◀</button>
+              <button type="button" className="bonus-jump-button" onClick={triggerBonusJump}>JUMP</button>
+              <button type="button" onPointerDown={() => { keysRef.current.right = true; }} onPointerUp={() => { keysRef.current.right = false; }} onPointerLeave={() => { keysRef.current.right = false; }}>▶</button>
+            </div>
+          </div>
+        )}
+
+        {isBonusRewinding && (
+          <div className="game-overlay bonus-rewind-overlay" role="status" aria-live="assertive">
+            <div className="bonus-rewind-disc" aria-hidden="true"><i /></div>
+            <div><span>{bonusCompletedRef.current ? `DOOR CLEARED / +${BONUS_REWARD} PTS` : "LAST ENTRY CALLED"}</span><strong>REWIND TO THE RAVE</strong><em>LEVEL 2 CROWD PRESSURE LOADING</em></div>
           </div>
         )}
 
@@ -1369,7 +1643,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                           <span className="tape-play-copy">Keep Playing</span>
                         </button>
                       </div>
-                      <p>You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score.</p>
+                      <p>{isBonusEligible ? "Clean run detected: Keep Playing launches the No Request Bonus dawn-door rush before Level 2." : "You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score."}</p>
                     </>
                   ) : <span className="chain-break-visual-only" aria-label="Achievement chain is breaking" />}
                 </>

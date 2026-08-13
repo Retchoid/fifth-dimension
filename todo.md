@@ -525,3 +525,10 @@
 - [x] Add richer in-game rave-world signage and DJ-specific 90s humour that responds to the active level.
 - [x] Add engaging arcade feedback moments that celebrate clean selection without changing the required two-level progression.
 - [x] Validate desktop/mobile legibility, gameplay continuity, build, and checkpoint delivery.
+
+## No Request Bonus side-scroller
+
+- [x] Track Level 1 clean-run eligibility and show a “NO REQUEST BONUS!” splash before the bonus level.
+- [x] Build a dawn vaporwave side-scroller with the DJ sprite, jump controls, rolling pills/CDs/ravers/bracelets/bottles, and a club owner by the top door.
+- [x] Add a rewind transition back to the main game and make earned bonus rewards available across both main levels.
+- [x] Validate balance, desktop/mobile controls, progression, build, and checkpoint delivery.
