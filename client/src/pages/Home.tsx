@@ -581,6 +581,12 @@ export default function Home() {
             <div className="matrix-seal" aria-hidden="true"><strong>5D</strong><span>SEALED<br />SIGNAL</span></div>
           </article>
           <article id="exclusive" className="exclusive-release" aria-labelledby="exclusive-title">
+            <div className="exclusive-paint-drips" aria-hidden="true">
+              <i className="exclusive-paint-drip drip-magenta" />
+              <i className="exclusive-paint-drip drip-cyan" />
+              <i className="exclusive-paint-drip drip-orange" />
+              <i className="exclusive-paint-drip drip-lime" />
+            </div>
             <div className="exclusive-band">
               <p className="exclusive-meta"><Music2 size={15} /> 5D EXCLUSIVE / 001 <i /> DIRECT FILE DROP</p>
               <h3 id="exclusive-title">{EXCLUSIVE_RELEASE.title}</h3>

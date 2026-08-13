@@ -1,0 +1,51 @@
+/* 5D exclusive-drop correction: visible paint drips belong to the release card only.
+   This stylesheet is purely presentational and deliberately does not touch game or unlock state. */
+.exclusive-release { position: relative; isolation: isolate; overflow: hidden; }
+.exclusive-band, .exclusive-track { position: relative; z-index: 1; }
+.exclusive-paint-drips { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.exclusive-paint-drip {
+  position: absolute;
+  top: clamp(9.7rem, 15vw, 13.6rem);
+  width: clamp(.58rem, 1.1vw, .94rem);
+  border: 2px solid #12091a;
+  border-top: 0;
+  border-radius: 0 0 999px 999px;
+  box-shadow: 2px 3px 0 rgba(5, 4, 9, .8), inset 1px 0 0 rgba(255,255,255,.34);
+  transform-origin: top;
+}
+.exclusive-paint-drip::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 2px);
+  width: clamp(1.35rem, 2.8vw, 2.35rem);
+  height: clamp(.7rem, 1.35vw, 1.15rem);
+  border: 2px solid #12091a;
+  border-radius: 55% 45% 25% 45%;
+  box-shadow: -1.1rem .35rem 0 -.4rem currentColor, .92rem -.08rem 0 -.45rem currentColor;
+  transform: translateX(-50%) rotate(-4deg);
+}
+.exclusive-paint-drip.drip-magenta { left: 8%; height: clamp(4.6rem, 8vw, 7.2rem); color: #ff147e; background: linear-gradient(90deg, #b8055b, #ff147e 50%, #ff7ab4); }
+.exclusive-paint-drip.drip-cyan { left: 15%; height: clamp(6.2rem, 10vw, 9.6rem); color: #00ddeb; background: linear-gradient(90deg, #008a9e, #00ddeb 55%, #8ffaff); transform: rotate(1.5deg); }
+.exclusive-paint-drip.drip-orange { right: 16%; height: clamp(5rem, 8.7vw, 8rem); color: #ff6a21; background: linear-gradient(90deg, #c9390d, #ff6a21 55%, #ffbf76); transform: rotate(-1.5deg); }
+.exclusive-paint-drip.drip-lime { right: 8%; height: clamp(3.8rem, 6.2vw, 5.8rem); color: #c9ff2d; background: linear-gradient(90deg, #6a9d03, #c9ff2d 52%, #efff9c); transform: rotate(3deg); }
+.exclusive-paint-drip.drip-cyan::after, .exclusive-paint-drip.drip-magenta::after {
+  content: "";
+  position: absolute;
+  left: 150%;
+  top: 1.1rem;
+  width: .35rem;
+  height: .35rem;
+  border: 1px solid #12091a;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: .65rem .8rem 0 -.05rem currentColor, -.42rem 1.4rem 0 -.08rem currentColor;
+}
+@media (max-width: 650px) {
+  .exclusive-paint-drip { top: 10rem; border-width: 1.5px; }
+  .exclusive-paint-drip.drip-magenta { left: 9%; }
+  .exclusive-paint-drip.drip-cyan { left: 18%; }
+  .exclusive-paint-drip.drip-orange { right: 17%; }
+  .exclusive-paint-drip.drip-lime { right: 8%; }
+}
+@media (prefers-reduced-motion: reduce) { .exclusive-paint-drip { transform: none; } }

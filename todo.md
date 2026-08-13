@@ -1,5 +1,13 @@
 # Amendment tasks
 
+## Exclusive card paint drips and official share preview
+
+- [x] Inspect the exclusive-release card’s current markup, layering, and responsive styles to identify why the requested paint drips are not visible.
+- [x] Restore visible magenta, cyan, and orange paint drips from the exclusive card only, without changing the locked-release or chain-break behavior.
+- [x] Create an official 1200×630 social share card centered on 5th Dimension’s music, selector identity, and playable arcade hook.
+- [x] Add Open Graph and X/Twitter metadata that uses the new share card and concise music-first conversion copy.
+- [x] Verify the release-card treatment and metadata at desktop/mobile sizes, run build checks, and publish.
+
 ## Street Fighter III arcade visual refinement
 
 - [x] Inventory every Selector Showdown sprite, pickup, stage layer, cabinet surface, and full-screen overlay against the Street Fighter III-style visual brief.

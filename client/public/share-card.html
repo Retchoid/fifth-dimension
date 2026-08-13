@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>5th Dimension Official Site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rubik+Wet+Paint&display=swap" rel="stylesheet" />
+    <style>
+      * { box-sizing: border-box; }
+      html, body { width: 1200px; height: 630px; margin: 0; overflow: hidden; background: #08070e; }
+      body { color: #fff3d0; font-family: "Bungee", Impact, sans-serif; }
+      .card { position: relative; width: 1200px; height: 630px; overflow: hidden; isolation: isolate; background: linear-gradient(112deg, #090712 0 38%, #211044 38% 56%, #0b0d18 56% 100%); }
+      .card::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .62; background: repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 2px, transparent 2px 7px), radial-gradient(circle at 16% 17%, rgba(0,226,237,.28), transparent 21%), radial-gradient(circle at 86% 32%, rgba(255,0,116,.3), transparent 29%), linear-gradient(90deg, transparent 0 23%, rgba(0,226,237,.15) 23.2% 23.5%, transparent 23.7% 73%, rgba(255,0,116,.2) 73.2% 73.6%, transparent 73.8%); }
+      .floor { position: absolute; z-index: 0; left: -5%; right: -5%; bottom: -20%; height: 50%; background: linear-gradient(160deg, rgba(52,39,56,.93), #090911 65%), repeating-linear-gradient(145deg, rgba(0,226,237,.32) 0 2px, transparent 2px 12%), repeating-linear-gradient(90deg, rgba(255,200,120,.19) 0 2px, transparent 2px 11%); clip-path: polygon(16% 0, 84% 0, 100% 100%, 0 100%); box-shadow: inset 0 9px 0 rgba(255,94,58,.42); }
+      .copy { position: absolute; z-index: 4; left: 68px; top: 74px; width: 510px; }
+      .eyebrow { display: inline-block; padding: 10px 14px; color: #10101b; background: #c9ff2d; box-shadow: 5px 5px 0 #ff3f93; font: 900 17px/1 "Bungee", Impact, sans-serif; letter-spacing: 2px; transform: rotate(-2deg); }
+      h1 { margin: 33px 0 18px; color: #fff1c6; font: 900 87px/.77 "Bungee", Impact, sans-serif; letter-spacing: -4px; text-transform: uppercase; text-shadow: 7px 7px 0 #ff167e, 12px 12px 0 rgba(0,0,0,.48), -3px -3px 0 #00ddeb; }
+      .genre { margin: 0; color: #00e7ff; font-size: 25px; letter-spacing: 4px; text-shadow: 3px 3px 0 #0b0712; }
+      .sub { max-width: 430px; margin: 24px 0 0; color: #ece0c8; font: 700 21px/1.35 system-ui, sans-serif; letter-spacing: .2px; }
+      .cta { display: inline-block; margin-top: 30px; padding: 12px 16px; border: 3px solid #0a0810; background: #ff5a1f; color: #13091a; box-shadow: 5px 5px 0 #00e7ff; font: 900 18px/1 "Bungee", Impact, sans-serif; letter-spacing: 2px; transform: rotate(1deg); }
+      .dj-frame { position: absolute; z-index: 3; right: 62px; bottom: -20px; width: 560px; height: 600px; overflow: hidden; }
+      .dj-frame::before { content: ""; position: absolute; z-index: -1; right: 15px; top: 8px; width: 440px; height: 440px; border: 8px solid #fbedbd; background: conic-gradient(from 14deg, #ff197f, #00ddeb, #c9ff2d, #ff6a21, #ff197f); box-shadow: 0 0 0 7px #100a19, 13px 16px 0 rgba(0,0,0,.56); transform: rotate(8deg); }
+      .dj { position: absolute; right: 30px; bottom: 12px; width: 500px; height: 540px; object-fit: contain; object-position: center bottom; image-rendering: pixelated; filter: contrast(1.2) saturate(1.28) drop-shadow(9px 9px 0 #09070e) drop-shadow(-3px -3px 0 rgba(255,245,195,.42)); }
+      .logo { position: absolute; z-index: 4; right: 42px; top: 34px; width: 235px; filter: drop-shadow(6px 7px 0 #0a0711); transform: rotate(3deg); }
+      .vinyl { position: absolute; z-index: 2; right: 426px; bottom: 58px; width: 102px; height: 102px; border: 7px solid #08070c; border-radius: 50%; background: radial-gradient(circle, #ffdc7a 0 10%, #ff5a1f 11% 27%, #16121e 28% 58%, #00e7ff 59% 64%, #08070c 65%); box-shadow: 5px 6px 0 rgba(0,0,0,.6), 0 0 18px #00ddeb; transform: rotate(-19deg); }
+      .footer { position: absolute; z-index: 5; right: 57px; bottom: 24px; color: #fff4d0; font: 900 15px/1 "Bungee", Impact, sans-serif; letter-spacing: 2px; text-shadow: 3px 3px 0 #0a0710; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="floor"></div>
+      <section class="copy">
+        <div class="eyebrow">OFFICIAL ARTIST SITE</div>
+        <h1>5th<br />Dimension</h1>
+        <p class="genre">JUNGLE / RAGGA / BASS</p>
+        <p class="sub">Heavy sound-system pressure, original mixes and an arcade selector challenge.</p>
+        <div class="cta">LISTEN. PLAY. UNLOCK.</div>
+      </section>
+      <div class="vinyl"></div>
+      <div class="dj-frame"><img class="dj" src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="5th Dimension selector" /></div>
+      <img class="logo" src="/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png" alt="5th Dimension" />
+      <div class="footer">MUSIC + SELECTOR SHOWDOWN</div>
+    </main>
+  </body>
+</html>
