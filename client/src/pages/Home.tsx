@@ -560,11 +560,6 @@ export default function Home() {
               <article className="project-card" key={project.id}>
                 <img src={project.image} alt="" />
                 <div className="project-shade" />
-                <svg className="project-cyan-paint" viewBox="0 0 320 110" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                  <path className="project-paint-base" d="M0 0H320V18C311 18 312 43 303 43C293 43 298 91 286 91C274 91 281 29 267 31C253 32 258 60 246 60C233 60 238 19 222 20C208 20 212 82 200 82C187 82 192 31 178 32C164 32 169 51 155 51C142 51 148 20 130 21C116 21 121 101 108 101C95 101 101 31 86 32C72 33 77 57 64 57C50 57 55 18 38 20C25 20 27 75 15 75C5 75 8 28 0 28Z" />
-                  <path className="project-paint-shadow" d="M99 22C106 30 114 42 114 73C114 93 111 101 108 101C95 101 101 31 86 32C92 31 96 29 99 22ZM194 22C202 31 205 50 205 70C205 79 202 82 200 82C187 82 192 31 178 32C185 30 190 26 194 22ZM279 25C290 32 292 55 291 76C290 88 288 91 286 91C274 91 281 29 267 31C272 30 276 28 279 25Z" />
-                  <path className="project-paint-highlight" d="M9 8C20 5 25 10 30 16M72 8C80 5 87 9 92 15M132 8C140 5 148 9 153 16M223 8C232 5 239 9 244 16M301 8C307 6 313 9 317 14" />
-                </svg>
                 <div className="project-content">
                   <span className="project-id">{project.id}</span>
                   <h3>{project.title}</h3>
@@ -659,8 +654,7 @@ export default function Home() {
           </article>
         </section>
 
-        {/* 5D design: the exclusive drop hands visitors directly into Selector Showdown,
-            using graffiti direction marks that visually wrap the cabinet rather than a generic divider. */}
+        {/* The exclusive drop hands visitors directly into Selector Showdown. */}
         <div className="arcade-flow-shell">
           <div className="arcade-graffiti-flow" aria-hidden="true">
             <span className="arcade-flow-stamp">EXCLUSIVE DROP / PLAY THE ARCADE
@@ -668,20 +662,6 @@ export default function Home() {
               <i className="arcade-paint-drip drip-lime" />
               <i className="arcade-paint-drip drip-pink" />
               <i className="arcade-paint-drip drip-yellow" />
-            </span>
-            <span className="arcade-ribbon arcade-ribbon-left">
-              <svg viewBox="0 0 320 610" focusable="false">
-                <path className="ribbon-shadow" d="M292 18C227 21 184 44 171 84c-15 45 42 65 10 120-31 54-106 54-109 124-2 58 54 78 104 98l-15 71 47-33 9 82 53-66-46-10 47-34-60-16c-32-40-71-78-58-123 15-52 91-52 104-117 11-55-18-97-65-115z" />
-                <path className="ribbon-main" d="M286 26C225 30 194 49 184 88c-11 41 43 61 11 113-30 49-96 51-99 113-2 54 49 71 95 90l-11 50 35-24 7 61 38-48-36-9 35-25-47-12c-31-38-66-72-55-113 13-48 83-49 96-108 10-46-13-81-57-100z" />
-                <path className="ribbon-accent" d="M281 40c-46 8-65 28-69 53-5 34 37 52 18 91-17 36-78 43-82 93-3 41 33 61 69 79" />
-              </svg>
-            </span>
-            <span className="arcade-ribbon arcade-ribbon-right">
-              <svg viewBox="0 0 320 610" focusable="false">
-                <path className="ribbon-shadow" d="M292 18C227 21 184 44 171 84c-15 45 42 65 10 120-31 54-106 54-109 124-2 58 54 78 104 98l-15 71 47-33 9 82 53-66-46-10 47-34-60-16c-32-40-71-78-58-123 15-52 91-52 104-117 11-55-18-97-65-115z" />
-                <path className="ribbon-main" d="M286 26C225 30 194 49 184 88c-11 41 43 61 11 113-30 49-96 51-99 113-2 54 49 71 95 90l-11 50 35-24 7 61 38-48-36-9 35-25-47-12c-31-38-66-72-55-113 13-48 83-49 96-108 10-46-13-81-57-100z" />
-                <path className="ribbon-accent" d="M281 40c-46 8-65 28-69 53-5 34 37 52 18 91-17 36-78 43-82 93-3 41 33 61 69 79" />
-              </svg>
             </span>
             <span className="arcade-splatter arcade-splatter-left">
               {Array.from({ length: 8 }, (_, index) => <i key={`left-splat-${index}`} className={`splat-dot splat-${index}`} />)}

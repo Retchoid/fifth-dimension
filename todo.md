@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## Arrow removal and targeted drip cleanup
+
+- [x] Remove the remaining decorative arcade ribbon arrows from the release-to-game transition.
+- [x] Shorten the release-card cyan drips so they end before the Selector Showdown heading area.
+- [x] Remove cyan paint drips from the Frequency Loading and Floor Rewiring forthcoming cards.
+- [x] Verify the affected mobile and desktop sections, build, and publish.
+
 ## Extended paint-overlap stacking correction
 
 - [x] Identify the stacking contexts that currently let adjacent boxes cover the release, event-card, or arcade-flow drips.
