@@ -631,3 +631,9 @@
 - [x] Move the chained Level 1 unlock box from the top-right to the bottom-left before its release sequence.
 - [x] Restyle the chain as thick, dark, segmented 16-bit links inspired by the supplied reference image.
 - [x] Validate desktop/mobile travel path, chain readability, break timing, build, and checkpoint delivery.
+
+## Padlock and destination-flash reinforcement
+
+- [x] Enlarge and reinforce the padlock on the diagonal chained unlock.
+- [x] Add a bright bottom-left destination-corner flash immediately before the chain break.
+- [x] Validate timing, responsive presentation, build, and checkpoint delivery.

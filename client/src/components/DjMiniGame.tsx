@@ -2011,9 +2011,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 ))}
               </div>
               {unlockRevealReady && !chainBreakComplete && (
-                <div className="chain-link-debris" aria-hidden="true">
-                  {Array.from({ length: 10 }, (_, index) => <i key={index} className={`chain-link-fragment chain-fragment-${index}`} />)}
-                </div>
+                <>
+                  <div className="unlock-destination-flash" aria-hidden="true"><i /><b /></div>
+                  <div className="chain-link-debris" aria-hidden="true">
+                    {Array.from({ length: 10 }, (_, index) => <i key={index} className={`chain-link-fragment chain-fragment-${index}`} />)}
+                  </div>
+                </>
               )}
             </div>
             <div className="overlay-box unlock-overlay-box">
