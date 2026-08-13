@@ -540,3 +540,8 @@
 - [x] Add falling pills and mobile phones as fair negative hazards in both levels.
 - [x] Redraw the Level 2 lion pickup as a more recognizable Lion of Judah treatment.
 - [x] Validate pickup balance, special-event timing, desktop/mobile rendering, build, and checkpoint delivery.
+
+## Turntable and adapter pickup audio
+
+- [x] Add distinct mute-aware 16-bit sound effects for turntable and 45-adapter pickups.
+- [x] Validate pickup routing, build, and checkpoint delivery.

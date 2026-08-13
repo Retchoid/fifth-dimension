@@ -240,6 +240,69 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     laser.stop(now + 0.19);
   };
 
+  const playTurntablePickup = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const platter = context.createOscillator();
+    const cue = context.createOscillator();
+    const filter = context.createBiquadFilter();
+    const gain = context.createGain();
+
+    // A short pitched platter spin and cue-lock chirp make the deck feel distinct
+    // from the record catch without interrupting the jungle bed underneath.
+    platter.type = "sawtooth";
+    cue.type = "square";
+    platter.frequency.setValueAtTime(126, now);
+    platter.frequency.exponentialRampToValueAtTime(310, now + 0.11);
+    platter.frequency.exponentialRampToValueAtTime(164, now + 0.29);
+    cue.frequency.setValueAtTime(740, now + 0.05);
+    cue.frequency.exponentialRampToValueAtTime(430, now + 0.19);
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(1320, now);
+    filter.Q.setValueAtTime(2.8, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.19, now + 0.016);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.31);
+    platter.connect(filter);
+    cue.connect(filter);
+    filter.connect(gain);
+    gain.connect(context.destination);
+    platter.start(now);
+    cue.start(now + 0.045);
+    platter.stop(now + 0.32);
+    cue.stop(now + 0.22);
+  };
+
+  const playAdapterPickup = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const gain = context.createGain();
+    const notes = [880, 1174, 1568];
+
+    // A bright three-note 45 adaptor arpeggio reads as a small but valuable bonus.
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.16, now + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
+    gain.connect(context.destination);
+    notes.forEach((frequency, index) => {
+      const tone = context.createOscillator();
+      const noteGain = context.createGain();
+      const start = now + index * 0.072;
+      tone.type = "triangle";
+      tone.frequency.setValueAtTime(frequency, start);
+      tone.frequency.exponentialRampToValueAtTime(frequency * 0.94, start + 0.12);
+      noteGain.gain.setValueAtTime(0.0001, start);
+      noteGain.gain.exponentialRampToValueAtTime(0.72, start + 0.008);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.14);
+      tone.connect(noteGain);
+      noteGain.connect(gain);
+      tone.start(start);
+      tone.stop(start + 0.15);
+    });
+  };
+
   const playSubwooferPop = () => {
     const context = getAudioContext();
     if (!context) return;
@@ -1109,7 +1172,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       if (newY >= 70 && newY <= 90 && item.x >= currentX - 8 && item.x <= currentX + 22) {
         structureChanged = true;
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "turntable" || item.type === "adapter") {
-          playRecordScratch();
+          if (item.type === "turntable") {
+            playTurntablePickup();
+          } else if (item.type === "adapter") {
+            playAdapterPickup();
+          } else {
+            playRecordScratch();
+          }
           const nextCombo = comboRef.current + 1;
           comboRef.current = nextCombo;
           setCombo(nextCombo);
