@@ -585,3 +585,8 @@
 - [x] Add a share control to each archive mix with its approved cover, exact title, and artist credit.
 - [x] Include the exact call to action: “check out 5th Dimension music official site for more content, games and upcoming events”.
 - [x] Validate the native-share and copy-link fallback behavior, responsive share-card display, build, and checkpoint delivery.
+
+## Level 2 HUD clearance
+
+- [x] Remove the Level 2 Rave Etiquette box and place the Crowd Hype meter in its unobstructed in-world location.
+- [x] Validate the Level 2 playfield layout, build, and checkpoint delivery.

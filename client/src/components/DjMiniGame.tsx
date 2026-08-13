@@ -1542,7 +1542,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <span className="rave-flyer-stack"><i>1997</i><b>ONE MORE TUNE?</b><em>ABSOLUTELY NOT.</em></span>
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>
-        <div className={`rave-banter-board${isPlaying ? " is-playing" : ""}`} role="status" aria-live="polite"><span>RAVE FAX</span><strong>{raveBanter}</strong></div>
+        {level !== 2 && <div className={`rave-banter-board${isPlaying ? " is-playing" : ""}`} role="status" aria-live="polite"><span>RAVE FAX</span><strong>{raveBanter}</strong></div>}
         <div className="game-hud">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
           <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>
@@ -1566,7 +1566,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
 
         {level === 2 && !gameOver && (
-          <div className="level-two-hype-meter" aria-label={`Crowd hype: ${recordsCaught} of ${LEVEL_TWO_REQUIRED_RECORDS}`}>
+          <div className="level-two-hype-meter level-two-hype-meter-in-world" aria-label={`Crowd hype: ${recordsCaught} of ${LEVEL_TWO_REQUIRED_RECORDS}`}>
             <div className="hype-meter-label"><span>CROWD HYPE</span><strong>{recordsCaught}/{LEVEL_TWO_REQUIRED_RECORDS}</strong></div>
             <div className="hype-meter-track" aria-hidden="true"><i style={{ width: `${Math.min(100, (recordsCaught / LEVEL_TWO_REQUIRED_RECORDS) * 100)}%` }} /></div>
             <small>BUILD THE RAVE FLOOR</small>
