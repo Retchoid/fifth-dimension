@@ -637,3 +637,9 @@
 - [x] Enlarge and reinforce the padlock on the diagonal chained unlock.
 - [x] Add a bright bottom-left destination-corner flash immediately before the chain break.
 - [x] Validate timing, responsive presentation, build, and checkpoint delivery.
+
+## Persistent Facebook-follow recognition
+
+- [x] Add a compact Facebook-follow reminder below the permanent game-share control.
+- [x] Add an explicit honor-based confirmation action that opens the artist page and triggers a RESPECT fist-bump splash with arcade shake.
+- [x] Persist the acknowledgement locally and validate desktop/mobile layout, timing, build, and checkpoint delivery.

@@ -5,6 +5,7 @@ import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, C
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
+const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
 const REQUIRED_RECORDS = 25;
 const LEVEL_TWO_REQUIRED_RECORDS = 50;
 const LEVEL_TWO_TRACK_OFFSET_SECONDS = 46;
@@ -113,6 +114,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
   const [musicStatus, setMusicStatus] = useState<"loading" | "ready" | "playing" | "paused" | "blocked" | "error">("loading");
   const [shared, setShared] = useState(false);
+  const [facebookRespectConfirmed, setFacebookRespectConfirmed] = useState(false);
+  const [isRespectSplashVisible, setIsRespectSplashVisible] = useState(false);
+  const [isRespectShaking, setIsRespectShaking] = useState(false);
   const [showComboBurst, setShowComboBurst] = useState(false);
   const [comboReaction, setComboReaction] = useState<ComboReaction>(null);
   const [isGunFingerShaking, setIsGunFingerShaking] = useState(false);
@@ -200,6 +204,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const comboBurstTimerRef = useRef<number>(0);
   const gunFingerShakeTimerRef = useRef<number>(0);
   const pickupFlashTimerRef = useRef<number>(0);
+  const respectSplashTimerRef = useRef<number>(0);
+  const respectShakeTimerRef = useRef<number>(0);
   downloadUnlockedRef.current = downloadUnlocked;
 
   // Key state for smooth movement
@@ -795,6 +801,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
   }, []);
 
+  useEffect(() => {
+    try {
+      setFacebookRespectConfirmed(window.localStorage.getItem(FACEBOOK_RESPECT_STORAGE_KEY) === "true");
+    } catch {
+      // Keep the acknowledgement scoped to this visit if browser storage is unavailable.
+    }
+  }, []);
+
   const recordHighScore = (candidate: number, rawName: string) => {
     const previousBest = highScoreRef.current;
     const isRecord = candidate > previousBest;
@@ -819,6 +833,21 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       } catch {}
       return sliced;
     });
+  };
+
+  const confirmFacebookRespect = () => {
+    try {
+      window.localStorage.setItem(FACEBOOK_RESPECT_STORAGE_KEY, "true");
+    } catch {
+      // Keep the acknowledgement active for this visit when storage is unavailable.
+    }
+    setFacebookRespectConfirmed(true);
+    window.clearTimeout(respectSplashTimerRef.current);
+    window.clearTimeout(respectShakeTimerRef.current);
+    setIsRespectSplashVisible(true);
+    setIsRespectShaking(true);
+    respectShakeTimerRef.current = window.setTimeout(() => setIsRespectShaking(false), 960);
+    respectSplashTimerRef.current = window.setTimeout(() => setIsRespectSplashVisible(false), 1900);
   };
 
   const submitScore = (event: React.FormEvent<HTMLFormElement>) => {
@@ -1679,6 +1708,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(comboBurstTimerRef.current);
       window.clearTimeout(gunFingerShakeTimerRef.current);
       window.clearTimeout(pickupFlashTimerRef.current);
+      window.clearTimeout(respectSplashTimerRef.current);
+      window.clearTimeout(respectShakeTimerRef.current);
       if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     };
   }, []);
@@ -1733,7 +1764,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         playsInline
         aria-label="16-bit jungle background soundtrack"
       />
-      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}`}>
+      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}${isRespectShaking ? " is-respect-shaking" : ""}`}>
         <div className="arcade-marquee">
           <span className="marquee-light" />
           <span className="marquee-seal" aria-hidden="true">5D</span>
@@ -1808,6 +1839,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <span>LEVEL 2</span>
             <strong>CROWD PRESSURE</strong>
             <i aria-hidden="true">◀ ◆ ▶</i>
+          </div>
+        )}
+
+        {isRespectSplashVisible && (
+          <div className="game-overlay respect-splash-overlay" role="status" aria-live="assertive">
+            <div className="respect-burst" aria-hidden="true">{Array.from({ length: 10 }, (_, index) => <i key={index} className={`respect-ray respect-ray-${index % 5}`} />)}</div>
+            <div className="respect-fist-bump" aria-hidden="true"><span className="respect-fist respect-fist-left"><i /></span><b className="respect-impact">!</b><span className="respect-fist respect-fist-right"><i /></span></div>
+            <div className="respect-splash-copy"><span>5D FAMILY CHECK-IN</span><strong>RESPECT!</strong><em>BIG UP FOR FOLLOWING THE SIGNAL</em></div>
           </div>
         )}
 
@@ -2394,6 +2433,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           {shared ? <Check size={16} /> : <Share2 size={16} />}
           <span>{shared ? "GAME LINK COPIED!" : "SHARE 5D ARCADE GAME"}</span>
         </button>
+      </div>
+      <div className="arcade-follow-reminder">
+        <div>
+          <span>FOLLOW THE 5D ARTIST PAGE</span>
+          <small>Like or follow in Facebook, then confirm here for a proper big up.</small>
+        </div>
+        <div className="arcade-follow-actions">
+          <a className="arcade-follow-link" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer">OPEN FACEBOOK</a>
+          <button type="button" className="arcade-respect-button" onClick={confirmFacebookRespect}>{facebookRespectConfirmed ? "SHOW RESPECT AGAIN" : "I FOLLOWED — RESPECT"}</button>
+        </div>
       </div>
     </section>
   );
