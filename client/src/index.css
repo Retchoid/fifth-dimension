@@ -3137,6 +3137,118 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 .level-two-dancer::after { content: ""; position: absolute; inset: 0; border: 2px solid rgba(255,223,164,.62); opacity: .34; mix-blend-mode: screen; }
 @keyframes level-two-dancer-sway { from { transform: translateX(-50%) translateY(7px) scale(.9) rotate(-3deg); } to { transform: translateX(-50%) translateY(-3px) scale(1.02) rotate(3deg); } }
 
+/* Visual-only arcade art pass: late-1990s hand-painted fighting-game depth.
+   This block changes presentation only; gameplay state, motion logic, and input remain untouched. */
+.game-viewport {
+  background-color: #08070d;
+  box-shadow: inset 0 0 0 3px rgba(12, 8, 14, .9), inset 0 0 32px rgba(255, 102, 56, .18), inset 0 -28px 34px rgba(0, 0, 0, .56);
+}
+.game-grid-bg:not(.level-two-grid-bg) {
+  background-size: auto, auto, 24px 24px, 24px 24px, 126% auto;
+  background-position: center, center 8%, center, center, center bottom;
+  filter: saturate(1.14) contrast(1.13) brightness(.82);
+}
+.game-grid-bg:not(.level-two-grid-bg)::before {
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(3, 4, 8, .96) 0 8%, rgba(13, 15, 24, .79) 9% 25%, transparent 25.5%),
+    repeating-linear-gradient(90deg, transparent 0 8.5%, rgba(255, 227, 159, .10) 8.7% 9%, transparent 9.2% 17.4%),
+    linear-gradient(109deg, transparent 0 16%, rgba(0, 215, 234, .23) 16.3% 17.1%, transparent 17.5% 81%, rgba(232, 58, 103, .28) 81.5% 82.4%, transparent 82.8%),
+    repeating-linear-gradient(0deg, transparent 0 29px, rgba(255, 238, 197, .065) 30px 31px);
+  mix-blend-mode: screen;
+  opacity: .92;
+}
+.game-grid-bg:not(.level-two-grid-bg)::after {
+  inset: auto -8% -3%;
+  width: auto;
+  height: 48%;
+  border: 0;
+  background:
+    radial-gradient(ellipse at 50% 22%, rgba(255, 172, 86, .27), transparent 44%),
+    linear-gradient(160deg, rgba(69, 54, 70, .96), rgba(17, 18, 27, .98) 62%),
+    repeating-linear-gradient(90deg, rgba(245, 196, 119, .27) 0 2px, transparent 2px 11%),
+    repeating-linear-gradient(145deg, rgba(34, 225, 238, .34) 0 2px, transparent 2px 18%);
+  box-shadow: inset 0 6px 0 rgba(8, 7, 12, .92), inset 0 9px 0 rgba(255, 104, 63, .38), 0 -10px 22px rgba(0, 0, 0, .42);
+  clip-path: polygon(22% 0, 78% 0, 100% 100%, 0 100%);
+  opacity: .97;
+}
+.rave-world-dressing::before {
+  content: "";
+  position: absolute;
+  inset: 14% 3% 10%;
+  background:
+    linear-gradient(90deg, rgba(10, 12, 20, .78) 0 7%, transparent 7.5% 28%, rgba(13, 10, 19, .68) 28.5% 33%, transparent 33.5% 67%, rgba(13, 10, 19, .68) 67.5% 72%, transparent 72.5% 92%, rgba(10, 12, 20, .78) 92.5%),
+    linear-gradient(113deg, transparent 0 27%, rgba(0, 226, 237, .17) 27.3% 28%, transparent 28.4% 71%, rgba(255, 77, 117, .19) 71.3% 72%, transparent 72.4%);
+  border-top: 3px solid rgba(255, 218, 156, .18);
+  border-bottom: 3px solid rgba(4, 4, 8, .8);
+  opacity: .82;
+}
+.rave-world-dressing::after {
+  content: "";
+  position: absolute;
+  left: -3%;
+  right: -3%;
+  bottom: 22%;
+  height: 15%;
+  background:
+    radial-gradient(ellipse at 4% 100%, #08070d 0 17%, transparent 18%),
+    radial-gradient(ellipse at 13% 100%, #08070d 0 16%, transparent 17%),
+    radial-gradient(ellipse at 23% 100%, #08070d 0 18%, transparent 19%),
+    radial-gradient(ellipse at 37% 100%, #08070d 0 16%, transparent 17%),
+    radial-gradient(ellipse at 53% 100%, #08070d 0 19%, transparent 20%),
+    radial-gradient(ellipse at 68% 100%, #08070d 0 17%, transparent 18%),
+    radial-gradient(ellipse at 83% 100%, #08070d 0 20%, transparent 21%),
+    radial-gradient(ellipse at 97% 100%, #08070d 0 18%, transparent 19%);
+  opacity: .76;
+}
+.dj-catcher::before {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -2%;
+  z-index: 0;
+  height: 14%;
+  border-radius: 50%;
+  background: rgba(1, 1, 4, .82);
+  filter: blur(2px);
+  transform: skewX(-14deg);
+}
+.dj-catcher-art { z-index: 1; filter: drop-shadow(5px 6px 0 #08070d) drop-shadow(-2px -2px 0 rgba(255, 231, 160, .36)) drop-shadow(0 0 12px rgba(255, 78, 116, .52)); }
+.dj-sprite { filter: contrast(1.18) saturate(1.18) drop-shadow(0 0 1px #020205); transform: translateY(7%) scale(1.16); transform-origin: 50% 100%; }
+.falling-object { filter: drop-shadow(3px 4px 0 rgba(3, 3, 7, .95)) drop-shadow(0 0 8px currentColor); }
+.vinyl-record-sprite { border: 3px solid #09090e; background: repeating-radial-gradient(circle, #09090e 0 3px, #2a2530 4px 5px, #09090e 6px 8px); box-shadow: inset 0 0 0 2px rgba(255, 239, 176, .18), 0 0 9px rgba(0, 220, 234, .82); }
+.vinyl-grooves { inset: 6px; border: 1px solid rgba(255, 229, 164, .58); }
+.vinyl-label { background: conic-gradient(#ff5a48 0 25%, #ffdc85 25% 50%, #00ddec 50% 75%, #ff5a48 75%); border: 2px solid #09090e; }
+.police-badge-sprite { filter: contrast(1.12) saturate(1.15); }
+.badge-shield { border: 3px solid #0a0a10; border-radius: 9px 9px 28px 28px; box-shadow: inset 3px 3px 0 rgba(255, 255, 232, .36), inset -4px -5px 0 rgba(91, 50, 8, .38), 3px 4px 0 #07070b, 0 0 12px rgba(255, 197, 52, .72); }
+.siren-beacon { border: 2px solid #08080d; box-shadow: 2px 3px 0 #07070b; }
+.turntable-pickup, .cdj-pickup { border-color: #08090d; border-radius: 2px; box-shadow: inset 3px 3px 0 rgba(255, 255, 255, .32), inset -4px -4px 0 rgba(0, 0, 0, .38), 3px 4px 0 #08090d, 0 0 11px currentColor; }
+.adapter-pickup { border-color: #08090d; box-shadow: inset 2px 2px 0 rgba(255, 255, 255, .27), 3px 4px 0 #08090d, 0 0 10px rgba(255, 225, 110, .62); }
+.crowd-throw-sprite { filter: contrast(1.14) saturate(1.12) drop-shadow(3px 4px 0 #07070b); }
+
+.game-grid-bg.level-two-grid-bg { filter: saturate(1.18) contrast(1.15) brightness(.78); }
+.level-two-booth { background: linear-gradient(to top, rgba(3, 3, 7, .9) 0 17%, rgba(11, 7, 17, .54) 18% 39%, transparent 54%), radial-gradient(ellipse at 50% 8%, rgba(255, 202, 123, .18), transparent 37%); }
+.level-two-booth::after { inset: auto -4% 13%; height: 22%; border-top: 3px solid rgba(255, 218, 156, .26); border-bottom: 5px solid rgba(4, 3, 8, .86); background: repeating-linear-gradient(90deg, rgba(0, 222, 237, .16) 0 2px, transparent 2px 11%), linear-gradient(164deg, rgba(73, 41, 59, .72), rgba(8, 6, 12, .9)); box-shadow: 0 -8px 20px rgba(255, 77, 117, .14); }
+.level-two-dancer { filter: saturate(1.42) contrast(1.18) drop-shadow(5px 6px 0 #08070d) drop-shadow(-2px -2px 0 rgba(255, 229, 164, .26)); }
+
+.bonus-level-stage { background: linear-gradient(180deg, #192644 0%, #1a2035 38%, #0b101e 100%); }
+.bonus-dawn-backdrop { filter: saturate(1.04) contrast(1.2) brightness(.64) sepia(.08); }
+.bonus-fire-escape-facade { background: repeating-linear-gradient(0deg, rgba(255, 239, 204, .07) 0 2px, transparent 2px 30px), repeating-linear-gradient(90deg, #343d4e 0 31px, #202734 32px 63px), linear-gradient(180deg, rgba(29, 37, 58, .98), rgba(8, 12, 22, .99)); box-shadow: inset 8px 0 0 #070a14, inset 13px 0 0 rgba(216, 240, 220, .12), inset -8px -8px 0 rgba(0, 0, 0, .32); }
+.bonus-platform { background: repeating-linear-gradient(90deg, #cbd0c7 0 6px, #747e82 7px 13px); box-shadow: 0 7px 0 #05070c, 0 11px 0 rgba(0, 0, 0, .5), inset 0 2px 0 rgba(255, 255, 255, .36); }
+.bonus-ladder { border-color: #cbd6d1; filter: drop-shadow(3px 4px 0 #05070c) drop-shadow(-1px -1px 0 rgba(255, 245, 215, .26)); }
+.bonus-dj-runner { filter: drop-shadow(4px 5px 0 #05070c) drop-shadow(-2px -2px 0 rgba(255, 227, 162, .24)); }
+.club-owner-sprite img { filter: hue-rotate(132deg) saturate(1.55) contrast(1.2) drop-shadow(2px 3px 0 #080a12); }
+
+@media (max-width: 650px) {
+  .game-grid-bg:not(.level-two-grid-bg) { background-size: auto, auto, 20px 20px, 20px 20px, auto 112%; }
+  .game-grid-bg:not(.level-two-grid-bg)::after { height: 42%; clip-path: polygon(13% 0, 87% 0, 100% 100%, 0 100%); }
+  .rave-world-dressing::before { inset: 16% 2% 13%; }
+  .rave-world-dressing::after { bottom: 19%; height: 12%; }
+  .dj-catcher::before { bottom: 0; }
+  .dj-sprite { transform: translateY(5%) scale(1.11); }
+}
+
 .lion-head-pickup { position: relative; display: grid; place-items: center; isolation: isolate; }
 .lion-crown-rays { position: absolute; z-index: -2; inset: -11%; border-radius: 50%; background: repeating-conic-gradient(from 3deg, #f9d94c 0 8deg, transparent 8deg 21deg); filter: drop-shadow(0 0 5px #d84c32); animation: lion-ray-spin 2.6s steps(12,end) infinite; }
 .lion-mane { position: absolute; z-index: -1; inset: 4%; border: 3px solid #12080c; border-radius: 50% 50% 48% 48%; background: repeating-conic-gradient(from 12deg, #5d1b18 0 10deg, #e55d23 10deg 20deg, #f9ba28 20deg 29deg, #84321c 29deg 36deg); box-shadow: inset 0 0 0 3px rgba(255,241,130,.23); }

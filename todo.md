@@ -1,5 +1,13 @@
 # Amendment tasks
 
+## Street Fighter III arcade visual refinement
+
+- [x] Inventory every Selector Showdown sprite, pickup, stage layer, cabinet surface, and full-screen overlay against the Street Fighter III-style visual brief.
+- [x] Define visual-only revisions for silhouette, line weight, palette ramps, impact effects, stage depth, and pixel-art readability without changing gameplay infrastructure.
+- [x] Apply the selected art-direction refinements only in visual markup, styles, and asset references.
+- [x] Confirm no changes to controls, scoring, timers, audio, persistence, unlock logic, or game-state transitions.
+- [x] Validate desktop/mobile visuals, typecheck, build, runtime console, and publish the visual-only checkpoint.
+
 ## Release-lock regression and evidence recheck
 
 - [x] Reproduce the unlocked release card in a clean mobile and desktop browser session with site storage cleared.
