@@ -550,3 +550,8 @@
 
 - [x] Add a subtle HUD-side flash that identifies the value of each positive pickup when collected.
 - [x] Validate feedback timing, responsive presentation, build, and checkpoint delivery.
+
+## Pre-level pickup legend
+
+- [x] Add a compact, level-aware pickup legend to the Level 1 and Level 2 instruction screens.
+- [x] Validate mobile readability, build, and checkpoint delivery.

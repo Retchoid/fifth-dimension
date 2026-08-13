@@ -63,6 +63,29 @@ interface DjMiniGameProps {
   onSupporterConfirmed?: () => void;
 }
 
+function PickupLegend({ level }: { level: GameLevel }) {
+  const isLevelTwo = level === 2;
+  return (
+    <aside className="pickup-legend" aria-label={`Level ${level} pickup guide`}>
+      <div className="pickup-legend-row">
+        <span className="pickup-legend-label">COLLECT</span>
+        <span className="pickup-legend-chip positive"><i className="legend-icon record" />DUB +1</span>
+        {isLevelTwo && <span className="pickup-legend-chip positive"><i className="legend-icon lion" />LION +2</span>}
+        <span className="pickup-legend-chip positive"><i className="legend-icon adapter" />45 +2</span>
+        <span className="pickup-legend-chip positive"><i className="legend-icon deck" />DECK +3</span>
+        <span className="pickup-legend-chip positive"><i className="legend-icon cdj" />CDJ +5</span>
+      </div>
+      <div className="pickup-legend-row pickup-legend-row-avoid">
+        <span className="pickup-legend-label">AVOID</span>
+        <span className="pickup-legend-chip negative"><i className="legend-icon cop" />SIREN</span>
+        <span className="pickup-legend-chip negative"><i className="legend-icon pill" />PILL</span>
+        <span className="pickup-legend-chip negative"><i className="legend-icon phone" />PHONE</span>
+        {isLevelTwo && <span className="pickup-legend-chip negative"><i className="legend-icon crowd" />BOTTLES + CORES</span>}
+      </div>
+    </aside>
+  );
+}
+
 export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete, downloadUnlocked = false, isUnlockCelebrating = false, supporterGateRequired = false, onSupporterConfirmed }: DjMiniGameProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [level, setLevel] = useState<GameLevel>(1);
@@ -1578,6 +1601,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
               <p>{level === 2 ? "Level 2: command the crowd from the booth. Catch 50 records while avoiding bottles, apple cores, and police sirens thrown from the rave floor." : "Catch spinning vinyl records (+100pts). Collect 25 records to unlock the free “Jersh In Case” download. Avoid the cop sirens and badge patrol—missed records reset your combo, while hazards cost lives."}</p>
+              <PickupLegend level={level} />
               <button type="button" className="tape-play-button" onClick={startGame}>
                 <span className="tape-play-face" aria-hidden="true">
                   <i className="tape-reel tape-reel-left" />
@@ -1789,6 +1813,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="overlay-box game-over-box-wide">
               <h3>LEVEL 1 HIGH SCORE</h3>
               <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
+              <PickupLegend level={2} />
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitPreLevelTwoScore}>
                   <label htmlFor="pre-level-selector-name">ENTER YOUR SELECTOR TAG</label>
