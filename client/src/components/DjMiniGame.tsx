@@ -159,6 +159,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const downloadUnlockedRef = useRef(downloadUnlocked);
   const unlockJinglePlayedRef = useRef(false);
   const chainBreakImpactPlayedRef = useRef(false);
+  const unlockRevealTimerRef = useRef<number>(0);
   const rewindAwardedRef = useRef(false);
   const rewindPauseTimerRef = useRef<number>(0);
   const wheelItUpAwardedRef = useRef(false);
@@ -204,6 +205,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusRewindTimerRef = useRef<number>(0);
   const mixerPickupCountRef = useRef(0);
   const turntablePickupCountRef = useRef(0);
+  const pendingPickupSplashRef = useRef<Array<"crate" | "headphones">>([]);
   const comboBurstTimerRef = useRef<number>(0);
   const gunFingerShakeTimerRef = useRef<number>(0);
   const pickupFlashTimerRef = useRef<number>(0);
@@ -368,6 +370,31 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       tone.start(start);
       tone.stop(start + 0.15);
     });
+  };
+
+  const playPickupToken = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const tone = context.createOscillator();
+    const overtone = context.createOscillator();
+    const gain = context.createGain();
+    tone.type = "square";
+    overtone.type = "triangle";
+    tone.frequency.setValueAtTime(492, now);
+    tone.frequency.exponentialRampToValueAtTime(738, now + 0.075);
+    overtone.frequency.setValueAtTime(984, now + 0.035);
+    overtone.frequency.exponentialRampToValueAtTime(738, now + 0.16);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.2, now + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.19);
+    tone.connect(gain);
+    overtone.connect(gain);
+    gain.connect(context.destination);
+    tone.start(now);
+    overtone.start(now + 0.03);
+    tone.stop(now + 0.2);
+    overtone.stop(now + 0.2);
   };
 
   const playSubwooferPop = () => {
@@ -1034,6 +1061,26 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     damageFeedbackTimerRef.current = window.setTimeout(() => setDamageFeedback(null), 980);
   };
 
+  const resumeMainGame = () => {
+    isPlayingRef.current = true;
+    setIsPlaying(true);
+    lastTimeRef.current = performance.now();
+    requestRef.current = requestAnimationFrame(updateGame);
+  };
+
+  const showNextQueuedPickupSplash = () => {
+    const nextSplash = pendingPickupSplashRef.current.shift();
+    if (nextSplash === "crate") {
+      setIsCrateBonusPaused(true);
+      return true;
+    }
+    if (nextSplash === "headphones") {
+      setIsHeadphonesBonusPaused(true);
+      return true;
+    }
+    return false;
+  };
+
   const updateBonusGame = (time: number) => {
     if (!bonusGameActiveRef.current) return;
     const elapsed = Math.max(0, time - bonusLastTimeRef.current);
@@ -1157,10 +1204,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isRewindPaused) return;
     rewindPauseTimerRef.current = window.setTimeout(() => {
       setIsRewindPaused(false);
-      isPlayingRef.current = true;
-      setIsPlaying(true);
-      lastTimeRef.current = performance.now();
-      requestRef.current = requestAnimationFrame(updateGame);
+      if (!showNextQueuedPickupSplash()) resumeMainGame();
     }, 1900);
     return () => window.clearTimeout(rewindPauseTimerRef.current);
   }, [isRewindPaused]);
@@ -1169,10 +1213,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isWheelItUpPaused) return;
     wheelItUpPauseTimerRef.current = window.setTimeout(() => {
       setIsWheelItUpPaused(false);
-      isPlayingRef.current = true;
-      setIsPlaying(true);
-      lastTimeRef.current = performance.now();
-      requestRef.current = requestAnimationFrame(updateGame);
+      if (!showNextQueuedPickupSplash()) resumeMainGame();
     }, 2050);
     return () => window.clearTimeout(wheelItUpPauseTimerRef.current);
   }, [isWheelItUpPaused]);
@@ -1217,10 +1258,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isCrateBonusPaused) return;
     crateBonusPauseTimerRef.current = window.setTimeout(() => {
       setIsCrateBonusPaused(false);
-      isPlayingRef.current = true;
-      setIsPlaying(true);
-      lastTimeRef.current = performance.now();
-      requestRef.current = requestAnimationFrame(updateGame);
+      if (!showNextQueuedPickupSplash()) resumeMainGame();
     }, 2050);
     return () => window.clearTimeout(crateBonusPauseTimerRef.current);
   }, [isCrateBonusPaused]);
@@ -1229,10 +1267,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isHeadphonesBonusPaused) return;
     headphonesBonusPauseTimerRef.current = window.setTimeout(() => {
       setIsHeadphonesBonusPaused(false);
-      isPlayingRef.current = true;
-      setIsPlaying(true);
-      lastTimeRef.current = performance.now();
-      requestRef.current = requestAnimationFrame(updateGame);
+      if (!showNextQueuedPickupSplash()) resumeMainGame();
     }, 2050);
     return () => window.clearTimeout(headphonesBonusPauseTimerRef.current);
   }, [isHeadphonesBonusPaused]);
@@ -1314,6 +1349,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(bonusSplashTimerRef.current);
     window.clearTimeout(bonusRewindTimerRef.current);
     window.clearTimeout(damageFeedbackTimerRef.current);
+    window.clearTimeout(unlockRevealTimerRef.current);
     setDamageFeedback(null);
     levelRef.current = 1;
     setLevel(1);
@@ -1353,6 +1389,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     bonusObstaclesRef.current = [];
     mixerPickupCountRef.current = 0;
     turntablePickupCountRef.current = 0;
+    pendingPickupSplashRef.current = [];
     setIsBonusEligible(false);
     setIsBonusSplashVisible(false);
     setIsBonusLevelActive(false);
@@ -1452,6 +1489,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       if (newY >= 64 && newY <= 96 && item.x >= currentX - catcherReach && item.x <= currentX + catcherReach) {
         structureChanged = true;
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
+          playPickupToken();
           if (item.type === "turntable") {
             playTurntablePickup();
           } else if (item.type === "adapter") {
@@ -1636,6 +1674,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     itemsRef.current = nextItems;
     if (structureChanged) setVisibleItems(nextItems);
+    if (pauseForCrateBonus && (pauseForRewind || pauseForWheelItUp || pauseForHeadphonesBonus)) {
+      pendingPickupSplashRef.current.push("crate");
+      pauseForCrateBonus = false;
+    }
+    if (pauseForHeadphonesBonus && (pauseForRewind || pauseForWheelItUp || pauseForCrateBonus)) {
+      pendingPickupSplashRef.current.push("headphones");
+      pauseForHeadphonesBonus = false;
+    }
     if (pauseAfterUnlock) {
       isPlayingRef.current = false;
       if (bgMusicRef.current) bgMusicRef.current.pause();
@@ -1643,10 +1689,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setIsUnlockPaused(true);
       setUnlockRevealReady(false);
       setChainBreakComplete(false);
-      const revealTimer = window.setTimeout(() => {
+      window.clearTimeout(unlockRevealTimerRef.current);
+      unlockRevealTimerRef.current = window.setTimeout(() => {
         setUnlockRevealReady(true);
       }, 3000);
-      return () => clearTimeout(revealTimer);
+      return;
     }
     if (pauseForRewind) {
       isPlayingRef.current = false;
@@ -1753,6 +1800,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(respectSplashTimerRef.current);
       window.clearTimeout(respectShakeTimerRef.current);
       window.clearTimeout(damageFeedbackTimerRef.current);
+      window.clearTimeout(unlockRevealTimerRef.current);
+      pendingPickupSplashRef.current = [];
       if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     };
   }, []);

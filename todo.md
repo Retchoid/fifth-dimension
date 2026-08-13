@@ -710,3 +710,10 @@
 - [x] Restyle the Level 1 speaker stacks to match the supplied industrial red-driver cabinet reference.
 - [x] Add visible corner plates, vents, bolts, support legs, and cable details while preserving 10/15-record milestones.
 - [x] Validate milestone motion, responsive presentation, build, and checkpoint delivery.
+
+## Selector Showdown regression restoration
+
+- [x] Audit all agreed splash events, pickup/token sound cues, chain unlock stages, and Level 1/Level 2 transitions against current code paths.
+- [x] Repair any confirmed missing, hidden, or prematurely cleared splash/audio behavior without unrelated visual changes.
+- [x] Validate fresh progression, mute behavior, event timing, desktop/mobile presentation, build, and checkpoint delivery.
+- [x] Deliver a specific report of every confirmed missed behavior, the exact repair made, and the validation performed.
