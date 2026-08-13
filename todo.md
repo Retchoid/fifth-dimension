@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## Extended paint-overlap stacking correction
+
+- [x] Identify the stacking contexts that currently let adjacent boxes cover the release, event-card, or arcade-flow drips.
+- [x] Raise and lengthen every static drip layer so it visibly crosses only the top outline of the adjacent box below.
+- [x] Preserve clear event, release, matrix, arcade, image, copy, and control content at desktop and mobile sizes.
+- [x] Validate visual stacking, build, and publish the extended-overlap correction.
+
 ## Site-wide paint-drip placement standard
 
 - [x] Inventory every active paint-drip element across the release card, forthcoming-event cards, arcade flow shell, and any other active site sections.

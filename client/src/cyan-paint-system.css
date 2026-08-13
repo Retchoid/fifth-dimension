@@ -1,10 +1,14 @@
 /* Shared cyan viscous-paint language for the exclusive release and forthcoming event cards. */
-.exclusive-release { position: relative; z-index: 6; }
-.arcade-flow-shell { position: relative; z-index: 3; }
-.project-card { overflow: visible; isolation: isolate; }
+.projects-section { position: relative; z-index: 5; overflow: visible; }
+.projects-grid { position: relative; z-index: 5; }
+.matrix-preview { z-index: 3; }
+.exclusive-release { position: relative; z-index: 8; }
+.arcade-flow-shell { position: relative; z-index: 3; overflow: visible; }
+.arcade-graffiti-flow { z-index: 7; }
+.project-card { z-index: 1; overflow: visible; isolation: isolate; }
 .project-cyan-paint {
   position: absolute;
-  z-index: 2;
+  z-index: 4;
   left: 0;
   right: 0;
   bottom: -42px;
@@ -17,9 +21,10 @@
 .project-paint-shadow { fill: #008ba9; opacity: .68; }
 .project-paint-highlight { fill: none; stroke: #a3f8ff; stroke-width: 4; stroke-linecap: round; opacity: .84; }
 .project-content { z-index: 3; }
+.arcade-flow-stamp { z-index: 8; }
 .arcade-flow-stamp .arcade-paint-drip {
   top: calc(100% + 2px);
-  z-index: 0;
+  z-index: 7;
 }
 .arcade-flow-stamp .drip-cyan { left: 12%; }
 .arcade-flow-stamp .drip-lime { left: 34%; }
