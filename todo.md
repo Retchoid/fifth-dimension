@@ -506,3 +506,10 @@
 - [x] Display a clear “LEVEL 2 — CROWD PRESSURE” marquee through the Level 2 transition.
 - [x] Add subtle complementary paint-splatter particles along both graffiti ribbon arrows.
 - [x] Validate timing, mute behavior, responsive marquee, build, and checkpoint delivery.
+
+## Level 2 crowd hype and release-flow refinement
+
+- [x] Place the current published domain in maintenance while keeping its URL unchanged during the update.
+- [x] Add a compact Level 2 crowd-hype objective meter below the HUD, driven by collected dubplates.
+- [x] Add paint drips to the exclusive-drop box and reroute the paired ribbons so they wrap around rather than cover the box text.
+- [x] Validate desktop/mobile clarity, gameplay meter behavior, checkpoint, and return the same domain online.

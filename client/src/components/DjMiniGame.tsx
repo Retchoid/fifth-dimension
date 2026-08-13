@@ -1108,6 +1108,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </button>
         </div>
 
+        {level === 2 && !gameOver && (
+          <div className="level-two-hype-meter" aria-label={`Crowd hype: ${recordsCaught} of ${LEVEL_TWO_REQUIRED_RECORDS}`}>
+            <div className="hype-meter-label"><span>CROWD HYPE</span><strong>{recordsCaught}/{LEVEL_TWO_REQUIRED_RECORDS}</strong></div>
+            <div className="hype-meter-track" aria-hidden="true"><i style={{ width: `${Math.min(100, (recordsCaught / LEVEL_TWO_REQUIRED_RECORDS) * 100)}%` }} /></div>
+            <small>BUILD THE RAVE FLOOR</small>
+          </div>
+        )}
+
         {isLevelTwoMarqueeVisible && level === 2 && !gameOver && (
           <div className="level-two-transition-marquee" role="status" aria-live="polite">
             <span>LEVEL 2</span>
