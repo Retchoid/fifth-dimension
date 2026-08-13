@@ -670,3 +670,9 @@
 - [x] Add subtle flashing neon windows and distant sign glows to the fire-escape city silhouette.
 - [x] Preserve readable obstacle lanes and support reduced-motion preferences.
 - [x] Validate build, visual restraint, and checkpoint delivery.
+
+## Fire-exit activation lighting
+
+- [x] Add a red EXIT-beacon pulse when the bonus door opens.
+- [x] Cast a matching red rim light across the bonus DJ sprite during the open-door state.
+- [x] Validate timing, reduced-motion behavior, build, and checkpoint delivery.

@@ -1970,6 +1970,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="bonus-ladder ladder-two" aria-hidden="true" />
             <div className="bonus-ladder ladder-three" aria-hidden="true" />
             <div className={`bonus-club-door${bonusDoorOpen ? " is-open" : ""}`} aria-label="Angry club owner throwing bottles beside the fire escape exit door">
+              <span className="exit-beacon" aria-hidden="true" />
               <span className="club-owner-sprite" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /></span>
               <span className="club-owner-label">CLUB OWNER</span>
               <span className="club-owner-bottle bottle-one" aria-hidden="true" /><span className="club-owner-bottle bottle-two" aria-hidden="true" />
@@ -1977,7 +1978,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             </div>
             <div className="bonus-hud"><span>NO REQUEST BONUS</span><strong>DOOR {Math.round(bonusProgress)}%</strong><b>♥ {bonusLives}</b></div>
             <div className="bonus-tip">DESKTOP: ◀ ▶ MOVE / SPACE JUMPS · MOBILE: TAP JUMPS / SWIPE ← → MOVE / SWIPE ↑ CLIMBS</div>
-            <div className={`bonus-dj-runner lane-${bonusLane}${bonusIsJumping ? " is-jumping" : ""}`} style={{ "--runner-left": `${bonusRunnerLeft}%`, "--runner-bottom": `${bonusRunnerBottom}%` } as React.CSSProperties}>
+            <div className={`bonus-dj-runner lane-${bonusLane}${bonusIsJumping ? " is-jumping" : ""}${bonusDoorOpen ? " is-exit-lit" : ""}`} style={{ "--runner-left": `${bonusRunnerLeft}%`, "--runner-bottom": `${bonusRunnerBottom}%` } as React.CSSProperties}>
               <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ climbing toward the club door" />
             </div>
             <div className="bonus-obstacle-layer" aria-hidden="true">
