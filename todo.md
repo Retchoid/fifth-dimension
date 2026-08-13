@@ -717,3 +717,18 @@
 - [x] Repair any confirmed missing, hidden, or prematurely cleared splash/audio behavior without unrelated visual changes.
 - [x] Validate fresh progression, mute behavior, event timing, desktop/mobile presentation, build, and checkpoint delivery.
 - [x] Deliver a specific report of every confirmed missed behavior, the exact repair made, and the validation performed.
+
+## Coin-style pickup sound restoration
+
+- [ ] Cross-reference the original pickup-audio requirement against the current positive-collection sound stack.
+- [ ] Add an unmistakable coin-style token cue for positive pickups while preserving record, deck, and adapter effects.
+- [ ] Validate mute behavior, collection routing, build, and checkpoint delivery.
+- [ ] Deliver a concise requirement-to-implementation report.
+
+## Complete discussion-to-implementation re-audit
+
+- [ ] Create a traceable matrix covering site structure, release unlock, mix archive, cabinet, Level 1, Level 2, bonus stage, sounds, all splash/reward states, sharing, and responsive behavior.
+- [ ] Inspect the current implementation against every matrix category and mark each as confirmed, missing, regressed, or ambiguous.
+- [ ] Repair every confirmed missing or regressed behavior in grouped, regression-safe changes, including the coin-style token sound.
+- [ ] Validate the repaired site and game with fresh progression, desktop/mobile checks, console review, typecheck, and production build.
+- [ ] Deliver the full requirement-to-implementation matrix with exact fixes and validation evidence.

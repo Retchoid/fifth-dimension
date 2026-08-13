@@ -375,26 +375,34 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const playPickupToken = () => {
     const context = getAudioContext();
     if (!context) return;
-    const now = context.currentTime;
-    const tone = context.createOscillator();
-    const overtone = context.createOscillator();
+    const now = context.currentTime + 0.11;
+    const coinPrimary = context.createOscillator();
+    const coinHarmonic = context.createOscillator();
+    const coinPing = context.createOscillator();
     const gain = context.createGain();
-    tone.type = "square";
-    overtone.type = "triangle";
-    tone.frequency.setValueAtTime(492, now);
-    tone.frequency.exponentialRampToValueAtTime(738, now + 0.075);
-    overtone.frequency.setValueAtTime(984, now + 0.035);
-    overtone.frequency.exponentialRampToValueAtTime(738, now + 0.16);
+    coinPrimary.type = "square";
+    coinHarmonic.type = "square";
+    coinPing.type = "sine";
+    coinPrimary.frequency.setValueAtTime(988, now);
+    coinPrimary.frequency.exponentialRampToValueAtTime(1319, now + 0.085);
+    coinHarmonic.frequency.setValueAtTime(1976, now);
+    coinHarmonic.frequency.exponentialRampToValueAtTime(2637, now + 0.095);
+    coinPing.frequency.setValueAtTime(2637, now + 0.07);
+    coinPing.frequency.exponentialRampToValueAtTime(1976, now + 0.26);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.2, now + 0.008);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.19);
-    tone.connect(gain);
-    overtone.connect(gain);
+    gain.gain.exponentialRampToValueAtTime(0.29, now + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.13, now + 0.11);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+    coinPrimary.connect(gain);
+    coinHarmonic.connect(gain);
+    coinPing.connect(gain);
     gain.connect(context.destination);
-    tone.start(now);
-    overtone.start(now + 0.03);
-    tone.stop(now + 0.2);
-    overtone.stop(now + 0.2);
+    coinPrimary.start(now);
+    coinHarmonic.start(now);
+    coinPing.start(now + 0.07);
+    coinPrimary.stop(now + 0.31);
+    coinHarmonic.stop(now + 0.31);
+    coinPing.stop(now + 0.31);
   };
 
   const playSubwooferPop = () => {
@@ -1489,7 +1497,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       if (newY >= 64 && newY <= 96 && item.x >= currentX - catcherReach && item.x <= currentX + catcherReach) {
         structureChanged = true;
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
-          playPickupToken();
           if (item.type === "turntable") {
             playTurntablePickup();
           } else if (item.type === "adapter") {
@@ -1497,6 +1504,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           } else {
             playRecordScratch();
           }
+          playPickupToken();
           const nextCombo = comboRef.current + 1;
           comboRef.current = nextCombo;
           setCombo(nextCombo);
@@ -2020,8 +2028,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <strong>NO REQUEST<br />BONUS!</strong>
               <em>DAWN DOOR RUSH — GET PAST THE CLUB OWNER</em>
             </div>
-            <div className="bonus-control-visual" aria-label="Bonus controls: tap to jump, swipe left or right to move, swipe up to climb">
-              <span><b>●</b>TAP<br />JUMP</span><span><b>← →</b>SWIPE<br />MOVE</span><span><b>↑</b>SWIPE<br />CLIMB</span>
+            <div className="bonus-control-visual" aria-label="Bonus controls: tap to jump, swipe sideways to move, swipe up to climb">
+              <span><b>●</b>TAP<br />JUMP</span><span><b>↔</b>SWIPE<br />MOVE</span><span><b>UP</b>SWIPE<br />CLIMB</span>
             </div>
             <div className="no-request-rewind-cue" aria-hidden="true"><i /><i /><i /></div>
           </div>
@@ -2051,7 +2059,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <i>FIRE EXIT</i>
             </div>
             <div className="bonus-hud"><span>NO REQUEST BONUS</span><strong>DOOR {Math.round(bonusProgress)}%</strong><b>♥ {bonusLives}</b></div>
-            <div className="bonus-tip">DESKTOP: ◀ ▶ MOVE / SPACE JUMPS · MOBILE: TAP JUMPS / SWIPE ← → MOVE / SWIPE ↑ CLIMBS</div>
+            <div className="bonus-tip">DESKTOP: A/D MOVE / SPACE JUMPS · MOBILE: TAP JUMPS / SWIPE SIDEWAYS MOVES / SWIPE UP CLIMBS</div>
             <div className={`bonus-dj-runner lane-${bonusLane}${bonusIsJumping ? " is-jumping" : ""}${bonusDoorOpen ? " is-exit-lit" : ""}`} style={{ "--runner-left": `${bonusRunnerLeft}%`, "--runner-bottom": `${bonusRunnerBottom}%` } as React.CSSProperties}>
               <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ climbing toward the club door" />
             </div>
