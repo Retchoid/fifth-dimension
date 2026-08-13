@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## Release gate unlocked-on-load regression
+
+- [x] Reproduce the release state with clean storage, stale storage, and the currently deployed persistence proof.
+- [x] Trace every code path that can set the release card to unlocked during initial load.
+- [x] Correct the gate so initial access is locked unless the accepted verified chain-break proof is present.
+- [x] Validate fresh desktop/mobile loads, stale-value rejection, valid post-chain restoration, build, and publish.
+
 ## Viscous cyan paint system and upcoming-event cards
 
 - [x] Add subtle single-color cyan shade and highlight planes, varied longer runs, and small splatter drops to the release-card drip silhouette.

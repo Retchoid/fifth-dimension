@@ -27,9 +27,9 @@ const requirements: Array<[string, string, string]> = [
   ["Level 2 dancers", game, "level-two-dancer-backdrop"],
   ["fire-escape bonus", game, "bonus-fire-escape-facade"],
   ["rolling bonus obstacles", game, "bonusSpawnTimerRef.current >= 2.6"],
-  ["Facebook respect action", game, "I FOLLOWED — RESPECT"],
+  ["Facebook RESPEKT action", game, "I FOLLOWED — RESPEKT"],
   ["personalized terminal finale", game, "BIG UP BADMAN"],
-  ["new versioned release key", releaseGate, "5d-selector-showdown-download-unlocked-v2"],
+  ["current versioned release key", releaseGate, "5d-selector-showdown-download-unlocked-v3"],
   ["exact release storage gate", home, "isReleaseUnlockStored"],
 ];
 

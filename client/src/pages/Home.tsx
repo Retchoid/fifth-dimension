@@ -38,6 +38,7 @@ import {
 import {
   DOWNLOAD_UNLOCK_STORAGE_KEY,
   DOWNLOAD_UNLOCK_STORAGE_VALUE,
+  LEGACY_DOWNLOAD_UNLOCK_STORAGE_KEYS,
   isReleaseUnlockProof,
   isReleaseUnlockStored,
   type ReleaseUnlockProof,
@@ -219,6 +220,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
+      LEGACY_DOWNLOAD_UNLOCK_STORAGE_KEYS.forEach((legacyKey) => window.localStorage.removeItem(legacyKey));
       setDownloadUnlocked(isReleaseUnlockStored(window.localStorage.getItem(DOWNLOAD_UNLOCK_STORAGE_KEY)));
       const hasConfirmedSupport = window.localStorage.getItem(SUPPORTER_CONFIRMATION_STORAGE_KEY) === "true";
       const arrivedViaSharedGameLink = new URLSearchParams(window.location.search).get("from") === "selector-share";
