@@ -704,3 +704,9 @@
 - [x] Refine the cabinet as a more convincing 90s arcade machine with readable functional controls and physical detail.
 - [x] Rewrite the initial pre-play instructions to match the actual Level 1, Level 2, bonus, reward, punishment, and unlock behavior.
 - [x] Repair any verified gaps found in the audit, then validate fresh progression, desktop/mobile controls, audio state, build, and checkpoint delivery.
+
+## Industrial speaker-stack art refinement
+
+- [x] Restyle the Level 1 speaker stacks to match the supplied industrial red-driver cabinet reference.
+- [x] Add visible corner plates, vents, bolts, support legs, and cable details while preserving 10/15-record milestones.
+- [x] Validate milestone motion, responsive presentation, build, and checkpoint delivery.

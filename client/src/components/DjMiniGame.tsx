@@ -2416,10 +2416,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {/* Level 1 sound-system assembly: half stack at 10, full stack at 15, and a dancer payoff at the 18-dub streak. */}
         <div className={`dj-booth-stage${level === 1 && recordsCaught >= 10 ? " speakers-half-raised" : ""}${level === 1 && recordsCaught >= 15 ? " speakers-full-raised" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
           <div className="speaker-tower speaker-tower-left">
-            <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
+            <span className="speaker-top-vents"><i /><i /><i /></span><span className="speaker-corner-plate plate-one" /><span className="speaker-corner-plate plate-two" /><span className="speaker-grille" /><span className="speaker-cone"><i /></span><span className="speaker-cone speaker-cone-small"><i /></span><span className="speaker-side-vent vent-left" /><span className="speaker-side-vent vent-right" /><span className="speaker-support-leg" /><span className="speaker-cable" />
           </div>
           <div className="speaker-tower speaker-tower-right">
-            <span className="speaker-grille" /><span className="speaker-cone" /><span className="speaker-cone" />
+            <span className="speaker-top-vents"><i /><i /><i /></span><span className="speaker-corner-plate plate-one" /><span className="speaker-corner-plate plate-two" /><span className="speaker-grille" /><span className="speaker-cone"><i /></span><span className="speaker-cone speaker-cone-small"><i /></span><span className="speaker-side-vent vent-left" /><span className="speaker-side-vent vent-right" /><span className="speaker-support-leg" /><span className="speaker-cable" />
           </div>
           {level === 1 && recordsCaught >= 10 && recordsCaught < 15 && (
             <div className="speaker-growth-debris half-stack-debris">
