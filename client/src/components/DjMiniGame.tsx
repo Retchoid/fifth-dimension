@@ -1149,6 +1149,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, [isUnlockPaused, unlockRevealReady]);
 
   useEffect(() => {
+    if (!chainBreakComplete || downloadUnlockedRef.current) return;
+    onUnlockDownload?.();
+  }, [chainBreakComplete, onUnlockDownload]);
+
+  useEffect(() => {
     if (!isRewindPaused) return;
     rewindPauseTimerRef.current = window.setTimeout(() => {
       setIsRewindPaused(false);
@@ -1540,7 +1545,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             if (!downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
               unlockJinglePlayedRef.current = true;
               playUnlockJingle();
-              onUnlockDownload?.();
               pauseAfterUnlock = true;
             } else {
               launchBonus = cleanLevelOne;
@@ -1942,7 +1946,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
               <p>{level === 2 ? "Level 2: command the crowd from the booth. Catch 50 records while avoiding bottles, apple cores, and police sirens thrown from the rave floor." : "Catch spinning vinyl records (+100pts). Collect 25 records to unlock the free “Jersh In Case” download. Avoid the cop sirens and badge patrol—missed records reset your combo, while hazards cost lives."}</p>
-              <PickupLegend level={level} />
               <button type="button" className="tape-play-button" onClick={startGame}>
                 <span className="tape-play-face" aria-hidden="true">
                   <i className="tape-reel tape-reel-left" />
@@ -1951,6 +1954,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 </span>
                 <span className="tape-play-copy">Start Session</span>
               </button>
+              <PickupLegend level={level} />
             </div>
           </div>
         )}
@@ -1962,6 +1966,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span>LEVEL 1 CLEAN RUN / {lives} LIVES LEFT</span>
               <strong>NO REQUEST<br />BONUS!</strong>
               <em>DAWN DOOR RUSH — GET PAST THE CLUB OWNER</em>
+            </div>
+            <div className="bonus-control-visual" aria-label="Bonus controls: tap to jump, swipe left or right to move, swipe up to climb">
+              <span><b>●</b>TAP<br />JUMP</span><span><b>← →</b>SWIPE<br />MOVE</span><span><b>↑</b>SWIPE<br />CLIMB</span>
             </div>
             <div className="no-request-rewind-cue" aria-hidden="true"><i /><i /><i /></div>
           </div>
@@ -2187,6 +2194,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="game-overlay pre-level-two-overlay">
             <div className="overlay-box game-over-box-wide pre-level-two-score-box">
               <h3>LEVEL 1 HIGH SCORE</h3>
+              <button type="button" className="tape-play-button reset-first-action" onClick={startGame}>
+                <span className="tape-play-face" aria-hidden="true"><i className="tape-reel tape-reel-left" /><span className="tape-window"><RotateCcw size={15} /></span><i className="tape-reel tape-reel-right" /></span>
+                <span className="tape-play-copy">PLAY AGAIN / RESET</span>
+              </button>
+              <div className="arcade-quick-controls" aria-label="Arcade controls"><span>← →</span> MOVE <i>•</i> <span>SPACE</span> JUMP</div>
+              <a className="facebook-like-button between-level-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
+              <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitPreLevelTwoScore}>
                   <label htmlFor="pre-level-selector-name">ENTER YOUR SELECTOR TAG</label>
@@ -2207,9 +2221,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   <Trophy size={15} /> TAG RECORDED AS <strong>{submittedName}</strong>
                 </div>
               )}
-              <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
-              <a className="facebook-like-button between-level-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
-              <PickupLegend level={2} />
               <div className="arcade-leaderboard-container">
                 <h4>TOP ARCADE SELECTORS</h4>
                 <div className="arcade-table-wrap">

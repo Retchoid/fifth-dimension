@@ -690,3 +690,10 @@
 - [x] Remove the two lower gameplay text boxes and replace the club owner with a cleaner DJ-compatible pixel character treatment.
 - [x] Replace blocky bonus controls with reliable tap jump, swipe movement/climb, and periodic rolling obstacles that match the game’s item language.
 - [x] Validate mobile/desktop controls, object cadence, gameplay clarity, build, and checkpoint delivery.
+
+## Level 1 unlock gating and arcade panel order
+
+- [x] Keep the Jersh download locked on a fresh session until Level 1 is completed and the chain sequence has run.
+- [x] Place the Start/Play Again/Reset action before the pickup-value legend in every relevant arcade panel.
+- [x] Add a compact visual bonus-control guide and order Level 1 handoff controls as replay first, then controls, Facebook Like, and selector tag entry.
+- [x] Validate fresh-session flow, local unlock persistence after achievement, responsive panel order, build, and checkpoint delivery.
