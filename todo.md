@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## Viscous cyan paint system and upcoming-event cards
+
+- [x] Add subtle single-color cyan shade and highlight planes, varied longer runs, and small splatter drops to the release-card drip silhouette.
+- [x] Extend the refined cyan paint system so it overlaps the adjacent box below in a controlled, readable way.
+- [x] Apply the same cyan paint language to the upcoming-event cards without blocking their copy or actions.
+- [x] Validate desktop/mobile stacking, content visibility, build, and publish.
+
 ## RESPEKT spelling and continuous cyan paint silhouette
 
 - [x] Replace applicable visible supporter-splash and follow-confirmation wording from RESPECT to RESPEKT.

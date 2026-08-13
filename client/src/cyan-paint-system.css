@@ -1,0 +1,22 @@
+/* Shared cyan viscous-paint language for the exclusive release and forthcoming event cards. */
+.exclusive-release { position: relative; z-index: 6; }
+.arcade-flow-shell { position: relative; z-index: 3; }
+.project-card { overflow: hidden; isolation: isolate; }
+.project-cyan-paint {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: -48px;
+  width: 100%;
+  height: 110px;
+  pointer-events: none;
+  opacity: .92;
+}
+.project-paint-base { fill: #00cde4; }
+.project-paint-shadow { fill: #008ba9; opacity: .68; }
+.project-paint-highlight { fill: none; stroke: #a3f8ff; stroke-width: 4; stroke-linecap: round; opacity: .84; }
+.project-content { z-index: 3; }
+@media (max-width: 650px) {
+  .project-cyan-paint { bottom: -38px; height: 88px; }
+}

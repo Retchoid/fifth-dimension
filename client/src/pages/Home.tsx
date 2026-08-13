@@ -558,6 +558,11 @@ export default function Home() {
               <article className="project-card" key={project.id}>
                 <img src={project.image} alt="" />
                 <div className="project-shade" />
+                <svg className="project-cyan-paint" viewBox="0 0 320 110" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <path className="project-paint-base" d="M0 0H320V18C311 18 312 43 303 43C293 43 298 91 286 91C274 91 281 29 267 31C253 32 258 60 246 60C233 60 238 19 222 20C208 20 212 82 200 82C187 82 192 31 178 32C164 32 169 51 155 51C142 51 148 20 130 21C116 21 121 101 108 101C95 101 101 31 86 32C72 33 77 57 64 57C50 57 55 18 38 20C25 20 27 75 15 75C5 75 8 28 0 28Z" />
+                  <path className="project-paint-shadow" d="M99 22C106 30 114 42 114 73C114 93 111 101 108 101C95 101 101 31 86 32C92 31 96 29 99 22ZM194 22C202 31 205 50 205 70C205 79 202 82 200 82C187 82 192 31 178 32C185 30 190 26 194 22ZM279 25C290 32 292 55 291 76C290 88 288 91 286 91C274 91 281 29 267 31C272 30 276 28 279 25Z" />
+                  <path className="project-paint-highlight" d="M9 8C20 5 25 10 30 16M72 8C80 5 87 9 92 15M132 8C140 5 148 9 153 16M223 8C232 5 239 9 244 16M301 8C307 6 313 9 317 14" />
+                </svg>
                 <div className="project-content">
                   <span className="project-id">{project.id}</span>
                   <h3>{project.title}</h3>
@@ -642,8 +647,11 @@ export default function Home() {
               <span className="exclusive-file-info">MP3 / {EXCLUSIVE_RELEASE.duration} / LISTEN OR DOWNLOAD</span>
             </div>
             <div className="download-box-edge-paint" aria-hidden="true">
-              <svg viewBox="0 0 1000 150" preserveAspectRatio="none" focusable="false">
-                <path d="M0 0H1000V28C985 28 983 48 970 49C955 50 961 129 945 129C929 129 937 40 919 42C899 43 903 64 888 64C868 64 875 35 850 36C828 36 836 111 820 111C804 111 809 42 790 42C771 42 778 76 758 76C738 76 744 33 721 34C700 35 708 142 689 142C671 142 678 45 658 46C641 47 642 83 626 83C608 83 616 31 590 34C568 36 571 105 553 105C534 105 542 44 523 44C504 44 509 67 490 67C474 67 478 30 454 31C431 32 438 123 420 123C402 123 408 42 385 42C365 42 373 70 352 70C331 70 338 28 315 30C294 31 301 97 284 98C264 98 271 42 251 43C231 44 235 72 217 72C196 72 203 32 176 34C153 35 160 140 141 140C121 140 130 45 106 45C84 45 92 83 69 83C47 83 56 30 26 31C11 32 10 54 0 52Z" />
+              <svg viewBox="0 0 1000 210" preserveAspectRatio="none" focusable="false">
+                <path className="release-paint-base" d="M0 0H1000V28C985 28 983 52 970 53C955 54 961 178 945 178C929 178 937 40 919 42C899 43 903 72 888 72C868 72 875 35 850 36C828 36 836 145 820 145C804 145 809 42 790 42C771 42 778 87 758 87C738 87 744 33 721 34C700 35 708 198 689 198C671 198 678 45 658 46C641 47 642 99 626 99C608 99 616 31 590 34C568 36 571 128 553 128C534 128 542 44 523 44C504 44 509 73 490 73C474 73 478 30 454 31C431 32 438 157 420 157C402 157 408 42 385 42C365 42 373 81 352 81C331 81 338 28 315 30C294 31 301 112 284 112C264 112 271 42 251 43C231 44 235 82 217 82C196 82 203 32 176 34C153 35 160 192 141 192C121 192 130 45 106 45C84 45 92 97 69 97C47 97 56 30 26 31C11 32 10 58 0 56Z" />
+                <path className="release-paint-shadow" d="M132 30C143 42 148 68 148 130C148 173 145 190 141 192C121 192 130 45 106 45C117 44 126 39 132 30ZM411 30C423 45 428 70 428 115C428 144 424 155 420 157C402 157 408 42 385 42C396 41 405 36 411 30ZM680 28C696 47 699 92 699 152C698 186 694 196 689 198C671 198 678 45 658 46C668 44 675 37 680 28ZM936 30C947 43 953 71 952 128C950 164 948 175 945 178C929 178 937 40 919 42C926 40 932 36 936 30Z" />
+                <path className="release-paint-highlight" d="M16 12C33 6 49 9 62 18M176 12C192 7 210 10 224 19M319 12C336 7 350 10 364 19M457 12C474 7 491 10 505 19M589 12C606 7 622 10 636 19M722 12C738 7 754 10 768 19M853 12C870 7 886 10 900 19" />
+                <g className="release-paint-splatter"><circle cx="109" cy="184" r="4" /><circle cx="180" cy="151" r="3" /><circle cx="430" cy="181" r="4" /><circle cx="674" cy="176" r="3" /><circle cx="954" cy="166" r="4" /></g>
               </svg>
             </div>
           </article>

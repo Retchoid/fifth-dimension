@@ -2,15 +2,18 @@
 .exclusive-release { overflow: visible; }
 .download-box-edge-paint {
   position: absolute;
-  z-index: 4;
+  z-index: 9;
   left: 0;
   right: 0;
-  bottom: -150px;
-  height: 150px;
+  bottom: -210px;
+  height: 210px;
   pointer-events: none;
 }
 .download-box-edge-paint svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.download-box-edge-paint path { fill: #00e7ff; }
+.release-paint-base { fill: #00cde4; }
+.release-paint-shadow { fill: #008ba9; opacity: .72; }
+.release-paint-highlight { fill: none; stroke: #a3f8ff; stroke-width: 7; stroke-linecap: round; opacity: .86; }
+.release-paint-splatter { fill: #00cde4; }
 @media (max-width: 650px) {
-  .download-box-edge-paint { bottom: -112px; height: 112px; }
+  .download-box-edge-paint { bottom: -158px; height: 158px; }
 }
