@@ -1,5 +1,19 @@
 # Amendment tasks
 
+## Site-wide paint-drip placement standard
+
+- [x] Inventory every active paint-drip element across the release card, forthcoming-event cards, arcade flow shell, and any other active site sections.
+- [x] Move every paint drip outside and below its source card or source element’s bottom outline.
+- [x] Limit overlap to adjacent outlines only; keep all images, copy, statuses, and controls unobstructed.
+- [x] Validate the complete site at desktop/mobile breakpoints, build, and publish.
+
+## Event-card cyan paint outside-outline correction
+
+- [x] Move the cyan paint layer outside each forthcoming event-card interior and below its brown/orange bottom outline.
+- [x] Allow only a light overlap onto the outline of the next box below, never its image, copy, or action areas.
+- [x] Verify the event-card image, title, description, status, and performance-matrix content remain unobstructed on desktop and mobile.
+- [x] Run visual/build validation and publish the corrected stacking treatment.
+
 ## Release gate unlocked-on-load regression
 
 - [x] Reproduce the release state with clean storage, stale storage, and the currently deployed persistence proof.

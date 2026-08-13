@@ -663,7 +663,12 @@ export default function Home() {
             using graffiti direction marks that visually wrap the cabinet rather than a generic divider. */}
         <div className="arcade-flow-shell">
           <div className="arcade-graffiti-flow" aria-hidden="true">
-            <span className="arcade-flow-stamp">EXCLUSIVE DROP / PLAY THE ARCADE</span>
+            <span className="arcade-flow-stamp">EXCLUSIVE DROP / PLAY THE ARCADE
+              <i className="arcade-paint-drip drip-cyan" />
+              <i className="arcade-paint-drip drip-lime" />
+              <i className="arcade-paint-drip drip-pink" />
+              <i className="arcade-paint-drip drip-yellow" />
+            </span>
             <span className="arcade-ribbon arcade-ribbon-left">
               <svg viewBox="0 0 320 610" focusable="false">
                 <path className="ribbon-shadow" d="M292 18C227 21 184 44 171 84c-15 45 42 65 10 120-31 54-106 54-109 124-2 58 54 78 104 98l-15 71 47-33 9 82 53-66-46-10 47-34-60-16c-32-40-71-78-58-123 15-52 91-52 104-117 11-55-18-97-65-115z" />
@@ -678,10 +683,6 @@ export default function Home() {
                 <path className="ribbon-accent" d="M281 40c-46 8-65 28-69 53-5 34 37 52 18 91-17 36-78 43-82 93-3 41 33 61 69 79" />
               </svg>
             </span>
-            <i className="arcade-paint-drip drip-cyan" />
-            <i className="arcade-paint-drip drip-lime" />
-            <i className="arcade-paint-drip drip-pink" />
-            <i className="arcade-paint-drip drip-yellow" />
             <span className="arcade-splatter arcade-splatter-left">
               {Array.from({ length: 8 }, (_, index) => <i key={`left-splat-${index}`} className={`splat-dot splat-${index}`} />)}
             </span>
