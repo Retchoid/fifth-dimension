@@ -1,0 +1,93 @@
+/* 5D release-card paint: every drip begins in the pooled lower edge of the download box.
+   Visual-only treatment; no release, chain, audio, or interaction behavior is touched. */
+.exclusive-release { overflow: visible; isolation: isolate; }
+.download-box-edge-paint {
+  position: absolute;
+  z-index: 4;
+  left: 8%;
+  right: 8%;
+  bottom: clamp(-5.25rem, -6vw, -3.8rem);
+  height: clamp(5.3rem, 8vw, 7.6rem);
+  pointer-events: none;
+}
+.download-box-edge-paint::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 4%;
+  width: 92%;
+  height: 22px;
+  border: 3px solid #100918;
+  border-top: 0;
+  border-radius: 0 0 42% 36% / 0 0 78% 82%;
+  background:
+    linear-gradient(90deg, #ee116d 0 19%, #ff6ea8 20% 31%, #0bdcec 32% 54%, #9af7fa 55% 59%, #f36a2d 60% 80%, #ffc079 81% 100%);
+  box-shadow: 3px 4px 0 rgba(8, 5, 12, .84), inset 0 3px 0 rgba(255, 255, 255, .46), inset 0 -4px 0 rgba(0, 0, 0, .2);
+  clip-path: polygon(0 0, 8% 13%, 19% 0, 31% 17%, 47% 1%, 60% 20%, 76% 0, 89% 16%, 100% 2%, 100% 100%, 0 100%);
+}
+.download-box-edge-paint::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 18%;
+  width: 52%;
+  height: 13px;
+  border: 2px solid #100918;
+  border-top: 0;
+  border-radius: 0 0 60% 42%;
+  background: linear-gradient(90deg, #ce084f, #ff4d90 32%, #00bad1 58%, #ff8d49 100%);
+  box-shadow: 2px 3px 0 rgba(8, 5, 12, .74);
+}
+.download-box-drip {
+  position: absolute;
+  top: 12px;
+  width: var(--drip-width);
+  height: var(--drip-height);
+  border: 3px solid #100918;
+  border-top: 0;
+  border-radius: 0 0 44% 56% / 0 0 86% 92%;
+  background: linear-gradient(90deg, var(--paint-dark), var(--paint) 53%, var(--paint-light));
+  box-shadow: 3px 4px 0 rgba(8, 5, 12, .82), inset 3px 0 0 rgba(255,255,255,.34), inset -3px 0 0 rgba(0,0,0,.14);
+  transform-origin: top;
+}
+.download-box-drip::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% - 4px);
+  width: calc(var(--drip-width) + 14px);
+  height: 17px;
+  border: 3px solid #100918;
+  border-bottom: 0;
+  border-radius: 62% 38% 0 0 / 78% 72% 0 0;
+  background: linear-gradient(90deg, var(--paint-dark), var(--paint) 53%, var(--paint-light));
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,.26);
+  transform: translateX(-50%) rotate(var(--tilt, 0deg));
+}
+.download-box-drip::after {
+  content: "";
+  position: absolute;
+  left: 22%;
+  bottom: 13%;
+  width: 24%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(255,255,255,.52);
+  filter: blur(.3px);
+}
+.box-drip-magenta { left: 13%; --drip-width: 22px; --drip-height: 66px; --paint-dark: #b4044f; --paint: #ff147e; --paint-light: #ff92bc; --tilt: -4deg; }
+.box-drip-cyan { left: 32%; --drip-width: 16px; --drip-height: 43px; --paint-dark: #008da3; --paint: #00ddeb; --paint-light: #9bf9ff; --tilt: 3deg; }
+.box-drip-orange { right: 26%; --drip-width: 25px; --drip-height: 76px; --paint-dark: #bb3b11; --paint: #ff6a21; --paint-light: #ffc07c; --tilt: -2deg; }
+.box-drip-pink { right: 11%; --drip-width: 14px; --drip-height: 38px; --paint-dark: #bd0753; --paint: #f8408b; --paint-light: #ff9fc6; --tilt: 5deg; }
+@media (max-width: 650px) {
+  .download-box-edge-paint { left: 11%; right: 11%; bottom: -4.45rem; height: 5.8rem; }
+  .download-box-edge-paint::before { height: 17px; border-width: 2px; }
+  .download-box-edge-paint::after { top: 12px; height: 10px; border-width: 2px; }
+  .download-box-drip { top: 9px; border-width: 2px; box-shadow: 2px 3px 0 rgba(8,5,12,.82), inset 2px 0 0 rgba(255,255,255,.34); }
+  .download-box-drip::before { height: 13px; border-width: 2px; }
+  .box-drip-magenta { --drip-width: 17px; --drip-height: 55px; }
+  .box-drip-cyan { --drip-width: 12px; --drip-height: 35px; }
+  .box-drip-orange { --drip-width: 19px; --drip-height: 62px; }
+  .box-drip-pink { --drip-width: 11px; --drip-height: 30px; }
+}
+@media (prefers-reduced-motion: reduce) { .download-box-drip { transform: none; } }

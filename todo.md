@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## Authentic download-box paint drips
+
+- [x] Identify the exact lower-edge element of the exclusive download box to use as the paint-flow source.
+- [x] Add irregular, outlined, cel-shaded paint pooling and tapered drips directly attached to that edge only.
+- [x] Confirm the treatment remains clear of release copy, controls, and the locked-state notice on desktop and mobile.
+- [x] Run validation and publish the corrected box-attached visual treatment.
+
 ## Exclusive card paint drips and official share preview
 
 - [x] Inspect the exclusive-release card’s current markup, layering, and responsive styles to identify why the requested paint drips are not visible.
