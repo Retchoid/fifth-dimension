@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## Single-color below-outline paint drip
+
+- [x] Remove the current multi-color, outlined paint-pool treatment from the release card.
+- [x] Add one solid cyan drip silhouette, using the existing release-card outline color, that begins behind and below that outline only.
+- [x] Confirm that no drip appears over the release-card text, controls, or interior surface.
+- [x] Validate desktop/mobile placement, build, and publish the simplified treatment.
+
 ## Third Strike reference alignment
 
 - [x] Replace the glossy neon-bar paint effect with hand-drawn, cel-shaded Third Strike-inspired paint forms.
