@@ -28,7 +28,6 @@ import {
   createBookingMailto,
   EXCLUSIVE_RELEASE,
   FACEBOOK_URL,
-  FUTURE_MIX_CHANNELS,
   INSTAGRAM_URL,
   MIXCLOUD_EMBED,
   MIXCLOUD_PROFILE,
@@ -101,6 +100,76 @@ const art = [
     className: "art-tall art-tag",
   },
 ];
+
+const MIX_ARCHIVE = {
+  jungle: [
+    {
+      id: "JUNGLE / 01",
+      title: "CFMU Hostile Airwaves — May 9",
+      artist: "DJ Hideaf",
+      description: "Hostile Airwaves archive recording. Date: May 9; year not listed.",
+      file: "/manus-storage/cfmu-hostile-airwaves-may-9_f0a61120.mp3",
+    },
+    {
+      id: "DNB / 02",
+      title: "Deep On Rolling",
+      artist: "Bobbyjackets",
+      description: "Liquid funk feature recorded for Red.fm.",
+      file: "/manus-storage/deep-on-rolling_a780ced9.mp3",
+    },
+    {
+      id: "DNB / 03",
+      title: "Minianimilism 2",
+      artist: "5th Dimension",
+      description: "Drum-and-bass transmission from the 5D archive.",
+      file: "/manus-storage/minianimilism-2_587c1ce0.mp3",
+    },
+  ],
+  house: [
+    {
+      id: "HOUSE / 01",
+      title: "Live Festival House Mix 2022",
+      artist: "Bobbyjackets",
+      description: "Live festival house broadcast from 2022.",
+      file: "/manus-storage/live-festival-house-mix-2022_87800888.mp3",
+    },
+    {
+      id: "HOUSE / 02",
+      title: "Holes in Our Souls",
+      artist: "Bobbyjackets",
+      description: "Multi-style downtempo and deep-house session.",
+      file: "/manus-storage/holes-in-our-souls_0caf2c04.mp3",
+    },
+    {
+      id: "LIVE HOUSE / A",
+      title: "Festival Live Mix House — Side A",
+      artist: "Bobbyjackets",
+      description: "Long progressive live-house set, Part A: techy electro bass house.",
+      file: "/manus-storage/festival-live-house-side-a_7de07c37.mp3",
+    },
+    {
+      id: "LIVE HOUSE / B",
+      title: "Festival Live Mix House — Side B",
+      artist: "Bobbyjackets",
+      description: "Long progressive live-house set, Part B: slightly harder bass.",
+      file: "/manus-storage/festival-live-house-side-b_731b09ed.mp3",
+    },
+    {
+      id: "LIVE HOUSE / C",
+      title: "Festival Live Mix House — Side C",
+      artist: "Bobbyjackets",
+      description: "Long progressive live-house set, Part C: keep it moving on the dancefloor.",
+      file: "/manus-storage/festival-live-house-side-c_a8c81233.mp3",
+    },
+    {
+      id: "LIVE HOUSE / D",
+      title: "Festival Live Mix House — Side D",
+      artist: "Bobbyjackets",
+      description: "Long progressive live-house set, Part D: sun coming up, totally turnt.",
+      file: "/manus-storage/festival-live-house-side-d_9e6f78e5.mp3",
+    },
+  ],
+} as const;
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -365,20 +434,41 @@ export default function Home() {
           <div className="section-heading">
             <div>
               <p className="eyebrow"><Disc3 size={15} /> MORE ROOMS / 02B</p>
-              <h2 id="genre-mixes-title">HOUSE MIXES &amp;<br /><em>OTHER FREQUENCIES.</em></h2>
+              <h2 id="genre-mixes-title">MIX ARCHIVE &amp;<br /><em>OTHER FREQUENCIES.</em></h2>
             </div>
-            <p>Future channels are standing by. New house sets, genre detours, and special sessions will appear here when the links land.</p>
+            <p>Direct files from the 5D, Bobbyjackets, and DJ Hideaf archives. Choose a channel and play every set without leaving the signal.</p>
           </div>
-          <div className="genre-mix-grid">
-            {FUTURE_MIX_CHANNELS.map((channel) => (
-              <article className="genre-mix-card" key={channel.id}>
-                <span className="genre-mix-id">{channel.id}</span>
-                <div className="genre-mix-static" aria-hidden="true"><Disc3 size={34} /><span>LINK<br />PENDING</span></div>
-                <h3>{channel.title}</h3>
-                <p>{channel.description}</p>
-                <span className="genre-mix-status"><i /> Awaiting the next drop</span>
-              </article>
-            ))}
+          <div className="mix-archive-groups">
+            <div className="mix-archive-group jungle-archive-group">
+              <div className="mix-archive-group-heading"><span>ARCHIVE CHANNEL / 5D BASS</span><h3>DnB &amp; <em>Jungle</em></h3><p>Breakbeat pressure, liquid movement, and independent radio signal.</p></div>
+              <div className="mix-archive-grid">
+                {MIX_ARCHIVE.jungle.map((mix) => (
+                  <article className="mix-archive-card" key={mix.id}>
+                    <span className="mix-archive-id">{mix.id}</span>
+                    <div className="mix-archive-titleline"><Disc3 size={25} /><div><h4>{mix.title}</h4><strong>{mix.artist}</strong></div></div>
+                    <p>{mix.description}</p>
+                    <audio controls preload="metadata" src={mix.file} aria-label={`Play ${mix.title} by ${mix.artist}`}>
+                      Your browser does not support direct audio playback.
+                    </audio>
+                  </article>
+                ))}
+              </div>
+            </div>
+            <div className="mix-archive-group house-archive-group">
+              <div className="mix-archive-group-heading"><span>ARCHIVE CHANNEL / BOBBYJACKETS</span><h3>House <em>Transmissions</em></h3><p>Festival energy, deep-house travel, and a four-part progressive live-house sequence.</p></div>
+              <div className="mix-archive-grid mix-archive-grid-house">
+                {MIX_ARCHIVE.house.map((mix) => (
+                  <article className="mix-archive-card" key={mix.id}>
+                    <span className="mix-archive-id">{mix.id}</span>
+                    <div className="mix-archive-titleline"><Music2 size={24} /><div><h4>{mix.title}</h4><strong>{mix.artist}</strong></div></div>
+                    <p>{mix.description}</p>
+                    <audio controls preload="metadata" src={mix.file} aria-label={`Play ${mix.title} by ${mix.artist}`}>
+                      Your browser does not support direct audio playback.
+                    </audio>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 

@@ -1471,7 +1471,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (isBonusLevelActive) return;
-    if (e.pointerType === "touch") return;
+    if (e.pointerType === "touch") e.preventDefault();
     updateDjPositionFromClientX(e.clientX);
   };
 
@@ -1496,7 +1496,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     <section id="minigame" className="minigame-section" aria-labelledby="minigame-title">
       <div className="section-heading">
         <div>
-          <p className="eyebrow"><Disc size={15} /> ARCADE PORTAL / 06</p>
+          <p className="eyebrow"><Disc size={15} /> DUBPLATE AUTHENTICATION / 06</p>
           <h2 id="minigame-title">SELECTOR<br /><em>SHOWDOWN.</em></h2>
         </div>
           <p>Catch 25 heavy 5D dubplates and dodge the badge patrol to unlock “Jersh In Case.” Then command the crowd through a 50-record Level 2 run. Missed records reset your combo; hazards cost lives. Use Left/Right arrows, A/D keys, or drag/touch to move the turntable.</p>
@@ -1524,16 +1524,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div
           ref={containerRef}
           className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding ? " is-bonus-scene" : ""}`}
-        onPointerMove={handlePointerMove}
-        onPointerDown={(e) => {
-          if (e.pointerType === "touch") updateDjPositionFromClientX(e.clientX);
-        }}
-        onTouchMove={(e) => {
-          if (!e.touches[0]) return;
-          e.preventDefault();
-          updateDjPositionFromClientX(e.touches[0].clientX);
-        }}
-      >
+          onPointerMove={handlePointerMove}
+          onPointerDown={(e) => {
+            if (e.pointerType === "touch") {
+              e.currentTarget.setPointerCapture(e.pointerId);
+              updateDjPositionFromClientX(e.clientX);
+            }
+          }}
+          onPointerUp={(e) => {
+            if (e.pointerType === "touch" && e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+          }}
+        >
         <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
         <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
           <span className="rave-poster rave-poster-left">NO REQUESTS<br />AFTER 4AM</span>
@@ -1541,13 +1542,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <span className="rave-flyer-stack"><i>1997</i><b>ONE MORE TUNE?</b><em>ABSOLUTELY NOT.</em></span>
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>
-        <div className="rave-banter-board" role="status" aria-live="polite"><span>RAVE FAX</span><strong>{raveBanter}</strong></div>
+        <div className={`rave-banter-board${isPlaying ? " is-playing" : ""}`} role="status" aria-live="polite"><span>RAVE FAX</span><strong>{raveBanter}</strong></div>
         <div className="game-hud">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
           <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>
           <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{level === 2 ? LEVEL_TWO_REQUIRED_RECORDS : REQUIRED_RECORDS}</strong></div>
           <div className="hud-badge combo-badge" aria-label={`Combo multiplier: ${combo}x`}>COMBO: <strong>{combo}x</strong></div>
-          <div className="hud-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
+          <div className="hud-badge high-score-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
           <div className="pickup-flash-slot" aria-live="polite" aria-atomic="true">
             {pickupFlash && <span key={pickupFlash.key}>{pickupFlash.label}</span>}
           </div>

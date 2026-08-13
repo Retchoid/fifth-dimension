@@ -555,3 +555,10 @@
 
 - [x] Add a compact, level-aware pickup legend to the Level 1 and Level 2 instruction screens.
 - [x] Validate mobile readability, build, and checkpoint delivery.
+
+## Game audit and direct-playback mix archive
+
+- [x] Review Selector Showdown for gameplay friction, visual overload, and responsive interaction issues; apply focused fixes while preserving progression.
+- [x] Verify and prepare supplied Google Drive audio sources for direct site playback, including the repeated Festival Live Mix Part C/Part D link.
+- [x] Add the supplied mixes to the Listen section with the stated titles, artists, descriptions, and native on-site players; place Deep On Rolling and Minianimilism 2 in the DnB/jungle archive rather than the house grouping.
+- [x] Validate game flow, audio playback, mobile usability, metadata, build, and checkpoint delivery.

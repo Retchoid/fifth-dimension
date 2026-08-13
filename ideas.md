@@ -83,3 +83,6 @@ Generated fallback assets prepared for this project live outside the project dir
 - Selector Showdown’s active playfield is framed as a 5D dubplate-authentication ritual through parchment broadcast labels, Signal Orange functional edges, and release-log metadata; reactive effects remain expressive but are nested inside this printed-transmission frame.
 - Selector Showdown should read as a pirate-radio/release-label challenge first and an arcade second, using broadcast metadata, stamped labels, tactile controls, and a recurring 5D seal.
 - The graffiti/round 5D seal should recur across major page zones as the primary brand mark, with typed “5th Dimension” labels as secondary identifiers.
+- Graphite, parchment, and Signal Orange now carry the listening archive and arcade frame; magenta/cyan are retained for imported artwork and contained gameplay energy rather than the general interface base.
+- The mix archive and arcade cabinet use printed-paper texture, thin technical rules, label-like metadata, and Signal Orange shadows as the default non-art material language.
+- Selector Showdown is explicitly labeled as a 5D dubplate-authentication challenge, nesting its arcade mechanics inside the release-label and pirate-radio ritual.
