@@ -117,6 +117,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [facebookRespectConfirmed, setFacebookRespectConfirmed] = useState(false);
   const [isRespectSplashVisible, setIsRespectSplashVisible] = useState(false);
   const [isRespectShaking, setIsRespectShaking] = useState(false);
+  const [damageFeedback, setDamageFeedback] = useState<{ label: string; lives: number; bonus?: boolean } | null>(null);
   const [showComboBurst, setShowComboBurst] = useState(false);
   const [comboReaction, setComboReaction] = useState<ComboReaction>(null);
   const [isGunFingerShaking, setIsGunFingerShaking] = useState(false);
@@ -207,6 +208,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const pickupFlashTimerRef = useRef<number>(0);
   const respectSplashTimerRef = useRef<number>(0);
   const respectShakeTimerRef = useRef<number>(0);
+  const damageFeedbackTimerRef = useRef<number>(0);
   downloadUnlockedRef.current = downloadUnlocked;
 
   // Key state for smooth movement
@@ -1025,6 +1027,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
   };
 
+  const announceDamage = (label: string, remainingLives: number, bonus = false) => {
+    window.clearTimeout(damageFeedbackTimerRef.current);
+    setDamageFeedback({ label, lives: remainingLives, bonus });
+    damageFeedbackTimerRef.current = window.setTimeout(() => setDamageFeedback(null), 980);
+  };
+
   const updateBonusGame = (time: number) => {
     if (!bonusGameActiveRef.current) return;
     const elapsed = Math.max(0, time - bonusLastTimeRef.current);
@@ -1072,6 +1080,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const nextLives = Math.max(0, bonusLivesRef.current - 1);
       bonusLivesRef.current = nextLives;
       setBonusLives(nextLives);
+      announceDamage("FIRE-ESCAPE ROLL", nextLives, true);
       // Generous per-platform checkpoints mean a surprise obstacle does not erase a full run.
       const checkpoint = Math.max(0, Math.floor(nextProgress / 25) * 25);
       bonusProgressRef.current = checkpoint;
@@ -1300,6 +1309,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(bonusJumpTimerRef.current);
     window.clearTimeout(bonusSplashTimerRef.current);
     window.clearTimeout(bonusRewindTimerRef.current);
+    window.clearTimeout(damageFeedbackTimerRef.current);
+    setDamageFeedback(null);
     levelRef.current = 1;
     setLevel(1);
     setLevelTwoComplete(false);
@@ -1553,6 +1564,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
           setLives(currentLives);
+          announceDamage(item.type === "cop" ? "BADGE HIT" : item.type === "pill" ? "PILL HIT" : item.type === "phone" ? "PHONE HIT" : item.type === "bottle" ? "BOTTLE HIT" : "APPLE CORE HIT", currentLives);
           if (currentLives === 0) {
             isPlayingRef.current = false;
             if (bgMusicRef.current) bgMusicRef.current.pause();
@@ -1737,6 +1749,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(pickupFlashTimerRef.current);
       window.clearTimeout(respectSplashTimerRef.current);
       window.clearTimeout(respectShakeTimerRef.current);
+      window.clearTimeout(damageFeedbackTimerRef.current);
       if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     };
   }, []);
@@ -1791,7 +1804,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         playsInline
         aria-label="16-bit jungle background soundtrack"
       />
-      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}${isRespectShaking ? " is-respect-shaking" : ""}`}>
+      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}${isRespectShaking ? " is-respect-shaking" : ""}${damageFeedback ? " is-damage-shaking" : ""}`}>
         <div className="arcade-marquee">
           <span className="marquee-light" />
           <span className="marquee-seal" aria-hidden="true">5D</span>
@@ -1833,6 +1846,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           }}
           onPointerCancel={() => { bonusPointerStartRef.current = null; }}
         >
+        {damageFeedback && !gameOver && (
+          <div className="damage-feedback" role="status" aria-live="assertive">
+            <span>{damageFeedback.bonus ? "BONUS DAMAGE" : "HEART LOST"}</span>
+            <strong>{damageFeedback.label}</strong>
+            <em>{"♥".repeat(damageFeedback.lives)}{"♡".repeat(Math.max(0, damageFeedback.bonus ? 3 - damageFeedback.lives : 4 - damageFeedback.lives))}</em>
+          </div>
+        )}
         <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
         <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
           <span className="rave-poster rave-poster-left">NO REQUESTS<br />AFTER 4AM</span>
@@ -1937,19 +1957,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {isBonusLevelActive && (
           <div className="bonus-level-stage" role="application" aria-label="No Request Bonus. Climb to the club door and jump rolling obstacles.">
             <div className="bonus-dawn-backdrop" aria-hidden="true" />
-            <div className="bonus-grid-horizon" aria-hidden="true" />
-            <div className="bonus-platform bonus-platform-one" aria-hidden="true" />
-            <div className="bonus-platform bonus-platform-two" aria-hidden="true" />
-            <div className="bonus-platform bonus-platform-three" aria-hidden="true" />
-            <div className="bonus-platform bonus-platform-four" aria-hidden="true" />
+            <div className="bonus-fire-escape-facade" aria-hidden="true"><i className="fire-escape-window window-one" /><i className="fire-escape-window window-two" /><i className="fire-escape-window window-three" /><i className="fire-escape-window window-four" /><b className="fire-escape-drainpipe" /></div>
+            <div className="bonus-city-silhouette" aria-hidden="true" />
+            <div className="bonus-platform bonus-platform-one" aria-hidden="true"><i /></div>
+            <div className="bonus-platform bonus-platform-two" aria-hidden="true"><i /></div>
+            <div className="bonus-platform bonus-platform-three" aria-hidden="true"><i /></div>
+            <div className="bonus-platform bonus-platform-four" aria-hidden="true"><i /></div>
             <div className="bonus-ladder ladder-one" aria-hidden="true" />
             <div className="bonus-ladder ladder-two" aria-hidden="true" />
             <div className="bonus-ladder ladder-three" aria-hidden="true" />
-            <div className={`bonus-club-door${bonusDoorOpen ? " is-open" : ""}`} aria-label="Angry club owner throwing bottles beside the open dawn door">
+            <div className={`bonus-club-door${bonusDoorOpen ? " is-open" : ""}`} aria-label="Angry club owner throwing bottles beside the fire escape exit door">
               <span className="club-owner-sprite" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /></span>
-              <span className="club-owner-label">OWNER</span>
+              <span className="club-owner-label">CLUB OWNER</span>
               <span className="club-owner-bottle bottle-one" aria-hidden="true" /><span className="club-owner-bottle bottle-two" aria-hidden="true" />
-              <i>NO GUESTLIST?</i>
+              <i>FIRE EXIT</i>
             </div>
             <div className="bonus-hud"><span>NO REQUEST BONUS</span><strong>DOOR {Math.round(bonusProgress)}%</strong><b>♥ {bonusLives}</b></div>
             <div className="bonus-tip">DESKTOP: ◀ ▶ MOVE / SPACE JUMPS · MOBILE: TAP JUMPS / SWIPE ← → MOVE / SWIPE ↑ CLIMBS</div>

@@ -657,3 +657,10 @@
 - [x] Move the Level 1 selector-name handoff higher, remove the two unwanted brown bottom boxes, and correct Level 1 catch collisions.
 - [x] Add dancing sprites as a visible Level 1 reward at an 18-dub streak.
 - [x] Validate desktop/mobile controls, obstacle behavior, collision reliability, responsive presentation, build, and checkpoint delivery.
+
+## Fire-escape bonus rebuild and consistent feedback
+
+- [x] Rebuild the bonus platforms, ladders, and doorway as a detailed club fire-escape exit in the established fighting-game pixel style.
+- [x] Synchronize speakers and other environmental entrances with stronger Street Fighter-inspired impact animations.
+- [x] Audit and repair shared reward/punishment overlay triggers and heart-loss feedback across both levels.
+- [x] Validate desktop/mobile gameplay feedback, visual sequencing, build, and checkpoint delivery.
