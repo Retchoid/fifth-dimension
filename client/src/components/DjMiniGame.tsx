@@ -430,6 +430,102 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     noise.stop(now + 0.74);
   };
 
+  const playPillOverloadCue = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const lead = context.createOscillator();
+    const undertow = context.createOscillator();
+    const wobble = context.createOscillator();
+    const filter = context.createBiquadFilter();
+    const gain = context.createGain();
+    const wobbleGain = context.createGain();
+
+    // A bent FM-style lead and slow unstable detune create a cartoonishly woozy
+    // selector moment without masking the existing jungle bed for long.
+    lead.type = "square";
+    undertow.type = "triangle";
+    wobble.type = "sine";
+    lead.frequency.setValueAtTime(522, now);
+    lead.frequency.exponentialRampToValueAtTime(328, now + 0.18);
+    lead.frequency.exponentialRampToValueAtTime(614, now + 0.48);
+    lead.frequency.exponentialRampToValueAtTime(246, now + 0.84);
+    undertow.frequency.setValueAtTime(174, now);
+    undertow.frequency.exponentialRampToValueAtTime(122, now + 0.86);
+    wobble.frequency.setValueAtTime(5.2, now);
+    wobbleGain.gain.setValueAtTime(190, now);
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(1260, now);
+    filter.frequency.exponentialRampToValueAtTime(690, now + 0.9);
+    filter.Q.setValueAtTime(3.4, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.16, now + 0.035);
+    gain.gain.exponentialRampToValueAtTime(0.11, now + 0.52);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.93);
+
+    wobble.connect(wobbleGain);
+    wobbleGain.connect(lead.detune);
+    wobbleGain.connect(undertow.detune);
+    lead.connect(filter);
+    undertow.connect(filter);
+    filter.connect(gain);
+    gain.connect(context.destination);
+    lead.start(now);
+    undertow.start(now);
+    wobble.start(now);
+    lead.stop(now + 0.95);
+    undertow.stop(now + 0.95);
+    wobble.stop(now + 0.95);
+  };
+
+  const playEmptyClubCue = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const roomNoise = context.createBuffer(1, Math.floor(context.sampleRate * 1.12), context.sampleRate);
+    const noiseData = roomNoise.getChannelData(0);
+    const noise = context.createBufferSource();
+    const roomFilter = context.createBiquadFilter();
+    const roomGain = context.createGain();
+
+    // A low, filtered room tail plus three falling “last tune” tones gives the
+    // empty dancefloor a clear sonic identity, distinct from the angry crowd cue.
+    for (let index = 0; index < noiseData.length; index += 1) {
+      const envelope = 1 - index / noiseData.length;
+      noiseData[index] = (Math.random() * 2 - 1) * envelope * 0.35;
+    }
+    noise.buffer = roomNoise;
+    roomFilter.type = "lowpass";
+    roomFilter.frequency.setValueAtTime(760, now);
+    roomFilter.frequency.exponentialRampToValueAtTime(180, now + 1.05);
+    roomFilter.Q.setValueAtTime(0.8, now);
+    roomGain.gain.setValueAtTime(0.0001, now);
+    roomGain.gain.exponentialRampToValueAtTime(0.07, now + 0.07);
+    roomGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
+    noise.connect(roomFilter);
+    roomFilter.connect(roomGain);
+    roomGain.connect(context.destination);
+
+    [392, 330, 262].forEach((frequency, index) => {
+      const tone = context.createOscillator();
+      const toneGain = context.createGain();
+      const start = now + index * 0.23;
+      tone.type = index === 1 ? "triangle" : "sine";
+      tone.frequency.setValueAtTime(frequency, start);
+      tone.frequency.exponentialRampToValueAtTime(frequency * 0.72, start + 0.34);
+      toneGain.gain.setValueAtTime(0.0001, start);
+      toneGain.gain.exponentialRampToValueAtTime(0.11, start + 0.025);
+      toneGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.42);
+      tone.connect(toneGain);
+      toneGain.connect(context.destination);
+      tone.start(start);
+      tone.stop(start + 0.44);
+    });
+
+    noise.start(now);
+    noise.stop(now + 1.12);
+  };
+
   const playCopSiren = () => {
     const context = getAudioContext();
     if (!context) return;
@@ -1507,12 +1603,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (pauseForCrowdAnger) {
       isPlayingRef.current = false;
       setIsPlaying(false);
+      playEmptyClubCue();
       setIsCrowdAngerPaused(true);
       return;
     }
     if (pauseForPillOverload) {
       isPlayingRef.current = false;
       setIsPlaying(false);
+      playPillOverloadCue();
       setIsPillOverloadPaused(true);
       return;
     }

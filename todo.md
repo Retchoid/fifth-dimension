@@ -613,3 +613,9 @@
 - [x] Replace the bottle/apple crowd reaction with a “WRONG TUNE MY SELECTAH — PEOPLE ARE LEAVING THE DANCEFLOOR” empty-club DJ scene.
 - [x] Redraw the apple core and Lion of Judah pickups as more legible 16-bit arcade sprites consistent with the Level 2 world.
 - [x] Validate desktop/mobile layering, hazard thresholds, pause/resume behavior, pickup visibility, build, and checkpoint delivery.
+
+## Level 2 reactive-scene audio
+
+- [x] Add a distinct mute-aware woozy 16-bit sound sequence to the three-pill dopey-DJ scene.
+- [x] Add a distinct mute-aware sparse empty-club / closing-time sound sequence to the bottle/apple crowd-exit scene.
+- [x] Validate scene-to-sound timing, mute behavior, typecheck, production build, and checkpoint delivery.
