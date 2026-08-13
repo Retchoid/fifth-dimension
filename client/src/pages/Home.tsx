@@ -642,10 +642,9 @@ export default function Home() {
               <span className="exclusive-file-info">MP3 / {EXCLUSIVE_RELEASE.duration} / LISTEN OR DOWNLOAD</span>
             </div>
             <div className="download-box-edge-paint" aria-hidden="true">
-              <i className="download-box-drip box-drip-magenta" />
-              <i className="download-box-drip box-drip-cyan" />
-              <i className="download-box-drip box-drip-orange" />
-              <i className="download-box-drip box-drip-pink" />
+              <svg viewBox="0 0 1000 150" preserveAspectRatio="none" focusable="false">
+                <path d="M0 0H1000V28C985 28 983 48 970 49C955 50 961 129 945 129C929 129 937 40 919 42C899 43 903 64 888 64C868 64 875 35 850 36C828 36 836 111 820 111C804 111 809 42 790 42C771 42 778 76 758 76C738 76 744 33 721 34C700 35 708 142 689 142C671 142 678 45 658 46C641 47 642 83 626 83C608 83 616 31 590 34C568 36 571 105 553 105C534 105 542 44 523 44C504 44 509 67 490 67C474 67 478 30 454 31C431 32 438 123 420 123C402 123 408 42 385 42C365 42 373 70 352 70C331 70 338 28 315 30C294 31 301 97 284 98C264 98 271 42 251 43C231 44 235 72 217 72C196 72 203 32 176 34C153 35 160 140 141 140C121 140 130 45 106 45C84 45 92 83 69 83C47 83 56 30 26 31C11 32 10 54 0 52Z" />
+              </svg>
             </div>
           </article>
         </section>

@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## RESPEKT spelling and continuous cyan paint silhouette
+
+- [x] Replace applicable visible supporter-splash and follow-confirmation wording from RESPECT to RESPEKT.
+- [x] Replace the straight cyan strip and discrete tab drips with one continuous organic cyan silhouette matching the supplied reference.
+- [x] Preserve the approved placement: paint appears only from below the cyan bottom outline and does not overlap release-card content.
+- [x] Validate spelling, desktop/mobile geometry, build, and publish.
+
 ## Single-color below-outline paint drip
 
 - [x] Remove the current multi-color, outlined paint-pool treatment from the release card.

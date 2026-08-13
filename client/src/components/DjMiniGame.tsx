@@ -39,7 +39,7 @@ const CELEBRATION_DANCERS = [
   { className: "dancer-magenta", src: "/manus-storage/5d-jungle-dancer-magenta_da5bea9b.png" },
 ] as const;
 
-const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maximum Respect"] as const;
+const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maximum Respekt"] as const;
 const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["record", "record", "pill", "phone", "apple", "bottle"];
 const BONUS_REWARD = 250;
 type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
@@ -1985,7 +1985,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="respect-burst" aria-hidden="true">{Array.from({ length: 10 }, (_, index) => <i key={index} className={`respect-ray respect-ray-${index % 5}`} />)}</div>
             <div className="respect-fist-bump" aria-hidden="true"><span className="respect-fist respect-fist-left"><i /></span><b className="respect-impact">!</b><span className="respect-fist respect-fist-right"><i /></span></div>
             <div className="respect-selector-tag"><span>BIG UP</span><strong>{submittedName || playerName || "NEW SELECTOR"}</strong></div>
-            <div className="respect-splash-copy"><span>5D FAMILY CHECK-IN</span><strong>RESPECT!</strong><em>BIG UP FOR FOLLOWING THE SIGNAL</em></div>
+            <div className="respect-splash-copy"><span>5D FAMILY CHECK-IN</span><strong>RESPEKT!</strong><em>BIG UP FOR FOLLOWING THE SIGNAL</em></div>
           </div>
         )}
 
@@ -2337,7 +2337,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             {comboReaction === "gun-fingers" && <div className="combo-gun-fingers"><i>☝</i><i>☝</i><i>☝</i></div>}
             {comboReaction === "ground-decks" && <div className="combo-ground-decks"><span className="combo-ground-crack" /><div className="combo-emerging-mixer"><i /><b /><em /></div><div className="combo-emerging-deck combo-deck-left"><i /></div><div className="combo-emerging-deck combo-deck-right"><i /></div></div>}
             {comboReaction === "ground-decks" && <div className="combo-dancer-pop">{CELEBRATION_DANCERS.map((dancer) => <img key={`ground-${dancer.className}`} className={`combo-dancer ${dancer.className}`} src={dancer.src} alt="" />)}</div>}
-            <span className="combo-burst-text">{comboReaction === "subwoofer" ? "BIG UP!" : comboReaction === "gun-fingers" ? "GUN FINGER MASSIVE" : comboReaction === "ground-decks" ? "MAXIMUM RESPECT" : COMBO_CALLOUTS[Math.min(COMBO_CALLOUTS.length - 1, Math.max(0, combo - 5))]}</span>
+            <span className="combo-burst-text">{comboReaction === "subwoofer" ? "BIG UP!" : comboReaction === "gun-fingers" ? "GUN FINGER MASSIVE" : comboReaction === "ground-decks" ? "MAXIMUM RESPEKT" : COMBO_CALLOUTS[Math.min(COMBO_CALLOUTS.length - 1, Math.max(0, combo - 5))]}</span>
             <span className="combo-burst-count">{combo}x DUBPLATE COMBO</span>
             <span className="combo-burst-quip">{comboReaction === "subwoofer" ? "SUBWOOFER DEPLOYED — LOW END CHECK" : comboReaction === "gun-fingers" ? "SELECTOR SALUTE — CABINET UNDER PRESSURE" : comboReaction === "ground-decks" ? "DECKS + MIXER: RISEN FROM THE RAVE FLOOR" : level === 2 ? "CROWD RESPONSE: STINK FACE APPROVED" : "NO REQUESTS. JUST REWIND."}</span>
             {Array.from({ length: 12 }, (_, i) => (
@@ -2587,7 +2587,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
         <div className="arcade-follow-actions">
           <a className="arcade-follow-link" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer">OPEN FACEBOOK</a>
-          <button type="button" className="arcade-respect-button" onClick={confirmFacebookRespect}>{facebookRespectConfirmed ? "SHOW RESPECT AGAIN" : "I FOLLOWED — RESPECT"}</button>
+          <button type="button" className="arcade-respect-button" onClick={confirmFacebookRespect}>{facebookRespectConfirmed ? "SHOW RESPEKT AGAIN" : "I FOLLOWED — RESPEKT"}</button>
         </div>
       </div>
     </section>
