@@ -605,3 +605,11 @@
 - [x] Trigger a headphones splash after collecting three turntables: “You remembered to bring your headphones to the rave!”
 - [x] Make rewind transitions spin visibly back into live gameplay.
 - [x] Validate bonus-event timing, resume behavior, build, and checkpoint delivery.
+
+## Level 2 reactive hit scenes and pickup-art refinement
+
+- [x] Keep the established dancer sprites visible and actively animated throughout Level 2 gameplay without obstructing the playfield.
+- [x] Trigger a three-pill “YOU ATE A PILL AND ARE TOO HIGH TO PLAY.” dopey-DJ splash with exaggerated pupils, then resume cleanly.
+- [x] Replace the bottle/apple crowd reaction with a “WRONG TUNE MY SELECTAH — PEOPLE ARE LEAVING THE DANCEFLOOR” empty-club DJ scene.
+- [x] Redraw the apple core and Lion of Judah pickups as more legible 16-bit arcade sprites consistent with the Level 2 world.
+- [x] Validate desktop/mobile layering, hazard thresholds, pause/resume behavior, pickup visibility, build, and checkpoint delivery.

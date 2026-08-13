@@ -1,4 +1,5 @@
 /* 5D design: preserve the crafted Sega-jungle cabinet while treating the bonus stage as a dawn-vaporwave pirate-radio detour, never a separate visual system. */
+/* 5D arcade style: readable late-90s fighting-game silhouettes, loud reactive cut-ins, and visible-but-nonblocking Level 2 dancers inside the vaporwave jungle cabinet. */
 import React, { useEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, Check } from "lucide-react";
 
@@ -120,6 +121,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
   const [isCrowdAngerPaused, setIsCrowdAngerPaused] = useState(false);
+  const [isPillOverloadPaused, setIsPillOverloadPaused] = useState(false);
   const [isCrateBonusPaused, setIsCrateBonusPaused] = useState(false);
   const [isHeadphonesBonusPaused, setIsHeadphonesBonusPaused] = useState(false);
   const [isLevelTwoMarqueeVisible, setIsLevelTwoMarqueeVisible] = useState(false);
@@ -161,6 +163,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bottleHitsRef = useRef(0);
   const appleCoreHitsRef = useRef(0);
   const crowdAngerPauseTimerRef = useRef<number>(0);
+  const pillHitsRef = useRef(0);
+  const pillOverloadPauseTimerRef = useRef<number>(0);
   const crateBonusPauseTimerRef = useRef<number>(0);
   const headphonesBonusPauseTimerRef = useRef<number>(0);
   const crowdCheerPlayedRef = useRef(false);
@@ -755,6 +759,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
     appleCoreHitsRef.current = 0;
+    pillHitsRef.current = 0;
     mixerPickupCountRef.current = 0;
     turntablePickupCountRef.current = 0;
     crowdCheerPlayedRef.current = false;
@@ -770,6 +775,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
     setIsCrowdAngerPaused(false);
+    setIsPillOverloadPaused(false);
     setIsCrateBonusPaused(false);
     setIsHeadphonesBonusPaused(false);
     setMixerDamaged(false);
@@ -1033,6 +1039,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, [isCrowdAngerPaused]);
 
   useEffect(() => {
+    if (!isPillOverloadPaused) return;
+    pillOverloadPauseTimerRef.current = window.setTimeout(() => {
+      setIsPillOverloadPaused(false);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      requestRef.current = requestAnimationFrame(updateGame);
+    }, 2250);
+    return () => window.clearTimeout(pillOverloadPauseTimerRef.current);
+  }, [isPillOverloadPaused]);
+
+  useEffect(() => {
     if (!isCrateBonusPaused) return;
     crateBonusPauseTimerRef.current = window.setTimeout(() => {
       setIsCrateBonusPaused(false);
@@ -1115,6 +1133,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
     appleCoreHitsRef.current = 0;
+    pillHitsRef.current = 0;
     crowdCheerPlayedRef.current = false;
     mixerDamagedRef.current = false;
     recoveryProgressRef.current = 0;
@@ -1122,6 +1141,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(wheelItUpPauseTimerRef.current);
     window.clearTimeout(policeSeizurePauseTimerRef.current);
     window.clearTimeout(crowdAngerPauseTimerRef.current);
+    window.clearTimeout(pillOverloadPauseTimerRef.current);
     window.clearTimeout(crateBonusPauseTimerRef.current);
     window.clearTimeout(headphonesBonusPauseTimerRef.current);
     window.clearTimeout(levelTwoMusicTimerRef.current);
@@ -1149,6 +1169,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsWheelItUpPaused(false);
     setIsPoliceSeizurePaused(false);
     setIsCrowdAngerPaused(false);
+    setIsPillOverloadPaused(false);
     setIsCrateBonusPaused(false);
     setIsHeadphonesBonusPaused(false);
     setIsLevelTwoMarqueeVisible(false);
@@ -1245,6 +1266,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     let pauseForWheelItUp = false;
     let pauseForPoliceSeizure = false;
     let pauseForCrowdAnger = false;
+    let pauseForPillOverload = false;
     let pauseForCrateBonus = false;
     let pauseForHeadphonesBonus = false;
     let launchBonus = false;
@@ -1414,6 +1436,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               pauseForCrowdAnger = true;
             }
           }
+          if (item.type === "pill") {
+            pillHitsRef.current += 1;
+            if (pillHitsRef.current >= 3) {
+              pillHitsRef.current = 0;
+              pauseForPillOverload = true;
+            }
+          }
         }
         continue;
       }
@@ -1479,6 +1508,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       isPlayingRef.current = false;
       setIsPlaying(false);
       setIsCrowdAngerPaused(true);
+      return;
+    }
+    if (pauseForPillOverload) {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      setIsPillOverloadPaused(true);
       return;
     }
     if (pauseForCrateBonus && !pauseForWheelItUp && !pauseForRewind) {
@@ -1694,7 +1729,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isCrateBonusPaused && !isHeadphonesBonusPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
+        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isPillOverloadPaused && !isCrateBonusPaused && !isHeadphonesBonusPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -1840,16 +1875,27 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {isCrowdAngerPaused && !gameOver && (
           <div className="game-overlay crowd-anger-overlay" role="status" aria-live="assertive">
-            <div className="angry-crowd-line" aria-hidden="true">
-              {Array.from({ length: 15 }, (_, index) => <i key={index} className={`angry-crowd-head angry-head-${index % 5}`} />)}
+            <div className="empty-club-room" aria-hidden="true">
+              <span className="empty-club-light empty-club-light-left" /><span className="empty-club-light empty-club-light-right" />
+              <span className="empty-club-speaker empty-club-speaker-left" /><span className="empty-club-speaker empty-club-speaker-right" />
+              <span className="empty-club-dj"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /></span>
+              <span className="empty-club-door door-one" /><span className="empty-club-door door-two" /><span className="empty-club-tumbleweed" />
             </div>
-            <div className="broken-record-warning" aria-hidden="true"><span /><b /></div>
             <div className="crowd-anger-copy">
-              <span>RAVE FLOOR RESPONSE / 2 HITS</span>
-              <strong>BAD SELECTION</strong>
-              <em>BROKEN RECORD — SWITCH IT UP!</em>
+              <span>THROWN TUNE / 2 HITS</span>
+              <strong>WRONG TUNE<br />MY SELECTAH</strong>
+              <em>PEOPLE ARE LEAVING THE DANCEFLOOR</em>
             </div>
-            {Array.from({ length: 8 }, (_, index) => <i key={index} className={`crowd-boo boo-${index % 4}`}>BOO!</i>)}
+            {Array.from({ length: 7 }, (_, index) => <i key={index} className={`crowd-exit-arrow exit-arrow-${index % 4}`} aria-hidden="true">EXIT</i>)}
+          </div>
+        )}
+
+        {isPillOverloadPaused && !gameOver && (
+          <div className="game-overlay pill-overload-overlay" role="status" aria-live="assertive">
+            <div className="pill-trip-burst" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index} className={`pill-trip-ray pill-trip-ray-${index % 6}`} />)}</div>
+            <div className="dopey-dj-portrait" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="dopey-pupil pupil-left" /><span className="dopey-pupil pupil-right" /><span className="dopey-smile" /></div>
+            <div className="pill-overload-copy"><span>PILL PRESSURE / 3 HITS</span><strong>TOO HIGH<br />TO PLAY!</strong><em>YOU ATE A PILL AND ARE TOO HIGH TO PLAY.</em></div>
+            <div className="pill-floaters" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <i key={index} className={`pill-floater pill-floater-${index % 4}`} />)}</div>
           </div>
         )}
 
@@ -2106,7 +2152,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                     </span>
                   </div>
                 ) : item.type === "lion" ? (
-                  <div className="lion-head-pickup" aria-label="Lion of Judah pickup worth 2 records"><span className="lion-crown-rays" /><img src="/manus-storage/selector-showdown-lion-of-judah-pickup_36a45652.png" alt="" /><strong>+2</strong></div>
+                  <div className="lion-head-pickup" aria-label="Lion of Judah pickup worth 2 records"><span className="lion-crown-rays" /><span className="lion-mane" /><span className="lion-face"><i /><i /><b /><em /></span><span className="lion-jah-crown"><i /><i /><i /></span><strong>+2</strong></div>
                 ) : item.type === "cdj" ? (
                   <div className="cdj-pickup" aria-label="CDJ pickup worth 5 records"><span className="cdj-platter" /><i className="cdj-display">5</i><b>+5</b></div>
                 ) : item.type === "mixer" ? (
@@ -2117,7 +2163,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   <div className="adapter-pickup" aria-label="45 adapter pickup worth 2 records"><span /><b>+2</b></div>
                 ) : (
                   <div className={`crowd-throw-sprite ${item.type}`} aria-label={item.type === "bottle" ? "Thrown bottle" : item.type === "apple" ? "Thrown apple core" : item.type === "pill" ? "Falling pill" : "Falling mobile phone"}>
-                    {item.type === "bottle" ? <span className="bottle-neck" /> : item.type === "apple" ? <><span className="apple-core-seed" /><span className="apple-core-leaf" /></> : item.type === "pill" ? <span className="pill-cap" /> : <><span className="phone-screen" /><span className="phone-antenna" /></>}
+                    {item.type === "bottle" ? <span className="bottle-neck" /> : item.type === "apple" ? <><span className="apple-core-stem" /><span className="apple-core-seed seed-one" /><span className="apple-core-seed seed-two" /><span className="apple-core-seed seed-three" /></> : item.type === "pill" ? <span className="pill-cap" /> : <><span className="phone-screen" /><span className="phone-antenna" /></>}
                   </div>
                 )}
               </div>
