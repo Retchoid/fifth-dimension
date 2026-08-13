@@ -643,3 +643,9 @@
 - [x] Add a compact Facebook-follow reminder below the permanent game-share control.
 - [x] Add an explicit honor-based confirmation action that opens the artist page and triggers a RESPECT fist-bump splash with arcade shake.
 - [x] Persist the acknowledgement locally and validate desktop/mobile layout, timing, build, and checkpoint delivery.
+
+## RESPECT selector-tag callout
+
+- [x] Display the player’s saved selector tag in the RESPECT fist-bump splash.
+- [x] Make the tag flash with bright arcade colors and provide a clear fallback when no tag is saved.
+- [x] Validate motion preferences, build, and checkpoint delivery.

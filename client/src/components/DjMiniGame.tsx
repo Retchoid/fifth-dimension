@@ -1846,6 +1846,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="game-overlay respect-splash-overlay" role="status" aria-live="assertive">
             <div className="respect-burst" aria-hidden="true">{Array.from({ length: 10 }, (_, index) => <i key={index} className={`respect-ray respect-ray-${index % 5}`} />)}</div>
             <div className="respect-fist-bump" aria-hidden="true"><span className="respect-fist respect-fist-left"><i /></span><b className="respect-impact">!</b><span className="respect-fist respect-fist-right"><i /></span></div>
+            <div className="respect-selector-tag"><span>BIG UP</span><strong>{submittedName || playerName || "NEW SELECTOR"}</strong></div>
             <div className="respect-splash-copy"><span>5D FAMILY CHECK-IN</span><strong>RESPECT!</strong><em>BIG UP FOR FOLLOWING THE SIGNAL</em></div>
           </div>
         )}
