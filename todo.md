@@ -513,3 +513,15 @@
 - [x] Add a compact Level 2 crowd-hype objective meter below the HUD, driven by collected dubplates.
 - [x] Add paint drips to the exclusive-drop box and reroute the paired ribbons so they wrap around rather than cover the box text.
 - [x] Validate desktop/mobile clarity, gameplay meter behavior, checkpoint, and return the same domain online.
+
+## Level 2 crowd-cheer milestone
+
+- [x] Trigger a one-time crowd-cheer sound when Level 2 hype first reaches 25 of 50 dubplates.
+- [x] Reset the cheer eligibility for each new Level 2 session and respect the mute control.
+- [x] Validate timing, build, and checkpoint delivery.
+
+## 90s rave-world game enhancement
+
+- [x] Add richer in-game rave-world signage and DJ-specific 90s humour that responds to the active level.
+- [x] Add engaging arcade feedback moments that celebrate clean selection without changing the required two-level progression.
+- [x] Validate desktop/mobile legibility, gameplay continuity, build, and checkpoint delivery.

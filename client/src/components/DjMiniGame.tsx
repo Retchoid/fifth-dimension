@@ -105,6 +105,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bottleHitsRef = useRef(0);
   const appleCoreHitsRef = useRef(0);
   const crowdAngerPauseTimerRef = useRef<number>(0);
+  const crowdCheerPlayedRef = useRef(false);
   const levelTwoMusicTimerRef = useRef<number>(0);
   const levelTwoMarqueeTimerRef = useRef<number>(0);
   const mixerDamagedRef = useRef(false);
@@ -196,6 +197,58 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     osc1.stop(now + 0.19);
     osc2.stop(now + 0.19);
     laser.stop(now + 0.19);
+  };
+
+  const playCrowdCheer = () => {
+    const context = getAudioContext();
+    if (!context) return;
+    const now = context.currentTime;
+    const crowdBus = context.createGain();
+    const crowdFilter = context.createBiquadFilter();
+    const noiseGain = context.createGain();
+    const noiseBuffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.72), context.sampleRate);
+    const noiseData = noiseBuffer.getChannelData(0);
+
+    // A short wall of filtered voices and static evokes a packed 16-bit rave-floor
+    // cheer without adding a large external sample to the arcade download.
+    for (let index = 0; index < noiseData.length; index += 1) {
+      const envelope = 1 - index / noiseData.length;
+      noiseData[index] = (Math.random() * 2 - 1) * envelope * 0.65;
+    }
+    const noise = context.createBufferSource();
+    noise.buffer = noiseBuffer;
+    crowdFilter.type = "bandpass";
+    crowdFilter.frequency.setValueAtTime(1380, now);
+    crowdFilter.frequency.linearRampToValueAtTime(940, now + 0.68);
+    crowdFilter.Q.setValueAtTime(0.7, now);
+    noiseGain.gain.setValueAtTime(0.0001, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.1, now + 0.025);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+    noise.connect(noiseGain);
+    noiseGain.connect(crowdFilter);
+
+    [218, 264, 312, 386].forEach((frequency, index) => {
+      const voice = context.createOscillator();
+      const voiceGain = context.createGain();
+      voice.type = index % 2 === 0 ? "sawtooth" : "triangle";
+      voice.frequency.setValueAtTime(frequency, now + index * 0.02);
+      voice.frequency.linearRampToValueAtTime(frequency * 1.32, now + 0.3 + index * 0.025);
+      voiceGain.gain.setValueAtTime(0.0001, now + index * 0.02);
+      voiceGain.gain.exponentialRampToValueAtTime(0.05, now + 0.045 + index * 0.02);
+      voiceGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.52 + index * 0.04);
+      voice.connect(voiceGain);
+      voiceGain.connect(crowdFilter);
+      voice.start(now + index * 0.02);
+      voice.stop(now + 0.7);
+    });
+
+    crowdBus.gain.setValueAtTime(0.0001, now);
+    crowdBus.gain.exponentialRampToValueAtTime(0.78, now + 0.03);
+    crowdBus.gain.exponentialRampToValueAtTime(0.0001, now + 0.74);
+    crowdFilter.connect(crowdBus);
+    crowdBus.connect(context.destination);
+    noise.start(now);
+    noise.stop(now + 0.74);
   };
 
   const playCopSiren = () => {
@@ -527,6 +580,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
     appleCoreHitsRef.current = 0;
+    crowdCheerPlayedRef.current = false;
     mixerDamagedRef.current = false;
     recoveryProgressRef.current = 0;
     scoreRef.current = scoreRef.current;
@@ -697,6 +751,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
     appleCoreHitsRef.current = 0;
+    crowdCheerPlayedRef.current = false;
     mixerDamagedRef.current = false;
     recoveryProgressRef.current = 0;
     window.clearTimeout(rewindPauseTimerRef.current);
@@ -857,6 +912,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           recordsCaughtRef.current = nextRecordsCaught;
           setScore(currentScore);
           setRecordsCaught(nextRecordsCaught);
+          if (levelRef.current === 2 && nextRecordsCaught >= 25 && !crowdCheerPlayedRef.current) {
+            crowdCheerPlayedRef.current = true;
+            playCrowdCheer();
+          }
           if (nextCombo >= 5) {
             setShowComboBurst(true);
             setTimeout(() => setShowComboBurst(false), 800);
@@ -1046,6 +1105,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     updateDjPositionFromClientX(e.clientX);
   };
 
+  const raveBanter = level === 2
+    ? recordsCaught >= 25
+      ? "CROWD: ONE MORE? SCHEDULED FOR 1999."
+      : combo >= 5
+        ? "MC SAYS PULL IT UP. DJ SAYS: NOT YET."
+        : "RAVE ETIQUETTE: MIND THE CABLES."
+    : recordsCaught >= 20
+      ? "DECKS IN. NEIGHBOURS OUT."
+      : combo >= 5
+        ? "CLEAN BLEND. NO REQUESTS TAKEN."
+        : "BASS TOO LOUD? STAND CLOSER.";
+
   return (
     <section id="minigame" className="minigame-section" aria-labelledby="minigame-title">
       <div className="section-heading">
@@ -1089,6 +1160,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         }}
       >
         <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
+        <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
+          <span className="rave-poster rave-poster-left">NO REQUESTS<br />AFTER 4AM</span>
+          <span className="rave-poster rave-poster-right">BASS =<br />FREE THERAPY</span>
+          <span className="rave-flyer-stack"><i>1997</i><b>ONE MORE TUNE?</b><em>ABSOLUTELY NOT.</em></span>
+          <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
+        </div>
+        <div className="rave-banter-board" role="status" aria-live="polite"><span>RAVE FAX</span><strong>{raveBanter}</strong></div>
         <div className="game-hud">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
           <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>
@@ -1370,6 +1448,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="combo-burst-overlay" aria-hidden="true">
             <span className="combo-burst-text">{COMBO_CALLOUTS[Math.min(COMBO_CALLOUTS.length - 1, Math.max(0, combo - 5))]}</span>
             <span className="combo-burst-count">{combo}x DUBPLATE COMBO</span>
+            <span className="combo-burst-quip">{level === 2 ? "CROWD RESPONSE: STINK FACE APPROVED" : "NO REQUESTS. JUST REWIND."}</span>
             {Array.from({ length: 12 }, (_, i) => (
               <i key={i} className={`burst-particle particle-${i % 4}`} />
             ))}
