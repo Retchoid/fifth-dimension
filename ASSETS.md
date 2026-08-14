@@ -20,3 +20,6 @@ The player wrapper includes a CSS-rendered neon selector fallback. If the genera
 The original supplied 5th Dimension artwork remains the primary site identity. The generated selector assets are scoped to the mini-game player and playfield only.
 
 | Splash-scene art direction reference | Current event-scene visual target | `/manus-storage/selectah-splash-art-direction_4d1c250f.png` | Late-1990s 2D fighting-game-inspired vinyl, DJ, police, halftone, and cel-shaded colour treatment; no typography or copied characters. |
+| After-party runner visual target | New bonus-stage art direction | `/manus-storage/afterparty-runner-visual-target_52d5fa2b.png` | Original 16-bit rear-view city road with a distant descending party light, readable equipment/hazard lanes, and a street-level after-party door. |
+| Rear-view DJ runner | Player artwork for the replacement bonus only | `/manus-storage/selector-dj-rear-runner_eefbafea.png` | Rear-view running pose derived from the existing selector character’s identity, palette, and chunky pixel-art grammar. |
+| After-party runner breakbeat | Dedicated bonus-only music bed | `/manus-storage/afterparty-runner-fast-breakbeat_0d617411.mp3` | Original 172 BPM instrumental 16-bit breakbeat with dark-city mood and a loop-ready road-run pulse. |

@@ -7,6 +7,16 @@ describe("arcade public score input", () => {
       playerTag: "RAGGA-5",
       score: 1250,
       completedLevel: "level2",
+      hasBonusCrown: false,
+    });
+  });
+
+  it("accepts the earned after-party crown flag only when supplied by the completed bonus flow", () => {
+    expect(arcadeScoreInput.parse({ playerTag: "5d", score: 5000, completedLevel: "level2", hasBonusCrown: true })).toMatchObject({
+      playerTag: "5D",
+      score: 5000,
+      completedLevel: "level2",
+      hasBonusCrown: true,
     });
   });
 

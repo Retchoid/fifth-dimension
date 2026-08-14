@@ -8,6 +8,7 @@ const releaseGate = readFileSync(resolve(projectRoot, "client/src/lib/releaseGat
 const styles = readFileSync(resolve(projectRoot, "client/src/index.css"), "utf8");
 const leaderboardRouter = readFileSync(resolve(projectRoot, "server/routers.ts"), "utf8");
 const leaderboardDb = readFileSync(resolve(projectRoot, "server/db.ts"), "utf8");
+const afterpartyStyles = readFileSync(resolve(projectRoot, "client/src/afterparty-runner.css"), "utf8");
 
 const requirements: Array<[string, string, string]> = [
   ["Selectah title", game, "SELECTAH"],
@@ -49,13 +50,19 @@ const requirements: Array<[string, string, string]> = [
   ["five-dubplate selector salute", game, "BOH!<br />BOH!<br />BIG UP"],
   ["Level 2 Run The Riddim reward", game, "RUN THE<br />RIDDIM!"],
   ["pill pitch wobble", game, "pill-pitch-wobble"],
-  ["fire-escape bonus", game, "bonus-fire-escape-facade"],
-  ["rolling bonus obstacles", game, "bonusSpawnTimerRef.current >= 2.6"],
-  ["bonus climb helper", game, "const climbBonusLadder = () =>"],
-  ["bonus keyboard climb", game, 'e.key === "ArrowUp" || e.key === "w" || e.key === "W"'],
-  ["bonus pointer capture", game, "e.currentTarget.setPointerCapture(e.pointerId);"],
-  ["bonus swipe movement", game, "moveBonusSideways(Math.sign(dx) as -1 | 1);"],
-  ["bonus mobile touch surface", styles, "touch-action: none;"],
+  ["Level 2 after-party gate", game, "const BONUS_START_RECORDS = 20"],
+  ["zero-hit after-party gate", game, "bonusThresholdReached && currentLives === 4"],
+  ["isolated after-party runner", game, "afterparty-runner-stage"],
+  ["rear-view runner sprite", game, "selector-dj-rear-runner"],
+  ["required after-party gear", game, "const BONUS_GEAR_TYPES"],
+  ["after-party road hazards", game, "const BONUS_HAZARD_TYPES"],
+  ["runner lane controls", game, "const setBonusLaneFromClientX"],
+  ["runner immediate hazard end", game, "GEAR SPILLED — BONUS OVER"],
+  ["runner dedicated breakbeat", game, "afterparty-runner-fast-breakbeat"],
+  ["after-party style layer", afterpartyStyles, ".afterparty-runner-stage"],
+  ["descending after-party light", afterpartyStyles, ".party-floor-5 .afterparty-distant-building"],
+  ["purple camo reward", afterpartyStyles, ".bonus-camo-unlocked .dj-sprite"],
+  ["public crown marker", game, "hasBonusCrown"],
   ["Facebook RESPEKT action", game, "I FOLLOWED — RESPEKT"],
   ["personalized terminal finale", game, "BIG UP BADMAN"],
   ["shared leaderboard query", leaderboardRouter, "leaderboard: publicProcedure.query"],

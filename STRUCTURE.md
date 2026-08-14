@@ -9,3 +9,5 @@ The surrounding site remains unchanged: `Home.tsx` imports and renders `<DjMiniG
 The game supports ArrowLeft/ArrowRight and A/D keyboard input plus pointer/touch movement on the game viewport. It remains a self-contained static frontend feature with no backend or external game service.
 
 The current event repair keeps the queue and game-loop work in `DjMiniGame.tsx`, but the scene surface is derived from the active sequence rather than relying solely on a collection of independently mounted paused-state booleans. The shared record-spin handoff and all scene-specific CSS remain in `index.css`.
+
+The after-party runner is an isolated bonus sub-loop in `DjMiniGame.tsx`, with independent runner entities, a dedicated HTML audio element, three-lane steering, collision checks, gear collection state, and a controlled handoff back to Level 2. Its styling is contained in a replacement bonus-only block in `index.css`. The shared leaderboard gains only a boolean crown field so the earned bonus clear can be displayed beside the public player tag; no account or personal information is added.

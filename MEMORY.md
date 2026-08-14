@@ -33,3 +33,19 @@ The development-only Level 1 speaker-stage view was visibly verified at 15 dubpl
 Final automated validation passed: 16 unit tests, the release-gate suite, the 61-hook selector regression audit, TypeScript, and production build. The ordinary visitor arcade page also loaded with an empty browser console after the repair.
 
 The final deterministic active-queue mount sweep confirmed rewind, Wheel It Up, police, pill, crate, headphones, BOH, and Run The Riddim. The crowd result initially used stale `BAD SELECTION` audit text; its approved `WRONG TUNE MY SELECTAH` text was then confirmed in the DOM and by direct cabinet inspection. Every queued special-event cut-in now mounts visibly.
+
+The old Level 1 No Request Bonus fire-escape mode is superseded only within the bonus subsystem. The confirmed replacement is a Level 2, zero-hit, 20-dubplate after-party runner with automatic forward perspective movement and only left/right player steering. It needs one headphones, turntable, microphone, speaker, mixer, and CDJ pickup; a cart, can, rock, or rat ends the bonus. The success reward is session-only bright-purple camo plus a crown persisted with the submitted public leaderboard entry.
+
+The first development-only after-party trigger set the expected Level 2 state (20/50 with four hearts) but did not retain a visible runner surface. This is an active launch-path finding, not a release result: the bonus must remain mounted through a rendered-frame check before the replacement can be published.
+
+After invalidating the main game run at bonus entry and giving the existing hold verifier a runner-safe mode, the active after-party scene was visibly confirmed. It shows the night city, converging road, descending building light and door, rear-view DJ, six-slot gear checklist, zero-hit instructions, and a stable `DISTANCE 5% / GEAR 0/6` HUD. The next checks are the immediate-fail branch and the clear/reward/crown branch.
+
+The deterministic fail branch returned to the ordinary Level 2 flow as designed. The deterministic clear branch returned to Level 2 with `.bonus-camo-unlocked` present on the DJ catcher, confirming the bright-purple session reward persists. No debug operation called the public score mutation or created a synthetic leaderboard entry.
+
+The clean, non-debug arcade session was reopened after the bonus checks. It loaded the ordinary Level 1 start screen and browser console reported no runtime output or errors.
+
+The after-party soundtrack was hardened by priming its dedicated MP3 under the original Start Session gesture. A held runner inspection then returned `paused: false`, `readyState: 4`, and an advancing playback time. After the full clear return interval, the runner was absent, the rewind layer was absent, and the same audio element returned `paused: true`; normal Level 2 audio resumed. The historical `boolean is not defined` message was not present in the current browser console or development log grep.
+
+After a full development-service restart, the normal arcade start screen rendered and its browser console remained empty. The deterministic runner failure check then confirmed `runner: false`, `bonusPaused: true`, and `mainPaused: false` after the fail return interval. Both the clear and failure audio exit paths are therefore verified.
+
+The historical `boolean is not defined` diagnostic was traced to the initial leaderboard-crown schema edit. The current `drizzle/schema.ts` explicitly imports Drizzle’s MySQL `boolean` helper and the only executable uses are that schema column and Zod’s unrelated `z.boolean()` validation. A fresh restart/browser console was clean. The completed runner-exit verifier also returned `runner: false`, `bonusPaused: true`, and `mainPaused: false`, matching the failure-path result.

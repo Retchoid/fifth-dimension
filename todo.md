@@ -2,6 +2,21 @@
 
 ## Last-four-prompts compliance audit
 
+- [x] Audit and isolate the existing bonus-level code so no non-bonus game or site behavior changes during replacement.
+- [x] Gate the new bonus at Level 2 with exactly 20 collected dubplates and zero hits; retain no Level 1 bonus entry path.
+- [x] Replace the bonus with a rear-view automatic pseudo-3D city run using the existing DJ identity, left/right controls, a descending after-party light, and a pulsing final door.
+- [x] Require one each of headphones, turntable, mic, speaker, mixer, and CDJ; end the bonus immediately on crackhead-cart, can, rock, or rat collision.
+- [x] Generate and integrate a separate faster 16-bit breakbeat used only during the bonus run.
+- [x] Reward completion with a bright-purple camo DJ outfit for the remaining session and a crown beside the player’s public leaderboard tag.
+- [x] Add isolated tests and browser verification for eligibility, controls, objective, fail/success states, music, visual reward, crown, and non-bonus regression boundaries.
+- [ ] Publish the fully audited bonus-level replacement only after all isolated checks pass.
+- [ ] Confirm the crown appears through the public read path when the first genuine Level 2 bonus-clear player submits a named score; do not seed a fabricated score.
+- [x] Reproduce or clear the stale `boolean is not defined` browser-console finding and document a clean ordinary-session result.
+- [x] Verify the bonus-only breakbeat begins on the runner handoff and pauses when the runner fails or completes, without changing normal-level audio.
+- [x] Restart the development service and verify that no current runtime source produces `boolean is not defined` before publication.
+- [x] Verify the bonus audio pauses and the normal track resumes after the immediate-fail exit path as well as the completed exit path.
+- [x] Trace the historical `boolean is not defined` diagnostic to its resolved schema import and confirm no executable runtime source retains the undefined identifier.
+- [x] Explicitly verify that the main Level 2 track resumes after the completed runner exit as well as after the failure exit.
 - [ ] Save a checkpoint for the validated arcade-scene repair and verify the published domain with a clean runtime console.
 - [x] Audit and repair every special-event trigger so police, pill, crowd, rewind, crate, headphones, and record splashes reliably render and resume in both levels.
 - [x] Restyle the record and pill splash scenes with the established Street Fighter-inspired arcade grammar, including dilated pupils, goofy grin, pitch wobble, and scene-specific copy.

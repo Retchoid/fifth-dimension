@@ -33,3 +33,7 @@ The active game must show a readable 2-bit jungle DJ rather than an image-error 
 ## Current event-scene repair
 
 The current repair consolidates visible splash rendering around the active queued sequence, adds a spinning-vinyl handoff before resumed or chained play, and retains the existing guarded game-loop pause/resume contract. It adds a five-dubplate `BOH! BOH! BIG UP` reward, a Level 2 fifteen-dubplate `RUN THE RIDDIM` reward, clearly visible speaker dancers in both levels, and revised Crowd Pressure Bonus entry copy.
+
+## Isolated Level 2 after-party runner replacement
+
+Only the old fire-escape bonus is being replaced. The new bonus opens during Level 2 immediately after 20 dubplates are collected with zero hits. It is an automatic forward, three-lane rear-view road run: A/D, arrows, touch drag, and existing pointer steering move the DJ left and right while the road, city, equipment, and hazards race toward the player. One each of headphones, turntable, microphone, speaker, mixer, and CDJ must be secured before the glowing after-party door opens. Any crackhead-cart, can, rock, or rat collision ends the bonus and returns to Level 2 without the reward. A clear awards session-only bright-purple camo to the DJ and a durable crown on the player’s shared leaderboard entry. Normal falling-object play, levels, event queue, release gate, score flow, and site remain outside the replacement boundary.

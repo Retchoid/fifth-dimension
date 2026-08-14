@@ -90,7 +90,7 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-export type ArcadeLeaderboardInput = Pick<InsertArcadeLeaderboardEntry, "playerTag" | "score" | "completedLevel">;
+export type ArcadeLeaderboardInput = Pick<InsertArcadeLeaderboardEntry, "playerTag" | "score" | "completedLevel" | "hasBonusCrown">;
 
 export async function listArcadeLeaderboard(limit = 10) {
   const db = await getDb();
@@ -102,6 +102,7 @@ export async function listArcadeLeaderboard(limit = 10) {
       playerTag: arcadeLeaderboardEntries.playerTag,
       score: arcadeLeaderboardEntries.score,
       completedLevel: arcadeLeaderboardEntries.completedLevel,
+      hasBonusCrown: arcadeLeaderboardEntries.hasBonusCrown,
       createdAt: arcadeLeaderboardEntries.createdAt,
     })
     .from(arcadeLeaderboardEntries)

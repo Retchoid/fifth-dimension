@@ -1,4 +1,4 @@
-import { index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /** Core user table backing the optional Manus OAuth flow. */
 export const users = mysqlTable("users", {
@@ -24,6 +24,7 @@ export const arcadeLeaderboardEntries = mysqlTable(
     playerTag: varchar("playerTag", { length: 12 }).notNull(),
     score: int("score").notNull(),
     completedLevel: mysqlEnum("completedLevel", ["level1", "level2"]).notNull(),
+    hasBonusCrown: boolean("hasBonusCrown").default(false).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => [
