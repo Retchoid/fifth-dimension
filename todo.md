@@ -4,11 +4,11 @@
 
 - [x] Audit the official-site adaptive card, every individual mix share card, the arcade share action, native-share availability, and copy-link fallbacks.
 - [x] Verify the required official-site and mix share metadata, image, title, artist, URL, and call-to-action behavior without altering existing content.
-- [ ] Repair any confirmed adaptive-card or share-flow regression, run full validation, and publish the verification update.
+- [x] Repair any confirmed adaptive-card or share-flow regression, run full validation, and publish the verification update.
 - [x] Open and verify all nine individual mix share cards for exact cover, title, artist, CTA, and share control presentation.
 - [x] Re-run native-share and copy-link fallback checks across representative DnB and house mixes plus the arcade share action.
-- [ ] Run the full validation suite and save/publish the adaptive-card/share verification update.
-- [ ] Save a checkpoint for the completed adaptive-card/share audit and smoke-check one archive and arcade share action against the saved preview.
+- [x] Run the full validation suite and save/publish the adaptive-card/share verification update.
+- [x] Save a checkpoint for the completed adaptive-card/share audit and smoke-check one archive and arcade share action against the saved preview.
 - [x] Audit the entire site’s typography, colour, texture, graphics, controls, cards, and section transitions for a unified gritty 1990s jungle-rave, boombox, tape, vaporwave, psychedelic, graffiti, hip-hop, and breakbeat aesthetic.
 - [x] Refine confirmed visual inconsistencies without changing any supplied text, section name, functional behavior, media content, or the approved first hero section.
 - [x] Verify responsive visual continuity from hero through archive, projects, release, arcade, visuals, booking, contact, and footer; then publish the unified system.

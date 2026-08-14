@@ -39,3 +39,7 @@ All nine share controls opened their intended card. Each card mounted a non-empt
 | Festival live mix house — Side D | Bobbyjackets | Card, artwork, attribution, CTA, and share control verified. |
 
 The native-share and clipboard-fallback branches were then rechecked using both a DnB entry (**Minianimilism 2**) and a house entry (**Holes in Our Souls**), alongside the arcade action. Both mix branches used their exact title/artist plus the required CTA and archive anchor. The arcade used the direct `?from=selector-share#minigame` URL. No adaptive-card or sharing regression was found.
+
+## Post-checkpoint smoke check
+
+After the sharing-verification checkpoint, a fresh preview reload opened the CFMU archive card with its exact title, Dj Hideaf attribution, required call to action, and share control intact. The direct arcade **Share game** control was also present in the same fresh build. No post-save regression was observed.
