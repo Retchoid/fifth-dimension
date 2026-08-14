@@ -2,6 +2,14 @@
 
 ## Last-four-prompts compliance audit
 
+- [ ] Confirm the newly submitted genuine bonus-clear score stores hasBonusCrown and renders the crown through the public leaderboard read path.
+- [x] Increase Crowd Pressure object spawn frequency and fall speed while reducing all-level dubplate frequency and globally shrinking object presentation without breaking shared collision fairness.
+- [x] Increase the Crowd Pressure music playback rate only during Level 2 while preserving the dedicated runner and Level 1 soundtrack behavior.
+- [x] Audit all active splash scenes against the supplied 16-bit visual direction and correct confirmed art or visibility gaps.
+- [x] Audit the full arcade sequence queue, level transitions, rewards, punishments, bonus route, pause/resume, and finale logic; add regression coverage for any confirmed gaps.
+- [ ] Validate desktop/mobile play, audio, crown visibility, splash art, sequence behavior, TypeScript, tests, build, and publish the rebalanced update.
+- [x] Locate or receive the supplied 16-bit reference images, then perform and document an exact scene-by-scene comparison for Rewind, Wheel It Up, Police, Crowd, Pill, Crate, Headphones, BOH, and Run the Riddim.
+- [x] Amend any splash art or CSS that differs from the supplied reference images, then rerun the held-scene review before publication.
 - [x] Audit and isolate the existing bonus-level code so no non-bonus game or site behavior changes during replacement.
 - [x] Gate the new bonus at Level 2 with exactly 20 collected dubplates and zero hits; retain no Level 1 bonus entry path.
 - [x] Replace the bonus with a rear-view automatic pseudo-3D city run using the existing DJ identity, left/right controls, a descending after-party light, and a pulsing final door.
@@ -9,7 +17,7 @@
 - [x] Generate and integrate a separate faster 16-bit breakbeat used only during the bonus run.
 - [x] Reward completion with a bright-purple camo DJ outfit for the remaining session and a crown beside the player’s public leaderboard tag.
 - [x] Add isolated tests and browser verification for eligibility, controls, objective, fail/success states, music, visual reward, crown, and non-bonus regression boundaries.
-- [ ] Publish the fully audited bonus-level replacement only after all isolated checks pass.
+- [x] Publish the fully audited bonus-level replacement only after all isolated checks pass.
 - [ ] Confirm the crown appears through the public read path when the first genuine Level 2 bonus-clear player submits a named score; do not seed a fabricated score.
 - [x] Reproduce or clear the stale `boolean is not defined` browser-console finding and document a clean ordinary-session result.
 - [x] Verify the bonus-only breakbeat begins on the runner handoff and pauses when the runner fails or completes, without changing normal-level audio.

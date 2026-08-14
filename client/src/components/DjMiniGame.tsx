@@ -18,24 +18,24 @@ type BonusRunnerType = BonusGearType | BonusHazardType;
 type FallingItemType = "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
 
 const FALLING_ITEM_RULES: Record<FallingItemType, { size: number; hitRadius: number; tilt: number }> = {
-  record: { size: 38, hitRadius: 10, tilt: -7 },
-  cop: { size: 42, hitRadius: 12, tilt: 0 },
-  bottle: { size: 38, hitRadius: 11, tilt: 13 },
-  apple: { size: 36, hitRadius: 10, tilt: -12 },
-  lion: { size: 50, hitRadius: 14, tilt: 0 },
-  cdj: { size: 50, hitRadius: 14, tilt: -5 },
-  mixer: { size: 50, hitRadius: 14, tilt: 4 },
-  turntable: { size: 50, hitRadius: 14, tilt: -4 },
-  adapter: { size: 32, hitRadius: 9, tilt: 8 },
-  pill: { size: 34, hitRadius: 10, tilt: -14 },
-  phone: { size: 32, hitRadius: 10, tilt: 16 },
+  record: { size: 32, hitRadius: 9, tilt: -7 },
+  cop: { size: 36, hitRadius: 10, tilt: 0 },
+  bottle: { size: 32, hitRadius: 10, tilt: 13 },
+  apple: { size: 31, hitRadius: 9, tilt: -12 },
+  lion: { size: 43, hitRadius: 12, tilt: 0 },
+  cdj: { size: 43, hitRadius: 12, tilt: -5 },
+  mixer: { size: 43, hitRadius: 12, tilt: 4 },
+  turntable: { size: 43, hitRadius: 12, tilt: -4 },
+  adapter: { size: 28, hitRadius: 8, tilt: 8 },
+  pill: { size: 29, hitRadius: 9, tilt: -14 },
+  phone: { size: 28, hitRadius: 9, tilt: 16 },
 };
 
 const SPAWN_WEIGHTS: Record<GameLevel, Array<readonly [FallingItemType, number]>> = {
-  // Negative items carry 49% of Level 1 spawns—15% above the previous 43%; dubplates fall less often at 51%.
-  1: [["record", 51], ["cop", 9.2], ["pill", 5.8], ["phone", 4.6], ["cdj", 7.2], ["mixer", 8.2], ["turntable", 8.2], ["adapter", 5.8]],
-  // Level 2 keeps its crowd-only bottles and cores, with 24.15% hazards—15% above the previous 21%.
-  2: [["record", 45.75], ["bottle", 4.65], ["apple", 4.65], ["cop", 5.75], ["pill", 4.6], ["phone", 4.5], ["lion", 6], ["cdj", 6], ["mixer", 7], ["turntable", 7], ["adapter", 4.1]],
+  // Dubplates are less frequent in every level; Level 1 keeps its established no-bottle/no-core contract.
+  1: [["record", 45.5], ["cop", 11.7], ["pill", 7.5], ["phone", 5.9], ["cdj", 7.2], ["mixer", 8.2], ["turntable", 8.2], ["adapter", 5.8]],
+  // Crowd Pressure raises non-record pressure while preserving all Level 2-positive gear and crowd-only hazards.
+  2: [["record", 37], ["bottle", 6.5], ["apple", 6.5], ["cop", 7], ["pill", 5.5], ["phone", 5], ["lion", 7], ["cdj", 6.5], ["mixer", 7], ["turntable", 7], ["adapter", 5]],
 };
 
 function pickFallingItemType(level: GameLevel, roll: number): FallingItemType {
@@ -328,6 +328,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!audio || !soundEnabledRef.current) return;
     audio.pause();
     audio.currentTime = 0;
+    audio.playbackRate = 1;
     audio.volume = 0.34;
     audio.muted = false;
     const playPromise = audio.play();
@@ -1137,6 +1138,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           ? Math.min(LEVEL_TWO_TRACK_OFFSET_SECONDS, trackDuration * 0.65)
           : LEVEL_TWO_TRACK_OFFSET_SECONDS;
         bgMusicRef.current.currentTime = levelTwoOffset;
+        bgMusicRef.current.playbackRate = 1.09;
       }
       playBackgroundMusic();
     }, Math.min(760, arrivalDuration - 250));
@@ -1680,7 +1682,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     spawnTimerRef.current += dt;
     // Fewer dubplates, more hazards: a steady scheduler keeps the flow populated
     // until the player clears a level or loses their final life.
-    const spawnInterval = levelRef.current === 2 ? 0.90 : 1.10;
+    const spawnInterval = levelRef.current === 2 ? 0.72 : 1.10;
     if (spawnTimerRef.current >= spawnInterval) {
       spawnTimerRef.current -= spawnInterval;
       const roll = Math.random();
@@ -1688,14 +1690,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const spawnedType = pickFallingItemType(levelRef.current, roll);
       const itemRule = FALLING_ITEM_RULES[spawnedType];
       // Increase speed moderately with progression / score
-      const baseSpeed = levelRef.current === 2 ? 42 : 36;
+      const baseSpeed = levelRef.current === 2 ? 50 : 36;
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
       itemsRef.current.push({
         id: nextIdRef.current++,
         x: Math.floor(Math.random() * 84) + 6,
         y: -10,
         type: spawnedType,
-        speed: Math.floor(Math.random() * 10) + baseSpeed + speedRamp,
+        speed: Math.floor(Math.random() * (levelRef.current === 2 ? 12 : 10)) + baseSpeed + speedRamp,
         size: itemRule.size,
         hitRadius: itemRule.hitRadius,
         tilt: itemRule.tilt * (Math.random() > 0.5 ? 1 : -1),
