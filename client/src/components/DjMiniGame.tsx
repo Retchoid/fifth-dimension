@@ -930,7 +930,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
   }, []);
 
-  const recordHighScore = (candidate: number, rawName: string, completedLevel: "level1" | "level2", hasBonusCrown = completedLevel === "level2" && bonusCamoUnlocked) => {
+  const recordHighScore = (candidate: number, rawName: string, completedLevel: "level1" | "level2", hasBonusCrown = completedLevel === "level2" && bonusCompletedRef.current) => {
     const previousBest = highScoreRef.current;
     const isRecord = candidate > previousBest;
     const bestScore = Math.max(previousBest, candidate);
@@ -1402,22 +1402,25 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     if (keysRef.current["left"]) moveBonusSideways(-1);
     if (keysRef.current["right"]) moveBonusSideways(1);
-    const nextProgress = Math.min(100, bonusProgressRef.current + (holdSequenceDebugEnabled ? 1 : 4.2) * dt);
+    const nextProgress = Math.min(100, bonusProgressRef.current + (holdSequenceDebugEnabled ? 1 : 2.75) * dt);
     bonusProgressRef.current = nextProgress;
     setBonusProgress(nextProgress);
 
     bonusSpawnTimerRef.current += dt;
-    if (!holdSequenceDebugEnabled && bonusSpawnTimerRef.current >= 0.72 && bonusObstaclesRef.current.length < 5) {
+    if (!holdSequenceDebugEnabled && bonusSpawnTimerRef.current >= 1.08 && bonusObstaclesRef.current.length < 3) {
       bonusSpawnTimerRef.current = 0;
       const missingGear = BONUS_GEAR_TYPES.filter((gear) => !bonusGearRef.current.includes(gear));
-      const isGear = missingGear.length > 0 && Math.random() < 0.82;
+      const isGear = missingGear.length > 0 && Math.random() < 0.88;
       const type = isGear
         ? missingGear[Math.floor(Math.random() * missingGear.length)]
         : BONUS_HAZARD_TYPES[Math.floor(Math.random() * BONUS_HAZARD_TYPES.length)];
-      const openLanes = [0, 1, 2].filter((lane) => !bonusObstaclesRef.current.some((entity) => entity.lane === lane && entity.depth < 28));
-      const lanePool = openLanes.length ? openLanes : [0, 1, 2];
-      const lane = lanePool[Math.floor(Math.random() * lanePool.length)];
-      bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, depth: 1, lane, type, speed: 27 + Math.floor(Math.random() * 11) });
+      const openLanes = [0, 1, 2].filter((lane) => !bonusObstaclesRef.current.some((entity) => entity.lane === lane && entity.depth < 62));
+      const safeLanes = openLanes.filter((lane) => !bonusObstaclesRef.current.some((entity) => entity.lane === lane && entity.depth > 54 && entity.depth < 102));
+      const lanePool = safeLanes.length ? safeLanes : openLanes;
+      if (lanePool.length) {
+        const lane = lanePool[Math.floor(Math.random() * lanePool.length)];
+        bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, depth: 1, lane, type, speed: 18 + Math.floor(Math.random() * 5) });
+      }
     }
 
     const nextObstacles: BonusRunnerEntity[] = [];
@@ -2327,10 +2330,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             </div>
             <div className="bonus-tip">AUTO RUN · A / D OR ARROWS STEER · DRAG OR TAP A ROAD LANE · ONE HIT ENDS THE DASH</div>
             <div className={`bonus-dj-runner afterparty-dj-runner lane-${bonusLane}${bonusDoorOpen ? " is-exit-lit" : ""}`}>
-              <img src="/manus-storage/selector-dj-rear-runner_eefbafea.png" alt="Rear-view jungle DJ running toward the after party" />
+              <img src="/manus-storage/selector-dj-rear-runner_00e1ae94.png" alt="Rear-view jungle DJ running toward the after party" />
             </div>
             <div className="bonus-obstacle-layer afterparty-entity-layer" aria-hidden="true">
-              {bonusObstacles.map((entity) => <span key={entity.id} className={`bonus-obstacle afterparty-entity ${entity.type} lane-${entity.lane}`} style={{ "--runner-depth": `${entity.depth}%` } as React.CSSProperties}><i /></span>)}
+              {bonusObstacles.map((entity) => <span key={entity.id} className={`bonus-obstacle afterparty-entity ${entity.type} lane-${entity.lane}`} data-entity={entity.type} style={{ "--runner-depth": `${entity.depth}%` } as React.CSSProperties}><i /><b>{entity.type === "headphones" ? "HP" : entity.type === "turntable" ? "TT" : entity.type === "speaker" ? "SPK" : entity.type === "mixer" ? "MIX" : entity.type === "cart" ? "CART" : entity.type.toUpperCase()}</b></span>)}
             </div>
             {bonusGearReady && <div className="afterparty-door-ready" role="status">ALL GEAR SECURED — RUN FOR THE DOOR</div>}
           </div>

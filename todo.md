@@ -2,6 +2,20 @@
 
 ## Arcade and post-hero design cohesion pass
 
+- [x] Perform a final held-scene review of the pill, crowd, and police splash screens for art, copy, and layering before publishing.
+- [x] Audit all non-hero section colour usage, surface materials, borders, shadows, typography accents, and graphic treatments for palette and style inconsistencies while preserving working rendering.
+- [x] Consolidate the post-hero site into one restrained graphite, deep-indigo, cyan-signal, magenta-flyer, lime-reward, and signal-orange palette with consistent material rules.
+- [x] Validate desktop and mobile visual consistency after the token pass without altering section copy, assets, or working interactions.
+- [x] Remove the visible white rectangle around the After Party rear-view DJ sprite while preserving the intended sprite design and bright-purple reward state.
+- [x] Replace the After Party’s indistinct pale lump entities with readable, hard-outlined 16-bit gear and hazard props that match the gritty rave/jungle arcade style.
+- [x] Rebalance the After Party spawn spacing, speed, safe lanes, and required gear cadence so the Level 2 bonus is fair and playable.
+- [ ] Verify the repaired bonus in a live run, including clear and fail paths, and preserve the existing Level 2 crown contract.
+- [x] Run a non-held pill, crowd, and police verification to confirm each releases through the record-spin bridge and returns to active play.
+- [ ] Re-run the repaired After Party clear and failure paths and verify the Level 2-only crown submission contract remains intact.
+- [ ] Recheck the user’s already submitted crown score against the corrected genuine Level 2 requirement without asking for another test.
+- [x] Guard the final named Level 2 score submission against a bonus-clear UI-state race by using the durable bonus completion proof.
+- [ ] Verify the corrected crown path in the final regression pass and publish the bonus repair.
+- [ ] Confirm one genuine named Level 2 bonus-clear submission after the durable crown-proof repair persists hasBonusCrown=1 and displays through the public leaderboard read path.
 - [x] Audit the official-site adaptive card, every individual mix share card, the arcade share action, native-share availability, and copy-link fallbacks.
 - [x] Verify the required official-site and mix share metadata, image, title, artist, URL, and call-to-action behavior without altering existing content.
 - [x] Repair any confirmed adaptive-card or share-flow regression, run full validation, and publish the verification update.
@@ -61,6 +75,7 @@
 - [x] Trace the historical `boolean is not defined` diagnostic to its resolved schema import and confirm no executable runtime source retains the undefined identifier.
 - [x] Explicitly verify that the main Level 2 track resumes after the completed runner exit as well as after the failure exit.
 - [ ] Save a checkpoint for the validated arcade-scene repair and verify the published domain with a clean runtime console.
+- [ ] Open the actual published site without an authentication redirect, confirm it renders, and inspect a clean live browser console before closing the release check.
 - [x] Audit and repair every special-event trigger so police, pill, crowd, rewind, crate, headphones, and record splashes reliably render and resume in both levels.
 - [x] Restyle the record and pill splash scenes with the established Street Fighter-inspired arcade grammar, including dilated pupils, goofy grin, pitch wobble, and scene-specific copy.
 - [x] Add a consistent spinning-record transition between every interrupted arcade scene and resumed play or chained scene.
