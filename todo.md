@@ -179,10 +179,10 @@
 - [x] Recheck all previously agreed site and game requirements against a documented acceptance checklist rather than source inspection alone.
 - [x] Run clean-session desktop/mobile validation, TypeScript, production build, runtime-console review, and save evidence before reporting completion.
 
-- [ ] Locate the original character and artwork assets from the archive, previous workspace, or accessible project media.
-- [ ] Compare the original visual theme against the current fallback-based render and document the required replacements.
-- [ ] Restore original character-led artwork and theme assets without reintroducing former deployment identifiers.
-- [ ] Revalidate desktop and mobile rendering, typecheck, build, and tests.
+- [x] Locate the original character and artwork assets from the archive, previous workspace, or accessible project media.
+- [x] Compare the original visual theme against the current fallback-based render and document the required replacements.
+- [x] Restore original character-led artwork and theme assets without reintroducing former deployment identifiers.
+- [x] Revalidate desktop and mobile rendering, typecheck, build, and tests.
 - [ ] Save a new checkpoint for the amended project.
 
 ## User-supplied reference restoration
@@ -200,10 +200,10 @@
 
 ## Lightbox and visual cleanup
 
-- [ ] Inspect the current art gallery and responsive interaction styles.
-- [ ] Add an accessible click/keyboard lightbox for gallery artwork.
-- [ ] Remove the character portrait from the opening hero background and the New Frequency Loading card.
-- [ ] Remove Orbit Tag / 5D from the gallery.
+- [x] Inspect the current art gallery and responsive interaction styles.
+- [x] Add an accessible click/keyboard lightbox for gallery artwork.
+- [x] Remove the character portrait from the opening hero background and the New Frequency Loading card.
+- [x] Remove Orbit Tag / 5D from the gallery.
 - [x] Validate lightbox interaction, responsive rendering, typecheck, build, and tests, then save a checkpoint.
 
 ## Vaporwave, graffiti flares, and junglist culture enhancement
@@ -216,21 +216,21 @@
 
 ## Interactive graffiti flares
 
-- [ ] Add hover and keyboard-focus feedback to the graffiti flare stickers.
-- [ ] Add a restrained neon pulse and spray/drip effect with reduced-motion support.
-- [ ] Validate desktop/mobile styling, typecheck, build, tests, and save a checkpoint.
+- [x] Add hover and keyboard-focus feedback to the graffiti flare stickers.
+- [x] Add a restrained neon pulse and spray/drip effect with reduced-motion support.
+- [x] Validate desktop/mobile styling, typecheck, build, tests, and save a checkpoint.
 
 ## Hero number-5 protection
 
-- [ ] Keep the number 5 in the 5th Dimension hero title visibly clear of both interactive graffiti flares at desktop and mobile widths.
-- [ ] Revalidate the interactive flare styling and save the updated checkpoint.
+- [x] Keep the number 5 in the 5th Dimension hero title visibly clear of both interactive graffiti flares at desktop and mobile widths.
+- [x] Revalidate the interactive flare styling and save the updated checkpoint.
 
 ## Vaporwave cityscape replacement
 
-- [ ] Remove the vaporwave sun layer from the hero.
-- [ ] Add a neon vaporwave cityscape with skyline silhouettes, window lights, haze, and perspective grid energy.
-- [ ] Confirm the hero number 5 remains clear of the cityscape and interactive flares on desktop and mobile.
-- [ ] Run typecheck, build, tests, screenshots, and save a checkpoint.
+- [x] Remove the vaporwave sun layer from the hero.
+- [x] Add a neon vaporwave cityscape with skyline silhouettes, window lights, haze, and perspective grid energy.
+- [x] Confirm the hero number 5 remains clear of the cityscape and interactive flares on desktop and mobile.
+- [x] Run typecheck, build, tests, screenshots, and save a checkpoint.
 
 ## Booking inquiry subject update
 
@@ -899,15 +899,15 @@
 
 ## Coin-style pickup sound restoration
 
-- [ ] Cross-reference the original pickup-audio requirement against the current positive-collection sound stack.
-- [ ] Add an unmistakable coin-style token cue for positive pickups while preserving record, deck, and adapter effects.
-- [ ] Validate mute behavior, collection routing, build, and checkpoint delivery.
-- [ ] Deliver a concise requirement-to-implementation report.
+- [x] Cross-reference the original pickup-audio requirement against the current positive-collection sound stack.
+- [x] Add an unmistakable coin-style token cue for positive pickups while preserving record, deck, and adapter effects.
+- [x] Validate mute behavior, collection routing, build, and checkpoint delivery.
+- [x] Deliver a concise requirement-to-implementation report.
 
 ## Complete discussion-to-implementation re-audit
 
-- [ ] Create a traceable matrix covering site structure, release unlock, mix archive, cabinet, Level 1, Level 2, bonus stage, sounds, all splash/reward states, sharing, and responsive behavior.
-- [ ] Inspect the current implementation against every matrix category and mark each as confirmed, missing, regressed, or ambiguous.
-- [ ] Repair every confirmed missing or regressed behavior in grouped, regression-safe changes, including the coin-style token sound.
-- [ ] Validate the repaired site and game with fresh progression, desktop/mobile checks, console review, typecheck, and production build.
-- [ ] Deliver the full requirement-to-implementation matrix with exact fixes and validation evidence.
+- [x] Create a traceable matrix covering site structure, release unlock, mix archive, cabinet, Level 1, Level 2, bonus stage, sounds, all splash/reward states, sharing, and responsive behavior.
+- [x] Inspect the current implementation against every matrix category and mark each as confirmed, missing, regressed, or ambiguous.
+- [x] Repair every confirmed missing or regressed behavior in grouped, regression-safe changes, including the coin-style token sound.
+- [x] Validate the repaired site and game with fresh progression, desktop/mobile checks, console review, typecheck, and production build.
+- [x] Deliver the full requirement-to-implementation matrix with exact fixes and validation evidence.

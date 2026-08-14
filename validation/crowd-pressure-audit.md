@@ -60,3 +60,7 @@ The third reference confirms the additional Sonic-style requirements used by the
 The direct held-scene sweep confirmed all nine scene roots were visible `display: grid` overlays. The expanded selector audit was then run successfully with **111 hooks**, including the scene-specific reference contracts above. No scene diverged enough from the recovered reference grammar to require a code amendment.
 
 The remaining work is the final mobile gameplay/audio/crown-path verification and publication.
+
+## Positive-pickup token cue audit
+
+Every positive pickup follows a two-part cue: its item-specific record scratch, platter, or adapter effect plays first, then `playPickupToken()` schedules a discrete square/triangle/sine coin strike after 220 milliseconds. This delay begins after the record scratch tail and keeps the coin cue audible rather than masked. The routing is shared by records, Lion of Judah heads, CDJs, mixers, turntables, and adapters; it remains guarded by the existing mute-aware audio-context helper. The selector audit now protects the token function, its invocation, two harmonic voices, and its post-scratch timing.

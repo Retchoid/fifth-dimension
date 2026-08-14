@@ -394,6 +394,7 @@ export default function Home() {
           <div className="hero-noise" aria-hidden="true" />
           <div className="vapor-cityscape" aria-hidden="true" />
           <span className="graffiti-flare flare-left" role="img" tabIndex={0} aria-label="Dubplate sound system flare">DUBPLATE</span>
+          <span className="graffiti-flare flare-right" role="img" tabIndex={0} aria-label="Bassline sound system flare">BASSLINE</span>
           <div className="hero-content">
             <p className="signal-label"><Zap size={15} fill="currentColor" /> DANCEHALL VIBES / DEEP JUNGLE BREAKS / SOUND SYSTEM WEIGHT</p>
             <h1 id="hero-title">
