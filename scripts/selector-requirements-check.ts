@@ -9,6 +9,9 @@ const styles = readFileSync(resolve(projectRoot, "client/src/index.css"), "utf8"
 const leaderboardRouter = readFileSync(resolve(projectRoot, "server/routers.ts"), "utf8");
 const leaderboardDb = readFileSync(resolve(projectRoot, "server/db.ts"), "utf8");
 const afterpartyStyles = readFileSync(resolve(projectRoot, "client/src/afterparty-runner.css"), "utf8");
+const arcadeRepairStyles = readFileSync(resolve(projectRoot, "client/src/arcade-repair.css"), "utf8");
+const postHeroStyles = readFileSync(resolve(projectRoot, "client/src/posthero-cohesion.css"), "utf8");
+const gameVisualStyles = readFileSync(resolve(projectRoot, "client/src/game-visual-system.css"), "utf8");
 
 const requirements: Array<[string, string, string]> = [
   ["Selectah title", game, "SELECTAH"],
@@ -53,6 +56,8 @@ const requirements: Array<[string, string, string]> = [
   ["Level 2 Crowd Pressure arrival", game, "isLevelTwoTransitioning"],
   ["Level 2 arrival overlay", game, "level-two-arrival-overlay"],
   ["Level 2 Crowd Pressure Bonus copy", game, "CROWD PRESSURE BONUS!"],
+  ["Level 2 explicit record-spin prelude", game, "setIsRecordTransitioning(true);"],
+  ["Level 2 record-spin bridge duration", game, "window.setTimeout(beginLevelTwoArrival, 560)"],
   ["compact lower Crowd Pressure meter", styles, "right: 1rem; bottom: 1rem;"],
   ["Level 1 18-dub dancers", game, "level-one-streak-dancers"],
   ["Level 2 dancers", game, "level-two-dancer-backdrop"],
@@ -68,10 +73,27 @@ const requirements: Array<[string, string, string]> = [
   ["after-party road hazards", game, "const BONUS_HAZARD_TYPES"],
   ["runner lane controls", game, "const setBonusLaneFromClientX"],
   ["runner immediate hazard end", game, "GEAR SPILLED — BONUS OVER"],
+  ["fair runner progress duration", game, "4.2) * dt"],
+  ["fair runner spawn cadence", game, "bonusSpawnTimerRef.current >= 0.72"],
+  ["fair runner active-entity cap", game, "bonusObstaclesRef.current.length < 5"],
+  ["fair runner lane spacing", game, "const openLanes = [0, 1, 2].filter"],
   ["runner dedicated breakbeat", game, "afterparty-runner-fast-breakbeat"],
   ["after-party style layer", afterpartyStyles, ".afterparty-runner-stage"],
   ["descending after-party light", afterpartyStyles, ".party-floor-5 .afterparty-distant-building"],
   ["purple camo reward", afterpartyStyles, ".bonus-camo-unlocked .dj-sprite"],
+  ["runner gear and hazard readability", arcadeRepairStyles, ".afterparty-entity::after"],
+  ["runner high-contrast road", arcadeRepairStyles, ".afterparty-road"],
+  ["between-level Big Up below score box", game, "pre-level-two-like"],
+  ["post-hero cohesion layer", postHeroStyles, "Post-hero cohesion pass"],
+  ["post-hero existing palette system", postHeroStyles, "#00e7ff"],
+  ["game-only visual audit layer", gameVisualStyles, "Selectah Showdown"],
+  ["game shared cabinet visual grammar", gameVisualStyles, ".arcade-cabinet-bezel"],
+  ["game Level 1 background visual grammar", gameVisualStyles, ".game-grid-bg:not(.level-two-grid-bg)"],
+  ["game Level 2 background visual grammar", gameVisualStyles, ".level-two-booth"],
+  ["game player and dancer visual grammar", gameVisualStyles, ".dj-catcher-art,.dj-sprite"],
+  ["game prop visual grammar", gameVisualStyles, ".falling-object"],
+  ["game cut-in visual grammar", gameVisualStyles, ".rewind-reward-overlay"],
+  ["game bonus-stage visual grammar", gameVisualStyles, ".afterparty-runner-stage"],
   ["public crown marker", game, "hasBonusCrown"],
   ["Facebook RESPEKT action", game, "I FOLLOWED — RESPEKT"],
   ["personalized terminal finale", game, "BIG UP BADMAN"],

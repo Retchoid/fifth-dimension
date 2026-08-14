@@ -1,4 +1,30 @@
-# Amendment tasks
+# Project TODO
+
+## Arcade and post-hero design cohesion pass
+
+- [x] Audit the entire site’s typography, colour, texture, graphics, controls, cards, and section transitions for a unified gritty 1990s jungle-rave, boombox, tape, vaporwave, psychedelic, graffiti, hip-hop, and breakbeat aesthetic.
+- [x] Refine confirmed visual inconsistencies without changing any supplied text, section name, functional behavior, media content, or the approved first hero section.
+- [x] Verify responsive visual continuity from hero through archive, projects, release, arcade, visuals, booking, contact, and footer; then publish the unified system.
+- [x] Audit every Selectah Showdown visual system only: Level 1 and Level 2 backgrounds, cabinet/stage, player sprites, falling pickups/hazards, all cut-ins, and the After Party Gear Dash.
+- [x] Update every confirmed noncompliant game graphic to the same gritty 1990s rave, jungle, graffiti, hip-hop arcade standard without changing game copy, logic, values, transitions, or any non-game site content.
+- [x] Verify the complete game-only visual system across normal play, all splash scenes, Level 2, and the bonus stage, then publish the focused update.
+- [x] Re-run and document a post-change visual sweep for Level 1, active Level 2, Rewind, Wheel It Up, Police, Crowd, Pill, Crate, Headphones, BOH, Run the Riddim, and After Party Gear Dash.
+- [x] Capture post-change evidence that both levels’ pickups and hazards use the unified hard-outline, fixed-palette arcade treatment.
+- [x] Document a scene-by-scene correction matrix mapping every previously noncompliant game graphic to its exact visual-only source change.
+- [x] Capture live Level 1 hazard and broader Level 1/Level 2 pickup evidence under the new shared arcade graphic layer.
+- [x] Document complete asset-family proof for the player, dancers, every pickup, every hazard, all cut-ins, both stage backgrounds, cabinet, and bonus runner.
+- [x] Capture an expanded live Level 1 and Level 2 object sweep that spans multiple pickup and hazard types in each level.
+- [ ] Save and publish the focused game-only visual update after the full scene sweep passes.
+- [x] Apply the same gritty 1990s rave, jungle, graffiti, hip-hop, and arcade rendering language to every post-hero graphic, including archive cards, projects, release imagery, gallery framing, booking/contact marks, game props, and bonus-stage visuals.
+- [x] Retain the existing first hero section, all current section names, all written copy, and supplied artwork while unifying framing, palette ramps, pixel edges, shadows, texture, and interaction styling.
+- [x] Validate the full post-hero visual system at desktop and mobile sizes, then publish the cohesive graphic update.
+- [x] Move the Big Up / Facebook action beneath the following arcade panel rather than leaving it inside the current box.
+- [x] Reproduce and repair the missing between-level transition and splash-screen sequence without changing progression targets or existing copy.
+- [x] Replace or refine falling-object presentation so pickups and hazards read as grounded, dark-contoured 16-bit arcade props rather than generic shapes, while preserving values and collision logic.
+- [x] Audit and repair the Level 2 After Party Gear Dash for readable lanes, visible gear/hazards, fair collision spacing, and coherent 16-bit aesthetics.
+- [x] Preserve the entire first hero section, all section names, and all existing written content during the visual cohesion pass.
+- [x] Restyle only post-hero site sections with the existing magenta/cyan/charcoal palette and a consistent gritty vaporwave, 90s rave, jungle, graffiti, and hip-hop system.
+- [ ] Validate desktop/mobile arcade flow, bonus visibility, interactive controls, post-hero visual coherence, tests, typecheck, build, and publish.
 
 ## Last-four-prompts compliance audit
 
@@ -183,7 +209,7 @@
 - [x] Compare the original visual theme against the current fallback-based render and document the required replacements.
 - [x] Restore original character-led artwork and theme assets without reintroducing former deployment identifiers.
 - [x] Revalidate desktop and mobile rendering, typecheck, build, and tests.
-- [ ] Save a new checkpoint for the amended project.
+- [x] Save a new checkpoint for the amended project.
 
 ## User-supplied reference restoration
 

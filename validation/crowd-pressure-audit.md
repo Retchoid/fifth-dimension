@@ -64,3 +64,7 @@ The remaining work is the final mobile gameplay/audio/crown-path verification an
 ## Positive-pickup token cue audit
 
 Every positive pickup follows a two-part cue: its item-specific record scratch, platter, or adapter effect plays first, then `playPickupToken()` schedules a discrete square/triangle/sine coin strike after 220 milliseconds. This delay begins after the record scratch tail and keeps the coin cue audible rather than masked. The routing is shared by records, Lion of Judah heads, CDJs, mixers, turntables, and adapters; it remains guarded by the existing mute-aware audio-context helper. The selector audit now protects the token function, its invocation, two harmonic voices, and its post-scratch timing.
+
+## Arcade repair verification
+
+The Level 2 verifier now showed the record-spin bridge immediately after `startLevelTwo()` and then progressed into active Level 2 play. The After Party Gear Dash was checked in a non-held session: at 31% distance it held five live entities spanning three lanes (`rat`, `mic`, `mixer`, `headphones`, and `cdj`). The repair also slows the run to 4.2% progress per second, limits the active field to five entities, favors still-missing gear at 82%, and avoids spawning a new entity in a lane already occupied near the horizon. The full-stage visual check showed a high-contrast three-lane road, cyan gear outlines and labels, magenta hazard outlines, an enlarged runner, and a clearly identifiable after-party building/door landmark.

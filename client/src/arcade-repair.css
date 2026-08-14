@@ -1,0 +1,33 @@
+/* Arcade repair pass: visible lane logic, readable prop silhouettes, and a clearly separated handoff action. */
+.pre-level-two-overlay { align-content: center; gap: .65rem; }
+.pre-level-two-like { justify-self: center; width: fit-content; margin: 0; }
+
+.falling-object { filter: drop-shadow(3px 4px 0 #07070b) drop-shadow(0 0 7px currentColor) !important; }
+.falling-object.record .vinyl-record-sprite { border-width: 3px; box-shadow: inset 2px 2px 0 rgba(255,255,255,.18), inset -3px -3px 0 rgba(0,0,0,.62), 3px 4px 0 #07070b, 0 0 11px #00ddec; }
+.falling-object.cop .police-badge-sprite { filter: drop-shadow(3px 4px 0 #07070b) saturate(1.35); }
+.falling-object.cop .badge-shield { background: linear-gradient(135deg,#f8e5a6 0 24%,#d8872c 25% 58%,#7d3b19 59%); }
+.falling-object.cop .badge-siren-top { border: 2px solid #07070b; border-bottom: 0; background: #10131d; box-shadow: 3px 3px 0 #07070b; }
+.falling-object :is(.mixer-pickup,.turntable-pickup,.cdj-pickup) { border-width: 3px; box-shadow: inset 3px 3px 0 rgba(255,255,255,.32), inset -3px -3px 0 rgba(0,0,0,.46), 3px 4px 0 #07070b, 0 0 10px currentColor; }
+.falling-object .crowd-throw-sprite.bottle::before { border-width: 3px; box-shadow: inset 3px 0 0 #bdeef1, inset -3px 0 0 #89a8ad, 3px 4px 0 #07070b; }
+.falling-object .crowd-throw-sprite.pill::before { box-shadow: 3px 4px 0 #07070b; }
+.falling-object .crowd-throw-sprite.phone::before { box-shadow: 3px 4px 0 #07070b; }
+
+.afterparty-runner-stage { background: linear-gradient(180deg,#050813 0%,#101d40 48%,#080913 100%); }
+.afterparty-runner-stage::before { content:""; position:absolute; inset:0; z-index:3; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(255,255,255,.055) 0 1px,transparent 1px 5px); mix-blend-mode:screen; opacity:.55; }
+.afterparty-road { z-index:4; width:170%; height:73%; background:linear-gradient(90deg,#050713 0 8%,#151f43 9% 28%,#32385a 48% 52%,#151f43 72% 91%,#050713 92%); box-shadow:inset 0 0 0 3px rgba(0,231,255,.48),0 -12px 28px rgba(255,70,158,.33); }
+.afterparty-road span { width:4px; opacity:.92; }.afterparty-road span:nth-child(3) { width:3px; background:repeating-linear-gradient(180deg,#fff0a8 0 16px,transparent 16px 30px); }
+.afterparty-distant-building { z-index:8; border-color:#05050a; box-shadow:6px 8px 0 #05050a,0 0 0 3px rgba(255,90,177,.54),0 0 28px rgba(0,231,255,.36); }
+.afterparty-hud,.afterparty-gear-list,.bonus-tip { z-index:15; border-color:#ffdf94; background:rgba(5,7,18,.92); box-shadow:3px 3px 0 #07070b; }
+.afterparty-gear-list span { min-width:28px; min-height:24px; border:2px solid #51496d; color:#fff2ba; }.afterparty-gear-list .collected { border-color:#c8ff64; }
+.afterparty-dj-runner { z-index:14; filter:drop-shadow(0 0 11px rgba(0,231,255,.66)); }
+.afterparty-entity-layer { z-index:13; }
+.afterparty-entity { width:clamp(24px,5.8vw,68px); opacity:calc(.62 + var(--runner-depth) * .004); filter:drop-shadow(3px 4px 0 #05050a); }
+.afterparty-entity i { border:4px solid #05050a; box-shadow:inset 2px 2px 0 rgba(255,255,255,.28),inset -3px -3px 0 rgba(0,0,0,.38),3px 4px 0 #05050a; }
+.afterparty-entity:is(.headphones,.turntable,.mic,.speaker,.mixer,.cdj) i { outline:2px solid #00e7ff; outline-offset:2px; filter:drop-shadow(0 0 8px rgba(0,231,255,.85)); }
+.afterparty-entity:is(.cart,.can,.rock,.rat) i { outline:2px solid #ff5cad; outline-offset:2px; filter:drop-shadow(0 0 8px rgba(255,92,173,.75)); }
+.afterparty-entity::after { position:absolute; left:50%; bottom:-13px; padding:1px 3px; border:1px solid #05050a; background:#fff0ad; color:#10091b; font:900 7px/1 monospace; letter-spacing:.04em; transform:translateX(-50%); box-shadow:2px 2px 0 #05050a; }
+.afterparty-entity.headphones::after { content:"HP"; }.afterparty-entity.turntable::after { content:"TT"; }.afterparty-entity.mic::after { content:"MIC"; }.afterparty-entity.speaker::after { content:"SPK"; }.afterparty-entity.mixer::after { content:"MIX"; }.afterparty-entity.cdj::after { content:"CDJ"; }
+.afterparty-entity.cart::after,.afterparty-entity.can::after,.afterparty-entity.rock::after,.afterparty-entity.rat::after { content:"X"; background:#ff5cad; color:#fff; }
+.afterparty-door-ready { z-index:16; border-width:3px; }
+@media (max-width:650px) { .pre-level-two-like { width:min(100%,252px); }.afterparty-runner-stage { min-height:100%; }.afterparty-entity { width:clamp(28px,8vw,46px); }.afterparty-entity::after { bottom:-12px; font-size:6px; }.afterparty-gear-list { top:.45rem; left:.45rem; }.afterparty-hud { top:.45rem; right:.45rem; }.bonus-tip { bottom:.45rem; max-width:92%; font-size:.36rem; }.afterparty-dj-runner { bottom:4%; width:74px; height:116px; } }
+@media (prefers-reduced-motion:reduce) { .afterparty-runner-stage::before { display:none; } }

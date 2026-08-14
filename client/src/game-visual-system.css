@@ -1,0 +1,31 @@
+/* Selectah Showdown: one gritty 1990s rave, jungle, graffiti, hip-hop arcade rendering system. Presentation only. */
+.arcade-cabinet-bezel { background:linear-gradient(90deg,#07060c 0 2.6%,#43364a 2.7% 4%,#17121f 4.1% 95.9%,#43364a 96% 97.3%,#07060c 97.4%); box-shadow:0 0 0 3px #050407,0 0 0 6px #68506d,12px 16px 0 #050407,18px 22px 0 #ff4f9c,0 0 32px rgba(0,231,255,.2),0 20px 36px rgba(0,0,0,.72); }
+.arcade-cabinet-bezel::before,.arcade-cabinet-bezel::after { background:linear-gradient(90deg,#050407,#64566b 42%,#1e1826 57%,#050407); }
+.game-viewport { isolation:isolate; background:#070611; box-shadow:inset 0 0 0 3px #050407,inset 0 0 0 7px rgba(0,231,255,.16),inset 0 -30px 36px rgba(0,0,0,.7); }
+.game-viewport::after { content:""; position:absolute; inset:0; z-index:6; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(255,255,255,.055) 0 1px,transparent 1px 5px),linear-gradient(115deg,rgba(0,231,255,.08),transparent 29%,transparent 73%,rgba(255,79,156,.09)); mix-blend-mode:screen; opacity:.58; }
+.game-grid-bg:not(.level-two-grid-bg) { background-color:#090716; filter:saturate(1.2) contrast(1.18) brightness(.76); }
+.game-grid-bg:not(.level-two-grid-bg)::before { background:linear-gradient(to top,#050407 0 7%,rgba(16,12,26,.93) 8% 25%,transparent 26%),repeating-linear-gradient(90deg,transparent 0 8%,rgba(0,231,255,.2) 8.2% 8.8%,transparent 9% 17%),linear-gradient(112deg,transparent 0 16%,rgba(0,231,255,.32) 16.3% 17%,transparent 17.3% 82%,rgba(255,79,156,.32) 82.3% 83%,transparent 83.3%); opacity:.92; }
+.game-grid-bg:not(.level-two-grid-bg)::after { background:radial-gradient(ellipse at 50% 17%,rgba(255,154,84,.35),transparent 44%),linear-gradient(160deg,#4c394c,#12131f 63%),repeating-linear-gradient(90deg,rgba(0,231,255,.28) 0 2px,transparent 2px 11%),repeating-linear-gradient(145deg,rgba(255,79,156,.3) 0 2px,transparent 2px 18%); box-shadow:inset 0 6px 0 #050407,inset 0 10px 0 rgba(255,79,156,.44),0 -10px 22px rgba(0,0,0,.55); }
+.level-two-grid-bg { background-color:#080613; filter:saturate(1.24) contrast(1.2) brightness(.75); }
+.level-two-booth { background:linear-gradient(to top,#040308 0 16%,rgba(12,8,21,.82) 17% 39%,transparent 55%),radial-gradient(ellipse at 50% 9%,rgba(0,231,255,.25),transparent 37%),radial-gradient(ellipse at 30% 24%,rgba(255,79,156,.2),transparent 27%); }
+.level-two-booth::after { border-top-color:rgba(0,231,255,.46); border-bottom-color:#050407; background:repeating-linear-gradient(90deg,rgba(0,231,255,.25) 0 2px,transparent 2px 11%),linear-gradient(164deg,rgba(89,45,78,.84),rgba(8,6,13,.94)); }
+.rave-world-dressing::before { border-top-color:rgba(0,231,255,.32); border-bottom-color:#050407; }
+.rave-world-dressing::after { opacity:.84; }
+
+.dj-catcher::before { background:#040308; filter:none; box-shadow:0 3px 0 rgba(255,79,156,.28); }
+.dj-catcher-art,.dj-sprite,.level-two-dancer,.speaker-stack-dancer,.level-one-streak-dancer { image-rendering:pixelated; filter:drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.32)) drop-shadow(0 0 8px rgba(255,79,156,.35)); }
+.dj-sprite { filter:contrast(1.2) saturate(1.24) drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.28)); }
+
+.falling-object { filter:drop-shadow(3px 4px 0 #050407) drop-shadow(-1px -1px 0 rgba(255,242,185,.26)) !important; }
+.falling-object :is(.vinyl-record-sprite,.police-badge-sprite,.crowd-throw-sprite,.turntable-pickup,.cdj-pickup,.mixer-pickup,.adapter-pickup,.lion-head-pickup) { image-rendering:pixelated; }
+.falling-object.record { color:#00e7ff; }.falling-object :is(.mixer,.turntable,.adapter,.cdj,.lion) { color:#c6ff00; }.falling-object :is(.cop,.bottle,.apple,.pill,.phone) { color:#ff4f9c; }
+.vinyl-record-sprite { background:repeating-radial-gradient(circle,#07070c 0 3px,#30263a 4px 5px,#08070d 6px 8px); }.vinyl-label { box-shadow:inset 2px 2px 0 rgba(255,255,255,.28); }
+.police-badge-sprite,.crowd-throw-sprite,.turntable-pickup,.cdj-pickup,.mixer-pickup,.adapter-pickup { border-color:#050407; }
+
+:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay) { isolation:isolate; box-shadow:inset 0 0 0 5px #050407,inset 0 0 0 8px rgba(0,231,255,.32); }
+:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay)::after { content:""; position:absolute; inset:0; z-index:12; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,transparent 1px 5px),linear-gradient(125deg,rgba(0,231,255,.13),transparent 31%,transparent 68%,rgba(255,79,156,.16)); mix-blend-mode:screen; opacity:.6; }
+.police-seizure-overlay { background:radial-gradient(circle at 50% 42%,rgba(0,231,255,.35),rgba(255,79,156,.28) 38%,#08050f 78%); }.crowd-anger-overlay { background:radial-gradient(circle at 50% 50%,rgba(255,153,72,.28),rgba(255,0,122,.23) 43%,#08050e 79%); }.crate-bonus-overlay { background:radial-gradient(circle at 50% 38%,rgba(255,172,94,.52),rgba(17,7,28,.91) 61%),repeating-linear-gradient(0deg,rgba(0,231,255,.08) 0 1px,transparent 1px 6px); }.headphones-bonus-overlay { background:radial-gradient(circle at 50% 40%,rgba(0,231,255,.46),rgba(16,6,29,.94) 62%),repeating-linear-gradient(90deg,rgba(255,79,156,.1) 0 2px,transparent 2px 10px); }
+
+.afterparty-runner-stage { box-shadow:inset 0 0 0 5px #050407,inset 0 0 0 8px rgba(0,231,255,.34),inset 0 -30px 44px rgba(0,0,0,.64); }
+.afterparty-cityline { filter:contrast(1.17) saturate(1.22); }.afterparty-road { border-top:2px solid rgba(255,79,156,.58); }.afterparty-entity i,.afterparty-dj-runner img { image-rendering:pixelated; }
+@media (prefers-reduced-motion:reduce) { .game-viewport::after,:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay)::after { display:none; } }

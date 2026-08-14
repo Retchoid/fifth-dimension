@@ -67,7 +67,7 @@ const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "sp
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; startLevelTwo: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; startLevelTwo: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -1051,6 +1051,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setFinale(true);
       return;
     }
+    const beginLevelTwoArrival = () => {
     gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     levelRef.current = 2;
@@ -1129,7 +1130,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const arrivalDuration = holdSequenceDebugEnabled ? 25000 : 2350;
     levelTwoMarqueeTimerRef.current = window.setTimeout(() => setIsLevelTwoMarqueeVisible(false), arrivalDuration + 850);
     primeAudio();
-    playRecordScratch();
     if (bgMusicRef.current) bgMusicRef.current.pause();
     levelTwoMusicTimerRef.current = window.setTimeout(() => {
       if (bgMusicRef.current) {
@@ -1149,6 +1149,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       lastTimeRef.current = performance.now();
       queueGameFrame();
     }, arrivalDuration);
+    };
+
+    window.clearTimeout(recordTransitionTimerRef.current);
+    setIsLevelTwoTransitioning(false);
+    setIsLevelTwoMarqueeVisible(false);
+    setIsRecordTransitioning(true);
+    primeAudio();
+    playRecordScratch();
+    recordTransitionTimerRef.current = window.setTimeout(beginLevelTwoArrival, 560);
   };
 
   const startNoRequestBonus = () => {
@@ -1336,6 +1345,28 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         setActiveArcadeSequence(null);
         setIsRecordTransitioning(false);
       },
+      showItemPreview: (previewLevel) => {
+        gameRunIdRef.current += 1;
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        const types = previewLevel === 1
+          ? (["record", "cop", "pill", "phone", "cdj", "mixer", "turntable", "adapter"] as FallingItemType[])
+          : (["record", "bottle", "apple", "cop", "pill", "phone", "lion", "cdj", "mixer", "turntable", "adapter"] as FallingItemType[]);
+        const previewItems = types.map((type, index) => {
+          const rule = FALLING_ITEM_RULES[type];
+          return { id: -900 - index, x: 6 + (index % 4) * 23, y: 12 + Math.floor(index / 4) * 30, type, speed: 0, size: rule.size, hitRadius: rule.hitRadius, tilt: rule.tilt };
+        });
+        levelRef.current = previewLevel;
+        itemsRef.current = previewItems;
+        // Rendering uses the active-play flag; the frame loop remains cancelled above, so this is preview-only.
+        isPlayingRef.current = true;
+        setLevel(previewLevel);
+        setVisibleItems(previewItems);
+        setIsPlaying(true);
+        setGameOver(false);
+        setActiveArcadeSequence(null);
+        setIsRecordTransitioning(false);
+        setIsLevelTwoTransitioning(false);
+      },
       startLevelTwo,
       startAfterpartyBonus: () => {
         levelRef.current = 2;
@@ -1371,19 +1402,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     if (keysRef.current["left"]) moveBonusSideways(-1);
     if (keysRef.current["right"]) moveBonusSideways(1);
-    const nextProgress = Math.min(100, bonusProgressRef.current + (holdSequenceDebugEnabled ? 1 : 7.5) * dt);
+    const nextProgress = Math.min(100, bonusProgressRef.current + (holdSequenceDebugEnabled ? 1 : 4.2) * dt);
     bonusProgressRef.current = nextProgress;
     setBonusProgress(nextProgress);
 
     bonusSpawnTimerRef.current += dt;
-    if (!holdSequenceDebugEnabled && bonusSpawnTimerRef.current >= 0.56 && bonusObstaclesRef.current.length < 7) {
+    if (!holdSequenceDebugEnabled && bonusSpawnTimerRef.current >= 0.72 && bonusObstaclesRef.current.length < 5) {
       bonusSpawnTimerRef.current = 0;
       const missingGear = BONUS_GEAR_TYPES.filter((gear) => !bonusGearRef.current.includes(gear));
-      const isGear = missingGear.length > 0 && Math.random() < 0.74;
+      const isGear = missingGear.length > 0 && Math.random() < 0.82;
       const type = isGear
         ? missingGear[Math.floor(Math.random() * missingGear.length)]
         : BONUS_HAZARD_TYPES[Math.floor(Math.random() * BONUS_HAZARD_TYPES.length)];
-      bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, depth: 1, lane: Math.floor(Math.random() * 3), type, speed: 34 + Math.floor(Math.random() * 18) });
+      const openLanes = [0, 1, 2].filter((lane) => !bonusObstaclesRef.current.some((entity) => entity.lane === lane && entity.depth < 28));
+      const lanePool = openLanes.length ? openLanes : [0, 1, 2];
+      const lane = lanePool[Math.floor(Math.random() * lanePool.length)];
+      bonusObstaclesRef.current.push({ id: bonusNextIdRef.current++, depth: 1, lane, type, speed: 27 + Math.floor(Math.random() * 11) });
     }
 
     const nextObstacles: BonusRunnerEntity[] = [];
@@ -2515,7 +2549,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <span className="tape-play-copy">PLAY AGAIN / RESET</span>
               </button>
               <div className="arcade-quick-controls" aria-label="Arcade controls"><span>A / D</span> MOVE <i>•</i> <span>SPACE</span> JUMP</div>
-              <a className="facebook-like-button between-level-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
               <p>Enter a selector tag now to carry it straight into the Level 2 terminal. Leave it blank to choose a tag after Level 2 instead.</p>
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitPreLevelTwoScore}>
@@ -2565,6 +2598,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 </div>
               </div>
             </div>
+            <a className="facebook-like-button between-level-like pre-level-two-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
           </div>
         )}
 

@@ -12,6 +12,9 @@ import "./exclusive-third-strike.css";
 import "./cyan-paint-system.css";
 import "./arcade-scene-hold.css";
 import "./afterparty-runner.css";
+import "./arcade-repair.css";
+import "./posthero-cohesion.css";
+import "./game-visual-system.css";
 
 const queryClient = new QueryClient();
 
