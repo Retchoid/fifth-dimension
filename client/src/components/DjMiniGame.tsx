@@ -930,7 +930,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
   }, []);
 
-  const recordHighScore = (candidate: number, rawName: string, completedLevel: "level1" | "level2", hasBonusCrown = bonusCamoUnlocked) => {
+  const recordHighScore = (candidate: number, rawName: string, completedLevel: "level1" | "level2", hasBonusCrown = completedLevel === "level2" && bonusCamoUnlocked) => {
     const previousBest = highScoreRef.current;
     const isRecord = candidate > previousBest;
     const bestScore = Math.max(previousBest, candidate);
@@ -954,7 +954,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       return;
     }
     setSharedScoreStatus("transmitting");
-    submitSharedScore.mutate({ playerTag: safeName, score: candidate, completedLevel, hasBonusCrown });
+    submitSharedScore.mutate({ playerTag: safeName, score: candidate, completedLevel, hasBonusCrown: completedLevel === "level2" && hasBonusCrown });
   };
 
   const confirmFacebookRespect = () => {

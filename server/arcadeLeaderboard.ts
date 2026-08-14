@@ -8,6 +8,10 @@ export const arcadeScoreInput = z.object({
   score: z.number().int().min(0).max(100_000),
   completedLevel: z.enum(["level1", "level2"]),
   hasBonusCrown: z.boolean().optional().default(false),
+}).superRefine((value, ctx) => {
+  if (value.hasBonusCrown && value.completedLevel !== "level2") {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["hasBonusCrown"], message: "After Party crowns require a Level 2 completion." });
+  }
 });
 
 export type ArcadeScoreInput = z.infer<typeof arcadeScoreInput>;

@@ -45,6 +45,8 @@
 - [x] Add isolated tests and browser verification for eligibility, controls, objective, fail/success states, music, visual reward, crown, and non-bonus regression boundaries.
 - [x] Publish the fully audited bonus-level replacement only after all isolated checks pass.
 - [ ] Confirm the crown appears through the public read path when the first genuine Level 2 bonus-clear player submits a named score; do not seed a fabricated score.
+- [ ] Verify that a crowned leaderboard row is a genuine named Level 2 bonus-clear completion; trace and correct any route that can persist a crown on a Level 1 submission.
+- [ ] Add a regression guard that crowned submissions require the intended bonus-clear completion contract and cannot attach to an invalid completion level.
 - [x] Reproduce or clear the stale `boolean is not defined` browser-console finding and document a clean ordinary-session result.
 - [x] Verify the bonus-only breakbeat begins on the runner handoff and pauses when the runner fails or completes, without changing normal-level audio.
 - [x] Restart the development service and verify that no current runtime source produces `boolean is not defined` before publication.

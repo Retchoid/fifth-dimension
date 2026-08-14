@@ -20,6 +20,10 @@ describe("arcade public score input", () => {
     });
   });
 
+  it("rejects an After Party crown on a Level 1 score", () => {
+    expect(() => arcadeScoreInput.parse({ playerTag: "5d", score: 5000, completedLevel: "level1", hasBonusCrown: true })).toThrow("After Party crowns require a Level 2 completion.");
+  });
+
   it("rejects tags or scores outside the public leaderboard contract", () => {
     expect(() => arcadeScoreInput.parse({ playerTag: "name with more than twelve chars", score: 100, completedLevel: "level1" })).toThrow();
     expect(() => arcadeScoreInput.parse({ playerTag: "BAD!", score: -1, completedLevel: "level1" })).toThrow();
