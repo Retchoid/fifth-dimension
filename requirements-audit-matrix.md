@@ -1,21 +1,23 @@
-# 5th Dimension — Requirement-to-Implementation Audit Matrix
+# 5th Dimension Release, Experience, and Conversion Audit
 
-This matrix consolidates the requirements recorded in the project discussion into auditable groups. Each item must be verified against current source, visible behavior, and a fresh production build before it is marked confirmed. Items marked **Needs verification** are not claims of completion.
+This matrix is a release checklist for the current corrective pass. **Pass** means the item has a named source-level or visual validation. **Pending final validation** means it is implemented but still requires the final clean build, console, and representative-render pass before publication.
 
-| ID | Requirement group | Core behavior to verify | Current audit state |
+| ID | Requirement group | Evidence to confirm | Current state |
 | --- | --- | --- | --- |
-| S1 | Artist site structure | Hero, artist story, listen/archive, projects, visuals, booking, contact, and arcade remain in the intended order with working navigation. | Confirmed in current page source |
-| S2 | Visual identity | Magenta/cyan graffiti identity, vaporwave city, readable 5th Dimension title, and interactive flare behavior remain intact. | Confirmed in current page and stylesheet source |
-| S3 | Gallery and booking | Visual lightbox, booking mailto, subject prefix, date and location fields work on desktop and mobile. | Confirmed in current page source |
-| S4 | Exclusive release | Jersh In Case metadata, locked listening/download state, persistent unlock, waveform, and post-unlock card state are correct. | Confirmed in parent/game wiring; unlock timer repaired in current audit |
-| S5 | Mix archive | Nine supplied mixes have exact title/artist, cover, playback, download, metadata, and individual sharing. | Confirmed in current mix configuration |
-| G1 | Cabinet and start | Cabinet is visually physical, mute/start actions work, initial instructions match the actual game, and the primary start/reset action is ordered first. | Confirmed in current component and stylesheet source |
-| G2 | Level 1 core | 25-dubplate target, reliable movement/catches, four hearts, staged speakers, correct hazards, progressive difficulty, and music from start work. | Confirmed in current loop and state source |
-| G3 | Level 1 rewards | Combo reactions, pickup values, HUD flash, coin/token sound, crate/headphones scenes, rewind/Wheel It Up, chain release, dancers, and download timing work. | Repaired: coin cue made distinct and delayed after item cue; overlapping pickup splashes queue |
-| G4 | Hazard punishment | Police seizure, damaged mixer/recovery, pill overload, crowd exit, damage feedback, and heart deductions work consistently. | Confirmed in current hazard routing and overlays |
-| G5 | Level 1 handoff | Chain delay/break completes before unlock, replay is first, controls/Like/tag follow, and clean runs route to the bonus correctly. | Repaired: retained unlock reveal timer; confirmed current panel ordering |
-| G6 | Level 2 | 50-dubplate target, music section change, Crowd Pressure marquee, hype meter/cheer, dancer layer, item roster, finale, and personalized terminal message work. | Confirmed in current level routing and overlays |
-| G7 | No Request Bonus | Fire-escape setting, owner/door, rolling periodic obstacles, reliable desktop/mobile gestures, exit lighting, camo reward, and rewind return work. | Confirmed in current bonus loop and stage source |
-| G8 | Social actions | Game share, Facebook follow reminder, RESPECT fist-bump/tag splash, and between-level/finale Like actions work without claiming Facebook verification. | Confirmed in current component source |
-| G9 | Accessibility and resilience | Reduced motion, mute behavior, keyboard/mobile controls, local persistence, no blank page/runtime errors, and responsive layouts are intact. | Confirmed in current source and final production validation |
-| V1 | Evidence | Typecheck, production build, browser-console review, and representative desktop/mobile renders are clean. | Confirmed: TypeScript and production build pass; no recent console warnings/errors; desktop visual review approved the current direction |
+| S1 | Content architecture | Hero, listen, mix archive, projects, exclusive release, arcade, visuals, booking, and contact retain a coherent artist-site journey. | Pass in page source and mobile full-page render. |
+| S2 | Visual identity | Magenta/cyan graffiti mark, vaporwave city texture, Street Fighter-inspired surfaces, and readable 5th Dimension title appear without the erroneous right-side genre label. | Pass in mobile hero render. |
+| S3 | Hero conversion | A music-first signal label, legible artist proposition, primary “Enter the mixes” action, and secondary artist-story action are visible above the fold. | Pass in mobile hero render. |
+| S4 | Hero cleanup | The invalid “RAGGA / AMEN / BASS” box and the obsolete release-to-arcade decorative line layer are absent. | Pass in source and mobile render. |
+| S5 | Exclusive release gate | New visits are locked unless the exact verified v5 chain-break proof exists; v1/v2/v3/v4 values are purged. | Pass: deterministic stale-proof test and fresh browser verification. |
+| S6 | Music conversion | The exclusive release explains its game gate; unlocked state exposes direct listen/download/share controls; nine archive mixes retain direct playback, download, and per-mix sharing. | Pass in source; visual verification pending final run. |
+| G1 | Arcade entry | Physical cabinet, plain-language objective, visible start action, mute control, pickup legend, four-heart HUD, and mobile/keyboard input paths are present. | Pass: source audit and responsive mobile render. |
+| G2 | Level 1 progression | The 25-record Level 1 target pauses for the chain sequence; the release remains unavailable before that exact state. | Pass: gate test, callback guard, and clean locked-state browser verification. |
+| G3 | Splash sequences | Rewind, Wheel It Up, crate, headphones, police, crowd-exit, and pill-overload events use one ordered queue so no triggered event is dropped by a competing pause. | Pass: deterministic development sequence run and source guard. |
+| G4 | Level transition | Completion/finale transitions take precedence over pickup rewards, preventing a same-frame reward from trapping the player in Level 1 or blocking Level 2 completion. | Pass: explicit ordering assertion in the selector regression audit. |
+| G5 | Level 2 and bonus | The 50-record finale, Crowd Pressure marquee, hype meter, No Request Bonus, mobile gestures, and named finale remain wired after the queue change. | Pass: source audit and production build. |
+| Q1 | Visual hierarchy | Strong title scale, intentional contrast, one primary call to action per major section, and controlled decorative density are preserved on desktop and 390px mobile. | Pass: mobile render and independent desktop review. |
+| Q2 | Responsive readability | Core body copy, navigation, primary CTA, hero mark, release card, and game section do not require horizontal scrolling at mobile width. | Pass: 390px full-page render and desktop review. |
+| Q3 | Accessibility and resilience | Semantic headings, useful image alternatives, keyboard-reachable actions, reduced-motion fallbacks, mute control, and guarded local storage remain present. | Pass: source audit and clean browser console. |
+| M1 | Share and discovery | Title, social descriptions, public 1200×630 social image, and image alternative text name Selectah Showdown consistently. | Pass in emitted metadata inspection; final production output pending. |
+| M2 | Booking conversion | Booking contact, user subject, optional date/location, and practical set-detail prompt remain in the conversion path. | Pass in page source. |
+| V1 | Final release evidence | Selector audit, release-gate test, TypeScript, production build, clean console, public metadata/image check, and desktop/mobile review complete without blocking findings. | Pass. |

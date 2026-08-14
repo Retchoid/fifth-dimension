@@ -43,6 +43,7 @@ const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maxim
 const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["record", "record", "pill", "phone", "apple", "bottle"];
 const BONUS_REWARD = 250;
 type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
+type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones";
 interface PickupFlash {
   key: number;
   label: string;
@@ -145,6 +146,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [bonusCamoUnlocked, setBonusCamoUnlocked] = useState(false);
   const [bonusObstacles, setBonusObstacles] = useState<BonusObstacle[]>([]);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
+  const sequenceDemoEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-demo") === "sequences";
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
@@ -206,7 +208,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusRewindTimerRef = useRef<number>(0);
   const mixerPickupCountRef = useRef(0);
   const turntablePickupCountRef = useRef(0);
-  const pendingPickupSplashRef = useRef<Array<"crate" | "headphones">>([]);
+  const pendingArcadeSequenceRef = useRef<ArcadeSequence[]>([]);
   const comboBurstTimerRef = useRef<number>(0);
   const gunFingerShakeTimerRef = useRef<number>(0);
   const pickupFlashTimerRef = useRef<number>(0);
@@ -1089,17 +1091,50 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     requestRef.current = requestAnimationFrame(updateGame);
   };
 
-  const showNextQueuedPickupSplash = () => {
-    const nextSplash = pendingPickupSplashRef.current.shift();
-    if (nextSplash === "crate") {
+  const startArcadeSequence = (sequence: ArcadeSequence) => {
+    isPlayingRef.current = false;
+    setIsPlaying(false);
+    if (sequence === "rewind") {
+      setIsRewindPaused(true);
+      return;
+    }
+    if (sequence === "wheel") {
+      setIsWheelItUpPaused(true);
+      return;
+    }
+    if (sequence === "police") {
+      mixerDamagedRef.current = true;
+      recoveryProgressRef.current = 0;
+      setMixerDamaged(true);
+      setRecoveryProgress(0);
+      playPoliceRadioBurst();
+      setIsPoliceSeizurePaused(true);
+      return;
+    }
+    if (sequence === "crowd") {
+      playEmptyClubCue();
+      setIsCrowdAngerPaused(true);
+      return;
+    }
+    if (sequence === "pill") {
+      playPillOverloadCue();
+      setIsPillOverloadPaused(true);
+      return;
+    }
+    if (sequence === "crate") {
       setIsCrateBonusPaused(true);
-      return true;
+      return;
     }
-    if (nextSplash === "headphones") {
-      setIsHeadphonesBonusPaused(true);
-      return true;
+    setIsHeadphonesBonusPaused(true);
+  };
+
+  const resumeOrAdvanceArcadeSequence = () => {
+    const nextSequence = pendingArcadeSequenceRef.current.shift();
+    if (nextSequence) {
+      startArcadeSequence(nextSequence);
+      return;
     }
-    return false;
+    resumeMainGame();
   };
 
   const updateBonusGame = (time: number) => {
@@ -1227,7 +1262,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isRewindPaused) return;
     rewindPauseTimerRef.current = window.setTimeout(() => {
       setIsRewindPaused(false);
-      if (!showNextQueuedPickupSplash()) resumeMainGame();
+      resumeOrAdvanceArcadeSequence();
     }, 1900);
     return () => window.clearTimeout(rewindPauseTimerRef.current);
   }, [isRewindPaused]);
@@ -1236,7 +1271,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isWheelItUpPaused) return;
     wheelItUpPauseTimerRef.current = window.setTimeout(() => {
       setIsWheelItUpPaused(false);
-      if (!showNextQueuedPickupSplash()) resumeMainGame();
+      resumeOrAdvanceArcadeSequence();
     }, 2050);
     return () => window.clearTimeout(wheelItUpPauseTimerRef.current);
   }, [isWheelItUpPaused]);
@@ -1245,10 +1280,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isPoliceSeizurePaused) return;
     policeSeizurePauseTimerRef.current = window.setTimeout(() => {
       setIsPoliceSeizurePaused(false);
-      isPlayingRef.current = true;
-      setIsPlaying(true);
-      lastTimeRef.current = performance.now();
-      requestRef.current = requestAnimationFrame(updateGame);
+      resumeOrAdvanceArcadeSequence();
     }, 2150);
     return () => window.clearTimeout(policeSeizurePauseTimerRef.current);
   }, [isPoliceSeizurePaused]);
@@ -1257,10 +1289,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isCrowdAngerPaused) return;
     crowdAngerPauseTimerRef.current = window.setTimeout(() => {
       setIsCrowdAngerPaused(false);
-      isPlayingRef.current = true;
-      setIsPlaying(true);
-      lastTimeRef.current = performance.now();
-      requestRef.current = requestAnimationFrame(updateGame);
+      resumeOrAdvanceArcadeSequence();
     }, 2100);
     return () => window.clearTimeout(crowdAngerPauseTimerRef.current);
   }, [isCrowdAngerPaused]);
@@ -1269,10 +1298,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isPillOverloadPaused) return;
     pillOverloadPauseTimerRef.current = window.setTimeout(() => {
       setIsPillOverloadPaused(false);
-      isPlayingRef.current = true;
-      setIsPlaying(true);
-      lastTimeRef.current = performance.now();
-      requestRef.current = requestAnimationFrame(updateGame);
+      resumeOrAdvanceArcadeSequence();
     }, 2250);
     return () => window.clearTimeout(pillOverloadPauseTimerRef.current);
   }, [isPillOverloadPaused]);
@@ -1281,7 +1307,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isCrateBonusPaused) return;
     crateBonusPauseTimerRef.current = window.setTimeout(() => {
       setIsCrateBonusPaused(false);
-      if (!showNextQueuedPickupSplash()) resumeMainGame();
+      resumeOrAdvanceArcadeSequence();
     }, 2050);
     return () => window.clearTimeout(crateBonusPauseTimerRef.current);
   }, [isCrateBonusPaused]);
@@ -1290,7 +1316,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!isHeadphonesBonusPaused) return;
     headphonesBonusPauseTimerRef.current = window.setTimeout(() => {
       setIsHeadphonesBonusPaused(false);
-      if (!showNextQueuedPickupSplash()) resumeMainGame();
+      resumeOrAdvanceArcadeSequence();
     }, 2050);
     return () => window.clearTimeout(headphonesBonusPauseTimerRef.current);
   }, [isHeadphonesBonusPaused]);
@@ -1419,7 +1445,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     bonusObstaclesRef.current = [];
     mixerPickupCountRef.current = 0;
     turntablePickupCountRef.current = 0;
-    pendingPickupSplashRef.current = [];
+    pendingArcadeSequenceRef.current = [];
     setIsBonusEligible(false);
     setIsBonusSplashVisible(false);
     setIsBonusLevelActive(false);
@@ -1475,8 +1501,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const roll = Math.random();
       // Level 1 stays free of bottles and apple cores; only the Level 2 crowd throws them.
       const spawnedType: FallingItem["type"] = levelRef.current === 2
-        ? (roll < 0.55 ? "record" : roll < 0.64 ? "bottle" : roll < 0.72 ? "apple" : roll < 0.79 ? "cop" : roll < 0.84 ? "pill" : roll < 0.89 ? "phone" : roll < 0.925 ? "lion" : roll < 0.95 ? "cdj" : roll < 0.965 ? "mixer" : roll < 0.985 ? "turntable" : "adapter")
-        : (roll < 0.66 ? "record" : roll < 0.78 ? "cop" : roll < 0.84 ? "pill" : roll < 0.89 ? "phone" : roll < 0.94 ? "cdj" : roll < 0.955 ? "mixer" : roll < 0.98 ? "turntable" : "adapter");
+        ? (roll < 0.54 ? "record" : roll < 0.58 ? "bottle" : roll < 0.62 ? "apple" : roll < 0.67 ? "cop" : roll < 0.71 ? "pill" : roll < 0.75 ? "phone" : roll < 0.81 ? "lion" : roll < 0.87 ? "cdj" : roll < 0.94 ? "mixer" : roll < 0.99 ? "turntable" : "adapter")
+        : (roll < 0.57 ? "record" : roll < 0.65 ? "cop" : roll < 0.70 ? "pill" : roll < 0.74 ? "phone" : roll < 0.81 ? "cdj" : roll < 0.89 ? "mixer" : roll < 0.97 ? "turntable" : "adapter");
       const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : spawnedType === "lion" ? 46 : spawnedType === "cdj" || spawnedType === "mixer" || spawnedType === "turntable" ? 48 : spawnedType === "adapter" ? 30 : spawnedType === "phone" ? 28 : 30;
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 42 : 36;
@@ -1704,14 +1730,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     itemsRef.current = nextItems;
     if (structureChanged) setVisibleItems(nextItems);
-    if (pauseForCrateBonus && (pauseForRewind || pauseForWheelItUp || pauseForHeadphonesBonus)) {
-      pendingPickupSplashRef.current.push("crate");
-      pauseForCrateBonus = false;
-    }
-    if (pauseForHeadphonesBonus && (pauseForRewind || pauseForWheelItUp || pauseForCrateBonus)) {
-      pendingPickupSplashRef.current.push("headphones");
-      pauseForHeadphonesBonus = false;
-    }
     if (pauseAfterUnlock) {
       isPlayingRef.current = false;
       if (bgMusicRef.current) bgMusicRef.current.pause();
@@ -1723,63 +1741,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       unlockRevealTimerRef.current = window.setTimeout(() => {
         setUnlockRevealReady(true);
       }, 3000);
-      return;
-    }
-    if (pauseForRewind) {
-      isPlayingRef.current = false;
-      setIsPlaying(false);
-      setIsRewindPaused(true);
-      return;
-    }
-    if (pauseForWheelItUp) {
-      isPlayingRef.current = false;
-      setIsPlaying(false);
-      setIsWheelItUpPaused(true);
-      return;
-    }
-    if (pauseForPoliceSeizure) {
-      isPlayingRef.current = false;
-      setIsPlaying(false);
-      mixerDamagedRef.current = true;
-      recoveryProgressRef.current = 0;
-      setMixerDamaged(true);
-      setRecoveryProgress(0);
-      playPoliceRadioBurst();
-      setIsPoliceSeizurePaused(true);
-      return;
-    }
-    if (pauseForCrowdAnger) {
-      isPlayingRef.current = false;
-      setIsPlaying(false);
-      playEmptyClubCue();
-      setIsCrowdAngerPaused(true);
-      return;
-    }
-    if (pauseForPillOverload) {
-      isPlayingRef.current = false;
-      setIsPlaying(false);
-      playPillOverloadCue();
-      setIsPillOverloadPaused(true);
-      return;
-    }
-    if (pauseForCrateBonus && !pauseForWheelItUp && !pauseForRewind) {
-      isPlayingRef.current = false;
-      setIsPlaying(false);
-      setIsCrateBonusPaused(true);
-      return;
-    }
-    if (pauseForHeadphonesBonus && !pauseForWheelItUp && !pauseForRewind) {
-      isPlayingRef.current = false;
-      setIsPlaying(false);
-      setIsHeadphonesBonusPaused(true);
-      return;
-    }
-    if (advanceToLevelTwo) {
-      startLevelTwo();
-      return;
-    }
-    if (launchBonus) {
-      startNoRequestBonus();
       return;
     }
     if (completeLevelTwo) {
@@ -1798,8 +1759,40 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setFinale(true);
       return;
     }
+    if (advanceToLevelTwo) {
+      startLevelTwo();
+      return;
+    }
+    if (launchBonus) {
+      startNoRequestBonus();
+      return;
+    }
+    const queuedSequences: ArcadeSequence[] = [
+      ...(pauseForPoliceSeizure ? ["police" as const] : []),
+      ...(pauseForCrowdAnger ? ["crowd" as const] : []),
+      ...(pauseForPillOverload ? ["pill" as const] : []),
+      ...(pauseForWheelItUp ? ["wheel" as const] : []),
+      ...(pauseForRewind ? ["rewind" as const] : []),
+      ...(pauseForCrateBonus ? ["crate" as const] : []),
+      ...(pauseForHeadphonesBonus ? ["headphones" as const] : []),
+    ];
+    const nextSequence = queuedSequences.shift();
+    if (nextSequence) {
+      pendingArcadeSequenceRef.current.push(...queuedSequences);
+      startArcadeSequence(nextSequence);
+      return;
+    }
     if (isPlayingRef.current) requestRef.current = requestAnimationFrame(updateGame);
   };
+
+  useEffect(() => {
+    if (!sequenceDemoEnabled) return;
+    pendingArcadeSequenceRef.current = ["wheel", "crate", "headphones", "pill", "crowd", "police"];
+    startArcadeSequence("rewind");
+    return () => {
+      pendingArcadeSequenceRef.current = [];
+    };
+  }, [sequenceDemoEnabled]);
 
   useEffect(() => {
     return () => {
@@ -1831,7 +1824,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(respectShakeTimerRef.current);
       window.clearTimeout(damageFeedbackTimerRef.current);
       window.clearTimeout(unlockRevealTimerRef.current);
-      pendingPickupSplashRef.current = [];
+      pendingArcadeSequenceRef.current = [];
       if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     };
   }, []);

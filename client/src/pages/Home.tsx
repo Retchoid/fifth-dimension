@@ -394,7 +394,6 @@ export default function Home() {
           <div className="hero-noise" aria-hidden="true" />
           <div className="vapor-cityscape" aria-hidden="true" />
           <span className="graffiti-flare flare-left" role="img" tabIndex={0} aria-label="Dubplate sound system flare">DUBPLATE</span>
-          <span className="graffiti-flare flare-right" role="img" tabIndex={0} aria-label="Ragga, amen and bass flare">RAGGA / AMEN / BASS</span>
           <div className="hero-content">
             <p className="signal-label"><Zap size={15} fill="currentColor" /> DANCEHALL VIBES / DEEP JUNGLE BREAKS / SOUND SYSTEM WEIGHT</p>
             <h1 id="hero-title">
@@ -656,20 +655,6 @@ export default function Home() {
 
         {/* The exclusive drop hands visitors directly into Selectah Showdown. */}
         <div className="arcade-flow-shell">
-          <div className="arcade-graffiti-flow" aria-hidden="true">
-            <span className="arcade-flow-stamp">EXCLUSIVE DROP / PLAY THE ARCADE
-              <i className="arcade-paint-drip drip-cyan" />
-              <i className="arcade-paint-drip drip-lime" />
-              <i className="arcade-paint-drip drip-pink" />
-              <i className="arcade-paint-drip drip-yellow" />
-            </span>
-            <span className="arcade-splatter arcade-splatter-left">
-              {Array.from({ length: 8 }, (_, index) => <i key={`left-splat-${index}`} className={`splat-dot splat-${index}`} />)}
-            </span>
-            <span className="arcade-splatter arcade-splatter-right">
-              {Array.from({ length: 8 }, (_, index) => <i key={`right-splat-${index}`} className={`splat-dot splat-${index}`} />)}
-            </span>
-          </div>
           <DjMiniGame
             downloadUnlocked={downloadUnlocked}
             onUnlockDownload={unlockDownload}

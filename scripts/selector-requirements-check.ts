@@ -25,6 +25,10 @@ const requirements: Array<[string, string, string]> = [
   ["pill overload overlay", game, "isPillOverloadPaused"],
   ["three-mixer reward", game, "isCrateBonusPaused"],
   ["three-turntable reward", game, "isHeadphonesBonusPaused"],
+  ["ordered arcade sequence queue", game, "const pendingArcadeSequenceRef = useRef<ArcadeSequence[]>([])"],
+  ["shared arcade sequence launcher", game, "const startArcadeSequence = (sequence: ArcadeSequence) =>"],
+  ["queued sequence continuation", game, "const resumeOrAdvanceArcadeSequence = () =>"],
+  ["Level 2 transition priority", game, "if (advanceToLevelTwo) {\n      startLevelTwo();"],
   ["Level 1 18-dub dancers", game, "level-one-streak-dancers"],
   ["Level 2 dancers", game, "level-two-dancer-backdrop"],
   ["fire-escape bonus", game, "bonus-fire-escape-facade"],
@@ -36,7 +40,7 @@ const requirements: Array<[string, string, string]> = [
   ["bonus mobile touch surface", styles, "touch-action: none;"],
   ["Facebook RESPEKT action", game, "I FOLLOWED — RESPEKT"],
   ["personalized terminal finale", game, "BIG UP BADMAN"],
-  ["current versioned release key", releaseGate, "5d-selector-showdown-download-unlocked-v3"],
+  ["current versioned release key", releaseGate, "5d-selector-showdown-download-unlocked-v5"],
   ["exact release storage gate", home, "isReleaseUnlockStored"],
 ];
 
@@ -58,6 +62,21 @@ const mixTitles = [
 
 for (const title of mixTitles) {
   if (!home.includes(`title: "${title}"`)) throw new Error(`Missing archive mix: ${title}`);
+}
+
+if (home.includes("RAGGA / AMEN / BASS")) {
+  throw new Error("The removed hero RAGGA / AMEN / BASS label was reintroduced");
+}
+
+if (home.includes("arcade-graffiti-flow")) {
+  throw new Error("The removed release-to-arcade decorative line layer was reintroduced");
+}
+
+const levelTwoCompletionIndex = game.indexOf("if (completeLevelTwo) {");
+const levelTwoTransitionIndex = game.indexOf("if (advanceToLevelTwo) {");
+const queuedSequenceIndex = game.indexOf("const queuedSequences: ArcadeSequence[] = [");
+if (levelTwoCompletionIndex < 0 || levelTwoTransitionIndex < 0 || queuedSequenceIndex < 0 || levelTwoCompletionIndex > queuedSequenceIndex || levelTwoTransitionIndex > queuedSequenceIndex) {
+  throw new Error("Level completion or Level 2 handoff no longer takes priority over queued pickup splashes");
 }
 
 const prohibitedDirectionGlyphs = /[←→◀▶↔]/;

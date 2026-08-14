@@ -1,5 +1,14 @@
 # Amendment tasks
 
+## Arcade-sequence, release-lock, and hero-label regression repair
+
+- [x] Reproduce the unlocked release state in a clean storage session and trace every initial-load and game-callback path that can expose release controls.
+- [x] Restore each required splash sequence, including combo, crate, headphones, pill-overload, crowd-exit, chain-break, and Level 1-to-Level 2 handoff states.
+- [x] Verify life loss, pause/resume timing, ordered reward precedence, and all two-level transitions through deterministic gameplay-state tests.
+- [x] Remove the incorrect hero “RAGGA / AMEN / BASS” tag and the unwanted decorative line treatment shown in the supplied mobile references.
+- [x] Cross-reference the full site against the established usability, visual hierarchy, responsive readability, accessibility, and music-site conversion requirements.
+- [x] Validate clean desktop/mobile release states, live game sequences, typecheck, production build, runtime console, visual review, and publish only after all checks pass.
+
 ## Selectah controls and adaptive-card restoration
 
 - [ ] Update the game’s visible Selector wording to Selectah where requested.
