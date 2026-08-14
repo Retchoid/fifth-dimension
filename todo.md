@@ -2,6 +2,13 @@
 
 ## Arcade and post-hero design cohesion pass
 
+- [x] Audit the official-site adaptive card, every individual mix share card, the arcade share action, native-share availability, and copy-link fallbacks.
+- [x] Verify the required official-site and mix share metadata, image, title, artist, URL, and call-to-action behavior without altering existing content.
+- [ ] Repair any confirmed adaptive-card or share-flow regression, run full validation, and publish the verification update.
+- [x] Open and verify all nine individual mix share cards for exact cover, title, artist, CTA, and share control presentation.
+- [x] Re-run native-share and copy-link fallback checks across representative DnB and house mixes plus the arcade share action.
+- [ ] Run the full validation suite and save/publish the adaptive-card/share verification update.
+- [ ] Save a checkpoint for the completed adaptive-card/share audit and smoke-check one archive and arcade share action against the saved preview.
 - [x] Audit the entire site’s typography, colour, texture, graphics, controls, cards, and section transitions for a unified gritty 1990s jungle-rave, boombox, tape, vaporwave, psychedelic, graffiti, hip-hop, and breakbeat aesthetic.
 - [x] Refine confirmed visual inconsistencies without changing any supplied text, section name, functional behavior, media content, or the approved first hero section.
 - [x] Verify responsive visual continuity from hero through archive, projects, release, arcade, visuals, booking, contact, and footer; then publish the unified system.
@@ -14,7 +21,7 @@
 - [x] Capture live Level 1 hazard and broader Level 1/Level 2 pickup evidence under the new shared arcade graphic layer.
 - [x] Document complete asset-family proof for the player, dancers, every pickup, every hazard, all cut-ins, both stage backgrounds, cabinet, and bonus runner.
 - [x] Capture an expanded live Level 1 and Level 2 object sweep that spans multiple pickup and hazard types in each level.
-- [ ] Save and publish the focused game-only visual update after the full scene sweep passes.
+- [x] Save and publish the focused game-only visual update after the full scene sweep passes.
 - [x] Apply the same gritty 1990s rave, jungle, graffiti, hip-hop, and arcade rendering language to every post-hero graphic, including archive cards, projects, release imagery, gallery framing, booking/contact marks, game props, and bonus-stage visuals.
 - [x] Retain the existing first hero section, all current section names, all written copy, and supplied artwork while unifying framing, palette ramps, pixel edges, shadows, texture, and interaction styling.
 - [x] Validate the full post-hero visual system at desktop and mobile sizes, then publish the cohesive graphic update.
@@ -24,7 +31,7 @@
 - [x] Audit and repair the Level 2 After Party Gear Dash for readable lanes, visible gear/hazards, fair collision spacing, and coherent 16-bit aesthetics.
 - [x] Preserve the entire first hero section, all section names, and all existing written content during the visual cohesion pass.
 - [x] Restyle only post-hero site sections with the existing magenta/cyan/charcoal palette and a consistent gritty vaporwave, 90s rave, jungle, graffiti, and hip-hop system.
-- [ ] Validate desktop/mobile arcade flow, bonus visibility, interactive controls, post-hero visual coherence, tests, typecheck, build, and publish.
+- [x] Validate desktop/mobile arcade flow, bonus visibility, interactive controls, post-hero visual coherence, tests, typecheck, build, and publish.
 
 ## Last-four-prompts compliance audit
 
@@ -46,7 +53,7 @@
 - [x] Publish the fully audited bonus-level replacement only after all isolated checks pass.
 - [ ] Confirm the crown appears through the public read path when the first genuine Level 2 bonus-clear player submits a named score; do not seed a fabricated score.
 - [ ] Verify that a crowned leaderboard row is a genuine named Level 2 bonus-clear completion; trace and correct any route that can persist a crown on a Level 1 submission.
-- [ ] Add a regression guard that crowned submissions require the intended bonus-clear completion contract and cannot attach to an invalid completion level.
+- [x] Add a regression guard that crowned submissions require the intended bonus-clear completion contract and cannot attach to an invalid completion level.
 - [x] Reproduce or clear the stale `boolean is not defined` browser-console finding and document a clean ordinary-session result.
 - [x] Verify the bonus-only breakbeat begins on the runner handoff and pauses when the runner fails or completes, without changing normal-level audio.
 - [x] Restart the development service and verify that no current runtime source produces `boolean is not defined` before publication.
