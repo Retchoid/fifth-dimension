@@ -1,5 +1,14 @@
 # Amendment tasks
 
+## Last-four-prompts compliance audit
+
+- [ ] Verify one genuine player score through the live UI, database, and fresh-session public leaderboard without fabricating public player content.
+- [ ] Save and deliver a post-audit checkpoint containing the final audit report and evidence summary.
+- [x] Extract the four most recent change requests, including all stated constraints, then map each to implemented code and evidence.
+- [x] Verify durable public leaderboard behavior, three Level 2 name-handoff paths, shared falling-object rules, Crowd Pressure transition/meter placement, splash states, and requested visual removals.
+- [x] Identify and repair any confirmed omissions; add regression coverage where the current evidence is incomplete.
+- [x] Re-run database, browser, responsive, unit, arcade-audit, TypeScript, and production-build checks; publish an evidence-based audit report.
+
 ## Optional score-name completion rules
 
 - [x] Verify in-browser that a saved Level 1 tag carries into the Level 2 finale, a final-screen tag is used when no earlier tag exists, and a blank final submission shows a nameless terminal sequence.
