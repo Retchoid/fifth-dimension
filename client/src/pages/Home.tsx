@@ -343,8 +343,8 @@ export default function Home() {
       <header className="dj-header">
         <a className="header-brand" href="#top" aria-label="5th Dimension home">
           <span className="brand-pulse" aria-hidden="true" />
-          <b className="mini-5d">5D</b>
-          <span>5D / BASS TRANSMISSION</span>
+          <img className="header-seal" src="/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png" alt="" />
+          <span className="header-brand-copy"><small>5D / PIRATE RADIO AUTH</small><b>BASS TRANSMISSION</b></span>
         </a>
         <nav className="dj-nav" aria-label="Main navigation">
           <a href="#listen">Listen</a>
@@ -428,7 +428,7 @@ export default function Home() {
               <p className="eyebrow"><Radio size={15} /> AUDIO PORTAL / 01</p>
               <h2 id="listen-title">PLAY THE <em>TRANSMISSION.</em></h2>
             </div>
-            <p>Drop the needle, hit play, and let the subwoofers tell the story.</p>
+            <p>Needle down. Signal open. Let the bass speak.</p>
           </div>
           <div className="deck-grid">
             <article className="music-deck soundcloud-deck">
@@ -492,7 +492,7 @@ export default function Home() {
               <p className="eyebrow"><Disc3 size={15} /> MORE ROOMS / 02B</p>
               <h2 id="genre-mixes-title">MIX ARCHIVE &amp;<br /><em>OTHER FREQUENCIES.</em></h2>
             </div>
-            <p>Direct files from the 5D, Bobbyjackets, and DJ Hideaf archives. Choose a channel and play every set without leaving the signal.</p>
+            <p>Direct archive pulls from 5D, Bobbyjackets, and DJ Hideaf. Choose a channel. Run the whole tape.</p>
           </div>
           <div className="mix-archive-groups">
             <div className="mix-archive-group jungle-archive-group">
@@ -504,6 +504,7 @@ export default function Home() {
                       <img className="mix-archive-cover" src={mix.cover} alt={`Cover artwork for ${mix.title}`} />
                       <div><span className="mix-archive-id">{mix.id}</span><div className="mix-archive-titleline"><Disc3 size={25} /><div><h4>{mix.title}</h4><strong>{mix.artist}</strong></div></div></div>
                     </div>
+                    <span className="mix-catalog-stamp">5D ARCHIVE / DIRECT DUBPLATE / {mix.id}</span>
                     <p>{mix.description}</p>
                     <div className="mix-archive-actions"><audio controls preload="metadata" src={mix.file} aria-label={`Play ${mix.title} by ${mix.artist}`}>Your browser does not support direct audio playback.</audio><a href={mix.file} download={mix.downloadName} className="mix-download" aria-label={`Download ${mix.title} by ${mix.artist}`}><Download size={15} /><span>MP3</span></a><button type="button" className="mix-share" onClick={() => { setSharedMixId(mix.id); setMixShareStatus("idle"); }} aria-label={`Open share card for ${mix.title} by ${mix.artist}`}><Share2 size={15} /><span>SHARE</span></button></div>
                   </article>
@@ -519,6 +520,7 @@ export default function Home() {
                       <img className="mix-archive-cover" src={mix.cover} alt={`Cover artwork for ${mix.title}`} />
                       <div><span className="mix-archive-id">{mix.id}</span><div className="mix-archive-titleline"><Music2 size={24} /><div><h4>{mix.title}</h4><strong>{mix.artist}</strong></div></div></div>
                     </div>
+                    <span className="mix-catalog-stamp">5D ARCHIVE / LIVE CUT / {mix.id}</span>
                     <p>{mix.description}</p>
                     <div className="mix-archive-actions"><audio controls preload="metadata" src={mix.file} aria-label={`Play ${mix.title} by ${mix.artist}`}>Your browser does not support direct audio playback.</audio><a href={mix.file} download={mix.downloadName} className="mix-download" aria-label={`Download ${mix.title} by ${mix.artist}`}><Download size={15} /><span>MP3</span></a><button type="button" className="mix-share" onClick={() => { setSharedMixId(mix.id); setMixShareStatus("idle"); }} aria-label={`Open share card for ${mix.title} by ${mix.artist}`}><Share2 size={15} /><span>SHARE</span></button></div>
                   </article>
@@ -730,7 +732,7 @@ export default function Home() {
           <div className="booking-copy">
             <p className="eyebrow"><Zap size={15} fill="currentColor" /> BOOKING INQUIRIES / LIVE CHANNEL</p>
             <h2 id="booking-title">BRING THE<br /><em>FREQUENCY.</em></h2>
-            <p>For bookings, event enquiries, guest spots, and collaborative transmissions, send a quick signal. Your email client will open with the subject automatically marked <strong>“BOOKING!”</strong> before your subject.</p>
+            <p>Send the date, place, and room details. The outgoing subject is stamped <strong>“BOOKING!”</strong> before your signal.</p>
             <a className="booking-email" href={`mailto:${BOOKING_EMAIL}`}><Mail size={18} /> {BOOKING_EMAIL}</a>
           </div>
           <form className="booking-form" onSubmit={openBookingEmail}>
@@ -781,7 +783,7 @@ export default function Home() {
           <div className="contact-content">
             <p className="eyebrow"><Zap size={15} fill="currentColor" /> OPEN CHANNEL / 05</p>
             <h2 id="contact-title">LOCK INTO<br /><em>THE FREQUENCY.</em></h2>
-            <p>For bookings, collabs, set information, and everything that belongs after dark, hit one of the live channels below.</p>
+            <p>Choose a live channel for bookings, collabs, set intel, and after-dark signals.</p>
             <div className="contact-actions">
               <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="contact-link"><Instagram size={21} /><span>Instagram</span><ArrowUpRight size={18} /></a>
               <a href={FACEBOOK_URL} target="_blank" rel="noreferrer" className="contact-link"><Facebook size={21} /><span>Facebook</span><ArrowUpRight size={18} /></a>

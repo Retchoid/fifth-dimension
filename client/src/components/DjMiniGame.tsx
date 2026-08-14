@@ -44,6 +44,7 @@ const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["record", "record", "pill", "
 const BONUS_REWARD = 250;
 type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones";
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; startLevelTwo: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -132,6 +133,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isCrateBonusPaused, setIsCrateBonusPaused] = useState(false);
   const [isHeadphonesBonusPaused, setIsHeadphonesBonusPaused] = useState(false);
   const [isLevelTwoMarqueeVisible, setIsLevelTwoMarqueeVisible] = useState(false);
+  const [activeArcadeSequence, setActiveArcadeSequence] = useState<ArcadeSequence | null>(null);
+  const [isLevelTwoTransitioning, setIsLevelTwoTransitioning] = useState(false);
   const [mixerDamaged, setMixerDamaged] = useState(false);
   const [recoveryProgress, setRecoveryProgress] = useState(0);
   const [mixerRepairBurst, setMixerRepairBurst] = useState(false);
@@ -147,10 +150,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [bonusObstacles, setBonusObstacles] = useState<BonusObstacle[]>([]);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const sequenceDemoEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-demo") === "sequences";
+  const holdSequenceDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hold") === "true";
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>(0);
+  const gameRunIdRef = useRef(0);
   const lastTimeRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -179,6 +184,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const crowdCheerPlayedRef = useRef(false);
   const levelTwoMusicTimerRef = useRef<number>(0);
   const levelTwoMarqueeTimerRef = useRef<number>(0);
+  const levelTwoTransitionTimerRef = useRef<number>(0);
+  const arcadeSequenceTimerRef = useRef<number>(0);
   const mixerDamagedRef = useRef(false);
   const recoveryProgressRef = useRef(0);
   const mixerRepairTimerRef = useRef<number>(0);
@@ -917,6 +924,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, [levelTwoComplete, scoreSubmitted, submittedName]);
 
   const startLevelTwo = () => {
+    gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     levelRef.current = 2;
     setLevel(2);
@@ -938,7 +946,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setRecordsCaught(0);
     setLives(4);
     setCombo(1);
-    setIsPlaying(true);
+    setIsPlaying(false);
     setIsUnlockPaused(false);
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
@@ -947,6 +955,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsPillOverloadPaused(false);
     setIsCrateBonusPaused(false);
     setIsHeadphonesBonusPaused(false);
+    setActiveArcadeSequence(null);
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
@@ -962,11 +971,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setVisibleItems([]);
     spawnTimerRef.current = 0;
     lastTimeRef.current = performance.now();
-    isPlayingRef.current = true;
+    isPlayingRef.current = false;
     window.clearTimeout(levelTwoMusicTimerRef.current);
     window.clearTimeout(levelTwoMarqueeTimerRef.current);
+    window.clearTimeout(levelTwoTransitionTimerRef.current);
+    window.clearTimeout(arcadeSequenceTimerRef.current);
+    setIsLevelTwoTransitioning(true);
     setIsLevelTwoMarqueeVisible(true);
-    levelTwoMarqueeTimerRef.current = window.setTimeout(() => setIsLevelTwoMarqueeVisible(false), 1850);
+    const arrivalDuration = holdSequenceDebugEnabled ? 25000 : 2350;
+    levelTwoMarqueeTimerRef.current = window.setTimeout(() => setIsLevelTwoMarqueeVisible(false), arrivalDuration + 850);
     primeAudio();
     playRecordScratch();
     if (bgMusicRef.current) bgMusicRef.current.pause();
@@ -979,8 +992,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         bgMusicRef.current.currentTime = levelTwoOffset;
       }
       playBackgroundMusic();
-    }, 165);
-    requestRef.current = requestAnimationFrame(updateGame);
+    }, Math.min(760, arrivalDuration - 250));
+    levelTwoTransitionTimerRef.current = window.setTimeout(() => {
+      setIsLevelTwoTransitioning(false);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      queueGameFrame();
+    }, arrivalDuration);
   };
 
   const startNoRequestBonus = () => {
@@ -1084,16 +1103,27 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     damageFeedbackTimerRef.current = window.setTimeout(() => setDamageFeedback(null), 980);
   };
 
+  const queueGameFrame = () => {
+    const runId = gameRunIdRef.current;
+    requestRef.current = requestAnimationFrame((time) => {
+      if (!isPlayingRef.current || runId !== gameRunIdRef.current) return;
+      updateGame(time);
+    });
+  };
+
   const resumeMainGame = () => {
     isPlayingRef.current = true;
     setIsPlaying(true);
     lastTimeRef.current = performance.now();
-    requestRef.current = requestAnimationFrame(updateGame);
+    queueGameFrame();
   };
 
   const startArcadeSequence = (sequence: ArcadeSequence) => {
+    gameRunIdRef.current += 1;
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
     isPlayingRef.current = false;
     setIsPlaying(false);
+    setActiveArcadeSequence(sequence);
     if (sequence === "rewind") {
       setIsRewindPaused(true);
       return;
@@ -1131,11 +1161,26 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const resumeOrAdvanceArcadeSequence = () => {
     const nextSequence = pendingArcadeSequenceRef.current.shift();
     if (nextSequence) {
-      startArcadeSequence(nextSequence);
+      window.setTimeout(() => startArcadeSequence(nextSequence), 90);
       return;
     }
     resumeMainGame();
   };
+
+  useEffect(() => {
+    if (!import.meta.env.DEV || typeof window === "undefined") return;
+    const debugWindow = window as ArcadeDebugWindow;
+    debugWindow.__selectahDebug = {
+      triggerSequence: (sequence) => {
+        pendingArcadeSequenceRef.current = [];
+        startArcadeSequence(sequence);
+      },
+      startLevelTwo,
+    };
+    return () => {
+      delete debugWindow.__selectahDebug;
+    };
+  }, []);
 
   const updateBonusGame = (time: number) => {
     if (!bonusGameActiveRef.current) return;
@@ -1259,67 +1304,30 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, [chainBreakComplete, onUnlockDownload]);
 
   useEffect(() => {
-    if (!isRewindPaused) return;
-    rewindPauseTimerRef.current = window.setTimeout(() => {
-      setIsRewindPaused(false);
+    if (!activeArcadeSequence) return;
+    const sequenceDurations: Record<ArcadeSequence, number> = {
+      rewind: 2300,
+      wheel: 2450,
+      police: 2500,
+      crowd: 2450,
+      pill: 2600,
+      crate: 2350,
+      headphones: 2350,
+    };
+    const activeDuration = holdSequenceDebugEnabled ? 25000 : sequenceDurations[activeArcadeSequence];
+    arcadeSequenceTimerRef.current = window.setTimeout(() => {
+      if (activeArcadeSequence === "rewind") setIsRewindPaused(false);
+      if (activeArcadeSequence === "wheel") setIsWheelItUpPaused(false);
+      if (activeArcadeSequence === "police") setIsPoliceSeizurePaused(false);
+      if (activeArcadeSequence === "crowd") setIsCrowdAngerPaused(false);
+      if (activeArcadeSequence === "pill") setIsPillOverloadPaused(false);
+      if (activeArcadeSequence === "crate") setIsCrateBonusPaused(false);
+      if (activeArcadeSequence === "headphones") setIsHeadphonesBonusPaused(false);
+      setActiveArcadeSequence(null);
       resumeOrAdvanceArcadeSequence();
-    }, 1900);
-    return () => window.clearTimeout(rewindPauseTimerRef.current);
-  }, [isRewindPaused]);
-
-  useEffect(() => {
-    if (!isWheelItUpPaused) return;
-    wheelItUpPauseTimerRef.current = window.setTimeout(() => {
-      setIsWheelItUpPaused(false);
-      resumeOrAdvanceArcadeSequence();
-    }, 2050);
-    return () => window.clearTimeout(wheelItUpPauseTimerRef.current);
-  }, [isWheelItUpPaused]);
-
-  useEffect(() => {
-    if (!isPoliceSeizurePaused) return;
-    policeSeizurePauseTimerRef.current = window.setTimeout(() => {
-      setIsPoliceSeizurePaused(false);
-      resumeOrAdvanceArcadeSequence();
-    }, 2150);
-    return () => window.clearTimeout(policeSeizurePauseTimerRef.current);
-  }, [isPoliceSeizurePaused]);
-
-  useEffect(() => {
-    if (!isCrowdAngerPaused) return;
-    crowdAngerPauseTimerRef.current = window.setTimeout(() => {
-      setIsCrowdAngerPaused(false);
-      resumeOrAdvanceArcadeSequence();
-    }, 2100);
-    return () => window.clearTimeout(crowdAngerPauseTimerRef.current);
-  }, [isCrowdAngerPaused]);
-
-  useEffect(() => {
-    if (!isPillOverloadPaused) return;
-    pillOverloadPauseTimerRef.current = window.setTimeout(() => {
-      setIsPillOverloadPaused(false);
-      resumeOrAdvanceArcadeSequence();
-    }, 2250);
-    return () => window.clearTimeout(pillOverloadPauseTimerRef.current);
-  }, [isPillOverloadPaused]);
-
-  useEffect(() => {
-    if (!isCrateBonusPaused) return;
-    crateBonusPauseTimerRef.current = window.setTimeout(() => {
-      setIsCrateBonusPaused(false);
-      resumeOrAdvanceArcadeSequence();
-    }, 2050);
-    return () => window.clearTimeout(crateBonusPauseTimerRef.current);
-  }, [isCrateBonusPaused]);
-
-  useEffect(() => {
-    if (!isHeadphonesBonusPaused) return;
-    headphonesBonusPauseTimerRef.current = window.setTimeout(() => {
-      setIsHeadphonesBonusPaused(false);
-      resumeOrAdvanceArcadeSequence();
-    }, 2050);
-    return () => window.clearTimeout(headphonesBonusPauseTimerRef.current);
-  }, [isHeadphonesBonusPaused]);
+    }, activeDuration);
+    return () => window.clearTimeout(arcadeSequenceTimerRef.current);
+  }, [activeArcadeSequence]);
 
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -1376,6 +1384,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, [isPlaying, isBonusLevelActive, bonusIsJumping]);
 
   const startGame = () => {
+    gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     const ctx = getAudioContext();
@@ -1400,6 +1409,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(headphonesBonusPauseTimerRef.current);
     window.clearTimeout(levelTwoMusicTimerRef.current);
     window.clearTimeout(levelTwoMarqueeTimerRef.current);
+    window.clearTimeout(levelTwoTransitionTimerRef.current);
+    window.clearTimeout(arcadeSequenceTimerRef.current);
     window.clearTimeout(mixerRepairTimerRef.current);
     window.clearTimeout(bonusJumpTimerRef.current);
     window.clearTimeout(bonusSplashTimerRef.current);
@@ -1430,6 +1441,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsCrateBonusPaused(false);
     setIsHeadphonesBonusPaused(false);
     setIsLevelTwoMarqueeVisible(false);
+    setActiveArcadeSequence(null);
+    setIsLevelTwoTransitioning(false);
     setMixerDamaged(false);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
@@ -1475,7 +1488,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     nextIdRef.current = 1;
     spawnTimerRef.current = 0;
     lastTimeRef.current = performance.now();
-    requestRef.current = requestAnimationFrame(updateGame);
+    queueGameFrame();
   };
 
   const updateGame = (time: number) => {
@@ -1782,7 +1795,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       startArcadeSequence(nextSequence);
       return;
     }
-    if (isPlayingRef.current) requestRef.current = requestAnimationFrame(updateGame);
+    if (isPlayingRef.current) queueGameFrame();
   };
 
   useEffect(() => {
@@ -1972,7 +1985,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </button>
         </div>
 
-        {level === 2 && !gameOver && (
+        {isLevelTwoTransitioning && level === 2 && !gameOver && (
+          <div className="game-overlay level-two-arrival-overlay" role="status" aria-live="assertive">
+            <div className="level-two-arrival-grid" aria-hidden="true" />
+            <div className="level-two-arrival-copy">
+              <span>LEVEL 2 / LIVE RAVE TRANSMISSION</span>
+              <strong>CROWD<br />PRESSURE</strong>
+              <em>50 DUBPLATES TO HOLD THE DANCE</em>
+              <i>THE CROWD IS READY. RUN THE NEXT PLATE.</i>
+            </div>
+          </div>
+        )}
+
+        {level === 2 && !gameOver && !isLevelTwoTransitioning && (
           <div className="level-two-hype-meter level-two-hype-meter-in-world" aria-label={`Crowd hype: ${recordsCaught} of ${LEVEL_TWO_REQUIRED_RECORDS}`}>
             <div className="hype-meter-label"><span>CROWD HYPE</span><strong>{recordsCaught}/{LEVEL_TWO_REQUIRED_RECORDS}</strong></div>
             <div className="hype-meter-track" aria-hidden="true"><i style={{ width: `${Math.min(100, (recordsCaught / LEVEL_TWO_REQUIRED_RECORDS) * 100)}%` }} /></div>

@@ -1,5 +1,12 @@
 # Amendment tasks
 
+## Crowd Pressure and splash-state regression repair
+
+- [x] Reproduce the missing non-police overlays from the live arcade and identify the state, timer, or render condition that prevents them appearing.
+- [x] Add a clear Level 2 Crowd Pressure arrival transition before active Level 2 play begins.
+- [x] Reduce the Crowd Pressure meter and move it lower so it does not obstruct the Level 2 stage or HUD.
+- [x] Verify every non-police splash, Level 2 transition, responsive arcade layout, console, TypeScript, production build, and publish.
+
 ## Arcade-sequence, release-lock, and hero-label regression repair
 
 - [x] Reproduce the unlocked release state in a clean storage session and trace every initial-load and game-callback path that can expose release controls.
