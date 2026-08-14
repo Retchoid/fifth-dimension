@@ -1,0 +1,34 @@
+/* Final active-play safeguard: this file loads with the game component after legacy arcade layers. */
+.level-two-hype-meter.level-two-hype-meter-in-world {
+  width: 98px !important;
+  right: .42rem !important;
+  bottom: .36rem !important;
+  padding: .15rem .2rem !important;
+  gap: .08rem !important;
+  opacity: .82;
+  transform: rotate(1.2deg) scale(.82);
+  transform-origin: bottom right;
+}
+
+.level-two-hype-meter.level-two-hype-meter-in-world small {
+  display: none !important;
+}
+
+@media (max-width: 650px) {
+  .level-two-hype-meter.level-two-hype-meter-in-world {
+    width: 86px !important;
+    right: .25rem !important;
+    bottom: .25rem !important;
+    transform: rotate(1.2deg) scale(.78);
+  }
+}
+
+/* Development-only still frame for the phone-width dissolve verifier. */
+.viewport-verify-hold::before,
+.viewport-verify-hold .transition-spinfield,
+.viewport-verify-hold .transition-iris,
+.viewport-verify-hold .transition-vinyl,
+.viewport-verify-hold .transition-caption {
+  animation-play-state: paused !important;
+  animation-delay: -.42s !important;
+}

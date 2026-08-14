@@ -5,6 +5,7 @@ import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, C
 import type { ReleaseUnlockProof } from "@/lib/releaseGate";
 import { resolveFinaleTag, sanitizeSelectorTag } from "@/lib/selectorTag";
 import { trpc } from "@/lib/trpc";
+import "@/gameplay-clarity.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
@@ -189,10 +190,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const holdSequenceDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hold") === "true";
   const finaleVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-finale-verify") : null;
   const nameJourneyVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-name-journey") : null;
+  const viewportVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>(0);
+  const viewportVerificationPreparedRef = useRef(false);
   const gameRunIdRef = useRef(0);
   const lastTimeRef = useRef<number>(0);
   const isPlayingRef = useRef(false);
@@ -1394,6 +1397,65 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     };
   }, []);
 
+  useEffect(() => {
+    if (viewportVerificationPreparedRef.current || !["active", "dissolve", "live", "transition"].includes(viewportVerificationMode ?? "")) return;
+    viewportVerificationPreparedRef.current = true;
+    let transitionReleaseTimer = 0;
+    const verifierTimer = window.setTimeout(() => {
+      gameRunIdRef.current += 1;
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      levelRef.current = 2;
+      recordsCaughtRef.current = 6;
+      livesRef.current = 4;
+      comboRef.current = 3;
+      bohBonusAwardedRef.current = true;
+      riddimBonusAwardedRef.current = true;
+      policeBadgeHitsRef.current = 0;
+      bottleHitsRef.current = 0;
+      appleCoreHitsRef.current = 0;
+      pillHitsRef.current = 0;
+      const verificationItems: FallingItem[] = [
+        { id: -701, x: 10, y: 3, type: "record", speed: 9, ...FALLING_ITEM_RULES.record },
+        { id: -702, x: 82, y: 11, type: "cop", speed: 9, ...FALLING_ITEM_RULES.cop },
+        { id: -703, x: 18, y: 19, type: "bottle", speed: 9, ...FALLING_ITEM_RULES.bottle },
+        { id: -704, x: 76, y: 28, type: "apple", speed: 9, ...FALLING_ITEM_RULES.apple },
+        { id: -705, x: 12, y: 37, type: "lion", speed: 9, ...FALLING_ITEM_RULES.lion },
+        { id: -706, x: 84, y: 46, type: "cdj", speed: 9, ...FALLING_ITEM_RULES.cdj },
+      ];
+      itemsRef.current = viewportVerificationMode === "active" || viewportVerificationMode === "live" ? verificationItems : [];
+      spawnTimerRef.current = viewportVerificationMode === "live" ? -1000 : 0;
+      setLevel(2);
+      setRecordsCaught(6);
+      setLives(4);
+      setCombo(3);
+      setGameOver(false);
+      setIsLevelTwoTransitioning(false);
+      setIsLevelTwoMarqueeVisible(false);
+      setActiveArcadeSequence(null);
+      setVisibleItems(viewportVerificationMode === "active" || viewportVerificationMode === "live" ? verificationItems : []);
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      if (viewportVerificationMode === "dissolve") {
+        setIsRecordTransitioning(true);
+      } else if (viewportVerificationMode === "transition") {
+        setIsRecordTransitioning(true);
+        transitionReleaseTimer = window.setTimeout(() => {
+          setIsRecordTransitioning(false);
+          lastTimeRef.current = performance.now();
+          queueGameFrame();
+        }, 520);
+      } else {
+        setIsRecordTransitioning(false);
+        if (viewportVerificationMode === "live") queueGameFrame();
+      }
+    }, 0);
+    return () => {
+      window.clearTimeout(verifierTimer);
+      window.clearTimeout(transitionReleaseTimer);
+    };
+  }, [viewportVerificationMode]);
+
   const updateBonusGame = (time: number) => {
     if (!bonusGameActiveRef.current) return;
     const elapsed = Math.max(0, time - bonusLastTimeRef.current);
@@ -2192,12 +2254,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
         <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
         <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
-          <span className="rave-poster rave-poster-left">NO REQUESTS<br />AFTER 4AM</span>
-          <span className="rave-poster rave-poster-right">BASS =<br />FREE THERAPY</span>
-          <span className="rave-flyer-stack"><i>1997</i><b>ONE MORE TUNE?</b><em>ABSOLUTELY NOT.</em></span>
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>
-        <div className="game-hud">
+        <div className="game-hud game-hud-clear">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
           <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>
           <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{level === 2 ? LEVEL_TWO_REQUIRED_RECORDS : REQUIRED_RECORDS}</strong></div>
@@ -2464,9 +2523,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
 
         {isRecordTransitioning && !gameOver && (
-          <div className="game-overlay record-spin-transition" role="status" aria-live="polite">
+          <div className={`game-overlay record-spin-transition${viewportVerificationMode === "dissolve" ? " viewport-verify-hold" : ""}`} role="status" aria-live="polite">
+            <div className="transition-spinfield" aria-hidden="true" />
+            <div className="transition-iris transition-iris-outer" aria-hidden="true" />
+            <div className="transition-iris transition-iris-inner" aria-hidden="true" />
             <div className="transition-vinyl" aria-hidden="true"><i /><b>5D</b></div>
-            <span>SPIN BACK TO THE SET</span>
+            <span className="transition-caption">SPIN DISSOLVE / BACK TO THE SET</span>
           </div>
         )}
 

@@ -16,6 +16,13 @@
 - [x] Guard the final named Level 2 score submission against a bonus-clear UI-state race by using the durable bonus completion proof.
 - [ ] Verify the corrected crown path in the final regression pass and publish the bonus repair.
 - [ ] Confirm one genuine named Level 2 bonus-clear submission after the durable crown-proof repair persists hasBonusCrown=1 and displays through the public leaderboard read path.
+- [x] Reduce or relocate nonessential active-game overlays so falling pickups and hazards remain continuously visible and playable.
+- [x] Replace the record-only scene handoff with a full-screen record-spin dissolve that clearly transitions between splash scenes and active play.
+- [x] Verify the decluttered active stage and screen-spin dissolve in desktop and mobile gameplay before publishing.
+- [x] Run an active phone-width Level 2 session and confirm the compact HUD and Crowd Hype meter leave falling-object lanes visible.
+- [x] Trigger and document the screen-spin dissolve at phone width, including its mount, clearing behavior, and return to active play.
+- [x] Run a real phone-width Level 2 gameplay session with the normal game loop active and verify the compact HUD and reduced Crowd Hype meter do not block falling pickups or hazards.
+- [x] Run a non-held phone-width screen-spin dissolve test and document overlay mount, timer-based clear, and return to active Level 2 play after the mobile layout changes.
 - [x] Audit the official-site adaptive card, every individual mix share card, the arcade share action, native-share availability, and copy-link fallbacks.
 - [x] Verify the required official-site and mix share metadata, image, title, artist, URL, and call-to-action behavior without altering existing content.
 - [x] Repair any confirmed adaptive-card or share-flow regression, run full validation, and publish the verification update.

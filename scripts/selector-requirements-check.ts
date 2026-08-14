@@ -12,6 +12,7 @@ const afterpartyStyles = readFileSync(resolve(projectRoot, "client/src/afterpart
 const arcadeRepairStyles = readFileSync(resolve(projectRoot, "client/src/arcade-repair.css"), "utf8");
 const postHeroStyles = readFileSync(resolve(projectRoot, "client/src/posthero-cohesion.css"), "utf8");
 const gameVisualStyles = readFileSync(resolve(projectRoot, "client/src/game-visual-system.css"), "utf8");
+const gameplayClarityStyles = readFileSync(resolve(projectRoot, "client/src/gameplay-clarity.css"), "utf8");
 
 const requirements: Array<[string, string, string]> = [
   ["Selectah title", game, "SELECTAH"],
@@ -40,6 +41,15 @@ const requirements: Array<[string, string, string]> = [
   ["splash relay timer", game, "const arcadeSequenceTimerRef"],
   ["record-spin scene handoff", game, "isRecordTransitioning"],
   ["record-spin transition layer", game, "record-spin-transition"],
+  ["full-screen screen-spin dissolve field", game, "transition-spinfield"],
+  ["screen-spin iris dissolve", game, "transition-iris-outer"],
+  ["screen-spin dissolve caption", game, "SPIN DISSOLVE / BACK TO THE SET"],
+  ["compact active-game HUD", game, "game-hud-clear"],
+  ["compact active-game HUD styling", styles, ".game-hud-clear"],
+  ["no blocking active-stage poster boxes", game, "rave-glowstick rave-glowstick-one"],
+  ["mobile live-play verifier", game, "arcade-viewport-verify"],
+  ["mobile non-held transition verifier", game, "viewportVerificationMode === \"transition\""],
+  ["compact Hype meter safeguard", gameplayClarityStyles, ".level-two-hype-meter.level-two-hype-meter-in-world"],
   ["active police scene rendering", game, "activeArcadeSequence === \"police\""],
   ["active pill scene rendering", game, "activeArcadeSequence === \"pill\""],
   ["active rewind scene rendering", game, "activeArcadeSequence === \"rewind\""],
