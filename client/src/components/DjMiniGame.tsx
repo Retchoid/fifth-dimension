@@ -63,8 +63,8 @@ const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maxim
 const BONUS_OBSTACLE_TYPES: BonusObstacleType[] = ["record", "record", "pill", "phone", "apple", "bottle"];
 const BONUS_REWARD = 250;
 type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
-type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; startLevelTwo: () => void } };
+type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; startLevelTwo: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -154,6 +154,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isPillOverloadPaused, setIsPillOverloadPaused] = useState(false);
   const [isCrateBonusPaused, setIsCrateBonusPaused] = useState(false);
   const [isHeadphonesBonusPaused, setIsHeadphonesBonusPaused] = useState(false);
+  const [isRecordTransitioning, setIsRecordTransitioning] = useState(false);
   const [isLevelTwoMarqueeVisible, setIsLevelTwoMarqueeVisible] = useState(false);
   const [activeArcadeSequence, setActiveArcadeSequence] = useState<ArcadeSequence | null>(null);
   const [isLevelTwoTransitioning, setIsLevelTwoTransitioning] = useState(false);
@@ -206,6 +207,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const rewindPauseTimerRef = useRef<number>(0);
   const wheelItUpAwardedRef = useRef(false);
   const wheelItUpPauseTimerRef = useRef<number>(0);
+  const bohBonusAwardedRef = useRef(false);
+  const riddimBonusAwardedRef = useRef(false);
   const policeBadgeHitsRef = useRef(0);
   const policeSeizurePauseTimerRef = useRef<number>(0);
   const bottleHitsRef = useRef(0);
@@ -220,6 +223,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const levelTwoMarqueeTimerRef = useRef<number>(0);
   const levelTwoTransitionTimerRef = useRef<number>(0);
   const arcadeSequenceTimerRef = useRef<number>(0);
+  const recordTransitionTimerRef = useRef<number>(0);
   const mixerDamagedRef = useRef(false);
   const recoveryProgressRef = useRef(0);
   const mixerRepairTimerRef = useRef<number>(0);
@@ -1018,6 +1022,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     comboRef.current = 1;
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
+    bohBonusAwardedRef.current = false;
+    riddimBonusAwardedRef.current = false;
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
     appleCoreHitsRef.current = 0;
@@ -1040,6 +1046,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsPillOverloadPaused(false);
     setIsCrateBonusPaused(false);
     setIsHeadphonesBonusPaused(false);
+    setIsRecordTransitioning(false);
     setActiveArcadeSequence(null);
     setMixerDamaged(false);
     setRecoveryProgress(0);
@@ -1061,6 +1068,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(levelTwoMarqueeTimerRef.current);
     window.clearTimeout(levelTwoTransitionTimerRef.current);
     window.clearTimeout(arcadeSequenceTimerRef.current);
+    window.clearTimeout(recordTransitionTimerRef.current);
     setIsLevelTwoTransitioning(true);
     setIsLevelTwoMarqueeVisible(true);
     const arrivalDuration = holdSequenceDebugEnabled ? 25000 : 2350;
@@ -1206,6 +1214,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const startArcadeSequence = (sequence: ArcadeSequence) => {
     gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    window.clearTimeout(recordTransitionTimerRef.current);
+    setIsRecordTransitioning(false);
     isPlayingRef.current = false;
     setIsPlaying(false);
     setActiveArcadeSequence(sequence);
@@ -1240,7 +1250,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setIsCrateBonusPaused(true);
       return;
     }
-    setIsHeadphonesBonusPaused(true);
+    if (sequence === "headphones") {
+      setIsHeadphonesBonusPaused(true);
+      return;
+    }
+    if (sequence === "boh") {
+      playSubwooferPop();
+      return;
+    }
+    playRecordScratch();
   };
 
   const resumeOrAdvanceArcadeSequence = () => {
@@ -1259,6 +1277,24 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       triggerSequence: (sequence) => {
         pendingArcadeSequenceRef.current = [];
         startArcadeSequence(sequence);
+      },
+      triggerRecordTransition: () => {
+        window.clearTimeout(recordTransitionTimerRef.current);
+        setIsRecordTransitioning(true);
+        recordTransitionTimerRef.current = window.setTimeout(() => setIsRecordTransitioning(false), holdSequenceDebugEnabled ? 25000 : 520);
+      },
+      showLevelOneSpeakers: () => {
+        gameRunIdRef.current += 1;
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        levelRef.current = 1;
+        recordsCaughtRef.current = 15;
+        isPlayingRef.current = false;
+        setLevel(1);
+        setRecordsCaught(15);
+        setIsPlaying(false);
+        setGameOver(false);
+        setActiveArcadeSequence(null);
+        setIsRecordTransitioning(false);
       },
       startLevelTwo,
     };
@@ -1398,6 +1434,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       pill: 2600,
       crate: 2350,
       headphones: 2350,
+      boh: 1750,
+      riddim: 2100,
     };
     const activeDuration = holdSequenceDebugEnabled ? 25000 : sequenceDurations[activeArcadeSequence];
     arcadeSequenceTimerRef.current = window.setTimeout(() => {
@@ -1409,9 +1447,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       if (activeArcadeSequence === "crate") setIsCrateBonusPaused(false);
       if (activeArcadeSequence === "headphones") setIsHeadphonesBonusPaused(false);
       setActiveArcadeSequence(null);
-      resumeOrAdvanceArcadeSequence();
+      setIsRecordTransitioning(true);
+      playRecordScratch();
+      recordTransitionTimerRef.current = window.setTimeout(() => {
+        setIsRecordTransitioning(false);
+        resumeOrAdvanceArcadeSequence();
+      }, 520);
     }, activeDuration);
-    return () => window.clearTimeout(arcadeSequenceTimerRef.current);
+    return () => {
+      window.clearTimeout(arcadeSequenceTimerRef.current);
+    };
   }, [activeArcadeSequence]);
 
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
@@ -1478,6 +1523,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     chainBreakImpactPlayedRef.current = false;
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
+    bohBonusAwardedRef.current = false;
+    riddimBonusAwardedRef.current = false;
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
     appleCoreHitsRef.current = 0;
@@ -1496,6 +1543,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(levelTwoMarqueeTimerRef.current);
     window.clearTimeout(levelTwoTransitionTimerRef.current);
     window.clearTimeout(arcadeSequenceTimerRef.current);
+    window.clearTimeout(recordTransitionTimerRef.current);
     window.clearTimeout(mixerRepairTimerRef.current);
     window.clearTimeout(bonusJumpTimerRef.current);
     window.clearTimeout(bonusSplashTimerRef.current);
@@ -1526,6 +1574,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsPillOverloadPaused(false);
     setIsCrateBonusPaused(false);
     setIsHeadphonesBonusPaused(false);
+    setIsRecordTransitioning(false);
     setIsLevelTwoMarqueeVisible(false);
     setActiveArcadeSequence(null);
     setIsLevelTwoTransitioning(false);
@@ -1627,6 +1676,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     let pauseForPillOverload = false;
     let pauseForCrateBonus = false;
     let pauseForHeadphonesBonus = false;
+    let pauseForBohBonus = false;
+    let pauseForRiddimBonus = false;
     let launchBonus = false;
     let advanceToLevelTwo = false;
     let completeLevelTwo = false;
@@ -1659,6 +1710,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const pickupLabel = item.type === "lion" ? "LION +2" : item.type === "cdj" ? "CDJ +5" : item.type === "mixer" ? "MIX +4" : item.type === "turntable" ? "DECK +3" : item.type === "adapter" ? "45 +2" : "DUB +1";
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
           currentScore += pointsEarned;
+          const nextRecordsCaught = recordsCaughtRef.current + pickupValue;
           window.clearTimeout(pickupFlashTimerRef.current);
           setPickupFlash({ key: item.id, label: pickupLabel });
           pickupFlashTimerRef.current = window.setTimeout(() => setPickupFlash(null), 820);
@@ -1674,6 +1726,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             rewindAwardedRef.current = true;
             currentScore += 5;
             pauseForRewind = true;
+          }
+          if (nextRecordsCaught >= 5 && !bohBonusAwardedRef.current) {
+            bohBonusAwardedRef.current = true;
+            currentScore += 250;
+            pauseForBohBonus = true;
+          }
+          if (levelRef.current === 2 && nextRecordsCaught >= 15 && !riddimBonusAwardedRef.current) {
+            riddimBonusAwardedRef.current = true;
+            currentScore += 500;
+            pauseForRiddimBonus = true;
           }
           if (item.type === "mixer") {
             mixerPickupCountRef.current += 1;
@@ -1707,7 +1769,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             }
           }
           scoreRef.current = currentScore;
-          const nextRecordsCaught = recordsCaughtRef.current + pickupValue;
           recordsCaughtRef.current = nextRecordsCaught;
           setScore(currentScore);
           setRecordsCaught(nextRecordsCaught);
@@ -1874,6 +1935,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       ...(pauseForPoliceSeizure ? ["police" as const] : []),
       ...(pauseForCrowdAnger ? ["crowd" as const] : []),
       ...(pauseForPillOverload ? ["pill" as const] : []),
+      ...(pauseForBohBonus ? ["boh" as const] : []),
+      ...(pauseForRiddimBonus ? ["riddim" as const] : []),
       ...(pauseForWheelItUp ? ["wheel" as const] : []),
       ...(pauseForRewind ? ["rewind" as const] : []),
       ...(pauseForCrateBonus ? ["crate" as const] : []),
@@ -1890,7 +1953,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   useEffect(() => {
     if (!sequenceDemoEnabled) return;
-    pendingArcadeSequenceRef.current = ["wheel", "crate", "headphones", "pill", "crowd", "police"];
+    pendingArcadeSequenceRef.current = ["wheel", "crate", "headphones", "pill", "crowd", "police", "boh", "riddim"];
     startArcadeSequence("rewind");
     return () => {
       pendingArcadeSequenceRef.current = [];
@@ -1927,6 +1990,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(respectShakeTimerRef.current);
       window.clearTimeout(damageFeedbackTimerRef.current);
       window.clearTimeout(unlockRevealTimerRef.current);
+      window.clearTimeout(recordTransitionTimerRef.current);
       pendingArcadeSequenceRef.current = [];
       if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
     };
@@ -2080,7 +2144,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="level-two-arrival-grid" aria-hidden="true" />
             <div className="level-two-arrival-copy">
               <span>LEVEL 2 / LIVE RAVE TRANSMISSION</span>
-              <strong>CROWD<br />PRESSURE</strong>
+              <strong>CROWD PRESSURE<br />BONUS!</strong>
               <em>50 DUBPLATES TO HOLD THE DANCE</em>
               <i>THE CROWD IS READY. RUN THE NEXT PLATE.</i>
             </div>
@@ -2098,7 +2162,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {isLevelTwoMarqueeVisible && level === 2 && !gameOver && (
           <div className="level-two-transition-marquee" role="status" aria-live="polite">
             <span>LEVEL 2</span>
-            <strong>CROWD PRESSURE</strong>
+            <strong>CROWD PRESSURE BONUS!</strong>
             <i aria-hidden="true">◆ SOUND SYSTEM ◆</i>
           </div>
         )}
@@ -2128,7 +2192,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isPillOverloadPaused && !isCrateBonusPaused && !isHeadphonesBonusPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
+        {!supporterGateRequired && !isPlaying && !gameOver && !activeArcadeSequence && !isRecordTransitioning && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isPillOverloadPaused && !isCrateBonusPaused && !isHeadphonesBonusPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -2143,6 +2207,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 </span>
                 <span className="tape-play-copy">Start Session</span>
               </button>
+              <div className="arcade-start-leaderboard" aria-label="Public arcade high scores">
+                <span>LIVE PUBLIC BOARD</span>
+                {sharedLeaderboardQuery.isLoading ? (
+                  <p>LOADING SCORES…</p>
+                ) : leaderboard.length ? (
+                  <ol>
+                    {leaderboard.slice(0, 3).map((entry, index) => <li key={entry.id}><b>#{index + 1}</b><strong>{entry.playerTag}</strong><em>{entry.score}</em></li>)}
+                  </ol>
+                ) : (
+                  <p>NO SCORES TRANSMITTED YET</p>
+                )}
+              </div>
               <PickupLegend level={level} />
             </div>
           </div>
@@ -2204,7 +2280,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {isRewindPaused && !gameOver && (
+        {activeArcadeSequence === "rewind" && !gameOver && (
           <div className="game-overlay rewind-reward-overlay" role="status" aria-live="assertive">
             <div className="rewind-time-tunnel" aria-hidden="true">{Array.from({ length: 7 }, (_, index) => <i key={index} />)}</div>
             <div className="rewind-record-splash" aria-hidden="true">
@@ -2223,21 +2299,21 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {isCrateBonusPaused && !gameOver && (
+        {activeArcadeSequence === "crate" && !gameOver && (
           <div className="game-overlay crate-bonus-overlay" role="status" aria-live="assertive">
             <div className="crate-stack" aria-hidden="true"><span className="crate-record crate-record-one" /><span className="crate-record crate-record-two" /><span className="crate-record crate-record-three" /><i>5D<br />DUBS</i></div>
             <div className="pickup-bonus-copy"><span>3 MIXERS COLLECTED</span><strong>RECORD CRATE<br />BONUS!</strong><em>A DJ ACCIDENTALLY PUT HIS RECORDS<br />IN YOUR CRATE!</em></div>
           </div>
         )}
 
-        {isHeadphonesBonusPaused && !gameOver && (
+        {activeArcadeSequence === "headphones" && !gameOver && (
           <div className="game-overlay headphones-bonus-overlay" role="status" aria-live="assertive">
             <div className="rave-headphones" aria-hidden="true"><i /><b /><em /></div>
             <div className="pickup-bonus-copy"><span>3 TURNTABLES COLLECTED</span><strong>HEADPHONES<br />READY!</strong><em>YOU REMEMBERED TO BRING YOUR<br />HEADPHONES TO THE RAVE!</em></div>
           </div>
         )}
 
-        {isWheelItUpPaused && !gameOver && (
+        {activeArcadeSequence === "wheel" && !gameOver && (
           <div className="game-overlay wheel-it-up-overlay" role="status" aria-live="assertive">
             <div className="wheel-turntable" aria-hidden="true">
               <span className="wheel-vinyl" />
@@ -2254,7 +2330,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {isPoliceSeizurePaused && !gameOver && (
+        {activeArcadeSequence === "police" && !gameOver && (
           <div className="game-overlay police-seizure-overlay" role="status" aria-live="assertive">
             <div className="police-seizure-grid" aria-hidden="true" />
             <div className="sega-police-car" aria-hidden="true">
@@ -2280,7 +2356,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {isCrowdAngerPaused && !gameOver && (
+        {activeArcadeSequence === "crowd" && !gameOver && (
           <div className="game-overlay crowd-anger-overlay" role="status" aria-live="assertive">
             <div className="empty-club-room" aria-hidden="true">
               <span className="empty-club-light empty-club-light-left" /><span className="empty-club-light empty-club-light-right" />
@@ -2297,12 +2373,34 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {isPillOverloadPaused && !gameOver && (
+        {activeArcadeSequence === "pill" && !gameOver && (
           <div className="game-overlay pill-overload-overlay" role="status" aria-live="assertive">
             <div className="pill-trip-burst" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index} className={`pill-trip-ray pill-trip-ray-${index % 6}`} />)}</div>
-            <div className="dopey-dj-portrait" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="dopey-pupil pupil-left" /><span className="dopey-pupil pupil-right" /><span className="dopey-smile" /></div>
-            <div className="pill-overload-copy"><span>PILL PRESSURE / 3 HITS</span><strong>TOO HIGH<br />TO PLAY!</strong><em>YOU ATE A PILL AND ARE TOO HIGH TO PLAY.</em></div>
+            <div className="dopey-dj-portrait" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="dopey-pupil pupil-left" /><span className="dopey-pupil pupil-right" /><span className="dopey-smile"><i /><i /><i /></span></div>
+            <div className="pill-pitch-wobble" aria-hidden="true"><i>PITCH</i><b>WOBBLE</b><i>PITCH</i></div>
+            <div className="pill-overload-copy"><span>PILL PRESSURE / 3 HITS / PITCH WOBBLE</span><strong>TOO HIGH<br />TO PLAY!</strong><em>YOU ATE A PILL. THE RIDDIM IS MELTING.</em></div>
             <div className="pill-floaters" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <i key={index} className={`pill-floater pill-floater-${index % 4}`} />)}</div>
+          </div>
+        )}
+
+        {activeArcadeSequence === "boh" && !gameOver && (
+          <div className="game-overlay selector-salute-overlay" role="status" aria-live="assertive">
+            <div className="selector-salute-record" aria-hidden="true"><i /><b>5D</b></div>
+            <div className="selector-salute-copy"><span>5 DUBPLATES / +250</span><strong>BOH!<br />BOH!<br />BIG UP</strong><em>THE SPEAKERS HEARD THAT ONE.</em></div>
+          </div>
+        )}
+
+        {activeArcadeSequence === "riddim" && !gameOver && (
+          <div className="game-overlay run-riddim-overlay" role="status" aria-live="assertive">
+            <div className="riddim-speaker-stack" aria-hidden="true"><i /><i /><i /><b /></div>
+            <div className="run-riddim-copy"><span>LEVEL 2 / 15 DUBPLATES / +500</span><strong>RUN THE<br />RIDDIM!</strong><em>THE DANCEFLOOR IS LOCKED IN.</em></div>
+          </div>
+        )}
+
+        {isRecordTransitioning && !gameOver && (
+          <div className="game-overlay record-spin-transition" role="status" aria-live="polite">
+            <div className="transition-vinyl" aria-hidden="true"><i /><b>5D</b></div>
+            <span>SPIN BACK TO THE SET</span>
           </div>
         )}
 
@@ -2612,13 +2710,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
 
         {/* Level 1 sound-system assembly: half stack at 10, full stack at 15, and a dancer payoff at the 18-dub streak. */}
-        <div className={`dj-booth-stage${level === 1 && recordsCaught >= 10 ? " speakers-half-raised" : ""}${level === 1 && recordsCaught >= 15 ? " speakers-full-raised" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
+        <div className={`dj-booth-stage${level === 1 && recordsCaught >= 10 ? " speakers-half-raised" : ""}${level === 1 && recordsCaught >= 15 ? " speakers-full-raised" : ""}${level === 2 ? " level-two-speaker-stage" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
           <div className="speaker-tower speaker-tower-left">
             <span className="speaker-top-vents"><i /><i /><i /></span><span className="speaker-corner-plate plate-one" /><span className="speaker-corner-plate plate-two" /><span className="speaker-grille" /><span className="speaker-cone"><i /></span><span className="speaker-cone speaker-cone-small"><i /></span><span className="speaker-side-vent vent-left" /><span className="speaker-side-vent vent-right" /><span className="speaker-support-leg" /><span className="speaker-cable" />
           </div>
           <div className="speaker-tower speaker-tower-right">
             <span className="speaker-top-vents"><i /><i /><i /></span><span className="speaker-corner-plate plate-one" /><span className="speaker-corner-plate plate-two" /><span className="speaker-grille" /><span className="speaker-cone"><i /></span><span className="speaker-cone speaker-cone-small"><i /></span><span className="speaker-side-vent vent-left" /><span className="speaker-side-vent vent-right" /><span className="speaker-support-leg" /><span className="speaker-cable" />
           </div>
+          {(level === 2 || recordsCaught >= 10) && (
+            <div className="speaker-stack-dancers">
+              <img className="speaker-stack-dancer dancer-lime" src={CELEBRATION_DANCERS[0].src} alt="" />
+              <img className="speaker-stack-dancer dancer-magenta" src={CELEBRATION_DANCERS[2].src} alt="" />
+            </div>
+          )}
           {level === 1 && recordsCaught >= 10 && recordsCaught < 15 && (
             <div className="speaker-growth-debris half-stack-debris">
               {Array.from({ length: 14 }, (_, index) => <i key={`half-debris-${index}`} className={`debris-chip chip-${index % 5}`} />)}

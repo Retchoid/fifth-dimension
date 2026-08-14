@@ -2,8 +2,17 @@
 
 ## Last-four-prompts compliance audit
 
-- [ ] Verify one genuine player score through the live UI, database, and fresh-session public leaderboard without fabricating public player content.
-- [ ] Save and deliver a post-audit checkpoint containing the final audit report and evidence summary.
+- [ ] Save a checkpoint for the validated arcade-scene repair and verify the published domain with a clean runtime console.
+- [x] Audit and repair every special-event trigger so police, pill, crowd, rewind, crate, headphones, and record splashes reliably render and resume in both levels.
+- [x] Restyle the record and pill splash scenes with the established Street Fighter-inspired arcade grammar, including dilated pupils, goofy grin, pitch wobble, and scene-specific copy.
+- [x] Add a consistent spinning-record transition between every interrupted arcade scene and resumed play or chained scene.
+- [x] Update the Level 2 entry copy to “CROWD PRESSURE BONUS!” and retain its compact lower-right objective meter.
+- [x] Make the dancer sprites visibly perform on speaker stacks in both Level 1 and Level 2 without obscuring pickups or the DJ.
+- [x] Add a five-dubplate “BOH! BOH! BIG UP” reward and a distinct Level 2 “RUN THE RIDDIM” reward with fair, explicit triggers.
+- [x] Add deterministic regression and browser evidence for every repaired scene, transition, dancer state, and new bonus; then publish the validated build.
+- [x] Surface the public leaderboard in the arcade start state and verify the genuine submitted score is visibly rendered for a fresh visitor.
+- [x] Verify one genuine player score through the live UI, database, and fresh-session public leaderboard without fabricating public player content.
+- [x] Save and deliver a post-audit checkpoint containing the final audit report and evidence summary.
 - [x] Extract the four most recent change requests, including all stated constraints, then map each to implemented code and evidence.
 - [x] Verify durable public leaderboard behavior, three Level 2 name-handoff paths, shared falling-object rules, Crowd Pressure transition/meter placement, splash states, and requested visual removals.
 - [x] Identify and repair any confirmed omissions; add regression coverage where the current evidence is incomplete.
@@ -12,7 +21,7 @@
 ## Optional score-name completion rules
 
 - [x] Verify in-browser that a saved Level 1 tag carries into the Level 2 finale, a final-screen tag is used when no earlier tag exists, and a blank final submission shows a nameless terminal sequence.
-- [ ] Submit one genuine selector score through the UI, verify its durable database write and a fresh-session public leaderboard read, then confirm it is visible in the shared board.
+- [x] Submit one genuine selector score through the UI, verify its durable database write and a fresh-session public leaderboard read, then confirm it is visible in the shared board.
 - [x] Complete mobile visual verification of the shared leaderboard and rebalanced falling-object gameplay, then publish the fully verified update.
 - [x] Preserve a tag entered before Level 2 and use it automatically in the Level 2 terminal sequence without a second prompt.
 - [x] If no tag exists before Level 2, accept a tag entered on the final score screen and use it in the green terminal sequence.
@@ -26,7 +35,7 @@
 - [x] Ensure the saved Level 2 player tag appears in the green terminal finale message.
 - [x] Increase negative-object spawn pressure by 15%, reduce dubplate frequency without permitting an empty end-state, and preserve playability through pass-or-game-over.
 - [x] Standardize sprite dimensions, hit boxes, fall motion, and collision handling for all item types across both levels.
-- [ ] Validate database access, public leaderboard reads, score writes, finale personalization, balanced object runs, desktop/mobile visuals, typecheck, build, and publish.
+- [x] Validate database access, public leaderboard reads, score writes, finale personalization, balanced object runs, desktop/mobile visuals, typecheck, build, and publish.
 
 ## Crowd Pressure and splash-state regression repair
 

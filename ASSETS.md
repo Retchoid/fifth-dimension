@@ -18,3 +18,5 @@ Selector Showdown follows the 5th Dimension visual system through a dark plum ra
 The player wrapper includes a CSS-rendered neon selector fallback. If the generated sprite fails to load, the fallback is revealed automatically, so the gameplay character never degrades to a browser image-error placeholder.
 
 The original supplied 5th Dimension artwork remains the primary site identity. The generated selector assets are scoped to the mini-game player and playfield only.
+
+| Splash-scene art direction reference | Current event-scene visual target | `/manus-storage/selectah-splash-art-direction_4d1c250f.png` | Late-1990s 2D fighting-game-inspired vinyl, DJ, police, halftone, and cel-shaded colour treatment; no typography or copied characters. |

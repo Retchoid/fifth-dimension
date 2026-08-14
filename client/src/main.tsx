@@ -10,6 +10,7 @@ import "./index.css";
 import "./download-box-paint.css";
 import "./exclusive-third-strike.css";
 import "./cyan-paint-system.css";
+import "./arcade-scene-hold.css";
 
 const queryClient = new QueryClient();
 

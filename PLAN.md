@@ -29,3 +29,7 @@ The embedded game remains immediately before the visuals and booking content. A 
 ## Verification criteria
 
 The active game must show a readable 2-bit jungle DJ rather than an image-error placeholder. The DJ must respond immediately to Left/Right and A/D input, pointer movement, and touch dragging. Falling records and cop badges must remain visible, collisions must update score/lives, and the five-record unlock callback must remain connected. The rave background must be visible but keep gameplay readable. The page must pass `pnpm run check`, production build, responsive screenshots, and source/runtime audits without changing the booking, lightbox, audio, or contact flows.
+
+## Current event-scene repair
+
+The current repair consolidates visible splash rendering around the active queued sequence, adds a spinning-vinyl handoff before resumed or chained play, and retains the existing guarded game-loop pause/resume contract. It adds a five-dubplate `BOH! BOH! BIG UP` reward, a Level 2 fifteen-dubplate `RUN THE RIDDIM` reward, clearly visible speaker dancers in both levels, and revised Crowd Pressure Bonus entry copy.

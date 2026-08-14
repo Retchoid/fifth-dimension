@@ -7,3 +7,5 @@ Gameplay entities live in refs. The animation loop mutates falling-object `top` 
 The surrounding site remains unchanged: `Home.tsx` imports and renders `<DjMiniGame />`, while `index.css` contains the rave-stage background, HUD, pixel-art sprite, CSS fallback catcher, falling objects, and responsive styles. The generated sprite and background are lifecycle-backed media listed in `ASSETS.md`; records and cop badges use Lucide vector icons.
 
 The game supports ArrowLeft/ArrowRight and A/D keyboard input plus pointer/touch movement on the game viewport. It remains a self-contained static frontend feature with no backend or external game service.
+
+The current event repair keeps the queue and game-loop work in `DjMiniGame.tsx`, but the scene surface is derived from the active sequence rather than relying solely on a collection of independently mounted paused-state booleans. The shared record-spin handoff and all scene-specific CSS remain in `index.css`.
