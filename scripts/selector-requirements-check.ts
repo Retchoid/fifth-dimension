@@ -5,8 +5,10 @@ const projectRoot = resolve(import.meta.dirname, "..");
 const game = readFileSync(resolve(projectRoot, "client/src/components/DjMiniGame.tsx"), "utf8");
 const home = readFileSync(resolve(projectRoot, "client/src/pages/Home.tsx"), "utf8");
 const releaseGate = readFileSync(resolve(projectRoot, "client/src/lib/releaseGate.ts"), "utf8");
+const styles = readFileSync(resolve(projectRoot, "client/src/index.css"), "utf8");
 
 const requirements: Array<[string, string, string]> = [
+  ["Selectah title", game, "SELECTAH"],
   ["Level 1 target", game, "const REQUIRED_RECORDS = 25"],
   ["Level 2 target", game, "const LEVEL_TWO_REQUIRED_RECORDS = 50"],
   ["Level 1 music", game, "startLevelOneMusic();"],
@@ -27,6 +29,11 @@ const requirements: Array<[string, string, string]> = [
   ["Level 2 dancers", game, "level-two-dancer-backdrop"],
   ["fire-escape bonus", game, "bonus-fire-escape-facade"],
   ["rolling bonus obstacles", game, "bonusSpawnTimerRef.current >= 2.6"],
+  ["bonus climb helper", game, "const climbBonusLadder = () =>"],
+  ["bonus keyboard climb", game, 'e.key === "ArrowUp" || e.key === "w" || e.key === "W"'],
+  ["bonus pointer capture", game, "e.currentTarget.setPointerCapture(e.pointerId);"],
+  ["bonus swipe movement", game, "moveBonusSideways(Math.sign(dx) as -1 | 1);"],
+  ["bonus mobile touch surface", styles, "touch-action: none;"],
   ["Facebook RESPEKT action", game, "I FOLLOWED — RESPEKT"],
   ["personalized terminal finale", game, "BIG UP BADMAN"],
   ["current versioned release key", releaseGate, "5d-selector-showdown-download-unlocked-v3"],

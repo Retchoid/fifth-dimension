@@ -1,5 +1,13 @@
 # Amendment tasks
 
+## Selectah controls and adaptive-card restoration
+
+- [ ] Update the game’s visible Selector wording to Selectah where requested.
+- [ ] Audit and repair bonus-level desktop and touch controls without changing normal-level controls.
+- [ ] Trace the adaptive-card preview source and restore the intended image-based archive cards.
+- [ ] Add the official-site adaptive card without replacing existing archive card imagery.
+- [ ] Validate game controls, adaptive-card image rendering, build, and publish.
+
 ## Arrow removal and targeted drip cleanup
 
 - [x] Remove the remaining decorative arcade ribbon arrows from the release-to-game transition.

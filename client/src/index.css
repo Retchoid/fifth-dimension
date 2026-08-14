@@ -2828,6 +2828,9 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 }
 
 /* Exclusive release playback and download controls */
+.game-viewport.is-bonus-scene,
+.bonus-level-stage { touch-action: none; }
+
 .exclusive-listen-actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -259,8 +259,8 @@ export default function Home() {
   const shareGameLink = async () => {
     const gameUrl = `${window.location.origin}${window.location.pathname}?from=selector-share#minigame`;
     const shareData = {
-      title: "5th Dimension — Selector Showdown",
-      text: "Run the 5D Selector Showdown and unlock the bass transmission.",
+      title: "5th Dimension — Selectah Showdown",
+      text: "Run the 5D Selectah Showdown and unlock the bass transmission.",
       url: gameUrl,
     };
 
@@ -607,7 +607,7 @@ export default function Home() {
                   </div>
                 </div>
               )}
-              <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 25 records in Selector Showdown to unlock the free complete track download.</p>
+              <p className="exclusive-description">One for the late set: a fresh signal delivered direct from the dimension. Collect 25 records in Selectah Showdown to unlock the free complete track download.</p>
               {downloadUnlocked ? (
                 <div className="exclusive-listen-actions">
                   <audio
@@ -638,7 +638,7 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="exclusive-locked" role="status">
-                  <ShieldAlert size={18} /> <span>Collect 25 records in Selector Showdown to unlock the free download.</span>
+                  <ShieldAlert size={18} /> <span>Collect 25 records in Selectah Showdown to unlock the free download.</span>
                 </div>
               )}
               <span className="exclusive-file-info">MP3 / {EXCLUSIVE_RELEASE.duration} / LISTEN OR DOWNLOAD</span>
@@ -654,7 +654,7 @@ export default function Home() {
           </article>
         </section>
 
-        {/* The exclusive drop hands visitors directly into Selector Showdown. */}
+        {/* The exclusive drop hands visitors directly into Selectah Showdown. */}
         <div className="arcade-flow-shell">
           <div className="arcade-graffiti-flow" aria-hidden="true">
             <span className="arcade-flow-stamp">EXCLUSIVE DROP / PLAY THE ARCADE

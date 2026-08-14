@@ -1055,15 +1055,25 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       return;
     }
     if (Math.abs(dy) > Math.abs(dx) && dy < -24) {
-      const currentLane = Math.min(3, Math.floor(bonusProgressRef.current / 25));
-      setBonusProgressSafely(Math.min(100, (currentLane + 1) * 25 + 1));
+      climbBonusLadder();
       return;
     }
     if (Math.abs(dx) > 22) {
-      const currentLane = Math.min(3, Math.floor(bonusProgressRef.current / 25));
-      const moveAlongPath = currentLane % 2 === 0 ? Math.sign(dx) : -Math.sign(dx);
-      setBonusProgressSafely(bonusProgressRef.current + moveAlongPath * 11);
+      moveBonusSideways(Math.sign(dx) as -1 | 1);
     }
+  };
+
+  const moveBonusSideways = (direction: -1 | 1) => {
+    if (!bonusGameActiveRef.current) return;
+    const currentLane = Math.min(3, Math.floor(bonusProgressRef.current / 25));
+    const moveAlongPath = currentLane % 2 === 0 ? direction : -direction;
+    setBonusProgressSafely(bonusProgressRef.current + moveAlongPath * 11);
+  };
+
+  const climbBonusLadder = () => {
+    if (!bonusGameActiveRef.current) return;
+    const currentLane = Math.min(3, Math.floor(bonusProgressRef.current / 25));
+    setBonusProgressSafely(Math.min(100, (currentLane + 1) * 25 + 1));
   };
 
   const announceDamage = (label: string, remainingLives: number, bonus = false) => {
@@ -1299,10 +1309,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isBonusLevelActive && e.key === " ") {
-        e.preventDefault();
-        triggerBonusJump();
-        return;
+      if (isBonusLevelActive) {
+        if (e.code === "Space" || e.key === "Enter") {
+          e.preventDefault();
+          triggerBonusJump();
+          return;
+        }
+        if ((e.key === "ArrowUp" || e.key === "w" || e.key === "W") && !e.repeat) {
+          e.preventDefault();
+          climbBonusLadder();
+          return;
+        }
       }
       if (!isPlaying && !isBonusLevelActive) return;
       if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
@@ -1856,7 +1873,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       <div className="section-heading">
         <div>
           <p className="eyebrow"><Disc size={15} /> DUBPLATE AUTHENTICATION / 06</p>
-          <h2 id="minigame-title">SELECTOR<br /><em>SHOWDOWN.</em></h2>
+          <h2 id="minigame-title">SELECTAH<br /><em>SHOWDOWN.</em></h2>
         </div>
           <p>Catch 25 heavy 5D dubplates to trigger the chained “Jersh In Case” release, then command a 50-record Level 2 crowd run. Missed records reset a streak and hazards remove hearts. Use A/D keys or pointer movement to position the turntable; the bonus uses tap and swipe gestures.</p>
       </div>
@@ -1901,12 +1918,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           }}
           onPointerDown={(e) => {
             if (isBonusLevelActive) {
-              if (e.pointerType === "touch" || e.pointerType === "pen") {
-                e.preventDefault();
-                e.currentTarget.setPointerCapture(e.pointerId);
-                bonusPointerStartRef.current = { x: e.clientX, y: e.clientY, time: performance.now() };
-                bonusGestureHandledRef.current = false;
-              }
+              e.preventDefault();
+              e.currentTarget.setPointerCapture(e.pointerId);
+              bonusPointerStartRef.current = { x: e.clientX, y: e.clientY, time: performance.now() };
+              bonusGestureHandledRef.current = false;
               return;
             }
             if (e.pointerType === "touch") {
@@ -1915,7 +1930,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             }
           }}
           onPointerUp={(e) => {
-            if (isBonusLevelActive && (e.pointerType === "touch" || e.pointerType === "pen")) {
+            if (isBonusLevelActive) {
               e.preventDefault();
               const start = bonusPointerStartRef.current;
               bonusPointerStartRef.current = null;
@@ -2064,7 +2079,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <i>FIRE EXIT</i>
             </div>
             <div className="bonus-hud"><span>NO REQUEST BONUS</span><strong>DOOR {Math.round(bonusProgress)}%</strong><b>♥ {bonusLives}</b></div>
-            <div className="bonus-tip">DESKTOP: A/D MOVE / SPACE JUMPS · MOBILE: TAP JUMPS / SWIPE SIDEWAYS MOVES / SWIPE UP CLIMBS</div>
+            <div className="bonus-tip">DESKTOP: A/D MOVE / SPACE OR ENTER JUMPS / W CLIMBS · MOBILE: TAP JUMPS / SWIPE SIDEWAYS MOVES / SWIPE UP CLIMBS</div>
             <div className={`bonus-dj-runner lane-${bonusLane}${bonusIsJumping ? " is-jumping" : ""}${bonusDoorOpen ? " is-exit-lit" : ""}`} style={{ "--runner-left": `${bonusRunnerLeft}%`, "--runner-bottom": `${bonusRunnerBottom}%` } as React.CSSProperties}>
               <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ climbing toward the club door" />
             </div>
@@ -2562,8 +2577,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             if (navigator.share) {
               try {
                 await navigator.share({
-                  title: "5th Dimension — Selector Showdown",
-                  text: "Play Selector Showdown and unlock the exclusive free 5D jungle download!",
+                  title: "5th Dimension — Selectah Showdown",
+                  text: "Play Selectah Showdown and unlock the exclusive free 5D jungle download!",
                   url: shareUrl,
                 });
                 return;
