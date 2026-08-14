@@ -681,6 +681,9 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   display: grid;
   place-items: center;
   pointer-events: none;
+  rotate: var(--fall-tilt, 0deg);
+  transform-origin: 50% 50%;
+  will-change: top, rotate;
   filter: drop-shadow(0 0 10px currentColor);
 }
 .falling-object.record {
@@ -2318,12 +2321,12 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   width: min(92%, 580px);
   min-height: 0;
   max-height: calc(100% - 1rem);
-  overflow-y: auto;
+  overflow-y: hidden;
   display: grid;
   align-content: start;
   justify-items: center;
-  gap: .3rem;
-  padding: clamp(1.3rem, 4vw, 3rem);
+  gap: .16rem;
+  padding: clamp(.6rem, 1.5vw, 1.15rem);
   border: 2px solid #63ff63;
   background: #020a04;
   box-shadow: 0 0 0 5px #041b08, 0 0 28px rgba(99,255,99,.42), inset 0 0 24px rgba(99,255,99,.12);
@@ -2338,22 +2341,23 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   letter-spacing: .18em;
   text-transform: uppercase;
 }
-.finale-kicker { color: #c6ff00; margin-bottom: .45rem; }
-.finale-subline { margin-top: .55rem; color: #42c842; }
+.finale-kicker { color: #c6ff00; margin-bottom: .16rem; }
+.finale-subline { margin-top: .18rem; color: #42c842; }
 .finale-copy {
   color: #63ff63;
-  font: 800 clamp(1.2rem, 3.5vw, 2.8rem)/1.05 monospace;
+  font: 800 clamp(1rem, 2.6vw, 2.1rem)/1.03 monospace;
   letter-spacing: .08em;
   text-shadow: 0 0 4px #63ff63, 3px 3px 0 #0e4119;
 }
 .finale-copy strong { color: #c6ff00; }
+.finale-high-scores { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.16rem .55rem; width:min(92%,460px); margin:.34rem auto 0; padding:.32rem .45rem; border:1px solid rgba(117,255,105,.55); background:rgba(0,18,5,.78); color:#75ff69; font:700 .47rem/1.1 monospace; text-align:left; box-shadow:0 0 14px rgba(77,255,79,.16), inset 0 0 0 1px rgba(0,0,0,.85); }.finale-high-scores>span { grid-column:1 / -1; color:#dcffb4; font-weight:900; letter-spacing:.13em; }.finale-high-scores b { overflow:hidden; color:#75ff69; font:700 .46rem/1.1 monospace; text-overflow:ellipsis; white-space:nowrap; }
 .finale-restart-button {
-  margin-top: .85rem;
-  padding: .72rem 1.2rem;
+  margin-top: .32rem;
+  padding: .42rem .72rem;
   border: 2px solid #63ff63;
   background: #0b3b15;
   color: #63ff63;
-  font: 800 .7rem monospace;
+  font: 800 .56rem monospace;
   letter-spacing: .14em;
   cursor: pointer;
   box-shadow: 4px 4px 0 #63ff63;
@@ -2361,7 +2365,7 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
 }
 .finale-restart-button:hover { background: #145d24; transform: translate(-2px, -2px); }
 .finale-restart-button:active { transform: scale(.97); }
-.finale-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .62rem; margin-top: .85rem; }
+.finale-actions { display: flex; flex-wrap: nowrap; justify-content: center; gap: .38rem; margin-top: .32rem; }
 .finale-actions .finale-restart-button { margin-top: 0; }
 .facebook-like-button { display: inline-flex; align-items: center; justify-content: center; min-height: 2.55rem; padding: .68rem 1rem; border: 2px solid #08090f; background: #1877f2; color: #fff; box-shadow: 4px 4px 0 #08090f; font: 900 .66rem/1 "Bungee", Impact, sans-serif; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; transition: transform 160ms var(--ease-out), background 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
 .facebook-like-button::before { content: "f"; display: grid; place-items: center; width: 1.1rem; height: 1.1rem; margin-right: .38rem; border-radius: 2px; background: #fff; color: #1877f2; font: 900 1rem/1 Arial, sans-serif; text-transform: lowercase; }
@@ -2423,8 +2427,15 @@ h1,h2,h3 { margin-top:0; font-family:"Bebas Neue",Impact,sans-serif; font-weight
   .level-two-booth .crowd-line { left: -5%; right: -5%; }
   .crowd-line i { width: 13px; height: 21px; }
   .booth-console { left: 17%; right: 17%; bottom: 9%; }
-  .finale-box { max-height: calc(100% - .6rem); padding: .85rem .7rem; gap: .25rem; }
-  .finale-copy { font-size: clamp(1.05rem, 6vw, 1.8rem); }
+  .finale-box { max-height: calc(100% - .35rem); overflow-y: hidden; padding: .45rem .5rem; gap: .12rem; }
+  .finale-kicker, .finale-subline { font-size: .45rem; letter-spacing: .12em; }
+  .finale-kicker { margin-bottom: .12rem; }
+  .finale-subline { margin-top: .16rem; }
+  .finale-copy { font-size: clamp(.98rem, 5.5vw, 1.55rem); }
+  .finale-high-scores { gap: .12rem .45rem; margin: .28rem auto 0; padding: .25rem .35rem; font-size: .4rem; }
+  .finale-high-scores b { font-size: .39rem; }
+  .finale-actions { flex-wrap: nowrap; margin-top: .28rem; gap: .28rem; }
+  .finale-actions > * { min-height: 1.65rem; padding: .34rem .36rem; font-size: .42rem; }
 }
 
 /* Front-layer dancers & unlock waiting message */

@@ -6,6 +6,8 @@ const game = readFileSync(resolve(projectRoot, "client/src/components/DjMiniGame
 const home = readFileSync(resolve(projectRoot, "client/src/pages/Home.tsx"), "utf8");
 const releaseGate = readFileSync(resolve(projectRoot, "client/src/lib/releaseGate.ts"), "utf8");
 const styles = readFileSync(resolve(projectRoot, "client/src/index.css"), "utf8");
+const leaderboardRouter = readFileSync(resolve(projectRoot, "server/routers.ts"), "utf8");
+const leaderboardDb = readFileSync(resolve(projectRoot, "server/db.ts"), "utf8");
 
 const requirements: Array<[string, string, string]> = [
   ["Selectah title", game, "SELECTAH"],
@@ -47,6 +49,15 @@ const requirements: Array<[string, string, string]> = [
   ["bonus mobile touch surface", styles, "touch-action: none;"],
   ["Facebook RESPEKT action", game, "I FOLLOWED — RESPEKT"],
   ["personalized terminal finale", game, "BIG UP BADMAN"],
+  ["shared leaderboard query", leaderboardRouter, "leaderboard: publicProcedure.query"],
+  ["shared leaderboard score mutation", leaderboardRouter, "submitScore: publicProcedure"],
+  ["shared leaderboard database write", leaderboardDb, "saveArcadeLeaderboardEntry"],
+  ["shared leaderboard client query", game, "trpc.arcade.leaderboard.useQuery"],
+  ["shared leaderboard client write", game, "submitSharedScore.mutate"],
+  ["public tag confirmation", game, "PUBLIC BOARD"],
+  ["canonical falling-item rules", game, "const FALLING_ITEM_RULES"],
+  ["balanced falling-item weights", game, "const SPAWN_WEIGHTS"],
+  ["shared collision radius", game, "const catcherReach = 13 + item.hitRadius"],
   ["current versioned release key", releaseGate, "5d-selector-showdown-download-unlocked-v5"],
   ["exact release storage gate", home, "isReleaseUnlockStored"],
 ];

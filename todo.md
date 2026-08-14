@@ -1,5 +1,24 @@
 # Amendment tasks
 
+## Optional score-name completion rules
+
+- [x] Verify in-browser that a saved Level 1 tag carries into the Level 2 finale, a final-screen tag is used when no earlier tag exists, and a blank final submission shows a nameless terminal sequence.
+- [ ] Submit one genuine selector score through the UI, verify its durable database write and a fresh-session public leaderboard read, then confirm it is visible in the shared board.
+- [x] Complete mobile visual verification of the shared leaderboard and rebalanced falling-object gameplay, then publish the fully verified update.
+- [x] Preserve a tag entered before Level 2 and use it automatically in the Level 2 terminal sequence without a second prompt.
+- [x] If no tag exists before Level 2, accept a tag entered on the final score screen and use it in the green terminal sequence.
+- [x] Allow a blank final score submission to reveal the real public high-score board and green terminal sequence without a placeholder username.
+- [x] Validate all three name-handoff paths with unit coverage, TypeScript, arcade regression checks, browser verification, and publish.
+
+## Shared leaderboard and falling-object gameplay pass
+
+- [x] Audit the existing local high-score, name-entry, finale, spawn, and collision paths before replacing any persistence.
+- [x] Add a durable public leaderboard that stores only sanitized player tags and completed scores for cross-visitor display.
+- [x] Ensure the saved Level 2 player tag appears in the green terminal finale message.
+- [x] Increase negative-object spawn pressure by 15%, reduce dubplate frequency without permitting an empty end-state, and preserve playability through pass-or-game-over.
+- [x] Standardize sprite dimensions, hit boxes, fall motion, and collision handling for all item types across both levels.
+- [ ] Validate database access, public leaderboard reads, score writes, finale personalization, balanced object runs, desktop/mobile visuals, typecheck, build, and publish.
+
 ## Crowd Pressure and splash-state regression repair
 
 - [x] Reproduce the missing non-police overlays from the live arcade and identify the state, timer, or render condition that prevents them appearing.
@@ -18,11 +37,11 @@
 
 ## Selectah controls and adaptive-card restoration
 
-- [ ] Update the game’s visible Selector wording to Selectah where requested.
-- [ ] Audit and repair bonus-level desktop and touch controls without changing normal-level controls.
-- [ ] Trace the adaptive-card preview source and restore the intended image-based archive cards.
-- [ ] Add the official-site adaptive card without replacing existing archive card imagery.
-- [ ] Validate game controls, adaptive-card image rendering, build, and publish.
+- [x] Update the game’s visible Selector wording to Selectah where requested.
+- [x] Audit and repair bonus-level desktop and touch controls without changing normal-level controls.
+- [x] Trace the adaptive-card preview source and restore the intended image-based archive cards.
+- [x] Add the official-site adaptive card without replacing existing archive card imagery.
+- [x] Validate game controls, adaptive-card image rendering, build, and publish.
 
 ## Arrow removal and targeted drip cleanup
 

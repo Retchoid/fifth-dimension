@@ -3,15 +3,47 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, Check } from "lucide-react";
 import type { ReleaseUnlockProof } from "@/lib/releaseGate";
+import { resolveFinaleTag, sanitizeSelectorTag } from "@/lib/selectorTag";
+import { trpc } from "@/lib/trpc";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
-const LEADERBOARD_STORAGE_KEY = "5d-selector-showdown-leaderboard-v1";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
 const REQUIRED_RECORDS = 25;
 const LEVEL_TWO_REQUIRED_RECORDS = 50;
 const LEVEL_TWO_TRACK_OFFSET_SECONDS = 46;
 type GameLevel = 1 | 2;
 type BonusObstacleType = "record" | "pill" | "phone" | "apple" | "bottle";
+type FallingItemType = "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
+
+const FALLING_ITEM_RULES: Record<FallingItemType, { size: number; hitRadius: number; tilt: number }> = {
+  record: { size: 38, hitRadius: 10, tilt: -7 },
+  cop: { size: 42, hitRadius: 12, tilt: 0 },
+  bottle: { size: 38, hitRadius: 11, tilt: 13 },
+  apple: { size: 36, hitRadius: 10, tilt: -12 },
+  lion: { size: 50, hitRadius: 14, tilt: 0 },
+  cdj: { size: 50, hitRadius: 14, tilt: -5 },
+  mixer: { size: 50, hitRadius: 14, tilt: 4 },
+  turntable: { size: 50, hitRadius: 14, tilt: -4 },
+  adapter: { size: 32, hitRadius: 9, tilt: 8 },
+  pill: { size: 34, hitRadius: 10, tilt: -14 },
+  phone: { size: 32, hitRadius: 10, tilt: 16 },
+};
+
+const SPAWN_WEIGHTS: Record<GameLevel, Array<readonly [FallingItemType, number]>> = {
+  // Negative items carry 49% of Level 1 spawns—15% above the previous 43%; dubplates fall less often at 51%.
+  1: [["record", 51], ["cop", 9.2], ["pill", 5.8], ["phone", 4.6], ["cdj", 7.2], ["mixer", 8.2], ["turntable", 8.2], ["adapter", 5.8]],
+  // Level 2 keeps its crowd-only bottles and cores, with 24.15% hazards—15% above the previous 21%.
+  2: [["record", 45.75], ["bottle", 4.65], ["apple", 4.65], ["cop", 5.75], ["pill", 4.6], ["phone", 4.5], ["lion", 6], ["cdj", 6], ["mixer", 7], ["turntable", 7], ["adapter", 4.1]],
+};
+
+function pickFallingItemType(level: GameLevel, roll: number): FallingItemType {
+  let checkpoint = 0;
+  for (const [type, weight] of SPAWN_WEIGHTS[level]) {
+    checkpoint += weight / 100;
+    if (roll < checkpoint) return type;
+  }
+  return "record";
+}
 
 interface BonusObstacle {
   id: number;
@@ -20,18 +52,6 @@ interface BonusObstacle {
   speed: number;
   type: BonusObstacleType;
 }
-
-interface LeaderboardEntry {
-  name: string;
-  score: number;
-}
-
-const DEFAULT_LEADERBOARD: LeaderboardEntry[] = [
-  { name: "5D-KILLA", score: 1200 },
-  { name: "DUB-SELECTOR", score: 900 },
-  { name: "AMEN-IST", score: 600 },
-  { name: "SOUNDBOY", score: 300 },
-];
 
 const CELEBRATION_DANCERS = [
   { className: "dancer-lime", src: "/manus-storage/5d-jungle-dancer-lime_af13269a.png" },
@@ -54,9 +74,11 @@ interface FallingItem {
   id: number;
   x: number; // percentage 0-92
   y: number; // percentage 0-90
-  type: "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
+  type: FallingItemType;
   speed: number;
   size: number;
+  hitRadius: number;
+  tilt: number;
 }
 
 interface DjMiniGameProps {
@@ -100,7 +122,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [combo, setCombo] = useState(1);
   const comboRef = useRef(1);
   const [highScore, setHighScore] = useState(0);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(DEFAULT_LEADERBOARD);
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [lives, setLives] = useState(4);
@@ -115,6 +136,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [playerName, setPlayerName] = useState("");
   const [submittedName, setSubmittedName] = useState("");
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
+  const [sharedScoreStatus, setSharedScoreStatus] = useState<"idle" | "transmitting" | "saved" | "failed">("idle");
   const [musicStatus, setMusicStatus] = useState<"loading" | "ready" | "playing" | "paused" | "blocked" | "error">("loading");
   const [shared, setShared] = useState(false);
   const [facebookRespectConfirmed, setFacebookRespectConfirmed] = useState(false);
@@ -149,8 +171,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [bonusCamoUnlocked, setBonusCamoUnlocked] = useState(false);
   const [bonusObstacles, setBonusObstacles] = useState<BonusObstacle[]>([]);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
+  const arcadeUtils = trpc.useUtils();
+  const sharedLeaderboardQuery = trpc.arcade.leaderboard.useQuery(undefined, { staleTime: 15_000, refetchOnWindowFocus: true });
+  const submitSharedScore = trpc.arcade.submitScore.useMutation({
+    onSuccess: () => {
+      setSharedScoreStatus("saved");
+      void arcadeUtils.arcade.leaderboard.invalidate();
+    },
+    onError: () => setSharedScoreStatus("failed"),
+  });
+  const leaderboard = sharedLeaderboardQuery.data ?? [];
   const sequenceDemoEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-demo") === "sequences";
   const holdSequenceDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hold") === "true";
+  const finaleVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-finale-verify") : null;
+  const nameJourneyVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-name-journey") : null;
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
@@ -192,6 +226,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const highScoreRef = useRef(0);
   const livesRef = useRef(4);
   const finaleRef = useRef(false);
+  const nameJourneyPreparedRef = useRef(false);
   const itemsRef = useRef<FallingItem[]>([]);
   const nextIdRef = useRef(1);
   const spawnTimerRef = useRef(0);
@@ -840,13 +875,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       highScoreRef.current = savedScore;
       setHighScore(savedScore);
 
-      const rawBoard = window.localStorage.getItem(LEADERBOARD_STORAGE_KEY);
-      if (rawBoard) {
-        const parsed = JSON.parse(rawBoard);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setLeaderboard(parsed);
-        }
-      }
     } catch {
       // Local storage may be unavailable in private or restricted browser contexts.
     }
@@ -860,7 +888,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
   }, []);
 
-  const recordHighScore = (candidate: number, rawName: string) => {
+  const recordHighScore = (candidate: number, rawName: string, completedLevel: "level1" | "level2") => {
     const previousBest = highScoreRef.current;
     const isRecord = candidate > previousBest;
     const bestScore = Math.max(previousBest, candidate);
@@ -873,17 +901,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       // Keep in-session score.
     }
 
-    // Update leaderboard table
-    setLeaderboard((prev) => {
-      const safeName = rawName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
-      const updated = [...prev, { name: safeName, score: candidate }];
-      updated.sort((a, b) => b.score - a.score);
-      const sliced = updated.slice(0, 5);
-      try {
-        window.localStorage.setItem(LEADERBOARD_STORAGE_KEY, JSON.stringify(sliced));
-      } catch {}
-      return sliced;
-    });
+    const safeName = sanitizeSelectorTag(rawName);
+    if (!safeName) {
+      setSharedScoreStatus("idle");
+      return;
+    }
+    if (nameJourneyVerificationMode) {
+      // The browser journey verifier must never create fabricated public scores.
+      setSharedScoreStatus("idle");
+      return;
+    }
+    setSharedScoreStatus("transmitting");
+    submitSharedScore.mutate({ playerTag: safeName, score: candidate, completedLevel });
   };
 
   const confirmFacebookRespect = () => {
@@ -903,11 +932,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const submitScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const safeName = playerName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
-    recordHighScore(score, safeName);
+    const safeName = sanitizeSelectorTag(playerName);
+    if (safeName) recordHighScore(score, safeName, levelTwoComplete ? "level2" : "level1");
     setPlayerName(safeName);
     setSubmittedName(safeName);
-    setScoreSubmitted(true);
+    setScoreSubmitted(Boolean(safeName));
     onAchievementFlowComplete?.();
     if (levelTwoComplete) {
       finaleRef.current = true;
@@ -916,14 +945,70 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   useEffect(() => {
-    // Keep the terminal finale tied to the completed Level 2 + saved-name state,
-    // even if the parent settles the download celebration in the same render.
+    // A tag saved before Level 2 carries directly into the terminal finale.
     if (!levelTwoComplete || !scoreSubmitted || !submittedName.trim()) return;
     finaleRef.current = true;
     setFinale(true);
   }, [levelTwoComplete, scoreSubmitted, submittedName]);
 
+  useEffect(() => {
+    if (!finaleVerificationMode) return;
+    const finalTag = finaleVerificationMode === "saved"
+      ? resolveFinaleTag("EARLY-MASSIVE", "LATER-TAG")
+      : finaleVerificationMode === "final"
+        ? resolveFinaleTag("", "FINAL-MASSIVE")
+        : "";
+    setScore(5000);
+    setLevelTwoComplete(true);
+    setGameOver(false);
+    setPlayerName(finalTag);
+    setSubmittedName(finalTag);
+    setScoreSubmitted(Boolean(finalTag));
+    finaleRef.current = true;
+    setFinale(true);
+  }, [finaleVerificationMode]);
+
+  useEffect(() => {
+    if (!nameJourneyVerificationMode || nameJourneyPreparedRef.current) return;
+    nameJourneyPreparedRef.current = true;
+    setScore(5000);
+    setLevel(2);
+    levelRef.current = 2;
+    setIsPlaying(false);
+    isPlayingRef.current = false;
+    setFinale(false);
+    finaleRef.current = false;
+    setScoreSubmitted(false);
+    setSubmittedName("");
+    setPlayerName("");
+    if (nameJourneyVerificationMode === "saved") {
+      setLevelTwoComplete(false);
+      setGameOver(false);
+      setPreLevelTwoHighScore(true);
+    } else {
+      setLevelTwoComplete(true);
+      setGameOver(true);
+      setPreLevelTwoHighScore(false);
+    }
+  }, [nameJourneyVerificationMode]);
+
+  useEffect(() => {
+    if (nameJourneyVerificationMode !== "saved" || !submittedName) return;
+    setLevelTwoComplete(true);
+    setGameOver(false);
+    finaleRef.current = true;
+    setFinale(true);
+  }, [nameJourneyVerificationMode, submittedName]);
+
   const startLevelTwo = () => {
+    if (nameJourneyVerificationMode === "saved") {
+      setPreLevelTwoHighScore(false);
+      setLevelTwoComplete(true);
+      setGameOver(false);
+      finaleRef.current = true;
+      setFinale(true);
+      return;
+    }
     gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     levelRef.current = 2;
@@ -1331,11 +1416,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const submitPreLevelTwoScore = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const safeName = playerName.trim().replace(/[^a-z0-9 _-]/gi, "").slice(0, 12).toUpperCase() || "SELECTOR";
-    recordHighScore(score, safeName);
+    const safeName = sanitizeSelectorTag(playerName);
+    if (safeName) recordHighScore(score, safeName, "level1");
     setPlayerName(safeName);
     setSubmittedName(safeName);
-    setScoreSubmitted(true);
+    setScoreSubmitted(Boolean(safeName));
     setPreLevelTwoHighScore(false);
     onAchievementFlowComplete?.();
     startLevelTwo();
@@ -1422,6 +1507,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setLevel(1);
     setLevelTwoComplete(false);
     setFinale(false);
+    setSharedScoreStatus("idle");
     finaleRef.current = false;
     isPlayingRef.current = true;
     startLevelOneMusic();
@@ -1507,16 +1593,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     let structureChanged = false;
     spawnTimerRef.current += dt;
-    // Reduce spawn frequency slightly (e.g. interval 1.1s for L1, 0.9s for L2)
+    // Fewer dubplates, more hazards: a steady scheduler keeps the flow populated
+    // until the player clears a level or loses their final life.
     const spawnInterval = levelRef.current === 2 ? 0.90 : 1.10;
     if (spawnTimerRef.current >= spawnInterval) {
-      spawnTimerRef.current = 0;
+      spawnTimerRef.current -= spawnInterval;
       const roll = Math.random();
       // Level 1 stays free of bottles and apple cores; only the Level 2 crowd throws them.
-      const spawnedType: FallingItem["type"] = levelRef.current === 2
-        ? (roll < 0.54 ? "record" : roll < 0.58 ? "bottle" : roll < 0.62 ? "apple" : roll < 0.67 ? "cop" : roll < 0.71 ? "pill" : roll < 0.75 ? "phone" : roll < 0.81 ? "lion" : roll < 0.87 ? "cdj" : roll < 0.94 ? "mixer" : roll < 0.99 ? "turntable" : "adapter")
-        : (roll < 0.57 ? "record" : roll < 0.65 ? "cop" : roll < 0.70 ? "pill" : roll < 0.74 ? "phone" : roll < 0.81 ? "cdj" : roll < 0.89 ? "mixer" : roll < 0.97 ? "turntable" : "adapter");
-      const size = spawnedType === "record" ? 34 : spawnedType === "cop" ? 38 : spawnedType === "lion" ? 46 : spawnedType === "cdj" || spawnedType === "mixer" || spawnedType === "turntable" ? 48 : spawnedType === "adapter" ? 30 : spawnedType === "phone" ? 28 : 30;
+      const spawnedType = pickFallingItemType(levelRef.current, roll);
+      const itemRule = FALLING_ITEM_RULES[spawnedType];
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 42 : 36;
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
@@ -1526,7 +1611,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         y: -10,
         type: spawnedType,
         speed: Math.floor(Math.random() * 10) + baseSpeed + speedRamp,
-        size,
+        size: itemRule.size,
+        hitRadius: itemRule.hitRadius,
+        tilt: itemRule.tilt * (Math.random() > 0.5 ? 1 : -1),
       });
       structureChanged = true;
     }
@@ -1553,8 +1640,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const itemNode = itemNodes?.[index] as HTMLElement | undefined;
       if (itemNode) itemNode.style.top = `${newY}%`;
 
-      const itemCatchReach = Math.max(8, Math.min(15, item.size / 3));
-      const catcherReach = 16 + itemCatchReach;
+      const catcherReach = 13 + item.hitRadius;
       if (newY >= 64 && newY <= 96 && item.x >= currentX - catcherReach && item.x <= currentX + catcherReach) {
         structureChanged = true;
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
@@ -1759,17 +1845,21 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (completeLevelTwo) {
       isPlayingRef.current = false;
       if (bgMusicRef.current) bgMusicRef.current.pause();
-      const finaleName = submittedName.trim() || playerName.trim() || "SELECTOR";
-      recordHighScore(currentScore, finaleName);
-      setSubmittedName(finaleName);
-      setScoreSubmitted(true);
+      const finaleName = resolveFinaleTag(submittedName, playerName);
+      if (finaleName) {
+        recordHighScore(currentScore, finaleName, "level2");
+        setSubmittedName(finaleName);
+        setScoreSubmitted(true);
+      } else {
+        setScoreSubmitted(false);
+      }
       setIsPlaying(false);
       setLevelTwoComplete(true);
-      setGameOver(false);
+      setGameOver(!finaleName);
       setIsUnlockPaused(false);
       setIsNewRecord(currentScore > highScoreRef.current);
-      finaleRef.current = true;
-      setFinale(true);
+      finaleRef.current = Boolean(finaleName);
+      setFinale(Boolean(finaleName));
       return;
     }
     if (advanceToLevelTwo) {
@@ -2299,10 +2389,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               </button>
               <div className="arcade-quick-controls" aria-label="Arcade controls"><span>A / D</span> MOVE <i>•</i> <span>SPACE</span> JUMP</div>
               <a className="facebook-like-button between-level-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
-              <p>Enter your selector tag before launching Level 2 crowd transmission.</p>
+              <p>Enter a selector tag now to carry it straight into the Level 2 terminal. Leave it blank to choose a tag after Level 2 instead.</p>
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitPreLevelTwoScore}>
-                  <label htmlFor="pre-level-selector-name">ENTER YOUR SELECTOR TAG</label>
+                  <label htmlFor="pre-level-selector-name">SELECTOR TAG (OPTIONAL)</label>
                   <div className="score-entry-row">
                     <input
                       id="pre-level-selector-name"
@@ -2312,12 +2402,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       autoComplete="nickname"
                       placeholder="YOUR NAME"
                     />
-                    <button type="submit" className="score-submit-button">SAVE & LAUNCH LVL 2</button>
+                    <button type="submit" className="score-submit-button">LAUNCH LVL 2</button>
                   </div>
                 </form>
               ) : (
                 <div className="score-saved-badge" role="status" aria-live="polite">
-                  <Trophy size={15} /> TAG RECORDED AS <strong>{submittedName}</strong>
+                  <Trophy size={15} /> {sharedScoreStatus === "transmitting" ? "TRANSMITTING" : sharedScoreStatus === "failed" ? "TRANSMISSION FAILED — REPLAY TO RETRY" : "TAG SAVED TO THE PUBLIC BOARD AS"} <strong>{submittedName}</strong>
                 </div>
               )}
               <div className="arcade-leaderboard-container">
@@ -2332,10 +2422,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       </tr>
                     </thead>
                     <tbody>
-                      {leaderboard.map((entry, idx) => (
-                        <tr key={`${entry.name}-${entry.score}-${idx}`}>
+                      {sharedLeaderboardQuery.isLoading ? (
+                        <tr><td colSpan={3}>LOADING PUBLIC SCOREBOARD…</td></tr>
+                      ) : leaderboard.length === 0 ? (
+                        <tr><td colSpan={3}>NO TRANSMISSIONS YET — SET THE FIRST SCORE.</td></tr>
+                      ) : leaderboard.map((entry, idx) => (
+                        <tr key={entry.id} className={scoreSubmitted && entry.score === score && entry.playerTag === submittedName ? "is-current-score" : ""}>
                           <td>#{idx + 1}</td>
-                          <td>{entry.name}</td>
+                          <td>{entry.playerTag}</td>
                           <td>{entry.score}</td>
                         </tr>
                       ))}
@@ -2351,8 +2445,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="game-overlay finale-overlay">
             <div className="finale-box" role="status" aria-live="polite">
               <span className="finale-kicker">5D TRANSMISSION COMPLETE</span>
-              <div className="finale-copy">BIG UP BADMAN <strong>{submittedName || "SELECTOR"}</strong><br />JUNGLE IS MASSIVE.</div>
+              <div className="finale-copy">{submittedName ? <>BIG UP BADMAN <strong>{submittedName}</strong><br /></> : null}JUNGLE IS MASSIVE.</div>
               <span className="finale-subline">LEVEL 2 / 50 DUBPLATES CLEARED</span>
+              <div className="finale-high-scores" aria-label="Public arcade high scores">
+                <span>PUBLIC HIGH SCORES</span>
+                {leaderboard.length ? leaderboard.slice(0, 5).map((entry, index) => <b key={entry.id}>#{index + 1} {entry.playerTag} · {entry.score}</b>) : <b>NO SCORES TRANSMITTED YET</b>}
+              </div>
               <div className="finale-actions">
                 <button type="button" className="finale-restart-button" onClick={startGame}>PLAY AGAIN</button>
                 <a className="facebook-like-button finale-like" href="https://www.facebook.com/share/19GAjvp42m/" target="_blank" rel="noreferrer" aria-label="Visit and like the 5th Dimension artist page on Facebook">BIG UP! (LIKE)</a>
@@ -2387,7 +2485,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 </div>
               )}
               <h3>{levelTwoComplete ? "LEVEL 2 CLEARED" : "SESSION TERMINATED"}</h3>
-              <p>{levelTwoComplete ? `Final Score: ${score} — Save your selector tag to send the transmission.` : <>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</>}</p>
+              <p>{levelTwoComplete ? `Final Score: ${score} — Enter a tag for the terminal, or leave it blank to run the green sequence without a username.` : <>Final Score: <strong>{score}</strong> {score >= 500 ? "— Heavy selector energy!" : "— Keep stacking the rhythm!"}</>}</p>
               <button type="button" className="tape-play-button reset-first-action" onClick={startGame}>
                 <span className="tape-play-face" aria-hidden="true"><i className="tape-reel tape-reel-left" /><span className="tape-window"><RotateCcw size={15} /></span><i className="tape-reel tape-reel-right" /></span>
                 <span className="tape-play-copy">PLAY AGAIN / RESET</span>
@@ -2395,7 +2493,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
               {!scoreSubmitted ? (
                 <form className="score-entry-form" onSubmit={submitScore}>
-                  <label htmlFor="selector-name">ENTER YOUR SELECTOR TAG</label>
+                  <label htmlFor="selector-name">SELECTOR TAG (OPTIONAL)</label>
                   <div className="score-entry-row">
                     <input
                       id="selector-name"
@@ -2406,13 +2504,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       placeholder="YOUR NAME"
                       aria-describedby="selector-name-hint"
                     />
-                    <button type="submit" className="score-submit-button">SAVE SCORE</button>
+                    <button type="submit" className="score-submit-button">CONTINUE</button>
                   </div>
-                  <span id="selector-name-hint">Up to 12 characters. Your tag is saved on this device.</span>
+                  <span id="selector-name-hint">Up to 12 characters. A tag joins the public board; a blank entry runs the terminal without a username.</span>
                 </form>
               ) : (
                 <div className="score-saved-badge" role="status" aria-live="polite">
-                  <Trophy size={15} /> SCORE SAVED AS <strong>{submittedName}</strong>
+                  <Trophy size={15} /> {sharedScoreStatus === "transmitting" ? "TRANSMITTING" : sharedScoreStatus === "failed" ? "TRANSMISSION FAILED — REPLAY TO RETRY" : "SCORE SAVED TO THE PUBLIC BOARD AS"} <strong>{submittedName}</strong>
                 </div>
               )}
 
@@ -2428,10 +2526,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       </tr>
                     </thead>
                     <tbody>
-                      {leaderboard.map((entry, idx) => (
-                        <tr key={`${entry.name}-${entry.score}-${idx}`} className={scoreSubmitted && entry.score === score && entry.name === submittedName ? "is-current-score" : ""}>
+                      {sharedLeaderboardQuery.isLoading ? (
+                        <tr><td colSpan={3}>LOADING PUBLIC SCOREBOARD…</td></tr>
+                      ) : leaderboard.length === 0 ? (
+                        <tr><td colSpan={3}>NO TRANSMISSIONS YET — SET THE FIRST SCORE.</td></tr>
+                      ) : leaderboard.map((entry, idx) => (
+                        <tr key={entry.id} className={scoreSubmitted && entry.score === score && entry.playerTag === submittedName ? "is-current-score" : ""}>
                           <td>#{idx + 1}</td>
-                          <td>{entry.name}</td>
+                          <td>{entry.playerTag}</td>
                           <td>{entry.score}</td>
                         </tr>
                       ))}
@@ -2456,7 +2558,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   top: `${item.y}%`,
                   width: `${item.size}px`,
                   height: `${item.size}px`,
-                }}
+                  "--fall-tilt": `${item.tilt}deg`,
+                } as React.CSSProperties}
               >
                 {item.type === "record" ? (
                   <div className="vinyl-record-sprite" aria-hidden="true">
