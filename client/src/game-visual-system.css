@@ -14,7 +14,8 @@
 
 .dj-catcher::before { background:transparent; filter:none; box-shadow:none; }
 .dj-catcher-art,.dj-sprite,.level-two-dancer,.speaker-stack-dancer,.level-one-streak-dancer { image-rendering:pixelated; filter:drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.32)) drop-shadow(0 0 8px rgba(255,79,156,.35)); }
-.dj-sprite { filter:contrast(1.2) saturate(1.24) drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.28)); }
+.dj-catcher-art,.dj-sprite { background:transparent!important; box-shadow:none!important; mix-blend-mode:screen; isolation:isolate; }
+.dj-sprite { filter:contrast(1.2) saturate(1.24) drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.28)) drop-shadow(0 0 8px rgba(255,79,156,.32)); }
 
 .falling-object { filter:drop-shadow(3px 4px 0 #050407) drop-shadow(-1px -1px 0 rgba(255,242,185,.26)) !important; }
 .falling-object :is(.vinyl-record-sprite,.police-badge-sprite,.crowd-throw-sprite,.turntable-pickup,.cdj-pickup,.mixer-pickup,.adapter-pickup,.lion-head-pickup) { image-rendering:pixelated; }

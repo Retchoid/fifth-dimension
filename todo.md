@@ -2,6 +2,10 @@
 
 ## Current approval-gated arcade regression audit
 
+- [ ] Remove the lime striped overlay visible within the SoundCloud embed while keeping the SoundCloud player, artwork, and controls functional.
+- [ ] Eliminate the remaining visible backing square around the active DJ sprite without changing its asset, collision area, camo state, or game behavior.
+- [ ] Increase visible speaker-stage scale without changing the approved speaker deployment timing, dancer thresholds, or gameplay area.
+- [ ] Remove remaining yellow square treatments and align post-hero sections to the original first-page cyan, magenta, graphite, and signal-orange language without changing content, covers, adaptive cards, or functions.
 - [x] Remove the failed post-hero archive-poster override and rebuild visual consistency from the original first-page cyan, magenta, graphite, and signal-orange language without changing content, covers, cards, or functions.
 - [x] Repair every mobile text-overflow and clipping issue in archive headings, descriptive copy, 5D Playa labels, and archive group titles; verify readable flow at phone width.
 - [x] Remove the unwanted yellow/green striped decorative bar over the Mixcloud artwork without changing the embed, artwork, copy, or controls.

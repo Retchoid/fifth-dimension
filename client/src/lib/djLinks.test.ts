@@ -18,6 +18,8 @@ describe("5th Dimension public channel configuration", () => {
   it("keeps the SoundCloud profile and supported player URL aligned", () => {
     expect(SOUND_CLOUD_PROFILE).toBe("https://soundcloud.com/user6777884");
     expect(SOUND_CLOUD_EMBED).toContain("api.soundcloud.com%2Fusers%2F1855303");
+    expect(SOUND_CLOUD_EMBED).toContain("visual=false");
+    expect(SOUND_CLOUD_EMBED).toContain("show_artwork=true");
   });
 
   it("retains the supplied Facebook and Instagram destinations", () => {
