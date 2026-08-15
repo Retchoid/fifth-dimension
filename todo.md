@@ -7,6 +7,7 @@
 - [ ] Restyle every arcade splash scene to the same hard-outlined urban arcade language as the hazards, preserving existing scenes, copy, timers, record-spin transitions, audio, and return-to-play behavior.
 - [ ] Verify the redesigned sprite treatment, backgrounds, and all splash overlays at desktop and phone widths without obscuring active gameplay.
 - [ ] Confirm the published production build applies the Level 1 and Level 2 hard-outline stage rules and capture direct live desktop and phone evidence.
+- [ ] Replace the Level 2 reuse of the Level 1 urban-stage artwork with its dedicated Level 2 crowd-pressure background while retaining the clear center lane and existing Level 2 booth layers.
 - [ ] Audit every standard, reward, hazard, chain, transition, loss, and bonus splash state individually to ensure the shared hard-outline treatment mounts where required.
 - [ ] Resolve the remaining active DJ sprite matte artifact with a verified live fix, then repeat the full desktop and phone-width arcade visual review.
 

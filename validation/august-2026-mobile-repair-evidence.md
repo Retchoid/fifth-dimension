@@ -88,3 +88,9 @@ Follow-up production inspection confirms both standard and WebKit mask propertie
 An active production session confirms that a rectangular matte still reads behind the supplied DJ sprite despite the deployed blend and radial-mask treatment. The next correction tests a non-destructive silhouette clip on the existing image only; it will not alter the source asset, collision bounds, controls, camo, or gameplay logic.
 
 The development build now resolves the tested pixel-silhouette `clip-path` on the active DJ image. This is limited to image compositing; the parent catcher remains unchanged, preserving the existing collision and control geometry while removing the source image’s rectangular outline from the visible presentation.
+
+The deterministic scene verifier exposes the standard sequence set: rewind, wheel, police, crowd, pill, crate, headphones, BOH, and Run the Riddim. Additional verifier controls cover the speaker milestone, loss comedown, Level 2 entry, and both bonus routes. These are being reviewed as development-only test states with no public score or release-gate data affected.
+
+The Level 2 verifier now resolves the dedicated `5d-selector-level-two-detailed-stage` artwork after its asynchronous stage switch completes. Its existing dark center-lane and cyan/magenta crowd-pressure overlays remain layered above that distinct source image.
+
+The hold-enabled deterministic verifier mounts the police scene with its police-car, DJ-reaction, recovery prompt, and established copy while the shared cyan/magenta/graphite frame remains attached. The cabinet was then focused for direct visual confirmation without advancing the test sequence.

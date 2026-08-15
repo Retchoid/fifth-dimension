@@ -121,6 +121,7 @@ const requirements: Array<[string, string, string]> = [
   ["game Level 1 background visual grammar", gameVisualStyles, ".game-grid-bg:not(.level-two-grid-bg)"],
   ["clear-lane urban stage art", gameVisualStyles, "selectah-level-one-urban-stage-reference_43ddc07a.png"],
   ["game Level 2 background visual grammar", gameVisualStyles, ".level-two-booth"],
+  ["dedicated Level 2 crowd-pressure stage art", gameVisualStyles, "5d-selector-level-two-detailed-stage_89e2157b.png"],
   ["matte-safe DJ sprite treatment", gameVisualStyles, "mask-image:radial-gradient"],
   ["DJ silhouette clip cleanup", gameVisualStyles, "clip-path:polygon(38% 0,62% 0"],
   ["game player and dancer visual grammar", gameVisualStyles, ".dj-catcher-art,.dj-sprite"],
