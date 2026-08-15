@@ -7,6 +7,9 @@
 - [ ] Reconcile speaker and dancer scale so speaker stacks read as intentionally huge and dancers read as clearly visible performers in the same stage depth, without blocking the active lanes or changing their approved milestones.
 - [ ] Redesign every visible deck, turntable, mixer, CDJ, crate, headphones, and remaining game object that still reads as a generic placeholder, using the same colorful cel-shaded hard outlines and urban 16-bit material language as the approved hazard art.
 - [ ] Audit all normal, reward, hazard, chain, transition, unlock, bonus, loss, game-over, and finale states at desktop and phone widths; complete only when each uses a purposeful illustrated background rather than placeholder markers or bare decorative CSS.
+- [ ] Capture and review desktop and phone runtime evidence for police, crowd, pill, rewind, record-spin, crate, headphones, salute/riddim, Level 2 arrival, loss, and game-over scenes.
+- [ ] Verify each inspected scene preserves its timing, copy, audio handoff, and return-to-play behavior in live runtime rather than only through source-selector coverage.
+- [ ] Document desktop and phone visual evidence that loss and game-over retain a full readable foreground hierarchy without shrunken sprite, shrunken copy, or empty background.
 
 - [ ] Remove the remaining visible square or backing plane around the active DJ sprite in every arcade state without changing the supplied sprite, hitbox, camo, collision, or controls.
 - [ ] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.

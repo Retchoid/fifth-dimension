@@ -241,6 +241,14 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (window.location.hash !== "#selectah-showdown") return;
+    const anchorTimer = window.setTimeout(() => {
+      document.getElementById("selectah-showdown")?.scrollIntoView({ block: "start" });
+    }, 0);
+    return () => window.clearTimeout(anchorTimer);
+  }, []);
+
   const unlockDownload = (proof: ReleaseUnlockProof) => {
     if (!isReleaseUnlockProof(proof)) return;
     const wasAlreadyUnlocked = downloadUnlocked;
@@ -750,7 +758,7 @@ export default function Home() {
         </section>
 
         {/* The exclusive drop hands visitors directly into Selectah Showdown. */}
-        <div className="arcade-flow-shell">
+        <div id="selectah-showdown" className="arcade-flow-shell">
           <DjMiniGame
             downloadUnlocked={downloadUnlocked}
             onUnlockDownload={unlockDownload}
