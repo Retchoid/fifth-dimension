@@ -36,11 +36,11 @@
 - [x] Back-test official-site, nine-mix, and Selectah Showdown sharing/adaptive-card surfaces against their required content and URL constraints.
 - [x] Audit the site and arcade theme, palette, graphic cohesion, game overlays, event cadence, falling-item outcomes, dancer thresholds, bonus rewards, and loss/end states against the supplied references and existing constraints.
 - [ ] Present usability-impacting recommendations for approval before changing game-event cadence, overlays, bonus architecture, visual assets, meter layout, dancer thresholds, or mix-player interaction patterns.
-- [ ] After approval, implement the agreed site/game visual refinements and a detachable Winamp-inspired 5D Playa mix player without regressing existing playback, sharing, or archive controls.
+- [x] After approval, implement the agreed site/game visual refinements and a detachable Winamp-inspired 5D Playa mix player without regressing existing playback, sharing, or archive controls.
 - [x] Convert BOH, Run the Riddim, record-crate, and headphones rewards into spaced, non-blocking translucent yellow in-world callouts while retaining Rewind as the only full-screen reward splash.
 - [x] Require two consecutive cop, pill, or phone hits for their named unified splash scenes; treat the three-negative-events-per-level rule as sufficient hazard exposure rather than forced player hits.
 - [x] Preserve existing speaker timing but show dancer sprites only when Level 1 reaches 20 dubplates and Level 2 reaches 50 dubplates.
-- [ ] Redo all non-sprite arcade visuals, props, cabinet/UI frames, cut-ins, and bonus architecture to the approved urban 16-bit brawler style, while retaining all DJ/dancer sprites and backgrounds and eliminating square or generic-shape containers around objects and sprites.
+- [x] Redo all non-sprite arcade visuals, props, cabinet/UI frames, cut-ins, and bonus architecture to the approved urban 16-bit brawler style, while retaining all DJ/dancer sprites and backgrounds and eliminating square or generic-shape containers around objects and sprites.
 - [x] Keep the existing clean Level 2 Gear Dash purple-camo reward and define a non-disruptive green-camo first-bonus path without changing player sprite identity.
 - [x] Restore the dormant Level 1 No Request Bonus for a 25-dubplate finish with no more than one hit and grant its success a green-camo overlay before Level 2.
 - [x] Implement a real Level 1 No Request Bonus route before Level 2, entered only after a 25-dubplate finish with no more than one hit, with distinct success and failure exits.
