@@ -1,0 +1,45 @@
+/* 5D Playa: a compact True Players DnB-inspired archive transport, separate from each original mix card. */
+.five-d-playa {
+  position: relative;
+  z-index: 8;
+  margin: 1.35rem 0 2rem;
+  border: 3px solid #100f1c;
+  background: linear-gradient(105deg, #151326 0 47%, #20102a 48% 100%);
+  box-shadow: 6px 7px 0 #05050a, 0 0 0 2px #00e7ff, 0 0 22px rgba(0, 231, 255, .16);
+  color: #f7efd2;
+}
+.five-d-playa::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  pointer-events: none;
+  opacity: .36;
+  background: repeating-linear-gradient(90deg, transparent 0 13px, rgba(255,255,255,.08) 13px 14px, transparent 14px 25px);
+}
+.five-d-playa-bar { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0,1fr) auto auto; min-height: 60px; }
+.five-d-playa-main { min-width: 0; display: grid; grid-template-columns: 47px minmax(122px,.9fr) minmax(160px,1.6fr) auto; gap: .65rem; align-items: center; padding: .45rem .66rem; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+.five-d-playa-main:hover .five-d-playa-mark,.five-d-playa-main:focus-visible .five-d-playa-mark { filter: brightness(1.22) saturate(1.3); }
+.five-d-playa-main:focus-visible,.five-d-playa-toggle:focus-visible,.five-d-playa-detach:focus-visible,.five-d-playa-queue button:focus-visible { outline: 2px solid #d7ff63; outline-offset: -2px; }
+.five-d-playa-mark { display: grid; place-items: center; width: 42px; height: 42px; border: 2px solid #05050a; background: #ff4b9b; color: #10121b; box-shadow: 3px 3px 0 #00e7ff, inset 2px 2px 0 rgba(255,255,255,.4); font: 900 1.1rem/.8 "Bungee", Impact, sans-serif; letter-spacing: -.12em; transform: rotate(-3deg); }
+.five-d-playa-label,.five-d-playa-now { display: grid; gap: .12rem; min-width: 0; }
+.five-d-playa-label b { color: #d7ff63; font: 900 .87rem/1 "Bungee", Impact, sans-serif; letter-spacing: .08em; }
+.five-d-playa-label em { color: #00e7ff; font: 700 .4rem/1.2 monospace; font-style: normal; letter-spacing: .08em; }
+.five-d-playa-now { padding-left: .65rem; border-left: 1px solid rgba(0,231,255,.35); }
+.five-d-playa-now strong { overflow: hidden; color: #f7efd2; font: 800 .63rem/1.2 "Bungee", Impact, sans-serif; letter-spacing: .035em; text-overflow: ellipsis; white-space: nowrap; }
+.five-d-playa-now small { color: #ffbf7b; font: 700 .52rem/1 monospace; letter-spacing: .08em; }
+.five-d-playa-state { color: #ff70b6; font: 900 .48rem/1 monospace; letter-spacing: .09em; }
+.five-d-playa-toggle,.five-d-playa-detach { position: relative; z-index: 2; align-self: stretch; min-width: 54px; border: 0; border-left: 2px solid #0a0912; background: #00d5ef; color: #120d1a; cursor: pointer; transition: filter 140ms ease-out, transform 140ms ease-out; }
+.five-d-playa-detach { min-width: 60px; background: #ffbf7b; font: 900 .48rem/1 "Bungee", Impact, sans-serif; letter-spacing: .05em; }
+.five-d-playa-toggle:hover,.five-d-playa-detach:hover { filter: brightness(1.12); }.five-d-playa-toggle:active,.five-d-playa-detach:active { transform: scale(.96); }
+.five-d-playa-progress { position: relative; z-index: 1; height: 5px; background: #080711; }.five-d-playa-progress i { display: block; height: 100%; background: linear-gradient(90deg, #d7ff63, #00e7ff 62%, #ff4b9b); box-shadow: 0 0 8px #00e7ff; transition: width .25s linear; }
+.five-d-playa-queue { position: relative; z-index: 1; border-top: 2px solid #0a0912; background: linear-gradient(135deg, rgba(4,5,14,.98), rgba(29,13,36,.98)); }
+.five-d-playa-queue-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .5rem .65rem; border-bottom: 1px solid rgba(0,231,255,.32); color: #00e7ff; font: 800 .48rem/1 "Bungee", Impact, sans-serif; letter-spacing: .08em; }
+.five-d-playa-queue-head button { border: 1px solid #d7ff63; background: #d7ff63; color: #11151a; padding: .24rem .42rem; font: 900 .43rem/1 "Bungee", Impact, sans-serif; cursor: pointer; }
+.five-d-playa-queue ol { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); max-height: 286px; margin: 0; padding: .48rem; gap: .38rem; overflow: auto; list-style: none; }
+.five-d-playa-queue li { min-width: 0; }.five-d-playa-queue li button { display: grid; grid-template-columns: 35px minmax(0,1fr) auto; width: 100%; gap: .38rem; align-items: center; min-height: 46px; padding: .28rem; border: 1px solid #3d3959; background: rgba(29,27,47,.76); color: #f7efd2; text-align: left; cursor: pointer; }
+.five-d-playa-queue li button:hover { border-color: #ff4b9b; background: rgba(73,22,67,.76); }.five-d-playa-queue li.is-current button { border-color: #d7ff63; background: linear-gradient(105deg, rgba(149,192,66,.22), rgba(0,231,255,.14)); box-shadow: inset 3px 0 0 #d7ff63; }
+.five-d-playa-queue img { width: 35px; height: 35px; border: 1px solid #080711; object-fit: cover; image-rendering: auto; }.five-d-playa-queue span { display: grid; min-width: 0; gap: .16rem; }.five-d-playa-queue b { overflow: hidden; color: #f7efd2; font: 800 .48rem/1.15 "Bungee", Impact, sans-serif; text-overflow: ellipsis; white-space: nowrap; }.five-d-playa-queue em { overflow: hidden; color: #ffbf7b; font: 700 .42rem/1 monospace; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }.five-d-playa-queue small { color: #00e7ff; font: 800 .36rem/1 monospace; letter-spacing: .05em; }
+.five-d-playa.is-detached { position: fixed; right: 1rem; bottom: 1rem; width: min(480px, calc(100vw - 2rem)); margin: 0; z-index: 80; animation: five-d-playa-dock .22s cubic-bezier(.23,1,.32,1) both; }.five-d-playa.is-detached .five-d-playa-queue { max-height: min(48vh, 400px); }.five-d-playa.is-detached .five-d-playa-queue ol { grid-template-columns: 1fr 1fr; max-height: min(42vh, 350px); }
+@keyframes five-d-playa-dock { from { opacity:0; transform:translateY(18px) scale(.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+@media (max-width: 720px) { .five-d-playa-bar { grid-template-columns: minmax(0,1fr) auto; }.five-d-playa-main { grid-template-columns: 43px minmax(0,1fr) auto; gap: .45rem; }.five-d-playa-mark { width: 38px; height: 38px; }.five-d-playa-now { grid-column: 2 / -1; padding-left: 0; border-left: 0; }.five-d-playa-state { align-self: start; }.five-d-playa-detach { display:none; }.five-d-playa-toggle { grid-column: 2; grid-row: 1; min-width: 52px; }.five-d-playa-queue ol { grid-template-columns: 1fr; }.five-d-playa.is-detached { right: .55rem; bottom: .55rem; width: calc(100vw - 1.1rem); }.five-d-playa.is-detached .five-d-playa-detach { display:block; }.five-d-playa.is-detached .five-d-playa-bar { grid-template-columns: minmax(0,1fr) auto auto; }.five-d-playa.is-detached .five-d-playa-toggle { grid-column: auto; grid-row: auto; }.five-d-playa.is-detached .five-d-playa-main { grid-template-columns: 40px minmax(0,1fr); }.five-d-playa.is-detached .five-d-playa-now,.five-d-playa.is-detached .five-d-playa-state { display:none; }.five-d-playa.is-detached .five-d-playa-queue ol { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .five-d-playa.is-detached { animation:none; }.five-d-playa-progress i { transition:none; } }

@@ -43,7 +43,9 @@ import {
   isReleaseUnlockStored,
   type ReleaseUnlockProof,
 } from "@/lib/releaseGate";
+import { archiveQueueProgressPercent, nextArchiveQueueIndex } from "@/lib/archiveQueue";
 import DjMiniGame from "@/components/DjMiniGame";
+import "../five-d-playa.css";
 import {
   Dialog,
   DialogContent,
@@ -214,9 +216,17 @@ export default function Home() {
   const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
   const [sharedMixId, setSharedMixId] = useState<string | null>(null);
   const [mixShareStatus, setMixShareStatus] = useState<"idle" | "copied">("idle");
+  const [fiveDPlayerOpen, setFiveDPlayerOpen] = useState(false);
+  const [fiveDPlayerDetached, setFiveDPlayerDetached] = useState(false);
+  const [fiveDPlayerIndex, setFiveDPlayerIndex] = useState(0);
+  const [fiveDPlayerPlaying, setFiveDPlayerPlaying] = useState(false);
+  const [fiveDPlayerProgress, setFiveDPlayerProgress] = useState(0);
+  const [fiveDPlayerDuration, setFiveDPlayerDuration] = useState(0);
   const [requiresSupporterConfirmation, setRequiresSupporterConfirmation] = useState(false);
   const exclusiveAudioRef = useRef<HTMLAudioElement>(null);
+  const fiveDPlayerAudioRef = useRef<HTMLAudioElement>(null);
   const activeArt = lightboxIndex === null ? null : art[lightboxIndex];
+  const fiveDActiveMix = ARCHIVE_MIXES[fiveDPlayerIndex] ?? ARCHIVE_MIXES[0];
 
   useEffect(() => {
     try {
@@ -279,6 +289,21 @@ export default function Home() {
 
   const activeShareMix = sharedMixId ? ARCHIVE_MIXES.find((mix) => mix.id === sharedMixId) ?? null : null;
 
+  const selectFiveDPlayerMix = (index: number, shouldPlay = fiveDPlayerPlaying) => {
+    setFiveDPlayerIndex(index);
+    setFiveDPlayerProgress(0);
+    setFiveDPlayerDuration(0);
+    setFiveDPlayerPlaying(shouldPlay);
+  };
+
+  const toggleFiveDPlayerPlayback = () => {
+    setFiveDPlayerPlaying((isPlaying) => !isPlaying);
+  };
+
+  const playNextFiveDMix = () => {
+    selectFiveDPlayerMix(nextArchiveQueueIndex(fiveDPlayerIndex, ARCHIVE_MIXES.length), true);
+  };
+
   const shareArchiveMix = async (mix: ArchiveMix) => {
     const archiveUrl = `${window.location.origin}${window.location.pathname}#other-mixes`;
     const shareData = {
@@ -312,6 +337,20 @@ export default function Home() {
   useEffect(() => {
     return () => exclusiveAudioRef.current?.pause();
   }, []);
+
+  useEffect(() => {
+    return () => fiveDPlayerAudioRef.current?.pause();
+  }, []);
+
+  useEffect(() => {
+    const audio = fiveDPlayerAudioRef.current;
+    if (!audio) return;
+    if (fiveDPlayerPlaying) {
+      void audio.play().catch(() => setFiveDPlayerPlaying(false));
+    } else {
+      audio.pause();
+    }
+  }, [fiveDPlayerIndex, fiveDPlayerPlaying]);
 
   useEffect(() => {
     if (!isUnlockCelebrating) return;
@@ -495,6 +534,46 @@ export default function Home() {
             </div>
             <p>Direct archive pulls from 5D, Bobbyjackets, and DJ Hideaf. Choose a channel. Run the whole tape.</p>
           </div>
+          <section className={`five-d-playa${fiveDPlayerOpen ? " is-open" : ""}${fiveDPlayerDetached ? " is-detached" : ""}`} aria-label="5D Playa archive queue">
+            <audio
+              key={fiveDActiveMix.file}
+              ref={fiveDPlayerAudioRef}
+              src={fiveDActiveMix.file}
+              preload="metadata"
+              onPlay={() => setFiveDPlayerPlaying(true)}
+              onPause={() => setFiveDPlayerPlaying(false)}
+              onLoadedMetadata={(event) => setFiveDPlayerDuration(event.currentTarget.duration || 0)}
+              onTimeUpdate={(event) => setFiveDPlayerProgress(event.currentTarget.currentTime)}
+              onEnded={playNextFiveDMix}
+            />
+            <div className="five-d-playa-bar">
+              <button type="button" className="five-d-playa-main" onClick={() => setFiveDPlayerOpen((isOpen) => !isOpen)} aria-expanded={fiveDPlayerOpen} aria-controls="five-d-playa-queue">
+                <span className="five-d-playa-mark" aria-hidden="true">5D</span>
+                <span className="five-d-playa-label"><b>5D PLAYA</b><em>TRUE PLAYERS DNB / ARCHIVE QUEUE</em></span>
+                <span className="five-d-playa-now"><strong>{fiveDActiveMix.title}</strong><small>{fiveDActiveMix.artist}</small></span>
+                <span className="five-d-playa-state">{fiveDPlayerPlaying ? "PLAYING" : "READY"}</span>
+              </button>
+              <button type="button" className="five-d-playa-toggle" onClick={toggleFiveDPlayerPlayback} aria-label={fiveDPlayerPlaying ? `Pause ${fiveDActiveMix.title}` : `Play ${fiveDActiveMix.title}`}>{fiveDPlayerPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}</button>
+              <button type="button" className="five-d-playa-detach" onClick={() => setFiveDPlayerDetached((isDetached) => !isDetached)} aria-pressed={fiveDPlayerDetached}>{fiveDPlayerDetached ? "DOCK" : "DETACH"}</button>
+            </div>
+            <div className="five-d-playa-progress" aria-hidden="true"><i style={{ width: `${archiveQueueProgressPercent(fiveDPlayerProgress, fiveDPlayerDuration)}%` }} /></div>
+            {fiveDPlayerOpen && (
+              <div id="five-d-playa-queue" className="five-d-playa-queue">
+                <div className="five-d-playa-queue-head"><span>ARCHIVE RUN / {fiveDPlayerIndex + 1} OF {ARCHIVE_MIXES.length}</span><button type="button" onClick={playNextFiveDMix}>NEXT MIX</button></div>
+                <ol>
+                  {ARCHIVE_MIXES.map((mix, index) => (
+                    <li key={mix.id} className={index === fiveDPlayerIndex ? "is-current" : ""}>
+                      <button type="button" onClick={() => selectFiveDPlayerMix(index, true)} aria-label={`Play ${mix.title} by ${mix.artist}`}>
+                        <img src={mix.cover} alt="" />
+                        <span><b>{mix.title}</b><em>{mix.artist}</em></span>
+                        <small>{index === fiveDPlayerIndex && fiveDPlayerPlaying ? "PLAYING" : "QUEUE"}</small>
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </section>
           <div className="mix-archive-groups">
             <div className="mix-archive-group jungle-archive-group">
               <div className="mix-archive-group-heading"><span>ARCHIVE CHANNEL / 5D BASS</span><h3>DnB &amp; <em>Jungle</em></h3><p>Breakbeat pressure, liquid movement, and independent radio signal.</p></div>

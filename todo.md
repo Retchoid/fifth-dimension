@@ -50,7 +50,7 @@
 - [x] Document browser evidence that Level 1 No Request clear grants only green camo while Level 2 After Party clear grants purple camo plus crown, with both failure exits returning safely.
 - [x] Re-run and record a fresh-session Level 2 After Party failure check after the Level 1 bonus changes so no prior purple-camo state can affect the evidence.
 - [x] Confirm the saved two-bonus browser-proof notes cover both clear and failure return behavior before the next checkpoint.
-- [ ] Build a detachable Winamp-inspired 5D Playa that queues every archive mix from top to bottom while preserving all individual native players, downloads, shares, and archive content.
+- [x] Build a detachable Winamp-inspired 5D Playa that queues every archive mix from top to bottom while preserving all individual native players, downloads, shares, and archive content.
 - [x] Audit the official-site adaptive card, every individual mix share card, the arcade share action, native-share availability, and copy-link fallbacks.
 - [x] Verify the required official-site and mix share metadata, image, title, artist, URL, and call-to-action behavior without altering existing content.
 - [x] Repair any confirmed adaptive-card or share-flow regression, run full validation, and publish the verification update.
