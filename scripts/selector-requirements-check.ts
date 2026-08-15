@@ -206,6 +206,7 @@ const requirements: Array<[string, string, string]> = [
   ["Miami cyan and magenta cabinet shell", miamiArcadeStyles, ".arcade-cabinet-bezel"],
   ["DJ sprite backing blend cleanup", gameVisualStyles, "mix-blend-mode:screen"],
   ["dramatically larger foreground speaker stage", gameplayClarityStyles, "transform:scale(2.25)!important"],
+  ["persistent detailed-scene speaker foreground scale", detailedArcadeSceneStyles, ".urban-speaker-tower { transform:scale(1.86)!important;scale:1.86!important; }"],
   ["Level 2 speaker foreground position", gameplayClarityStyles, "transform:translateY(0) scale(1.42)!important"],
   ["mobile heading single column", responsiveRepairStyles, "grid-template-columns:minmax(0,1fr) !important"],
   ["mobile heading wrapping", responsiveRepairStyles, "overflow-wrap:anywhere !important"],

@@ -54,7 +54,7 @@
 .loss-curb-copy { width:min(64%,500px)!important; }
 
 /* Speakers are deliberately huge; dancers are readable, front-of-cone performers rather than tiny stickers. */
-.urban-speaker-tower { transform:scale(1.86)!important; }
+.urban-speaker-tower { transform:scale(1.86)!important;scale:1.86!important; }
 .urban-speaker-tower img { transform:scale(1.12)!important;filter:drop-shadow(7px 9px 0 rgba(5,4,7,.92)) saturate(1.18)!important; }
 .dj-booth-stage.speakers-half-raised .urban-speaker-tower,.dj-booth-stage.speakers-full-raised .urban-speaker-tower { animation-name:urban-speaker-arrive-detailed!important; }
 @keyframes urban-speaker-arrive-detailed { 0% { opacity:0;transform:translateY(-190px) scale(.68); } 60% { opacity:1;transform:translateY(8px) scale(2.02); } 100% { opacity:1;transform:translateY(0) scale(1.86); } }
@@ -67,7 +67,7 @@
 .combo-emerging-mixer :is(i,b,em),.combo-emerging-deck i { display:none!important; }
 
 @media (max-width:650px) {
-  .urban-speaker-tower { transform:scale(1.45)!important; }
+  .urban-speaker-tower { transform:scale(1.45)!important;scale:1.45!important; }
   .urban-speaker-tower img { transform:scale(1.05)!important; }
   .dj-booth-stage.speakers-half-raised .urban-speaker-tower,.dj-booth-stage.speakers-full-raised .urban-speaker-tower { animation-name:urban-speaker-arrive-detailed-mobile!important; }
   @keyframes urban-speaker-arrive-detailed-mobile { 0% { opacity:0;transform:translateY(-130px) scale(.58); } 60% { opacity:1;transform:translateY(6px) scale(1.58); } 100% { opacity:1;transform:translateY(0) scale(1.45); } }
