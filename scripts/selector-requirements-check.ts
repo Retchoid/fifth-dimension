@@ -6,6 +6,7 @@ const game = readFileSync(resolve(projectRoot, "client/src/components/DjMiniGame
 const home = readFileSync(resolve(projectRoot, "client/src/pages/Home.tsx"), "utf8");
 const releaseGate = readFileSync(resolve(projectRoot, "client/src/lib/releaseGate.ts"), "utf8");
 const styles = readFileSync(resolve(projectRoot, "client/src/index.css"), "utf8");
+const indexHtml = readFileSync(resolve(projectRoot, "client/index.html"), "utf8");
 const leaderboardRouter = readFileSync(resolve(projectRoot, "server/routers.ts"), "utf8");
 const leaderboardDb = readFileSync(resolve(projectRoot, "server/db.ts"), "utf8");
 const afterpartyStyles = readFileSync(resolve(projectRoot, "client/src/afterparty-runner.css"), "utf8");
@@ -160,6 +161,16 @@ const requirements: Array<[string, string, string]> = [
   ["Run the Riddim first award cannot be suppressed", game, "pauseForRiddimBonus = true;"],
   ["Gun Finger extended readability", game, "nextReaction === \"gun-fingers\" ? 1750"],
   ["Gun Finger non-blocking in-world callout", game, "announceInWorldReward(\"GUN FINGER MASSIVE\""],
+  ["sprite underlay removed", gameVisualStyles, ".dj-catcher::before { background:transparent; filter:none; box-shadow:none; }"],
+  ["green reward signal", gameVisualStyles, "rgba(185,255,79,.92)"],
+  ["red hazard signal", gameVisualStyles, "rgba(255,55,75,.94)"],
+  ["official adaptive canonical URL preserved", indexHtml, 'property="og:url" content="https://fifthdim-ahhcmq4d.manus.space/"'],
+  ["official adaptive image preserved", indexHtml, 'property="og:image" content="https://files.manuscdn.com/user_upload_by_module/session_file/310519663887234637/SPFreeeJWSngaXXD.png"'],
+  ["large image social card preserved", indexHtml, 'name="twitter:card" content="summary_large_image"'],
+  ["archive native playback preserved", home, '<audio controls preload="metadata" src={mix.file}'],
+  ["archive MP3 download preserved", home, 'download={mix.downloadName} className="mix-download"'],
+  ["archive share control preserved", home, 'className="mix-share" onClick={() => { setSharedMixId(mix.id);'],
+  ["archive share call to action preserved", home, 'check out 5th Dimension music official site for more content, games and upcoming events'],
   ["Bonus 2 route clears entity labels", afterpartyStyles, ".afterparty-entity b{display:none;}"],
   ["same-type bottle/core crowd threshold", game, "if (hazardHitsRef.current >= 2)"],
   ["two-pill overload warning", game, "if (item.type === \"pill\") pauseForPillOverload = true;"],

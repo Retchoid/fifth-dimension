@@ -2,6 +2,14 @@
 
 ## Current approval-gated arcade regression audit
 
+- [x] Implement the approved content-preserving jungle-rave, urban-decay, retro-cyber post-hero site and 5D Playa redesign while retaining every album cover, adaptive card, media control, link, and functional contract.
+- [x] Remove only the visible player-sprite underlay and apply the approved green reward/red hazard visual signals without changing arcade mechanics.
+- [x] Research the requested jungle, drum-and-bass, 1990s rave, vaporwave, psychedelic, graffiti, urban-decay, retro, and cyber references before proposing the site and 5D Playa redesign.
+- [x] Re-verify after the redesign that official-site adaptive-card metadata and mix-share content remain unchanged and functional.
+- [x] Smoke-check representative archive media controls, MP3 downloads, share actions, and key links after the visual reskin through the deterministic preservation audit.
+- [x] Remove the visible square or underlay around the player sprite so only the sprite is visible, while preserving collision geometry and gameplay behavior.
+- [x] Add a green visual glow to positive rewards and a red visual glow to hazards without changing scoring, hazard types, collision, or scene logic.
+- [x] Propose a content-preserving redesign of the site and 5D Playa that retains all album covers, adaptive cards, media, core descriptions, existing functions, and share behavior; obtain approval before implementation.
 - [ ] Make the first BOH and Run the Riddim awards visibly render once, make Big Up and Gun Finger clearly readable as non-blocking in-world feedback, and clear Bonus 2 route-obscuring status layers without changing scoring, targets, hazards, sprites, stages, or other game systems.
 - [ ] Add the approved non-blocking Gun Finger in-world visibility treatment and verify it renders during live play without pausing gameplay.
 - [ ] Capture desktop and mobile Bonus 2 runner evidence confirming the compacted status chrome no longer blocks route entities or visual lanes.

@@ -12,13 +12,13 @@
 .rave-world-dressing::before { border-top-color:rgba(0,231,255,.32); border-bottom-color:#050407; }
 .rave-world-dressing::after { opacity:.84; }
 
-.dj-catcher::before { background:#040308; filter:none; box-shadow:0 3px 0 rgba(255,79,156,.28); }
+.dj-catcher::before { background:transparent; filter:none; box-shadow:none; }
 .dj-catcher-art,.dj-sprite,.level-two-dancer,.speaker-stack-dancer,.level-one-streak-dancer { image-rendering:pixelated; filter:drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.32)) drop-shadow(0 0 8px rgba(255,79,156,.35)); }
 .dj-sprite { filter:contrast(1.2) saturate(1.24) drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.28)); }
 
 .falling-object { filter:drop-shadow(3px 4px 0 #050407) drop-shadow(-1px -1px 0 rgba(255,242,185,.26)) !important; }
 .falling-object :is(.vinyl-record-sprite,.police-badge-sprite,.crowd-throw-sprite,.turntable-pickup,.cdj-pickup,.mixer-pickup,.adapter-pickup,.lion-head-pickup) { image-rendering:pixelated; }
-.falling-object.record { color:#00e7ff; }.falling-object :is(.mixer,.turntable,.adapter,.cdj,.lion) { color:#c6ff00; }.falling-object :is(.cop,.bottle,.apple,.pill,.phone) { color:#ff4f9c; }
+.falling-object.record,.falling-object :is(.mixer,.turntable,.adapter,.cdj,.lion) { color:#b9ff4f; filter:drop-shadow(3px 4px 0 #050407) drop-shadow(0 0 8px rgba(185,255,79,.92))!important; }.falling-object :is(.cop,.bottle,.apple,.pill,.phone) { color:#ff4f67; filter:drop-shadow(3px 4px 0 #050407) drop-shadow(0 0 8px rgba(255,55,75,.94))!important; }
 .vinyl-record-sprite { background:repeating-radial-gradient(circle,#07070c 0 3px,#30263a 4px 5px,#08070d 6px 8px); }.vinyl-label { box-shadow:inset 2px 2px 0 rgba(255,255,255,.28); }
 .police-badge-sprite,.crowd-throw-sprite,.turntable-pickup,.cdj-pickup,.mixer-pickup,.adapter-pickup { border-color:#050407; }
 

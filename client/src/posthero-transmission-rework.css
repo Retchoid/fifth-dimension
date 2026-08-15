@@ -1,0 +1,71 @@
+/* Approved post-hero redesign: rave-flyer information density, jungle sound-system weight,
+   decayed urban print, and restrained retro-cyber signal light. Content and controls are untouched. */
+.listen-section,.bio-section,.projects-section,.visuals-section,.genre-mixes-section,.booking-section,.contact-section {
+  position:relative;
+  isolation:isolate;
+  background-color:#0b0b12;
+  background-image:linear-gradient(105deg,rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(17deg,rgba(0,0,0,.31) 24%,transparent 24% 73%,rgba(0,0,0,.23) 73%),repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 5px);
+  background-size:13px 13px,100% 100%,100% 5px;
+}
+.listen-section::before,.bio-section::before,.projects-section::before,.visuals-section::before,.genre-mixes-section::before,.booking-section::before,.contact-section::before {
+  content:""; position:absolute; z-index:-1; inset:0; pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,231,255,.12),transparent 14%,transparent 85%,rgba(255,79,156,.13)),radial-gradient(circle at 18% 12%,rgba(183,255,67,.08),transparent 24%);
+  mix-blend-mode:screen;
+}
+.section-heading { position:relative; max-width:78rem; margin-inline:auto; padding-inline:.2rem; }
+.section-heading::before { content:"TRANSMISSION / 5D"; display:block; width:max-content; max-width:100%; margin-bottom:.36rem; color:#b9ff4f; font:800 .48rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; text-shadow:1px 1px 0 #050407; }
+.section-heading h2,.section-heading-dark h2 { color:#f5ebd2; font-family:"Bungee",Impact,sans-serif; letter-spacing:.04em; text-shadow:3px 3px 0 #08070d,5px 5px 0 rgba(255,79,156,.46); }
+.section-heading p { max-width:65ch; color:#d7d1d4; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+
+.music-deck,.bio-art-panel,.project-card,.mix-archive-card,.booking-form,.booking-copy,.contact-content {
+  border:2px solid #17131f !important;
+  border-radius:0 !important;
+  background:linear-gradient(138deg,rgba(34,29,42,.98),rgba(10,10,16,.98) 60%,rgba(28,20,35,.98)) !important;
+  box-shadow:5px 6px 0 #050407,0 0 0 1px rgba(0,231,255,.26),inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+.music-deck::before,.bio-art-panel::before,.project-card::before,.mix-archive-card::before,.booking-form::before,.booking-copy::before,.contact-content::before {
+  content:""; position:absolute; inset:5px; pointer-events:none; border:1px solid rgba(255,255,255,.08); mix-blend-mode:screen;
+}
+.music-deck,.mix-archive-card,.project-card { overflow:hidden; }
+.music-deck { transform:rotate(-.35deg); }
+.music-deck:nth-of-type(even),.mix-archive-card:nth-of-type(even),.project-card:nth-of-type(even) { transform:rotate(.3deg); }
+.mix-archive-group-heading,.mix-catalog-stamp,.project-id,.project-status,.booking-signal { color:#b9ff4f !important; font-family:ui-monospace,SFMono-Regular,Menlo,monospace !important; letter-spacing:.11em; }
+.mix-archive-id,.mix-archive-titleline h3,.project-card h3,.booking-copy h2,.contact-content h2 { color:#f9edd5 !important; text-shadow:2px 2px 0 #08070d; }
+.mix-archive-card:hover,.project-card:hover { border-color:#ff5c9f !important; transform:translate(-2px,-2px) rotate(-.15deg); box-shadow:7px 8px 0 #050407,0 0 0 1px rgba(255,79,156,.72),0 0 18px rgba(255,79,156,.2) !important; }
+.mix-archive-cover { border:2px solid #050407 !important; box-shadow:3px 3px 0 rgba(0,231,255,.64) !important; }
+.mix-download,.mix-share,.booking-submit,.booking-email,.contact-link { border-radius:0 !important; box-shadow:3px 3px 0 #050407 !important; }
+.mix-download,.booking-submit { background:#b9ff4f !important; color:#090b0c !important; }
+.mix-share,.booking-email { background:#00cfe7 !important; color:#081016 !important; }
+.contact-link { background:#ff5c9f !important; color:#160810 !important; }
+
+.projects-grid,.mix-archive-grid { gap:1rem !important; }
+.project-card::after,.mix-archive-card::after { content:"5D / DUBPLATE ARCHIVE"; position:absolute; right:.35rem; bottom:.28rem; color:rgba(255,255,255,.31); font:800 .32rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.08em; pointer-events:none; }
+.visuals-section .art-card,.visuals-section figure { border:2px solid #050407; box-shadow:5px 6px 0 #050407,0 0 0 1px rgba(0,231,255,.32); background:#17111d; }
+.visuals-section .art-card:nth-child(even),.visuals-section figure:nth-child(even) { box-shadow:5px 6px 0 #050407,0 0 0 1px rgba(255,79,156,.52); }
+.visuals-section figcaption { color:#d7ff75 !important; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.08em; }
+
+.booking-form input,.booking-form textarea { border-radius:0 !important; border-color:#494056 !important; background:#0b0a12 !important; color:#f8efd7 !important; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+.booking-form input:focus,.booking-form textarea:focus { border-color:#00d9f2 !important; box-shadow:0 0 0 2px rgba(0,217,242,.22) !important; }
+.contact-grid-bg { opacity:.48; filter:saturate(1.24) contrast(1.1); }
+
+/* Material correction: archive paper and signal-orange hierarchy lead the interface; neon remains a contained accent. */
+.listen-section,.bio-section,.projects-section,.visuals-section,.genre-mixes-section,.booking-section,.contact-section { background-color:#111015; background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 5px),repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0 1px,transparent 1px 17px),linear-gradient(116deg,rgba(255,111,49,.075),transparent 27%,transparent 73%,rgba(206,187,142,.06)); }
+.listen-section::before,.bio-section::before,.projects-section::before,.visuals-section::before,.genre-mixes-section::before,.booking-section::before,.contact-section::before { background:linear-gradient(90deg,rgba(255,111,49,.18),transparent 10%,transparent 90%,rgba(211,192,153,.1)),radial-gradient(circle at 18% 12%,rgba(255,232,181,.07),transparent 23%); mix-blend-mode:normal; }
+.section-heading::before { color:#ff7a38; text-shadow:1px 1px 0 #050407; }
+.section-heading h2,.section-heading-dark h2 { color:#f7edd5; text-shadow:3px 3px 0 #08070d,5px 5px 0 rgba(255,111,49,.38); }
+.section-heading:nth-child(odd)::before { content:"5D / PIRATE RADIO LOG"; }.projects-section .section-heading::before { content:"5D / UPCOMING SIGNAL"; }.visuals-section .section-heading::before { content:"5D / AUTHENTICATED ARTWORK"; }.genre-mixes-section .section-heading::before { content:"5D / RELEASE INDEX"; }.booking-section .section-heading::before { content:"5D / BOOKING COORDINATES"; }.contact-section .section-heading::before { content:"5D / RETURN CHANNEL"; }
+.music-deck,.bio-art-panel,.project-card,.mix-archive-card,.booking-form,.booking-copy,.contact-content { border-color:#27232a !important; background:linear-gradient(138deg,rgba(47,42,39,.98),rgba(18,17,19,.99) 63%,rgba(45,36,32,.98)) !important; box-shadow:5px 6px 0 #050407,0 0 0 1px rgba(255,232,181,.17),inset 0 1px 0 rgba(255,248,225,.16) !important; }
+.mix-archive-group-heading,.mix-catalog-stamp,.project-id,.project-status,.booking-signal { color:#ff9c5e !important; }
+.mix-archive-card:hover,.project-card:hover { border-color:#ff7a38 !important; box-shadow:7px 8px 0 #050407,0 0 0 1px rgba(255,122,56,.76),0 0 17px rgba(255,111,49,.15) !important; }
+.mix-archive-cover { box-shadow:3px 3px 0 #ff7a38 !important; }
+.mix-download,.booking-submit { background:#ff7a38 !important; color:#120d0a !important; }.mix-share,.booking-email { background:#e8dcc2 !important; color:#17120f !important; }.contact-link { background:#ff7a38 !important; color:#160810 !important; }
+.mix-download:hover,.booking-submit:hover,.contact-link:hover { filter:brightness(1.12) saturate(1.12); }.mix-share:hover,.booking-email:hover { background:#fff0cf !important; }
+.visuals-section .art-card,.visuals-section figure { box-shadow:5px 6px 0 #050407,0 0 0 1px rgba(255,232,181,.23); }.visuals-section .art-card:nth-child(even),.visuals-section figure:nth-child(even) { box-shadow:5px 6px 0 #050407,0 0 0 1px rgba(255,122,56,.48); }
+.visuals-section figcaption { color:#ffb377 !important; }
+
+@media (max-width:720px) {
+  .music-deck { transform:none; }
+  .mix-archive-card:nth-of-type(even),.project-card:nth-of-type(even) { transform:none; }
+  .section-heading::before { font-size:.42rem; }
+  .music-deck,.bio-art-panel,.project-card,.mix-archive-card,.booking-form,.booking-copy,.contact-content { box-shadow:4px 5px 0 #050407,0 0 0 1px rgba(0,231,255,.24),inset 0 1px 0 rgba(255,255,255,.1) !important; }
+}

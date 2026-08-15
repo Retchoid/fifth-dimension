@@ -46,6 +46,7 @@ import {
 import { archiveQueueProgressPercent, nextArchiveQueueIndex } from "@/lib/archiveQueue";
 import DjMiniGame from "@/components/DjMiniGame";
 import "../five-d-playa.css";
+import "../posthero-transmission-rework.css";
 import {
   Dialog,
   DialogContent,

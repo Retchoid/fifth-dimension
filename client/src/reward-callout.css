@@ -13,7 +13,7 @@
   padding: .38rem .65rem .32rem;
   border: 2px solid rgba(25, 21, 27, .9);
   background: rgba(255, 218, 70, .76);
-  box-shadow: 3px 3px 0 rgba(23, 18, 27, .68), inset 0 2px 0 rgba(255, 247, 181, .8);
+  box-shadow: 3px 3px 0 rgba(23, 18, 27, .68), inset 0 2px 0 rgba(255, 247, 181, .8), 0 0 13px rgba(177, 255, 72, .84);
   color: #241b24;
   font-family: "Bungee", system-ui, sans-serif;
   text-align: center;
