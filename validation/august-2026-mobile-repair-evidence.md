@@ -94,3 +94,9 @@ The deterministic scene verifier exposes the standard sequence set: rewind, whee
 The Level 2 verifier now resolves the dedicated `5d-selector-level-two-detailed-stage` artwork after its asynchronous stage switch completes. Its existing dark center-lane and cyan/magenta crowd-pressure overlays remain layered above that distinct source image.
 
 The hold-enabled deterministic verifier mounts the police scene with its police-car, DJ-reaction, recovery prompt, and established copy while the shared cyan/magenta/graphite frame remains attached. The cabinet was then focused for direct visual confirmation without advancing the test sequence.
+
+The public checkpoint loads with the arcade controls intact, and its deployed CSS bundle contains the dedicated Level 2 crowd-pressure stage asset. The asset contract is therefore present on production; a user-played Level 2 remains the appropriate final experiential check of its real-time object lanes.
+
+The current phone-width full-page development review completed after the silhouette and dedicated-stage corrections. The arcade remains contained within the mobile content flow, with the compact cabinet, release card, archive controls, visual-gallery items, booking form, and footer all present; no new text clipping or horizontal runaway was observed in the rendered review.
+
+The hold-enabled rewind verifier confirms the shared overlay frame is mounted and computes to the intended cyan/magenta/graphite layered background, hard inset treatment, and dark outline inside the cabinet. The same final CSS rule now includes the chain, inter-level, finale, loss, game-over, and bonus rewind overlay classes that were previously outside this shared art contract.

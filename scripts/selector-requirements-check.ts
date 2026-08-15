@@ -138,6 +138,7 @@ const requirements: Array<[string, string, string]> = [
   ["5D Playa direct archive shares remain", home, "className=\"mix-share\""],
   ["game cut-in visual grammar", gameVisualStyles, ".rewind-reward-overlay"],
   ["shared hard-outline splash frame", gameVisualStyles, "Every interruption receives one high-contrast"],
+  ["chain, finale, loss, and bonus splash coverage", gameVisualStyles, ".unlock-overlay,.pre-level-two-overlay,.finale-overlay,.loss-curb-overlay,.game-over-overlay,.bonus-rewind-overlay"],
   ["game bonus-stage visual grammar", gameVisualStyles, ".afterparty-runner-stage"],
   ["public crown marker", game, "hasBonusCrown"],
   ["durable bonus-clear crown proof", game, "shouldAwardBonusCrown(completedLevel, bonusCompletedRef.current)"],
