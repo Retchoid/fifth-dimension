@@ -9,12 +9,12 @@
 - [x] Remove the visible white rectangle around the After Party rear-view DJ sprite while preserving the intended sprite design and bright-purple reward state.
 - [x] Replace the After Party’s indistinct pale lump entities with readable, hard-outlined 16-bit gear and hazard props that match the gritty rave/jungle arcade style.
 - [x] Rebalance the After Party spawn spacing, speed, safe lanes, and required gear cadence so the Level 2 bonus is fair and playable.
-- [ ] Verify the repaired bonus in a live run, including clear and fail paths, and preserve the existing Level 2 crown contract.
+- [x] Verify the repaired bonus in a live run, including clear and fail paths, and preserve the existing Level 2 crown contract.
 - [x] Run a non-held pill, crowd, and police verification to confirm each releases through the record-spin bridge and returns to active play.
-- [ ] Re-run the repaired After Party clear and failure paths and verify the Level 2-only crown submission contract remains intact.
+- [x] Re-run the repaired After Party clear and failure paths and verify the Level 2-only crown submission contract remains intact.
 - [ ] Recheck the user’s already submitted crown score against the corrected genuine Level 2 requirement without asking for another test.
 - [x] Guard the final named Level 2 score submission against a bonus-clear UI-state race by using the durable bonus completion proof.
-- [ ] Verify the corrected crown path in the final regression pass and publish the bonus repair.
+- [x] Verify the corrected crown path in the final regression pass and publish the bonus repair.
 - [ ] Confirm one genuine named Level 2 bonus-clear submission after the durable crown-proof repair persists hasBonusCrown=1 and displays through the public leaderboard read path.
 - [x] Reduce or relocate nonessential active-game overlays so falling pickups and hazards remain continuously visible and playable.
 - [x] Replace the record-only scene handoff with a full-screen record-spin dissolve that clearly transitions between splash scenes and active play.
@@ -35,7 +35,7 @@
 - [x] Restore and verify the v5 locked-by-default Jersh release state before gameplay completes the chain-break contract.
 - [x] Back-test official-site, nine-mix, and Selectah Showdown sharing/adaptive-card surfaces against their required content and URL constraints.
 - [x] Audit the site and arcade theme, palette, graphic cohesion, game overlays, event cadence, falling-item outcomes, dancer thresholds, bonus rewards, and loss/end states against the supplied references and existing constraints.
-- [ ] Present usability-impacting recommendations for approval before changing game-event cadence, overlays, bonus architecture, visual assets, meter layout, dancer thresholds, or mix-player interaction patterns.
+- [x] Present usability-impacting recommendations for approval before changing game-event cadence, overlays, bonus architecture, visual assets, meter layout, dancer thresholds, or mix-player interaction patterns.
 - [x] After approval, implement the agreed site/game visual refinements and a detachable Winamp-inspired 5D Playa mix player without regressing existing playback, sharing, or archive controls.
 - [x] Convert BOH, Run the Riddim, record-crate, and headphones rewards into spaced, non-blocking translucent yellow in-world callouts while retaining Rewind as the only full-screen reward splash.
 - [x] Require two consecutive cop, pill, or phone hits for their named unified splash scenes; treat the three-negative-events-per-level rule as sufficient hazard exposure rather than forced player hits.
