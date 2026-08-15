@@ -94,3 +94,62 @@
 .game-viewport .level-two-arrival-overlay { background-image:linear-gradient(90deg,rgba(5,4,11,.86),transparent 26% 74%,rgba(5,4,11,.86)),url("/manus-storage/5d-selector-level-two-detailed-stage_89e2157b.png")!important; }
 .game-viewport .game-over-overlay { background-image:linear-gradient(to bottom,rgba(7,4,13,.2),rgba(7,4,13,.9)),url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png")!important; }
 .game-viewport .loss-curb-overlay { background-image:linear-gradient(to bottom,rgba(4,3,10,.12),rgba(4,3,10,.82)),url("/manus-storage/selectah-urban-brawler-visual-target_a56c19c4.png")!important; }
+
+/* Shared hazard interruption shell: a cracked, scanlined arcade monitor that preserves each illustrated scene beneath it. */
+.game-viewport .hazard-splash {
+  background-color:#0a0a0a!important;
+  border:4px solid #ff2d95!important;
+  box-shadow:0 0 40px rgba(255,45,149,.3),inset 0 0 60px rgba(255,45,149,.1)!important;
+  font-family:"Press Start 2P","Bungee",monospace!important;
+  text-transform:uppercase;
+  position:relative;
+  isolation:isolate;
+}
+.game-viewport .hazard-splash::after {
+  content:"";
+  position:absolute;
+  z-index:6;
+  inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.2) 2px,rgba(0,0,0,.2) 4px);
+  pointer-events:none;
+}
+.game-viewport .hazard-splash :is(.police-seizure-copy,.crowd-anger-copy,.pill-overload-copy,.sega-police-car,.dopey-dj-portrait,.pill-pitch-wobble,.empty-club-room) { position:relative; z-index:7; }
+
+/* Development-only capture wrapper: hides the page introduction so phone review frames show the entire cabinet state. */
+.arcade-cabinet-focus .section-heading { display:none!important; }
+.arcade-cabinet-focus .minigame-section { padding-top:0!important; }
+.arcade-cabinet-focus .police-recovery-prompt { display:none!important; }
+
+/* Crowd interruption copy previously inherited a negative offset intended for an older compact warning; keep both new two-line titles within the scene frame. */
+.game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy {
+  position:absolute!important;
+  top:12%!important;
+  left:50%!important;
+  width:min(90%,590px)!important;
+  margin:0!important;
+  transform:translateX(-50%)!important;
+}
+.game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy {
+  position:absolute!important;
+  top:46%!important;
+  left:50%!important;
+  width:min(76%,560px)!important;
+  margin:0!important;
+  transform:translateX(-50%)!important;
+}
+.game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy strong { font-size:clamp(1.65rem,4.7vw,3.65rem)!important; }
+.game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy em { font-size:clamp(.64rem,1.45vw,.98rem)!important; line-height:1.08!important; letter-spacing:.045em!important; }
+@media (max-width:650px) {
+  .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy {
+    top:8%!important;
+    gap:.24rem!important;
+    width:92%!important;
+  }
+  .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy strong { font-size:clamp(1.95rem,10.6vw,2.65rem)!important; }
+  .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy em { font-size:clamp(.47rem,2.35vw,.61rem)!important; line-height:1.12!important; letter-spacing:.035em!important; }
+  .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy.is-wrong-tune strong { font-size:clamp(1.48rem,8.2vw,2.05rem)!important; line-height:.84!important; }
+  .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy.is-wrong-tune em { max-width:96%!important; }
+  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy { top:43%!important; width:88%!important; }
+  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy strong { font-size:clamp(1.72rem,9.1vw,2.25rem)!important; }
+  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy em { font-size:clamp(.54rem,2.55vw,.68rem)!important; }
+}

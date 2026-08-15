@@ -385,6 +385,26 @@ export default function Home() {
     window.location.href = createBookingMailto(bookingSubject, bookingMessage, bookingEventDate, bookingEventLocation);
   };
 
+  const arcadeVerifierOnly = import.meta.env.DEV && new URLSearchParams(window.location.search).get("arcade-verifier") === "true";
+  const arcadeCabinetFocus = arcadeVerifierOnly && new URLSearchParams(window.location.search).get("arcade-cabinet-focus") === "true";
+
+  if (arcadeVerifierOnly) {
+    return (
+      <main className="min-h-screen bg-[#09070f] px-3 py-5 sm:px-6 sm:py-8">
+        <div id="selectah-showdown" className={`arcade-flow-shell${arcadeCabinetFocus ? " arcade-cabinet-focus" : ""}`}>
+          <DjMiniGame
+            downloadUnlocked={downloadUnlocked}
+            isUnlockCelebrating={isUnlockCelebrating}
+            onUnlockDownload={unlockDownload}
+            onAchievementFlowComplete={settleAchievementFlow}
+            supporterGateRequired={requiresSupporterConfirmation}
+            onSupporterConfirmed={() => setRequiresSupporterConfirmation(false)}
+          />
+        </div>
+      </main>
+    );
+  }
+
   return (
     <div className="dj-site min-h-screen bg-[#09070f] text-white">
       <header className="dj-header">
@@ -444,6 +464,47 @@ export default function Home() {
           </nav>
         )}
       </header>
+
+      <section className={`five-d-playa${fiveDPlayerOpen ? " is-open" : ""}${fiveDPlayerDetached ? " is-detached" : ""}`} aria-label="5D Playa archive queue">
+        <audio
+          key={fiveDActiveMix.file}
+          ref={fiveDPlayerAudioRef}
+          src={fiveDActiveMix.file}
+          preload="metadata"
+          onPlay={() => setFiveDPlayerPlaying(true)}
+          onPause={() => setFiveDPlayerPlaying(false)}
+          onLoadedMetadata={(event) => setFiveDPlayerDuration(event.currentTarget.duration || 0)}
+          onTimeUpdate={(event) => setFiveDPlayerProgress(event.currentTarget.currentTime)}
+          onEnded={playNextFiveDMix}
+        />
+        <div className="five-d-playa-bar">
+          <button type="button" className="five-d-playa-main" onClick={() => setFiveDPlayerOpen((isOpen) => !isOpen)} aria-expanded={fiveDPlayerOpen} aria-controls="five-d-playa-queue">
+            <span className="five-d-playa-mark" aria-hidden="true">5D</span>
+            <span className="five-d-playa-label"><b>5D PLAYA</b><em>TRUE PLAYERS DNB / ARCHIVE QUEUE</em></span>
+            <span className="five-d-playa-now"><strong>{fiveDActiveMix.title}</strong><small>{fiveDActiveMix.artist}</small></span>
+            <span className="five-d-playa-state">{fiveDPlayerPlaying ? "PLAYING" : "READY"}</span>
+          </button>
+          <button type="button" className="five-d-playa-toggle" onClick={toggleFiveDPlayerPlayback} aria-label={fiveDPlayerPlaying ? `Pause ${fiveDActiveMix.title}` : `Play ${fiveDActiveMix.title}`}>{fiveDPlayerPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}</button>
+          <button type="button" className="five-d-playa-detach" onClick={() => setFiveDPlayerDetached((isDetached) => !isDetached)} aria-pressed={fiveDPlayerDetached}>{fiveDPlayerDetached ? "DOCK" : "DETACH"}</button>
+        </div>
+        <div className="five-d-playa-progress" aria-hidden="true"><i style={{ width: `${archiveQueueProgressPercent(fiveDPlayerProgress, fiveDPlayerDuration)}%` }} /></div>
+        {fiveDPlayerOpen && (
+          <div id="five-d-playa-queue" className="five-d-playa-queue">
+            <div className="five-d-playa-queue-head"><span>ARCHIVE RUN / {fiveDPlayerIndex + 1} OF {ARCHIVE_MIXES.length}</span><button type="button" onClick={playNextFiveDMix}>NEXT MIX</button></div>
+            <ol>
+              {ARCHIVE_MIXES.map((mix, index) => (
+                <li key={mix.id} className={index === fiveDPlayerIndex ? "is-current" : ""}>
+                  <button type="button" onClick={() => selectFiveDPlayerMix(index, true)} aria-label={`Play ${mix.title} by ${mix.artist}`}>
+                    <img src={mix.cover} alt="" />
+                    <span><b>{mix.title}</b><em>{mix.artist}</em></span>
+                    <small>{index === fiveDPlayerIndex && fiveDPlayerPlaying ? "PLAYING" : "QUEUE"}</small>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+      </section>
 
       <main id="top">
         <section className="hero" aria-labelledby="hero-title">
@@ -555,46 +616,6 @@ export default function Home() {
             </div>
             <p>Direct archive pulls from 5D, Bobbyjackets, and DJ Hideaf. Choose a channel. Run the whole tape.</p>
           </div>
-          <section className={`five-d-playa${fiveDPlayerOpen ? " is-open" : ""}${fiveDPlayerDetached ? " is-detached" : ""}`} aria-label="5D Playa archive queue">
-            <audio
-              key={fiveDActiveMix.file}
-              ref={fiveDPlayerAudioRef}
-              src={fiveDActiveMix.file}
-              preload="metadata"
-              onPlay={() => setFiveDPlayerPlaying(true)}
-              onPause={() => setFiveDPlayerPlaying(false)}
-              onLoadedMetadata={(event) => setFiveDPlayerDuration(event.currentTarget.duration || 0)}
-              onTimeUpdate={(event) => setFiveDPlayerProgress(event.currentTarget.currentTime)}
-              onEnded={playNextFiveDMix}
-            />
-            <div className="five-d-playa-bar">
-              <button type="button" className="five-d-playa-main" onClick={() => setFiveDPlayerOpen((isOpen) => !isOpen)} aria-expanded={fiveDPlayerOpen} aria-controls="five-d-playa-queue">
-                <span className="five-d-playa-mark" aria-hidden="true">5D</span>
-                <span className="five-d-playa-label"><b>5D PLAYA</b><em>TRUE PLAYERS DNB / ARCHIVE QUEUE</em></span>
-                <span className="five-d-playa-now"><strong>{fiveDActiveMix.title}</strong><small>{fiveDActiveMix.artist}</small></span>
-                <span className="five-d-playa-state">{fiveDPlayerPlaying ? "PLAYING" : "READY"}</span>
-              </button>
-              <button type="button" className="five-d-playa-toggle" onClick={toggleFiveDPlayerPlayback} aria-label={fiveDPlayerPlaying ? `Pause ${fiveDActiveMix.title}` : `Play ${fiveDActiveMix.title}`}>{fiveDPlayerPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}</button>
-              <button type="button" className="five-d-playa-detach" onClick={() => setFiveDPlayerDetached((isDetached) => !isDetached)} aria-pressed={fiveDPlayerDetached}>{fiveDPlayerDetached ? "DOCK" : "DETACH"}</button>
-            </div>
-            <div className="five-d-playa-progress" aria-hidden="true"><i style={{ width: `${archiveQueueProgressPercent(fiveDPlayerProgress, fiveDPlayerDuration)}%` }} /></div>
-            {fiveDPlayerOpen && (
-              <div id="five-d-playa-queue" className="five-d-playa-queue">
-                <div className="five-d-playa-queue-head"><span>ARCHIVE RUN / {fiveDPlayerIndex + 1} OF {ARCHIVE_MIXES.length}</span><button type="button" onClick={playNextFiveDMix}>NEXT MIX</button></div>
-                <ol>
-                  {ARCHIVE_MIXES.map((mix, index) => (
-                    <li key={mix.id} className={index === fiveDPlayerIndex ? "is-current" : ""}>
-                      <button type="button" onClick={() => selectFiveDPlayerMix(index, true)} aria-label={`Play ${mix.title} by ${mix.artist}`}>
-                        <img src={mix.cover} alt="" />
-                        <span><b>{mix.title}</b><em>{mix.artist}</em></span>
-                        <small>{index === fiveDPlayerIndex && fiveDPlayerPlaying ? "PLAYING" : "QUEUE"}</small>
-                      </button>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
-          </section>
           <div className="mix-archive-groups">
             <div className="mix-archive-group jungle-archive-group">
               <div className="mix-archive-group-heading"><span>ARCHIVE CHANNEL / 5D BASS</span><h3>DnB &amp; <em>Jungle</em></h3><p>Breakbeat pressure, liquid movement, and independent radio signal.</p></div>

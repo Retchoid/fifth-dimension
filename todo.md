@@ -10,6 +10,16 @@
 - [ ] Capture and review desktop and phone runtime evidence for police, crowd, pill, rewind, record-spin, crate, headphones, salute/riddim, Level 2 arrival, loss, and game-over scenes.
 - [ ] Verify each inspected scene preserves its timing, copy, audio handoff, and return-to-play behavior in live runtime rather than only through source-selector coverage.
 - [ ] Document desktop and phone visual evidence that loss and game-over retain a full readable foreground hierarchy without shrunken sprite, shrunken copy, or empty background.
+- [x] Replace the pill, police, Wrong Tune, and Thrown Tune hazard splash copy with the user-approved titles and humorous supporting lines, preserving their existing trigger logic, timing, audio, and return-to-play behavior.
+- [x] Apply a shared `hazard-splash` cracked-arcade treatment to those hazard scenes: black ground, magenta hard frame, inset and outer neon glow, Press Start 2P fallback stack, uppercase copy, and non-interactive scanlines without hiding the illustrated focal art.
+- [ ] Capture and review the revised pill, police, Wrong Tune, and Thrown Tune hazard scenes at desktop and phone widths, verifying the full copy is readable and no scene is obscured.
+- [x] Deliver one separate review image for each updated hazard splash: Too High to Play, Cops Seized Your Mixer, Wrong Tune My Selectah, and Thrown Tune.
+- [ ] Reposition the police recovery-combo prompt so it does not overlap the revised Cops Seized Your Mixer headline at desktop or phone width.
+- [x] Correct the desktop police hazard-copy placement so the complete Cops Seized Your Mixer title and supporting line remain inside the illustrated cracked-screen frame.
+- [x] Remove only the main archive 5D Playa queue panel while retaining its top-navigation 5D Playa control and the archive’s individual native audio players, downloads, and share controls.
+- [x] Provide a text document containing the complete Selectah Showdown game source and its directly imported arcade stylesheets for review.
+- [x] Create and attach one consolidated plain-text Selectah Showdown export containing the full gameplay source followed by all directly imported arcade stylesheets.
+- [x] Correct the mobile and desktop crowd-hazard copy layout so the full Wrong Tune My Selectah and Thrown Tune titles are visible above their supporting lines within the cracked-screen frame.
 
 - [ ] Remove the remaining visible square or backing plane around the active DJ sprite in every arcade state without changing the supplied sprite, hitbox, camo, collision, or controls.
 - [ ] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.
