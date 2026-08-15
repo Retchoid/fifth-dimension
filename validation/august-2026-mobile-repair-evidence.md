@@ -66,3 +66,13 @@ That computed-style capture exposed an inherited speaker-deployment animation re
 The browser confirmed that the corrected deployment keyframes were active and completed. Because the parent transform was still reported at unit scale after completion, the transparent speaker art itself now carries the foreground scale; this makes the visible speaker size independent of the parent animation's computed-transform reporting.
 
 The final development DOM check confirms the top-right launcher exists, the duplicate archive-local detach control is hidden, the standalone Big Up visual class is present in the loaded stylesheet, and both staged speaker images resolve to a `matrix(2.25, 0, 0, 2.25, 0, 0)` transform. The phone-width header capture retains the protected first-page identity and exposes the 5D Playa control as the cyan radio button in the right action cluster.
+
+The next focused visual pass targets the reported residual DJ sprite backing square, the stage backgrounds, and every standard arcade splash layer; this pass is scoped as presentation-only so collision, controls, progression, score, audio, and release contracts remain untouched.
+
+The focused DJ inspection confirmed that the catcher, art wrapper, and sprite all compute to transparent backgrounds with no box shadow; the remaining rectangular appearance is therefore treated as an embedded asset/matting problem rather than a container-panel rule. A direct image-edit attempt was unavailable because the daily visual-generation quota had already been reached, so the correction will preserve the supplied sprite and use an asset-safe render treatment instead.
+
+The active arcade stage has been focused in the development browser for visual confirmation of the existing DJ compositing and the lane boundaries before the stage and splash visual treatment is replaced.
+
+The redesigned development stage was then opened with the deterministic sequence verifier. The automated checks passed, and the next browser step explicitly triggers a standard splash so the new frame can be visually reviewed rather than inferred from source alone.
+
+The deterministic inspection triggered a standard negative-event sequence and retained the expected active-stage mount, established event copy, return path, and record-spin relay infrastructure while presenting the redesigned cyan/magenta/graphite hard-outline frame. The review remains visual-only: no progression, collision, input, timing, or audio behavior was altered.

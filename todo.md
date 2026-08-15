@@ -2,6 +2,11 @@
 
 ## Current approval-gated arcade regression audit
 
+- [ ] Remove the remaining visible square or backing plane around the active DJ sprite in every arcade state without changing the supplied sprite, hitbox, camo, collision, or controls.
+- [ ] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.
+- [ ] Restyle every arcade splash scene to the same hard-outlined urban arcade language as the hazards, preserving existing scenes, copy, timers, record-spin transitions, audio, and return-to-play behavior.
+- [ ] Verify the redesigned sprite treatment, backgrounds, and all splash overlays at desktop and phone widths without obscuring active gameplay.
+
 - [ ] Remove every visible paint-drip layer from the live site, including the release-card lower-edge SVG wrapper, and prove its absence at 375 px width without changing release content or gate behavior.
 - [ ] Remove the visible yellow/lime strip and yellow-orange treatment from the mobile SoundCloud embed, retaining a usable SoundCloud playback and external-link experience.
 - [ ] Apply one coherent graphite, cyan, magenta, and signal-orange visual system across all post-hero sections, including embedded-player cards and 5D Playa, with no contradictory parchment, brown, lime, or yellow panel treatments.
