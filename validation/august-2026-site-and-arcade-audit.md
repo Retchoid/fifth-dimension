@@ -45,3 +45,17 @@ The existing DJ and dancer sprites should be retained. The non-sprite asset syst
 ## Recommendation
 
 Implement the completed content-safe repairs immediately. For the game and 5D Playa, proceed only after confirming a concise interaction contract: convert all non-Rewind rewards to non-blocking in-world callouts; use exact consecutive-hazard logic; move dancers to the requested record milestones; treat “three negative outcomes” as guaranteed **hazard exposures** rather than forced hits; define the first green-camo bonus; and adopt a compact docked 5D Playa that preserves every existing individual player, download, and share control.
+
+## Approved implementation contract
+
+The first bonus will restore the existing dormant **No Request Bonus** route: a Level 1 finish with no more than one hit opens the short pre-Level-2 bonus. Its success applies a **green camo** session overlay to the existing DJ sprite. The existing clean Level 2, 20-dubplate, zero-hit **After Party Gear Dash** remains the second bonus and keeps its **purple camo plus crown** reward. Both rewards are visual overlays only; neither replaces the supplied DJ or dancer sprites.
+
+Hazard pacing will guarantee meaningful negative **exposure**, not forced player failure: each level will schedule at least three visible hazard opportunities while allowing the player to avoid them. The named punishment events will occur only when the same cop, pill, or phone hazard is caught twice consecutively; any different catch or a missed object clears the corresponding sequence counter. The UI will preserve the current speaker-growth timing, but speaker dancers will not render until Level 1 reaches 20 dubplates or Level 2 reaches 50 dubplates.
+
+## Two-bonus browser proof after the first-bonus restoration
+
+The development-only Level 1 verifier confirmed that a No Request clear removes the bonus stage, returns to the existing Level 1 score handoff, applies the green camo class and green clothing overlay, and does not transmit a public score. A fresh-session failure verifier confirmed that the same route removes the stage and returns to the score handoff with neither green camo nor a score submission.
+
+The Level 2 After Party verifier was rerun after the Level 1 work. Its active runner was present before a scripted clear; the clear retained the purple camo class and purple clothing overlay, displayed the existing “PURPLE CAMO + CROWN EARNED” reward copy, and did not submit a score. The Level 2 reward is still constrained by the existing `shouldAwardBonusCrown(completedLevel, bonusCompletedRef.current)` client proof and Level-2-only server validation. Thus, the new Level 1 green route cannot create a crown payload.
+
+A fresh-session Level 2 failure verifier then removed the runner and returned safely with no purple camo class, no purple outfit overlay, no crown reward copy, and no green camo carry-over. The fresh first-bonus failure and fresh second-bonus failure therefore both return safely without a reward; the verified clear routes remain distinct: green only for the Level 1 No Request Bonus and purple plus crown proof for the Level 2 After Party Gear Dash.

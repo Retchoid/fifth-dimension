@@ -37,6 +37,20 @@
 - [x] Audit the site and arcade theme, palette, graphic cohesion, game overlays, event cadence, falling-item outcomes, dancer thresholds, bonus rewards, and loss/end states against the supplied references and existing constraints.
 - [ ] Present usability-impacting recommendations for approval before changing game-event cadence, overlays, bonus architecture, visual assets, meter layout, dancer thresholds, or mix-player interaction patterns.
 - [ ] After approval, implement the agreed site/game visual refinements and a detachable Winamp-inspired 5D Playa mix player without regressing existing playback, sharing, or archive controls.
+- [x] Convert BOH, Run the Riddim, record-crate, and headphones rewards into spaced, non-blocking translucent yellow in-world callouts while retaining Rewind as the only full-screen reward splash.
+- [x] Require two consecutive cop, pill, or phone hits for their named unified splash scenes; treat the three-negative-events-per-level rule as sufficient hazard exposure rather than forced player hits.
+- [x] Preserve existing speaker timing but show dancer sprites only when Level 1 reaches 20 dubplates and Level 2 reaches 50 dubplates.
+- [ ] Redo all non-sprite arcade visuals, props, cabinet/UI frames, cut-ins, and bonus architecture to the approved urban 16-bit brawler style, while retaining all DJ/dancer sprites and backgrounds and eliminating square or generic-shape containers around objects and sprites.
+- [x] Keep the existing clean Level 2 Gear Dash purple-camo reward and define a non-disruptive green-camo first-bonus path without changing player sprite identity.
+- [x] Restore the dormant Level 1 No Request Bonus for a 25-dubplate finish with no more than one hit and grant its success a green-camo overlay before Level 2.
+- [x] Implement a real Level 1 No Request Bonus route before Level 2, entered only after a 25-dubplate finish with no more than one hit, with distinct success and failure exits.
+- [x] Tie green camo strictly to successful completion of the restored Level 1 No Request Bonus instead of qualification alone, while preserving the supplied DJ sprite.
+- [x] Re-verify that the existing clean Level 2 After Party grants purple camo plus crown while the completed Level 1 No Request Bonus grants only green camo.
+- [x] Re-run the Level 2 After Party clear path after the Level 1 bonus changes and verify purple camo still applies, the crown payload still uses hasBonusCrown, and green camo alone never upgrades to a crown.
+- [x] Document browser evidence that Level 1 No Request clear grants only green camo while Level 2 After Party clear grants purple camo plus crown, with both failure exits returning safely.
+- [x] Re-run and record a fresh-session Level 2 After Party failure check after the Level 1 bonus changes so no prior purple-camo state can affect the evidence.
+- [x] Confirm the saved two-bonus browser-proof notes cover both clear and failure return behavior before the next checkpoint.
+- [ ] Build a detachable Winamp-inspired 5D Playa that queues every archive mix from top to bottom while preserving all individual native players, downloads, shares, and archive content.
 - [x] Audit the official-site adaptive card, every individual mix share card, the arcade share action, native-share availability, and copy-link fallbacks.
 - [x] Verify the required official-site and mix share metadata, image, title, artist, URL, and call-to-action behavior without altering existing content.
 - [x] Repair any confirmed adaptive-card or share-flow regression, run full validation, and publish the verification update.
