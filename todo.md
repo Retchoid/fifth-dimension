@@ -23,6 +23,20 @@
 - [x] Trigger and document the screen-spin dissolve at phone width, including its mount, clearing behavior, and return to active play.
 - [x] Run a real phone-width Level 2 gameplay session with the normal game loop active and verify the compact HUD and reduced Crowd Hype meter do not block falling pickups or hazards.
 - [x] Run a non-held phone-width screen-spin dissolve test and document overlay mount, timer-based clear, and return to active Level 2 play after the mobile layout changes.
+- [x] Add a short post-loss curbside comedown scene with the DJ sitting alone outside the rave before the reset flow is available.
+- [x] Preserve replay/reset as the first available action after the brief loss scene without affecting score submission, Level 2, or normal restart behavior.
+- [x] Verify the post-loss scene and reset handoff at desktop and phone widths, then publish the correction.
+- [ ] Run a full loss-to-reset regression proving score-entry, Level 2 completion, and normal restart behavior remain correct with the curbside timer.
+- [ ] Inspect and document the held phone-width curbside capture for layout containment and readability.
+- [ ] Run a non-held phone-width curbside test proving the scene mounts, reset remains hidden during it, and replay returns as the first action after its timer.
+- [x] Inspect the supplied visual references and reproduce the reported yellow Mixcloud obstruction, Jersh credit obstruction, and incorrect initial release unlock state.
+- [x] Use the newly supplied urban 16-bit brawler references to benchmark non-sprite arcade art for layered street depth, cel-shaded hard outlines, controlled neon signage, grounded debris, and readable prop silhouettes.
+- [x] Remove the confirmed Mixcloud and Jersh obstructions without changing content, layout flow, controls, or audio behavior.
+- [x] Restore and verify the v5 locked-by-default Jersh release state before gameplay completes the chain-break contract.
+- [x] Back-test official-site, nine-mix, and Selectah Showdown sharing/adaptive-card surfaces against their required content and URL constraints.
+- [x] Audit the site and arcade theme, palette, graphic cohesion, game overlays, event cadence, falling-item outcomes, dancer thresholds, bonus rewards, and loss/end states against the supplied references and existing constraints.
+- [ ] Present usability-impacting recommendations for approval before changing game-event cadence, overlays, bonus architecture, visual assets, meter layout, dancer thresholds, or mix-player interaction patterns.
+- [ ] After approval, implement the agreed site/game visual refinements and a detachable Winamp-inspired 5D Playa mix player without regressing existing playback, sharing, or archive controls.
 - [x] Audit the official-site adaptive card, every individual mix share card, the arcade share action, native-share availability, and copy-link fallbacks.
 - [x] Verify the required official-site and mix share metadata, image, title, artist, URL, and call-to-action behavior without altering existing content.
 - [x] Repair any confirmed adaptive-card or share-flow regression, run full validation, and publish the verification update.
@@ -81,8 +95,8 @@
 - [x] Verify the bonus audio pauses and the normal track resumes after the immediate-fail exit path as well as the completed exit path.
 - [x] Trace the historical `boolean is not defined` diagnostic to its resolved schema import and confirm no executable runtime source retains the undefined identifier.
 - [x] Explicitly verify that the main Level 2 track resumes after the completed runner exit as well as after the failure exit.
-- [ ] Save a checkpoint for the validated arcade-scene repair and verify the published domain with a clean runtime console.
-- [ ] Open the actual published site without an authentication redirect, confirm it renders, and inspect a clean live browser console before closing the release check.
+- [x] Save a checkpoint for the validated arcade-scene repair and verify the published domain with a clean runtime console.
+- [x] Open the actual published site without an authentication redirect, confirm it renders, and inspect a clean live browser console before closing the release check.
 - [x] Audit and repair every special-event trigger so police, pill, crowd, rewind, crate, headphones, and record splashes reliably render and resume in both levels.
 - [x] Restyle the record and pill splash scenes with the established Street Fighter-inspired arcade grammar, including dilated pupils, goofy grin, pitch wobble, and scene-specific copy.
 - [x] Add a consistent spinning-record transition between every interrupted arcade scene and resumed play or chained scene.

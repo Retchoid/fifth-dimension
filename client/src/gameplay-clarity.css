@@ -32,3 +32,31 @@
   animation-play-state: paused !important;
   animation-delay: -.42s !important;
 }
+
+/* Brief post-loss comedown: the DJ sits outside the emptied rave before reset controls return. */
+.loss-curb-overlay {
+  z-index: 43;
+  overflow: hidden;
+  isolation: isolate;
+  background: radial-gradient(circle at 72% 18%, rgba(0,231,255,.16), transparent 27%), linear-gradient(180deg, #080714 0 57%, #13111c 58% 100%);
+  animation: loss-curb-fade 2.3s cubic-bezier(.22,.8,.3,1) both;
+}
+.loss-curb-night { position:absolute; inset:0; z-index:0; overflow:hidden; background: linear-gradient(180deg, transparent 0 50%, rgba(3,6,12,.78) 51%); }
+.loss-curb-night::before { content:""; position:absolute; inset:0; opacity:.44; background: repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 5px), linear-gradient(105deg, transparent 0 54%, rgba(255,90,31,.12) 55% 56%, transparent 57%); }
+.loss-moon { position:absolute; right:12%; top:10%; width:34px; aspect-ratio:1; border:3px solid #080611; border-radius:50%; background:#ffd98a; box-shadow:0 0 28px rgba(255,217,138,.62); }
+.loss-venue-sign { position:absolute; right:10%; top:34%; padding:.18rem .32rem; border:3px solid #080611; background:#ff5a1f; color:#160711; font:900 .56rem/1 "Bungee",Impact,sans-serif; box-shadow:4px 4px 0 #09070f,0 0 13px #ff5a1f; transform:rotate(-4deg); }
+.loss-venue-door { position:absolute; right:13%; bottom:27%; width:48px; height:88px; border:5px solid #080611; background:linear-gradient(90deg,#23152b,#050508 74%); box-shadow:inset 12px 0 0 rgba(0,231,255,.18),0 0 17px rgba(0,231,255,.26); }
+.loss-neon-spill { position:absolute; right:5%; bottom:22%; width:43%; height:17%; opacity:.7; background:radial-gradient(ellipse at 50% 10%, rgba(0,231,255,.54), transparent 70%); filter:blur(7px); transform:rotate(-6deg); }
+.loss-curb-ground { position:absolute; z-index:1; left:0; right:0; bottom:0; height:31%; border-top:5px solid #080611; background:repeating-linear-gradient(102deg,#27222b 0 17px,#18151e 18px 33px); box-shadow:inset 0 9px 0 rgba(255,255,255,.035); }
+.loss-curb-ground i { position:absolute; bottom:28%; width:23%; height:5px; background:#00e7ff; box-shadow:0 0 9px #00e7ff; opacity:.45; }.loss-curb-ground i:nth-child(1){left:4%;transform:rotate(-7deg)}.loss-curb-ground i:nth-child(2){left:42%;transform:rotate(4deg)}.loss-curb-ground i:nth-child(3){right:3%;transform:rotate(-3deg)}
+.loss-curb-dj { position:absolute; z-index:3; left:24%; bottom:17%; width:clamp(96px,20vw,170px); filter:grayscale(.42) saturate(.72) brightness(.72) drop-shadow(6px 7px 0 #06040a); animation:loss-dj-sink 2.3s cubic-bezier(.22,.8,.3,1) both; }
+.loss-curb-dj img { display:block; width:100%; image-rendering:pixelated; transform:translateY(16px) scaleY(.77); transform-origin:center bottom; }
+.loss-dj-leg { position:absolute; bottom:-16px; width:19%; height:25%; border:4px solid #07050a; background:repeating-linear-gradient(135deg,#413a48 0 6px,#141019 6px 12px); transform-origin:top center; }.loss-dj-leg-left{left:32%;transform:rotate(22deg)}.loss-dj-leg-right{left:52%;transform:rotate(-25deg)}
+.loss-dj-crate { position:absolute; left:-14%; bottom:-19px; width:31%; height:25%; border:4px solid #12070c; background:repeating-linear-gradient(90deg,#7b3e26 0 8px,#bc6c34 8px 13px); box-shadow:4px 4px 0 #08050a; }
+.loss-curb-copy { position:relative; z-index:4; display:grid; justify-items:center; gap:.28rem; width:min(58%,430px); margin-left:clamp(6.5rem,27vw,15rem); margin-bottom:clamp(2rem,7vw,4.5rem); text-align:center; animation:loss-copy-rise 2.3s cubic-bezier(.22,.8,.3,1) both; }
+.loss-curb-copy span { color:#00e7ff; font:900 clamp(.42rem,1.15vw,.66rem)/1 "Bungee",Impact,sans-serif; letter-spacing:.09em; text-shadow:2px 2px 0 #080611; }.loss-curb-copy strong { color:#f5e5bc; font:900 clamp(1.45rem,4.8vw,3.5rem)/.83 "Rubik Wet Paint","Bungee",Impact,cursive; -webkit-text-stroke:1px #080611; paint-order:stroke fill; text-shadow:4px 4px 0 #ff5a1f,7px 7px 0 rgba(0,0,0,.65); }.loss-curb-copy em { color:#d8c7a3; font:800 clamp(.42rem,1.15vw,.66rem)/1.25 "Bungee",Impact,sans-serif; font-style:normal; letter-spacing:.04em; }
+@keyframes loss-curb-fade { 0% { opacity:0; } 12%,79% { opacity:1; } 100% { opacity:0; } }
+@keyframes loss-dj-sink { 0% { opacity:0; transform:translateY(-20px) rotate(-8deg) scale(.86); } 20%,79% { opacity:1; transform:translateY(0) rotate(0) scale(1); } 100% { opacity:.28; transform:translateY(9px) scale(.96); } }
+@keyframes loss-copy-rise { 0% { opacity:0; transform:translateY(20px) scale(.92); } 18%,78% { opacity:1; transform:translateY(0) scale(1); } 100% { opacity:0; transform:translateY(-9px) scale(.97); } }
+@media (max-width:650px) { .loss-curb-dj { left:14%; bottom:19%; width:94px; }.loss-curb-copy { width:56%; margin-left:7rem; margin-bottom:1.25rem; }.loss-curb-copy strong { font-size:1.55rem; }.loss-curb-copy em { font-size:.39rem; }.loss-venue-sign { right:7%; top:30%; transform:scale(.82) rotate(-4deg); }.loss-venue-door { right:9%; bottom:29%; transform:scale(.76); transform-origin:bottom right; } }
+@media (prefers-reduced-motion:reduce) { .loss-curb-overlay,.loss-curb-dj,.loss-curb-copy { animation:none; } }

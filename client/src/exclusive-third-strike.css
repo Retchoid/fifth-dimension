@@ -31,6 +31,8 @@
 .exclusive-band::after {
   content: "";
   position: absolute;
+  pointer-events: none;
+  z-index: 0;
   right: 4%;
   bottom: -14px;
   width: 30%;
@@ -52,6 +54,9 @@
 .exclusive-artist span { color: #ffe08d; text-shadow: 1px 1px 0 #283345; }
 .exclusive-artist strong { color: #fff1d0; text-shadow: 2px 2px 0 #7f465d; }
 .exclusive-artist em { color: #b8eee2; text-shadow: 1px 1px 0 #24323d; }
+.exclusive-band > .exclusive-meta,
+.exclusive-band > h3,
+.exclusive-band > .exclusive-artist { position: relative; z-index: 1; }
 .exclusive-track {
   z-index: 1;
   overflow: visible;

@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, Check } from "lucide-react";
 import type { ReleaseUnlockProof } from "@/lib/releaseGate";
 import { resolveFinaleTag, sanitizeSelectorTag } from "@/lib/selectorTag";
+import { shouldAwardBonusCrown } from "@/lib/bonusCrown";
 import { trpc } from "@/lib/trpc";
 import "@/gameplay-clarity.css";
 
@@ -68,7 +69,7 @@ const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "sp
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; startLevelTwo: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; startLevelTwo: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -130,6 +131,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [lives, setLives] = useState(4);
   const [gameOver, setGameOver] = useState(false);
+  const [isLossComedownVisible, setIsLossComedownVisible] = useState(false);
   const [isUnlockPaused, setIsUnlockPaused] = useState(false);
   const [unlockRevealReady, setUnlockRevealReady] = useState(false);
   const [chainBreakComplete, setChainBreakComplete] = useState(false);
@@ -191,6 +193,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const finaleVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-finale-verify") : null;
   const nameJourneyVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-name-journey") : null;
   const viewportVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
+  const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
@@ -267,6 +270,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const respectSplashTimerRef = useRef<number>(0);
   const respectShakeTimerRef = useRef<number>(0);
   const damageFeedbackTimerRef = useRef<number>(0);
+  const lossComedownTimerRef = useRef<number>(0);
   downloadUnlockedRef.current = downloadUnlocked;
 
   // Key state for smooth movement
@@ -933,7 +937,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
   }, []);
 
-  const recordHighScore = (candidate: number, rawName: string, completedLevel: "level1" | "level2", hasBonusCrown = completedLevel === "level2" && bonusCompletedRef.current) => {
+  const recordHighScore = (candidate: number, rawName: string, completedLevel: "level1" | "level2", hasBonusCrown = shouldAwardBonusCrown(completedLevel, bonusCompletedRef.current)) => {
     const previousBest = highScoreRef.current;
     const isRecord = candidate > previousBest;
     const bestScore = Math.max(previousBest, candidate);
@@ -957,7 +961,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       return;
     }
     setSharedScoreStatus("transmitting");
-    submitSharedScore.mutate({ playerTag: safeName, score: candidate, completedLevel, hasBonusCrown: completedLevel === "level2" && hasBonusCrown });
+    submitSharedScore.mutate({ playerTag: safeName, score: candidate, completedLevel, hasBonusCrown: shouldAwardBonusCrown(completedLevel, hasBonusCrown) });
   };
 
   const confirmFacebookRespect = () => {
@@ -1370,6 +1374,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         setIsRecordTransitioning(false);
         setIsLevelTwoTransitioning(false);
       },
+      showLossComedown: () => {
+        gameRunIdRef.current += 1;
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        levelRef.current = 1;
+        livesRef.current = 0;
+        isPlayingRef.current = false;
+        setLevel(1);
+        setLives(0);
+        setScore(800);
+        setIsPlaying(false);
+        setLevelTwoComplete(false);
+        setGameOver(true);
+        showLossComedown();
+      },
       startLevelTwo,
       startAfterpartyBonus: () => {
         levelRef.current = 2;
@@ -1649,6 +1667,30 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     };
   }, [isPlaying, isBonusLevelActive]);
 
+  const showLossComedown = () => {
+    window.clearTimeout(lossComedownTimerRef.current);
+    setIsLossComedownVisible(true);
+    if (lossVerificationHold) return;
+    lossComedownTimerRef.current = window.setTimeout(() => setIsLossComedownVisible(false), 2300);
+  };
+
+  useEffect(() => {
+    if (!lossVerificationHold) return;
+    gameRunIdRef.current += 1;
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    levelRef.current = 1;
+    livesRef.current = 0;
+    isPlayingRef.current = false;
+    setLevel(1);
+    setLives(0);
+    setScore(800);
+    setIsPlaying(false);
+    setLevelTwoComplete(false);
+    setGameOver(true);
+    showLossComedown();
+    return () => window.clearTimeout(lossComedownTimerRef.current);
+  }, [lossVerificationHold]);
+
   const startGame = () => {
     gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
@@ -1684,6 +1726,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(bonusSplashTimerRef.current);
     window.clearTimeout(bonusRewindTimerRef.current);
     window.clearTimeout(damageFeedbackTimerRef.current);
+    window.clearTimeout(lossComedownTimerRef.current);
     window.clearTimeout(unlockRevealTimerRef.current);
     setDamageFeedback(null);
     levelRef.current = 1;
@@ -1701,6 +1744,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     livesRef.current = 4;
     setIsPlaying(true);
     setGameOver(false);
+    setIsLossComedownVisible(false);
     setLevelTwoComplete(false);
     setIsUnlockPaused(false);
     setIsRewindPaused(false);
@@ -1967,6 +2011,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             itemsRef.current = [];
             setVisibleItems([]);
             setGameOver(true);
+            showLossComedown();
             setLevelTwoComplete(false);
             setIsUnlockPaused(false);
             setIsPlaying(false);
@@ -2702,7 +2747,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             ))}
           </div>
         )}
-        {gameOver && !finale && (
+        {isLossComedownVisible && gameOver && !levelTwoComplete && (
+          <div className="game-overlay loss-curb-overlay" role="status" aria-live="assertive">
+            <div className="loss-curb-night" aria-hidden="true"><span className="loss-moon" /><span className="loss-venue-sign">RAVE</span><span className="loss-venue-door" /><span className="loss-neon-spill" /></div>
+            <div className="loss-curb-ground" aria-hidden="true"><i /><i /><i /></div>
+            <div className="loss-curb-dj" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="loss-dj-leg loss-dj-leg-left" /><span className="loss-dj-leg loss-dj-leg-right" /><span className="loss-dj-crate" /></div>
+            <div className="loss-curb-copy"><span>LAST TUNE / CURB-SIDE COMEDOWN</span><strong>THE RAVE<br />LEFT YOU OUTSIDE.</strong><em>TAKE A BREATH. THE NEXT SESSION IS WAITING.</em></div>
+          </div>
+        )}
+
+        {gameOver && !finale && !isLossComedownVisible && (
           <div className="game-overlay game-over-overlay">
             <div className="overlay-box game-over-box-wide">
               {isNewRecord && (

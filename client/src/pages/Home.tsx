@@ -449,7 +449,7 @@ export default function Home() {
               <a href={SOUND_CLOUD_PROFILE} target="_blank" rel="noreferrer" className="deck-link">Open in SoundCloud <ArrowUpRight size={17} /></a>
             </article>
             <article className="music-deck mixcloud-deck">
-              <div className="deck-topline"><span>MC / SECONDARY DECK</span><span className="live-chip"><i /> FEATURED MIX</span></div>
+              <div className="deck-topline"><span>MC / SECONDARY DECK</span><span className="live-chip mixcloud-live-chip">FEATURED MIX</span></div>
               <h3>Mixcloud<br /><em>Logikal Grinder</em></h3>
               <div className="embed-shell mixcloud-embed-shell">
                 <iframe
