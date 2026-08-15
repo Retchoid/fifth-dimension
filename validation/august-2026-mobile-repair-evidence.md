@@ -76,3 +76,9 @@ The active arcade stage has been focused in the development browser for visual c
 The redesigned development stage was then opened with the deterministic sequence verifier. The automated checks passed, and the next browser step explicitly triggers a standard splash so the new frame can be visually reviewed rather than inferred from source alone.
 
 The deterministic inspection triggered a standard negative-event sequence and retained the expected active-stage mount, established event copy, return path, and record-spin relay infrastructure while presenting the redesigned cyan/magenta/graphite hard-outline frame. The review remains visual-only: no progression, collision, input, timing, or audio behavior was altered.
+
+The published domain loaded the checkpointed build successfully with the arcade controls present. A focused production-stage selector read is being completed separately to confirm that the new stage and sprite compositing rules reached the public deployment.
+
+The first public computed-style inspection still reflected the previous cached arcade stylesheet. A cache-busting production reload was therefore opened before completing the final selector confirmation; no conclusion is drawn from the pre-refresh style read.
+
+The cache-busted production page then loaded the published Selectah Showdown cabinet with its controls, locked release gate, and the intended dark center-stage composition intact. The public visual review confirmed the cabinet remains usable and the revised stage treatment does not introduce a gameplay-surface obstruction. The browser’s standard `maskImage` field reports `none`; the source includes the corresponding WebKit-safe mask declaration and screen compositing fallback for the supplied sprite asset.
