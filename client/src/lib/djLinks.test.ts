@@ -34,6 +34,8 @@ describe("5th Dimension public channel configuration", () => {
     expect(MIXCLOUD_FEATURED_MIX).toBe("https://www.mixcloud.com/fingerbanginfaderz/logikal-grinder/");
     expect(MIXCLOUD_EMBED).toContain("mixcloud.com/widget/iframe");
     expect(decodeURIComponent(MIXCLOUD_EMBED)).toContain("/fingerbanginfaderz/logikal-grinder/");
+    expect(MIXCLOUD_EMBED).toContain("mini=0");
+    expect(MIXCLOUD_EMBED).not.toContain("mini=1");
   });
 
   it("creates booking emails with the BOOKING subject prefix", () => {

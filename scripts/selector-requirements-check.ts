@@ -15,6 +15,8 @@ const postHeroStyles = readFileSync(resolve(projectRoot, "client/src/posthero-co
 const gameVisualStyles = readFileSync(resolve(projectRoot, "client/src/game-visual-system.css"), "utf8");
 const gameplayClarityStyles = readFileSync(resolve(projectRoot, "client/src/gameplay-clarity.css"), "utf8");
 const rewardCalloutStyles = readFileSync(resolve(projectRoot, "client/src/reward-callout.css"), "utf8");
+const responsiveRepairStyles = readFileSync(resolve(projectRoot, "client/src/responsive-visual-repair.css"), "utf8");
+const djLinks = readFileSync(resolve(projectRoot, "client/src/lib/djLinks.ts"), "utf8");
 
 const requirements: Array<[string, string, string]> = [
   ["Selectah title", game, "SELECTAH"],
@@ -171,6 +173,10 @@ const requirements: Array<[string, string, string]> = [
   ["archive MP3 download preserved", home, 'download={mix.downloadName} className="mix-download"'],
   ["archive share control preserved", home, 'className="mix-share" onClick={() => { setSharedMixId(mix.id);'],
   ["archive share call to action preserved", home, 'check out 5th Dimension music official site for more content, games and upcoming events'],
+  ["Mixcloud compact widget disabled", djLinks, "mini=0"],
+  ["mobile heading single column", responsiveRepairStyles, "grid-template-columns:minmax(0,1fr) !important"],
+  ["mobile heading wrapping", responsiveRepairStyles, "overflow-wrap:anywhere !important"],
+  ["mobile player label wrapping", responsiveRepairStyles, ".five-d-playa-now strong,.five-d-playa-label b,.five-d-playa-label em"],
   ["Bonus 2 route clears entity labels", afterpartyStyles, ".afterparty-entity b{display:none;}"],
   ["same-type bottle/core crowd threshold", game, "if (hazardHitsRef.current >= 2)"],
   ["two-pill overload warning", game, "if (item.type === \"pill\") pauseForPillOverload = true;"],

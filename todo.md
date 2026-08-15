@@ -2,6 +2,11 @@
 
 ## Current approval-gated arcade regression audit
 
+- [x] Remove the failed post-hero archive-poster override and rebuild visual consistency from the original first-page cyan, magenta, graphite, and signal-orange language without changing content, covers, cards, or functions.
+- [x] Repair every mobile text-overflow and clipping issue in archive headings, descriptive copy, 5D Playa labels, and archive group titles; verify readable flow at phone width.
+- [x] Remove the unwanted yellow/green striped decorative bar over the Mixcloud artwork without changing the embed, artwork, copy, or controls.
+- [x] Record focused phone-width evidence that archive headings, supporting copy, archive group headings, and 5D Playa labels no longer clip.
+- [x] Identify the exact remaining Mixcloud bar source, then confirm the simplified presentation leaves the Mixcloud embed artwork and controls intact.
 - [x] Implement the approved content-preserving jungle-rave, urban-decay, retro-cyber post-hero site and 5D Playa redesign while retaining every album cover, adaptive card, media control, link, and functional contract.
 - [x] Remove only the visible player-sprite underlay and apply the approved green reward/red hazard visual signals without changing arcade mechanics.
 - [x] Research the requested jungle, drum-and-bass, 1990s rave, vaporwave, psychedelic, graffiti, urban-decay, retro, and cyber references before proposing the site and 5D Playa redesign.
