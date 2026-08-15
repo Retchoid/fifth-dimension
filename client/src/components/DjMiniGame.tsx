@@ -5,6 +5,7 @@ import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, C
 import type { ReleaseUnlockProof } from "@/lib/releaseGate";
 import { resolveFinaleTag, sanitizeSelectorTag } from "@/lib/selectorTag";
 import { shouldAwardBonusCrown } from "@/lib/bonusCrown";
+import { scheduledNamedHazardExposure } from "@/lib/hazardExposure";
 import { trpc } from "@/lib/trpc";
 import "@/gameplay-clarity.css";
 import "@/reward-callout.css";
@@ -294,6 +295,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const itemsRef = useRef<FallingItem[]>([]);
   const nextIdRef = useRef(1);
   const spawnTimerRef = useRef(0);
+  const namedHazardSpawnCountRef = useRef(0);
   const djXRef = useRef(50);
   const bonusRequestRef = useRef<number>(0);
   const noRequestBonusRequestRef = useRef<number>(0);
@@ -1184,6 +1186,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     itemsRef.current = [];
     setVisibleItems([]);
     spawnTimerRef.current = 0;
+    namedHazardSpawnCountRef.current = 0;
     lastTimeRef.current = performance.now();
     isPlayingRef.current = false;
     window.clearTimeout(levelTwoMusicTimerRef.current);
@@ -1969,6 +1972,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     itemsRef.current = [];
     nextIdRef.current = 1;
     spawnTimerRef.current = 0;
+    namedHazardSpawnCountRef.current = 0;
     lastTimeRef.current = performance.now();
     queueGameFrame();
   };
@@ -1994,9 +1998,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const spawnInterval = levelRef.current === 2 ? 0.72 : 1.10;
     if (spawnTimerRef.current >= spawnInterval) {
       spawnTimerRef.current -= spawnInterval;
+      namedHazardSpawnCountRef.current += 1;
+      const scheduledNamedHazard = scheduledNamedHazardExposure(levelRef.current, namedHazardSpawnCountRef.current);
       const roll = Math.random();
-      // Level 1 stays free of bottles and apple cores; only the Level 2 crowd throws them.
-      const spawnedType = pickFallingItemType(levelRef.current, roll);
+      // Each scheduled pair is an avoidable chance to deliberately trigger a named scene.
+      // Level 1 remains free of bottles and apple cores; only Level 2 crowd throws them.
+      const spawnedType = scheduledNamedHazard ?? pickFallingItemType(levelRef.current, roll);
       const itemRule = FALLING_ITEM_RULES[spawnedType];
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 50 : 36;

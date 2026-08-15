@@ -1,5 +1,15 @@
 # Project TODO
 
+## Current approval-gated arcade regression audit
+
+- [x] Adjust falling-object exposure so each level has a fair, achievable opportunity to trigger the cop, pill, and Wrong Tune My Selectah outcomes at least once without forcing player hits or changing unrelated arcade systems.
+- [ ] Audit why the cop, pill, and Wrong Tune My Selectah splash scenes fail to present reliably, including their intended sound effects, then propose fixes before implementation.
+- [ ] Audit the remaining undesigned arcade assets and the visible square around the player sprite, then propose non-disruptive visual fixes before implementation.
+- [ ] Audit scene-spinning transitions and bonus-round splash timing so each is clear, readable, and brief; do not retime or redesign without approval.
+- [ ] Audit Bonus 2 Gear Dash for parity with Level 1 and Level 2 movement, collision readability, pacing, audio, and exit behavior; do not alter its gameplay contract without approval.
+- [ ] Cross-check the three latest requested workstreams and produce evidence-backed completion status before applying any new changes.
+- [ ] Preserve the existing site and game status; obtain explicit approval before any major gameplay, timing, visual, or asset change.
+
 ## Arcade and post-hero design cohesion pass
 
 - [x] Perform a final held-scene review of the pill, crowd, and police splash screens for art, copy, and layering before publishing.

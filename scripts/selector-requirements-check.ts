@@ -154,6 +154,8 @@ const requirements: Array<[string, string, string]> = [
   ["consecutive pill counter", game, "if (item.type === \"pill\") pillHitsRef.current = consecutiveHazardCountRef.current;"],
   ["consecutive phone counter", game, "if (item.type === \"phone\") phoneHitsRef.current = consecutiveHazardCountRef.current;"],
   ["phone crowd warning", game, "if (item.type === \"phone\") pauseForCrowdAnger = true;"],
+  ["fair named-hazard exposure schedule", game, "scheduledNamedHazardExposure(levelRef.current, namedHazardSpawnCountRef.current)"],
+  ["named-hazard exposure counter reset", game, "namedHazardSpawnCountRef.current = 0;"],
   ["same-type bottle/core crowd threshold", game, "if (hazardHitsRef.current >= 2)"],
   ["two-pill overload warning", game, "if (item.type === \"pill\") pauseForPillOverload = true;"],
   ["three-mixer crate threshold", game, "if (mixerPickupCountRef.current >= 3)"],
