@@ -1,7 +1,7 @@
 /**
  * Archive-faithful 5th Dimension transmission: street-poster collage, bass-first hierarchy, and signal-colour motion.
  */
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -241,12 +241,11 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    if (window.location.hash !== "#selectah-showdown") return;
-    const anchorTimer = window.setTimeout(() => {
-      document.getElementById("selectah-showdown")?.scrollIntoView({ block: "start" });
-    }, 0);
-    return () => window.clearTimeout(anchorTimer);
+  useLayoutEffect(() => {
+    const isSelectahDeepLink = window.location.hash === "#selectah-showdown";
+    const isDevelopmentSceneFocus = import.meta.env.DEV && new URLSearchParams(window.location.search).get("arcade-focus") === "true";
+    if (!isSelectahDeepLink && !isDevelopmentSceneFocus) return;
+    document.getElementById("selectah-showdown")?.scrollIntoView({ block: "start" });
   }, []);
 
   const unlockDownload = (proof: ReleaseUnlockProof) => {
