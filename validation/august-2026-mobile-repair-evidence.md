@@ -79,6 +79,12 @@ The deterministic inspection triggered a standard negative-event sequence and re
 
 The published domain loaded the checkpointed build successfully with the arcade controls present. A focused production-stage selector read is being completed separately to confirm that the new stage and sprite compositing rules reached the public deployment.
 
-The first public computed-style inspection still reflected the previous cached arcade stylesheet. A cache-busting production reload was therefore opened before completing the final selector confirmation; no conclusion is drawn from the pre-refresh style read.
+The first public computed-style inspection used an incomplete URL comparison and incorrectly appeared to reflect the prior stage rule. A cache-busting production reload and direct CSS-bundle read confirmed the checkpointed stage selector is present in the deployed bundle. The live `.game-grid-bg` element computes to the redesigned urban-stage URL with the expected dark lane gradient.
 
 The cache-busted production page then loaded the published Selectah Showdown cabinet with its controls, locked release gate, and the intended dark center-stage composition intact. The public visual review confirmed the cabinet remains usable and the revised stage treatment does not introduce a gameplay-surface obstruction. The browser’s standard `maskImage` field reports `none`; the source includes the corresponding WebKit-safe mask declaration and screen compositing fallback for the supplied sprite asset.
+
+Follow-up production inspection confirms both standard and WebKit mask properties resolve to the intended radial alpha fade and the DJ image uses the intended screen blend. The remaining question is now a visual acceptance check of the active sprite against the reported square rather than a missing deployed style rule.
+
+An active production session confirms that a rectangular matte still reads behind the supplied DJ sprite despite the deployed blend and radial-mask treatment. The next correction tests a non-destructive silhouette clip on the existing image only; it will not alter the source asset, collision bounds, controls, camo, or gameplay logic.
+
+The development build now resolves the tested pixel-silhouette `clip-path` on the active DJ image. This is limited to image compositing; the parent catcher remains unchanged, preserving the existing collision and control geometry while removing the source image’s rectangular outline from the visible presentation.

@@ -122,6 +122,7 @@ const requirements: Array<[string, string, string]> = [
   ["clear-lane urban stage art", gameVisualStyles, "selectah-level-one-urban-stage-reference_43ddc07a.png"],
   ["game Level 2 background visual grammar", gameVisualStyles, ".level-two-booth"],
   ["matte-safe DJ sprite treatment", gameVisualStyles, "mask-image:radial-gradient"],
+  ["DJ silhouette clip cleanup", gameVisualStyles, "clip-path:polygon(38% 0,62% 0"],
   ["game player and dancer visual grammar", gameVisualStyles, ".dj-catcher-art,.dj-sprite"],
   ["game prop visual grammar", gameVisualStyles, ".falling-object"],
   ["field urban-brawler asset map", game, "const URBAN_PROP_ASSETS"],

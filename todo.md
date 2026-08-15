@@ -6,6 +6,9 @@
 - [ ] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.
 - [ ] Restyle every arcade splash scene to the same hard-outlined urban arcade language as the hazards, preserving existing scenes, copy, timers, record-spin transitions, audio, and return-to-play behavior.
 - [ ] Verify the redesigned sprite treatment, backgrounds, and all splash overlays at desktop and phone widths without obscuring active gameplay.
+- [ ] Confirm the published production build applies the Level 1 and Level 2 hard-outline stage rules and capture direct live desktop and phone evidence.
+- [ ] Audit every standard, reward, hazard, chain, transition, loss, and bonus splash state individually to ensure the shared hard-outline treatment mounts where required.
+- [ ] Resolve the remaining active DJ sprite matte artifact with a verified live fix, then repeat the full desktop and phone-width arcade visual review.
 
 - [ ] Remove every visible paint-drip layer from the live site, including the release-card lower-edge SVG wrapper, and prove its absence at 375 px width without changing release content or gate behavior.
 - [ ] Remove the visible yellow/lime strip and yellow-orange treatment from the mobile SoundCloud embed, retaining a usable SoundCloud playback and external-link experience.
