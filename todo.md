@@ -2,6 +2,12 @@
 
 ## Current approval-gated arcade regression audit
 
+- [ ] Replace every placeholder-like splash and record-spin transition layer with a detailed, colorful, illustrated hard-outlined scene composition that matches the described event while preserving its existing timing, copy, audio, and return-to-play behavior.
+- [ ] Restore a detailed illustrated background and readable foreground hierarchy to the game-over and loss presentations; do not leave a shrunken sprite, shrunken copy, or empty background as a substitute for the requested scene.
+- [ ] Reconcile speaker and dancer scale so speaker stacks read as intentionally huge and dancers read as clearly visible performers in the same stage depth, without blocking the active lanes or changing their approved milestones.
+- [ ] Redesign every visible deck, turntable, mixer, CDJ, crate, headphones, and remaining game object that still reads as a generic placeholder, using the same colorful cel-shaded hard outlines and urban 16-bit material language as the approved hazard art.
+- [ ] Audit all normal, reward, hazard, chain, transition, unlock, bonus, loss, game-over, and finale states at desktop and phone widths; complete only when each uses a purposeful illustrated background rather than placeholder markers or bare decorative CSS.
+
 - [ ] Remove the remaining visible square or backing plane around the active DJ sprite in every arcade state without changing the supplied sprite, hitbox, camo, collision, or controls.
 - [ ] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.
 - [ ] Restyle every arcade splash scene to the same hard-outlined urban arcade language as the hazards, preserving existing scenes, copy, timers, record-spin transitions, audio, and return-to-play behavior.

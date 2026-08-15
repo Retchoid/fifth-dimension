@@ -1,0 +1,78 @@
+/* Detailed illustrated scene treatment. Existing text, timers, controls, scores, and state logic stay untouched. */
+
+:is(.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.rewind-reward-overlay,.wheel-it-up-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay,.unlock-overlay,.pre-level-two-overlay,.finale-overlay,.loss-curb-overlay,.game-over-overlay,.bonus-rewind-overlay) {
+  overflow:hidden;
+  background-color:#090713!important;
+  background-image:
+    linear-gradient(90deg,rgba(5,4,11,.83) 0 11%,transparent 24% 76%,rgba(5,4,11,.83) 89% 100%),
+    linear-gradient(to bottom,rgba(4,3,9,.16),rgba(4,3,9,.8)),
+    url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important;
+  background-position:center!important;
+  background-size:cover!important;
+}
+
+/* Each interruption has a purpose-built colour and object composition, not a placeholder grid. */
+.police-seizure-overlay { background-image:linear-gradient(90deg,rgba(0,18,41,.78),rgba(246,19,72,.2),rgba(0,18,41,.82)),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important; }
+.police-seizure-grid { background-image:radial-gradient(circle at 16% 17%,rgba(0,231,255,.75) 0 2%,transparent 2.7%),radial-gradient(circle at 84% 17%,rgba(255,48,103,.8) 0 2%,transparent 2.7%),url("/manus-storage/selectah-police-siren-urban_5fb879fa.png")!important;background-size:auto,auto,clamp(150px,28vw,300px)!important;background-repeat:repeat,repeat,no-repeat!important;background-position:center,center,82% 67%!important;opacity:.94; }
+.sega-police-car { filter:drop-shadow(0 10px 0 #050407) drop-shadow(0 0 18px rgba(0,231,255,.56)); }
+.police-dj-reaction img { filter:drop-shadow(8px 10px 0 #050407) saturate(1.24)!important; }
+
+.crowd-anger-overlay { background-image:linear-gradient(to bottom,rgba(119,29,28,.26),rgba(6,4,10,.88)),url("/manus-storage/selectah-urban-brawler-visual-target_a56c19c4.png")!important; }
+.empty-club-room { background-image:linear-gradient(to top,rgba(4,3,9,.78) 0 24%,transparent 58%),url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png")!important;background-size:cover!important;background-position:center bottom!important;filter:contrast(1.12) saturate(.82) brightness(.76); }
+.empty-club-dj img { filter:grayscale(.3) saturate(.72) drop-shadow(5px 7px 0 #050407)!important; }
+
+.pill-overload-overlay { background-image:radial-gradient(ellipse at 50% 52%,rgba(255,120,36,.3),rgba(59,7,76,.58) 46%,rgba(6,4,11,.92) 78%),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important; }
+.pill-trip-burst { background-image:url("/manus-storage/selectah-pill-urban_e2f4393e.png")!important;background-size:clamp(110px,21vw,260px)!important;background-repeat:no-repeat!important;background-position:82% 20%!important; }
+.dopey-dj-portrait img { filter:drop-shadow(8px 10px 0 #050407) saturate(1.28) hue-rotate(18deg)!important; }
+
+.rewind-reward-overlay,.wheel-it-up-overlay,.record-spin-transition,.bonus-rewind-overlay { background-image:radial-gradient(circle at 50% 50%,rgba(0,231,255,.24),rgba(255,0,122,.2) 42%,rgba(5,4,11,.92) 76%),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important; }
+.rewind-time-tunnel,.transition-spinfield { background-image:linear-gradient(90deg,rgba(0,231,255,.13),transparent 46%,rgba(255,0,122,.16)),url("/manus-storage/selectah-dubplate-urban_052862f6.png")!important;background-size:cover,clamp(220px,38vw,430px)!important;background-repeat:no-repeat!important;background-position:center,center!important; }
+.transition-vinyl { background-image:url("/manus-storage/selectah-dubplate-urban_052862f6.png")!important;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important;filter:drop-shadow(0 0 0 #050407) drop-shadow(0 0 20px rgba(0,231,255,.55)); }
+
+.crate-bonus-overlay { background-image:linear-gradient(to bottom,rgba(255,134,54,.17),rgba(7,4,12,.9)),url("/manus-storage/selectah-urban-brawler-visual-target_a56c19c4.png")!important; }
+.crate-stack { filter:drop-shadow(9px 10px 0 #050407); }
+.crate-stack::after { content:"";position:absolute;inset:-18% -18%;background:url("/manus-storage/selectah-dubplate-urban_052862f6.png") center/contain no-repeat;opacity:.38;z-index:-1; }
+.headphones-bonus-overlay { background-image:radial-gradient(circle at 30% 37%,rgba(0,231,255,.38),rgba(7,4,13,.9) 65%),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important; }
+.rave-headphones { background-image:url("/manus-storage/selectah-runner-gear-urban_47eea311.png")!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;filter:drop-shadow(8px 10px 0 #050407); }
+
+.selector-salute-overlay,.run-riddim-overlay { background-image:linear-gradient(140deg,rgba(0,231,255,.22),transparent 46%,rgba(255,0,122,.25)),url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png")!important; }
+.selector-salute-record { background-image:url("/manus-storage/selectah-dubplate-urban_052862f6.png")!important;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important; }
+.riddim-speaker-stack { background-image:url("/manus-storage/selectah-speaker-stack-urban_9fd16c27.png")!important;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important;filter:drop-shadow(8px 10px 0 #050407); }
+
+.level-two-arrival-overlay { background-image:linear-gradient(90deg,rgba(5,4,11,.86),transparent 26% 74%,rgba(5,4,11,.86)),url("/manus-storage/5d-selector-level-two-detailed-stage_89e2157b.png")!important; }
+.level-two-arrival-grid { background-image:linear-gradient(to top,rgba(5,4,11,.9),transparent 62%),url("/manus-storage/selectah-speaker-stack-urban_9fd16c27.png"),url("/manus-storage/selectah-speaker-stack-urban_9fd16c27.png")!important;background-size:cover,clamp(90px,14vw,155px),clamp(90px,14vw,155px)!important;background-position:center,7% 80%,93% 80%!important;background-repeat:no-repeat!important; }
+
+/* Finish and fail panels return to actual city/rave scenes instead of a bare panel. */
+.game-over-overlay { background-image:linear-gradient(to bottom,rgba(7,4,13,.2),rgba(7,4,13,.9)),url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png")!important; }
+.game-over-overlay .game-over-box-wide { position:relative;min-height:52%;background:linear-gradient(126deg,rgba(12,8,22,.9),rgba(34,13,44,.78))!important;border:3px solid #050407!important;box-shadow:0 0 0 3px #00e7ff,8px 10px 0 rgba(5,4,7,.88)!important; }
+.game-over-overlay .game-over-box-wide::after { content:"";position:absolute;right:-5%;bottom:-14%;width:clamp(100px,19vw,190px);height:clamp(130px,25vw,250px);pointer-events:none;background:url("/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png") center bottom/contain no-repeat;clip-path:polygon(38% 0,62% 0,68% 12%,79% 17%,86% 31%,91% 43%,84% 58%,77% 65%,80% 79%,90% 90%,88% 100%,64% 100%,57% 84%,50% 78%,43% 84%,36% 100%,12% 100%,10% 90%,20% 79%,23% 65%,16% 58%,9% 43%,14% 31%,21% 17%,32% 12%);filter:brightness(.76) saturate(.82) drop-shadow(7px 8px 0 #050407); }
+.game-over-overlay .game-over-box-wide h3 { font-size:clamp(2rem,5.4vw,4.6rem)!important;position:relative;z-index:2; }
+.game-over-overlay .game-over-box-wide > * { position:relative;z-index:2; }
+.loss-curb-overlay { background-image:linear-gradient(to bottom,rgba(4,3,10,.12),rgba(4,3,10,.82)),url("/manus-storage/selectah-urban-brawler-visual-target_a56c19c4.png")!important; }
+.loss-curb-night { background-image:linear-gradient(to top,rgba(4,3,10,.84),transparent 66%),url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png")!important;background-position:center bottom!important;background-size:cover!important;filter:brightness(.72) saturate(.86); }
+.loss-curb-dj { width:clamp(118px,23vw,204px)!important;filter:grayscale(.28) saturate(.84) brightness(.78) drop-shadow(7px 8px 0 #06040a)!important; }
+.loss-curb-copy { width:min(64%,500px)!important; }
+
+/* Speakers are deliberately huge; dancers are readable, front-of-cone performers rather than tiny stickers. */
+.urban-speaker-tower { transform:scale(1.86)!important; }
+.urban-speaker-tower img { transform:scale(1.12)!important;filter:drop-shadow(7px 9px 0 rgba(5,4,7,.92)) saturate(1.18)!important; }
+.dj-booth-stage.speakers-half-raised .urban-speaker-tower,.dj-booth-stage.speakers-full-raised .urban-speaker-tower { animation-name:urban-speaker-arrive-detailed!important; }
+@keyframes urban-speaker-arrive-detailed { 0% { opacity:0;transform:translateY(-190px) scale(.68); } 60% { opacity:1;transform:translateY(8px) scale(2.02); } 100% { opacity:1;transform:translateY(0) scale(1.86); } }
+.speaker-stack-dancer,.level-two-dancer,.level-one-streak-dancer { z-index:9!important;scale:1.3;transform-origin:center bottom;filter:drop-shadow(4px 5px 0 #050407) drop-shadow(0 0 9px rgba(0,231,255,.45))!important; }
+.speaker-stack-dancer img,.level-two-dancer img,.level-one-streak-dancer img { width:100%!important;height:100%!important;object-fit:contain!important; }
+
+/* Deck-floor reward uses the same approved prop art as normal pickups, not geometric stand-ins. */
+.combo-emerging-mixer { background:url("/manus-storage/selectah-mixer-urban_aa64e423.png") center/contain no-repeat!important;border:0!important;box-shadow:none!important;filter:drop-shadow(6px 7px 0 #050407)!important; }
+.combo-emerging-deck { background:url("/manus-storage/selectah-turntable-urban_de17fd21.png") center/contain no-repeat!important;border:0!important;box-shadow:none!important;filter:drop-shadow(6px 7px 0 #050407)!important; }
+.combo-emerging-mixer :is(i,b,em),.combo-emerging-deck i { display:none!important; }
+
+@media (max-width:650px) {
+  .urban-speaker-tower { transform:scale(1.45)!important; }
+  .urban-speaker-tower img { transform:scale(1.05)!important; }
+  .dj-booth-stage.speakers-half-raised .urban-speaker-tower,.dj-booth-stage.speakers-full-raised .urban-speaker-tower { animation-name:urban-speaker-arrive-detailed-mobile!important; }
+  @keyframes urban-speaker-arrive-detailed-mobile { 0% { opacity:0;transform:translateY(-130px) scale(.58); } 60% { opacity:1;transform:translateY(6px) scale(1.58); } 100% { opacity:1;transform:translateY(0) scale(1.45); } }
+  .speaker-stack-dancer,.level-two-dancer,.level-one-streak-dancer { scale:1.08; }
+  .game-over-overlay .game-over-box-wide::after { right:-12%;bottom:-10%;opacity:.76; }
+  .game-over-overlay .game-over-box-wide { padding-right:27%!important; }
+  .loss-curb-dj { width:112px!important; }
+}

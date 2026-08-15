@@ -10,6 +10,7 @@ import { trpc } from "@/lib/trpc";
 import "@/gameplay-clarity.css";
 import "@/miami-arcade-stage.css";
 import "@/reward-callout.css";
+import "@/detailed-arcade-scenes.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";

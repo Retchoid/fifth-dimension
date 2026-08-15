@@ -15,6 +15,7 @@ const postHeroStyles = readFileSync(resolve(projectRoot, "client/src/posthero-co
 const gameVisualStyles = readFileSync(resolve(projectRoot, "client/src/game-visual-system.css"), "utf8");
 const gameplayClarityStyles = readFileSync(resolve(projectRoot, "client/src/gameplay-clarity.css"), "utf8");
 const rewardCalloutStyles = readFileSync(resolve(projectRoot, "client/src/reward-callout.css"), "utf8");
+const detailedArcadeSceneStyles = readFileSync(resolve(projectRoot, "client/src/detailed-arcade-scenes.css"), "utf8");
 const fiveDPlayaStyles = readFileSync(resolve(projectRoot, "client/src/five-d-playa.css"), "utf8");
 const responsiveRepairStyles = readFileSync(resolve(projectRoot, "client/src/responsive-visual-repair.css"), "utf8");
 const miamiArcadeStyles = readFileSync(resolve(projectRoot, "client/src/miami-arcade-stage.css"), "utf8");
@@ -139,6 +140,9 @@ const requirements: Array<[string, string, string]> = [
   ["game cut-in visual grammar", gameVisualStyles, ".rewind-reward-overlay"],
   ["shared hard-outline splash frame", gameVisualStyles, "Every interruption receives one high-contrast"],
   ["chain, finale, loss, and bonus splash coverage", gameVisualStyles, ".unlock-overlay,.pre-level-two-overlay,.finale-overlay,.loss-curb-overlay,.game-over-overlay,.bonus-rewind-overlay"],
+  ["detailed illustrated splash scene layer", detailedArcadeSceneStyles, "selectah-splash-art-direction_4d1c250f.png"],
+  ["detailed game-over rave background", detailedArcadeSceneStyles, "5d-selector-rave-stage_e4fdff4b.png"],
+  ["approved deck and mixer reward art", detailedArcadeSceneStyles, "selectah-mixer-urban_aa64e423.png"],
   ["game bonus-stage visual grammar", gameVisualStyles, ".afterparty-runner-stage"],
   ["public crown marker", game, "hasBonusCrown"],
   ["durable bonus-clear crown proof", game, "shouldAwardBonusCrown(completedLevel, bonusCompletedRef.current)"],
