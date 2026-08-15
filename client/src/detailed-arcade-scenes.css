@@ -76,3 +76,21 @@
   .game-over-overlay .game-over-box-wide { padding-right:27%!important; }
   .loss-curb-dj { width:112px!important; }
 }
+
+/* This higher-specificity pass wins over the shared frame defined by the older visual layer. */
+.game-viewport :is(.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.rewind-reward-overlay,.wheel-it-up-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay,.unlock-overlay,.pre-level-two-overlay,.finale-overlay,.loss-curb-overlay,.game-over-overlay,.bonus-rewind-overlay) {
+  background-color:#090713!important;
+  background-image:linear-gradient(90deg,rgba(5,4,11,.83) 0 11%,transparent 24% 76%,rgba(5,4,11,.83) 89% 100%),linear-gradient(to bottom,rgba(4,3,9,.16),rgba(4,3,9,.8)),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important;
+  background-position:center!important;
+  background-size:cover!important;
+}
+.game-viewport .police-seizure-overlay { background-image:linear-gradient(90deg,rgba(0,18,41,.78),rgba(246,19,72,.2),rgba(0,18,41,.82)),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important; }
+.game-viewport .crowd-anger-overlay { background-image:linear-gradient(to bottom,rgba(119,29,28,.26),rgba(6,4,10,.88)),url("/manus-storage/selectah-urban-brawler-visual-target_a56c19c4.png")!important; }
+.game-viewport .pill-overload-overlay { background-image:radial-gradient(ellipse at 50% 52%,rgba(255,120,36,.3),rgba(59,7,76,.58) 46%,rgba(6,4,11,.92) 78%),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important; }
+.game-viewport :is(.rewind-reward-overlay,.wheel-it-up-overlay,.record-spin-transition,.bonus-rewind-overlay) { background-image:radial-gradient(circle at 50% 50%,rgba(0,231,255,.24),rgba(255,0,122,.2) 42%,rgba(5,4,11,.92) 76%),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important; }
+.game-viewport .crate-bonus-overlay { background-image:linear-gradient(to bottom,rgba(255,134,54,.17),rgba(7,4,12,.9)),url("/manus-storage/selectah-urban-brawler-visual-target_a56c19c4.png")!important; }
+.game-viewport .headphones-bonus-overlay { background-image:radial-gradient(circle at 30% 37%,rgba(0,231,255,.38),rgba(7,4,13,.9) 65%),url("/manus-storage/selectah-splash-art-direction_4d1c250f.png")!important; }
+.game-viewport :is(.selector-salute-overlay,.run-riddim-overlay) { background-image:linear-gradient(140deg,rgba(0,231,255,.22),transparent 46%,rgba(255,0,122,.25)),url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png")!important; }
+.game-viewport .level-two-arrival-overlay { background-image:linear-gradient(90deg,rgba(5,4,11,.86),transparent 26% 74%,rgba(5,4,11,.86)),url("/manus-storage/5d-selector-level-two-detailed-stage_89e2157b.png")!important; }
+.game-viewport .game-over-overlay { background-image:linear-gradient(to bottom,rgba(7,4,13,.2),rgba(7,4,13,.9)),url("/manus-storage/5d-selector-rave-stage_e4fdff4b.png")!important; }
+.game-viewport .loss-curb-overlay { background-image:linear-gradient(to bottom,rgba(4,3,10,.12),rgba(4,3,10,.82)),url("/manus-storage/selectah-urban-brawler-visual-target_a56c19c4.png")!important; }
