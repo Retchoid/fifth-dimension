@@ -1,0 +1,125 @@
+/* Mid-1990s Miami vaporwave cabinet stage. This file is intentionally presentation-only. */
+.minigame-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 79% 10%, rgba(255, 0, 122, .2), transparent 21rem),
+    radial-gradient(circle at 15% 82%, rgba(0, 231, 255, .18), transparent 22rem),
+    linear-gradient(135deg, #090611 0%, #140724 44%, #090611 100%) !important;
+}
+
+.minigame-section::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: clamp(8.5rem, 18vw, 14rem) 0 1.4rem;
+  pointer-events: none;
+  opacity: .92;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255, 97, 161, .58) 0 4%, rgba(255, 0, 122, .2) 25%, transparent 51%),
+    linear-gradient(160deg, transparent 0 43%, rgba(0, 231, 255, .11) 43.4% 44.2%, transparent 44.6% 55%, rgba(255, 0, 122, .13) 55.4% 56.1%, transparent 56.5%),
+    repeating-linear-gradient(90deg, transparent 0 8.8%, rgba(0, 231, 255, .1) 9% 9.25%, transparent 9.5% 18%),
+    linear-gradient(to bottom, rgba(6, 4, 12, 0), rgba(8, 4, 15, .92) 82%);
+  filter: saturate(1.14);
+}
+
+.minigame-section::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -6%;
+  right: -6%;
+  bottom: 0;
+  height: 32%;
+  pointer-events: none;
+  border-top: 2px solid rgba(0, 231, 255, .58);
+  background:
+    linear-gradient(160deg, transparent 0 49%, rgba(0, 231, 255, .18) 49.2% 49.7%, transparent 50% 100%),
+    repeating-linear-gradient(90deg, rgba(255, 0, 122, .1) 0 1px, transparent 1px 10%),
+    linear-gradient(to bottom, rgba(20, 5, 34, .2), #07050d 78%);
+  transform: perspective(420px) rotateX(58deg) translateY(21%);
+  transform-origin: center bottom;
+}
+
+.arcade-cabinet-bezel {
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+  border: 4px solid #07050d;
+  border-radius: 18px 18px 11px 11px;
+  background:
+    linear-gradient(90deg, #07050d 0 2%, #00a9c0 2.2% 3%, #25102e 3.2% 4.4%, #13091d 4.6% 95.4%, #25102e 95.6% 97%, #ff007a 97.2% 98%, #07050d 98.2%),
+    linear-gradient(145deg, #1b0b2d, #08050f 55%, #16091e) !important;
+  box-shadow:
+    0 0 0 3px #020207,
+    0 0 0 7px rgba(0, 231, 255, .58),
+    0 0 0 10px rgba(255, 0, 122, .4),
+    15px 19px 0 #05040a,
+    24px 28px 0 rgba(255, 0, 122, .58),
+    0 0 38px rgba(0, 231, 255, .35),
+    0 0 74px rgba(255, 0, 122, .24) !important;
+}
+
+.arcade-cabinet-bezel::before,
+.arcade-cabinet-bezel::after {
+  background:
+    repeating-linear-gradient(0deg, #07050d 0 5px, #261431 5px 7px),
+    linear-gradient(90deg, #07050d, #00b8d1 42%, #ff007a 57%, #07050d) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12);
+}
+
+.arcade-marquee {
+  border-top: 2px solid #00e7ff;
+  border-bottom: 2px solid #ff007a;
+  background:
+    linear-gradient(90deg, rgba(0, 231, 255, .16), transparent 24%, transparent 76%, rgba(255, 0, 122, .22)),
+    repeating-linear-gradient(90deg, #100819 0 11px, #190d25 11px 13px) !important;
+  box-shadow: inset 0 0 22px rgba(0, 231, 255, .2), 0 5px 0 #05040a;
+}
+
+.arcade-marquee strong {
+  color: #f6f1ff;
+  text-shadow: 3px 3px 0 #ff007a, -2px -2px 0 rgba(0, 231, 255, .62), 0 0 12px rgba(255, 0, 122, .48);
+}
+
+.marquee-seal,
+.cabinet-service-plate {
+  border-color: #00e7ff !important;
+  background: #140a20 !important;
+  color: #ff6ca6 !important;
+  box-shadow: 3px 3px 0 #ff007a, inset 0 0 0 1px rgba(0, 231, 255, .26) !important;
+}
+
+.game-viewport {
+  border: 2px solid rgba(0, 231, 255, .7);
+  box-shadow: inset 0 0 0 4px #05040a, inset 0 0 0 7px rgba(255, 0, 122, .34), 0 0 18px rgba(0, 231, 255, .24) !important;
+}
+
+.cabinet-physical-controls {
+  border-top: 2px solid #ff007a;
+  background: linear-gradient(90deg, #09060f, #1b0c27 48%, #09060f) !important;
+  box-shadow: inset 0 2px 0 rgba(0, 231, 255, .24);
+}
+
+.arcade-cabinet-share-bar {
+  position: relative;
+  z-index: 1;
+  border: 2px solid rgba(0, 231, 255, .48);
+  background: linear-gradient(90deg, rgba(8, 5, 14, .92), rgba(30, 7, 38, .92)) !important;
+  box-shadow: 5px 6px 0 rgba(255, 0, 122, .46);
+}
+
+@media (max-width: 650px) {
+  .minigame-section::before { top: 7rem; }
+  .arcade-cabinet-bezel {
+    border-width: 3px;
+    border-radius: 12px 12px 8px 8px;
+    box-shadow: 0 0 0 3px #020207, 0 0 0 5px rgba(0, 231, 255, .56), 8px 10px 0 #05040a, 13px 15px 0 rgba(255, 0, 122, .5), 0 0 25px rgba(0, 231, 255, .26) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .minigame-section::before,
+  .minigame-section::after { filter: none; }
+}

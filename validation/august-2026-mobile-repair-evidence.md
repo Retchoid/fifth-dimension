@@ -31,6 +31,10 @@ Focused browser inspection after the SoundCloud change confirmed that the standa
 
 After the remaining artwork field was suppressed, a second focused browser check confirmed that the embedded SoundCloud player still exposes its account, track title, play action, share action, playlist items, and external SoundCloud action. The player therefore remains functional without the yellow artwork treatment.
 
+## Miami cabinet stage verification
+
+The development-only held arcade view was focused directly on the Selectah Showdown cabinet after the cabinet-stage styling pass. The cabinet remains mounted with the existing marquee, viewport, service plate, physical controls, share controls, release copy, and public board. The presentation layer adds only the Miami vaporwave stage field, cyan/magenta neon bezel treatment, and gritty cabinet materials; no game control, player sprite, score, release-gate, or item-render markup was changed.
+
 The targeted arcade pass preserves the existing speaker and player markup. The only active style changes are an enlarged transparent speaker-art transform, transparent player-wrapper rules, and a screen blend on the existing DJ art to dissolve its opaque black backing into the dark stage. The automated selector audit locks those presentation-only contracts.
 
 ## Fresh-session release-gate verification

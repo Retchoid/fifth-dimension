@@ -12,6 +12,17 @@
 .live-chip.mixcloud-live-chip > i { display:none !important; }
 .mixcloud-embed-shell::before,.mixcloud-embed-shell::after { content:none !important; display:none !important; }
 .five-d-playa { background:linear-gradient(105deg,#151326 0 47%,#20102a 48% 100%) !important; border-color:#100f1c !important; box-shadow:6px 7px 0 #05050a,0 0 0 2px #00e7ff,0 0 22px rgba(0,231,255,.16) !important; }.five-d-playa-bar::after { color:rgba(0,231,255,.68) !important; }.five-d-playa-mark { background:#ff4b9b !important; color:#10121b !important; }.five-d-playa-label b,.five-d-playa-state { color:#00e7ff !important; }.five-d-playa-label em,.five-d-playa-queue-head { color:#00e7ff !important; }.five-d-playa-detach { background:#ff4b9b !important; color:#fff !important; }.live-chip>i,.mixcloud-live-chip>i { display:none!important; }.music-deck .live-chip { background:rgba(12,9,21,.78)!important; color:#f6ebd4!important; border-color:rgba(0,231,255,.58)!important; box-shadow:3px 3px 0 #ff007a!important; }
+
+/* One first-page material system beyond the hero: graphite fields, cyan signal, magenta flyer ink, and orange actions. */
+:is(.listen-section,.bio-section,.genre-mixes-section,.projects-section,.visuals-section,.booking-section,.contact-section) { background-color:#0e0a16!important; background-image:radial-gradient(circle at 86% 14%,rgba(255,0,122,.16),transparent 23rem),radial-gradient(circle at 12% 76%,rgba(0,231,255,.13),transparent 22rem),repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 7px)!important; }
+:is(.music-deck,.mixcloud-deck,.mix-archive-card,.mix-archive-group,.genre-mix-card,.project-card,.visual-deck,.booking-form,.booking-copy,.contact-content,.matrix-preview,.exclusive-release) { border-color:rgba(0,231,255,.5)!important; background-color:#151022!important; box-shadow:6px 6px 0 rgba(255,0,122,.5)!important; }
+:is(.mix-catalog-stamp,.mix-archive-id,.genre-mix-id,.project-id,.project-status,.matrix-kicker,.exclusive-meta) { color:#00e7ff!important; border-color:#00e7ff!important; background:#120d1d!important; }
+:is(.mix-download,.booking-submit,.lightbox-nav) { background:#00e7ff!important; color:#09070f!important; box-shadow:3px 3px 0 #ff007a!important; }
+:is(.mix-share,.booking-email,.contact-link,.five-d-playa-detach) { background:#ff007a!important; color:#fff!important; box-shadow:3px 3px 0 #00e7ff!important; }
+:is(.mix-download,.mix-share,.booking-submit,.booking-email,.contact-link,.five-d-playa-detach):hover { background:#ff5a1f!important; color:#09070f!important; }
+
+/* Paint effects are presentation-only and are removed without touching release, arcade, or media controls. */
+:is(.paint-drip,.paint-drips,.download-paint-drip,.release-paint-drip,.exclusive-paint-drip,.arcade-paint-drip,.rewind-splash-drip,[class*="paint-drip"],[class*="paint_drip"],[class*="drip-cyan"],[class*="drip-lime"],[class*="drip-pink"],[class*="drip-yellow"]) { display:none!important; }
 @media (max-width:720px) {
   html,body { overflow-x:hidden; }
   .section-heading,.section-heading-dark { display:grid !important; grid-template-columns:minmax(0,1fr) !important; gap:1rem !important; }

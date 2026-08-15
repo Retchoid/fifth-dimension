@@ -8,6 +8,7 @@ import { shouldAwardBonusCrown } from "@/lib/bonusCrown";
 import { scheduledNamedHazardExposure } from "@/lib/hazardExposure";
 import { trpc } from "@/lib/trpc";
 import "@/gameplay-clarity.css";
+import "@/miami-arcade-stage.css";
 import "@/reward-callout.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";

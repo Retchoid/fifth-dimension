@@ -2,6 +2,8 @@
 
 ## Current approval-gated arcade regression audit
 
+- [x] Redesign the Selectah Showdown cabinet and its immediate stage backdrop as a mid-1990s Miami vaporwave, graffiti, gritty-neon environment while preserving game controls, sprites, scoring, release-gate, and all gameplay behavior.
+- [ ] Remove all paint-drip presentation layers and further unify site sections around the original first-page cyan, magenta, graphite, and signal-orange language without changing content, media, controls, release-gate, arcade, or adaptive-card behavior.
 - [ ] Ensure the Jersh In Case download begins locked in every fresh session and unlocks only after the verified Level 1 chain-break completion.
 - [ ] Remove the remaining yellow accent from the SoundCloud presentation while retaining its player, artwork, controls, and external access.
 - [ ] Remove the lime striped overlay visible within the SoundCloud embed while keeping the SoundCloud player, artwork, and controls functional.
