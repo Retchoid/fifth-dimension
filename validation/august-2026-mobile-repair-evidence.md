@@ -100,3 +100,5 @@ The public checkpoint loads with the arcade controls intact, and its deployed CS
 The current phone-width full-page development review completed after the silhouette and dedicated-stage corrections. The arcade remains contained within the mobile content flow, with the compact cabinet, release card, archive controls, visual-gallery items, booking form, and footer all present; no new text clipping or horizontal runaway was observed in the rendered review.
 
 The hold-enabled rewind verifier confirms the shared overlay frame is mounted and computes to the intended cyan/magenta/graphite layered background, hard inset treatment, and dark outline inside the cabinet. The same final CSS rule now includes the chain, inter-level, finale, loss, game-over, and bonus rewind overlay classes that were previously outside this shared art contract.
+
+The published checkpoint loads on the public domain with the arcade start controls available. Its deployed stylesheet contains the extended unlock, finale, loss, and bonus overlay selectors, confirming that the common hard-outline coverage is included in the public bundle.
