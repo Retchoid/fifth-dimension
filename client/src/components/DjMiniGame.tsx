@@ -115,6 +115,7 @@ interface PickupFlash {
 interface InWorldReward {
   label: string;
   quip: string;
+  kind?: "boh" | "riddim" | "gun-fingers" | "wheel" | "crate" | "headphones";
 }
 
 interface FallingItem {
@@ -1355,10 +1356,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     damageFeedbackTimerRef.current = window.setTimeout(() => setDamageFeedback(null), 980);
   };
 
-  const announceInWorldReward = (label: string, quip: string) => {
+  const announceInWorldReward = (label: string, quip: string, kind?: InWorldReward["kind"]) => {
     window.clearTimeout(inWorldRewardTimerRef.current);
-    setInWorldReward({ label, quip });
-    inWorldRewardTimerRef.current = window.setTimeout(() => setInWorldReward(null), 1250);
+    setInWorldReward({ label, quip, kind });
+    inWorldRewardTimerRef.current = window.setTimeout(() => setInWorldReward(null), kind === "boh" || kind === "riddim" ? 1650 : 1250);
   };
 
   const queueGameFrame = () => {
@@ -1385,7 +1386,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK" },
         headphones: { label: "HEADPHONES SECURED", quip: "THREE DECKS / READY TO SELECT" },
       };
-      announceInWorldReward(rewardCopy[sequence].label, rewardCopy[sequence].quip);
+      announceInWorldReward(rewardCopy[sequence].label, rewardCopy[sequence].quip, sequence);
       if (sequence === "boh") playSubwooferPop(); else playRecordScratch();
       resumeOrAdvanceArcadeSequence();
       return;
@@ -2089,18 +2090,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           if (nextRecordsCaught >= 5 && !bohBonusAwardedRef.current) {
             bohBonusAwardedRef.current = true;
             currentScore += 250;
-            if (canShowInWorldReward) {
-              lastInWorldRewardRecordRef.current = nextRecordsCaught;
-              pauseForBohBonus = true;
-            }
+            lastInWorldRewardRecordRef.current = nextRecordsCaught;
+            pauseForBohBonus = true;
           }
           if (levelRef.current === 2 && nextRecordsCaught >= 15 && !riddimBonusAwardedRef.current) {
             riddimBonusAwardedRef.current = true;
             currentScore += 500;
-            if (canShowInWorldReward) {
-              lastInWorldRewardRecordRef.current = nextRecordsCaught;
-              pauseForRiddimBonus = true;
-            }
+            lastInWorldRewardRecordRef.current = nextRecordsCaught;
+            pauseForRiddimBonus = true;
           }
           if (item.type === "mixer") {
             mixerPickupCountRef.current += 1;
@@ -2153,16 +2150,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           if (nextReaction) {
             setComboReaction(nextReaction);
             setShowComboBurst(true);
+            if (nextReaction === "gun-fingers") {
+              announceInWorldReward("GUN FINGER MASSIVE", "SELECTOR SALUTE / CABINET UNDER PRESSURE", "gun-fingers");
+            }
             window.clearTimeout(comboBurstTimerRef.current);
             comboBurstTimerRef.current = window.setTimeout(() => {
               setShowComboBurst(false);
               setComboReaction(null);
-            }, nextReaction === "ground-decks" ? 1350 : 1100);
+            }, nextReaction === "ground-decks" ? 1350 : nextReaction === "gun-fingers" ? 1750 : 1100);
             if (nextReaction === "subwoofer" || nextReaction === "gun-fingers") playSubwooferPop();
             if (nextReaction === "gun-fingers") {
               setIsGunFingerShaking(true);
               window.clearTimeout(gunFingerShakeTimerRef.current);
-              gunFingerShakeTimerRef.current = window.setTimeout(() => setIsGunFingerShaking(false), 980);
+              gunFingerShakeTimerRef.current = window.setTimeout(() => setIsGunFingerShaking(false), 1500);
             }
           }
           if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS) {
@@ -2500,7 +2500,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
         {inWorldReward && !gameOver && (
-          <div className="in-world-reward" role="status" aria-live="polite">
+          <div className={`in-world-reward${inWorldReward.kind ? ` in-world-reward-${inWorldReward.kind}` : ""}`} role="status" aria-live="polite">
             <strong>{inWorldReward.label}</strong>
             <span>{inWorldReward.quip}</span>
           </div>

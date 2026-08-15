@@ -2,6 +2,11 @@
 
 ## Current approval-gated arcade regression audit
 
+- [ ] Make the first BOH and Run the Riddim awards visibly render once, make Big Up and Gun Finger clearly readable as non-blocking in-world feedback, and clear Bonus 2 route-obscuring status layers without changing scoring, targets, hazards, sprites, stages, or other game systems.
+- [ ] Add the approved non-blocking Gun Finger in-world visibility treatment and verify it renders during live play without pausing gameplay.
+- [ ] Capture desktop and mobile Bonus 2 runner evidence confirming the compacted status chrome no longer blocks route entities or visual lanes.
+- [ ] Audit why the Big Up, Gun Finger, and Run the Riddim feedback does not reliably appear, and propose trigger/render corrections before implementation.
+- [ ] Audit the Bonus 2 overlay and HUD geometry that blocks runner entities, then propose a non-disruptive play-area correction before implementation.
 - [x] Adjust falling-object exposure so each level has a fair, achievable opportunity to trigger the cop, pill, and Wrong Tune My Selectah outcomes at least once without forcing player hits or changing unrelated arcade systems.
 - [ ] Audit why the cop, pill, and Wrong Tune My Selectah splash scenes fail to present reliably, including their intended sound effects, then propose fixes before implementation.
 - [ ] Audit the remaining undesigned arcade assets and the visible square around the player sprite, then propose non-disruptive visual fixes before implementation.
