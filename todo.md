@@ -2,6 +2,8 @@
 
 ## Current approval-gated arcade regression audit
 
+- [ ] Ensure the Jersh In Case download begins locked in every fresh session and unlocks only after the verified Level 1 chain-break completion.
+- [ ] Remove the remaining yellow accent from the SoundCloud presentation while retaining its player, artwork, controls, and external access.
 - [ ] Remove the lime striped overlay visible within the SoundCloud embed while keeping the SoundCloud player, artwork, and controls functional.
 - [ ] Eliminate the remaining visible backing square around the active DJ sprite without changing its asset, collision area, camo state, or game behavior.
 - [ ] Increase visible speaker-stage scale without changing the approved speaker deployment timing, dancer thresholds, or gameplay area.

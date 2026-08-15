@@ -29,4 +29,10 @@ The verifier held the active Level 1 scene at **15/25** records with the game’
 
 Focused browser inspection after the SoundCloud change confirmed that the standard player continues to expose its account, track title, play control, share control, follow control, playlist items, and privacy link. The previous large visual-mode artwork field—the location of the reported lime striped overlay—no longer renders because the player now uses SoundCloud's standard `visual=false` mode with the player artwork setting retained.
 
+After the remaining artwork field was suppressed, a second focused browser check confirmed that the embedded SoundCloud player still exposes its account, track title, play action, share action, playlist items, and external SoundCloud action. The player therefore remains functional without the yellow artwork treatment.
+
 The targeted arcade pass preserves the existing speaker and player markup. The only active style changes are an enlarged transparent speaker-art transform, transparent player-wrapper rules, and a screen blend on the existing DJ art to dissolve its opaque black backing into the dark stage. The automated selector audit locks those presentation-only contracts.
+
+## Fresh-session release-gate verification
+
+In the local browser preview, the former durable v5 value and the current-session proof were explicitly cleared before a full reload. The resulting release card displayed the locked instruction, **“Collect 25 records in Selectah Showdown to unlock the free download,”** and exposed no listen or download action. This confirms that a fresh session starts locked; only the verified in-session Level 1 chain-break proof can open the release.
