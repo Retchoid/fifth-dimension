@@ -105,7 +105,7 @@ const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maxim
 const BONUS_START_RECORDS = 20;
 const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "speaker", "mixer", "cdj"];
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
-type ComboReaction = "subwoofer" | "gun-fingers" | "ground-decks" | null;
+type ComboReaction = "big-up" | "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
 type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
 interface PickupFlash {
@@ -116,7 +116,7 @@ interface PickupFlash {
 interface InWorldReward {
   label: string;
   quip: string;
-  kind?: "boh" | "riddim" | "gun-fingers" | "wheel" | "crate" | "headphones";
+  kind?: "boh" | "big-up" | "riddim" | "gun-fingers" | "wheel" | "crate" | "headphones";
 }
 
 interface FallingItem {
@@ -268,6 +268,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const wheelItUpAwardedRef = useRef(false);
   const wheelItUpPauseTimerRef = useRef<number>(0);
   const bohBonusAwardedRef = useRef(false);
+  const bigUpAwardedRef = useRef(false);
   const riddimBonusAwardedRef = useRef(false);
   const policeBadgeHitsRef = useRef(0);
   const phoneHitsRef = useRef(0);
@@ -1132,6 +1133,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
     bohBonusAwardedRef.current = false;
+    bigUpAwardedRef.current = false;
     riddimBonusAwardedRef.current = false;
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
@@ -1360,7 +1362,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const announceInWorldReward = (label: string, quip: string, kind?: InWorldReward["kind"]) => {
     window.clearTimeout(inWorldRewardTimerRef.current);
     setInWorldReward({ label, quip, kind });
-    inWorldRewardTimerRef.current = window.setTimeout(() => setInWorldReward(null), kind === "boh" || kind === "riddim" ? 1650 : 1250);
+    inWorldRewardTimerRef.current = window.setTimeout(() => setInWorldReward(null), kind === "boh" || kind === "big-up" || kind === "riddim" ? 1650 : 1250);
   };
 
   const queueGameFrame = () => {
@@ -1381,7 +1383,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const startArcadeSequence = (sequence: ArcadeSequence) => {
     if (sequence === "boh" || sequence === "riddim" || sequence === "wheel" || sequence === "crate" || sequence === "headphones") {
       const rewardCopy: Record<"boh" | "riddim" | "wheel" | "crate" | "headphones", InWorldReward> = {
-        boh: { label: "BOH! BOH! BIG UP", quip: "SELECTOR SALUTE / +250" },
+        boh: { label: "BOH! BOH!", quip: "FIVE DUBPLATES / +250" },
         riddim: { label: "RUN THE RIDDIM!", quip: "CROWD PRESSURE / +500" },
         wheel: { label: "WHEEL IT UP", quip: "GUN FINGER MASSIVE / +10" },
         crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK" },
@@ -1870,6 +1872,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     rewindAwardedRef.current = false;
     wheelItUpAwardedRef.current = false;
     bohBonusAwardedRef.current = false;
+    bigUpAwardedRef.current = false;
     riddimBonusAwardedRef.current = false;
     policeBadgeHitsRef.current = 0;
     bottleHitsRef.current = 0;
@@ -2094,6 +2097,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             lastInWorldRewardRecordRef.current = nextRecordsCaught;
             pauseForBohBonus = true;
           }
+          if (nextRecordsCaught >= 6 && !bigUpAwardedRef.current) {
+            bigUpAwardedRef.current = true;
+            setComboReaction("big-up");
+            setShowComboBurst(true);
+            announceInWorldReward("BIG UP!", "big-up", "big-up");
+            window.clearTimeout(comboBurstTimerRef.current);
+            comboBurstTimerRef.current = window.setTimeout(() => {
+              setShowComboBurst(false);
+              setComboReaction(null);
+            }, 1100);
+            playSubwooferPop();
+          }
           if (levelRef.current === 2 && nextRecordsCaught >= 15 && !riddimBonusAwardedRef.current) {
             riddimBonusAwardedRef.current = true;
             currentScore += 500;
@@ -2147,7 +2162,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             crowdCheerPlayedRef.current = true;
             playCrowdCheer();
           }
-          const nextReaction: ComboReaction = nextCombo === 6 ? "subwoofer" : nextCombo === 12 ? "gun-fingers" : nextCombo === 24 ? "ground-decks" : null;
+          const nextReaction: ComboReaction = nextCombo === 12 ? "gun-fingers" : nextCombo === 24 ? "ground-decks" : null;
           if (nextReaction) {
             setComboReaction(nextReaction);
             setShowComboBurst(true);
@@ -2159,7 +2174,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               setShowComboBurst(false);
               setComboReaction(null);
             }, nextReaction === "ground-decks" ? 1350 : nextReaction === "gun-fingers" ? 1750 : 1100);
-            if (nextReaction === "subwoofer" || nextReaction === "gun-fingers") playSubwooferPop();
+            if (nextReaction === "gun-fingers") playSubwooferPop();
             if (nextReaction === "gun-fingers") {
               setIsGunFingerShaking(true);
               window.clearTimeout(gunFingerShakeTimerRef.current);
@@ -2503,7 +2518,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {inWorldReward && !gameOver && (
           <div className={`in-world-reward${inWorldReward.kind ? ` in-world-reward-${inWorldReward.kind}` : ""}`} role="status" aria-live="polite">
             <strong>{inWorldReward.label}</strong>
-            <span>{inWorldReward.quip}</span>
           </div>
         )}
         <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
@@ -2965,13 +2979,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {showComboBurst && (
           <div className={`combo-burst-overlay${comboReaction ? ` combo-reaction-${comboReaction}` : ""}`} aria-hidden="true">
+            {comboReaction === "big-up" && <div className="combo-big-up"><i /><i /><i /><b /></div>}
             {comboReaction === "subwoofer" && <div className="combo-subwoofer"><i /><b /><span>5D BASS</span></div>}
             {comboReaction === "gun-fingers" && <div className="combo-gun-fingers"><i>☝</i><i>☝</i><i>☝</i></div>}
             {comboReaction === "ground-decks" && <div className="combo-ground-decks"><span className="combo-ground-crack" /><div className="combo-emerging-mixer"><i /><b /><em /></div><div className="combo-emerging-deck combo-deck-left"><i /></div><div className="combo-emerging-deck combo-deck-right"><i /></div></div>}
             {comboReaction === "ground-decks" && <div className="combo-dancer-pop">{CELEBRATION_DANCERS.map((dancer) => <img key={`ground-${dancer.className}`} className={`combo-dancer ${dancer.className}`} src={dancer.src} alt="" />)}</div>}
-            <span className="combo-burst-text">{comboReaction === "subwoofer" ? "BIG UP!" : comboReaction === "gun-fingers" ? "GUN FINGER MASSIVE" : comboReaction === "ground-decks" ? "MAXIMUM RESPEKT" : COMBO_CALLOUTS[Math.min(COMBO_CALLOUTS.length - 1, Math.max(0, combo - 5))]}</span>
+            <span className="combo-burst-text">{comboReaction === "big-up" || comboReaction === "subwoofer" ? "BIG UP!" : comboReaction === "gun-fingers" ? "GUN FINGER MASSIVE" : comboReaction === "ground-decks" ? "MAXIMUM RESPEKT" : COMBO_CALLOUTS[Math.min(COMBO_CALLOUTS.length - 1, Math.max(0, combo - 5))]}</span>
             <span className="combo-burst-count">{combo}x DUBPLATE COMBO</span>
-            <span className="combo-burst-quip">{comboReaction === "subwoofer" ? "SUBWOOFER DEPLOYED — LOW END CHECK" : comboReaction === "gun-fingers" ? "SELECTOR SALUTE — CABINET UNDER PRESSURE" : comboReaction === "ground-decks" ? "DECKS + MIXER: RISEN FROM THE RAVE FLOOR" : level === 2 ? "CROWD RESPONSE: STINK FACE APPROVED" : "NO REQUESTS. JUST REWIND."}</span>
             {Array.from({ length: 12 }, (_, i) => (
               <i key={i} className={`burst-particle particle-${i % 4}`} />
             ))}

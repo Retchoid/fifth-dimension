@@ -2,6 +2,25 @@
 
 ## Current approval-gated arcade regression audit
 
+- [ ] Remove every visible paint-drip layer from the live site, including the release-card lower-edge SVG wrapper, and prove its absence at 375 px width without changing release content or gate behavior.
+- [ ] Remove the visible yellow/lime strip and yellow-orange treatment from the mobile SoundCloud embed, retaining a usable SoundCloud playback and external-link experience.
+- [ ] Apply one coherent graphite, cyan, magenta, and signal-orange visual system across all post-hero sections, including embedded-player cards and 5D Playa, with no contradictory parchment, brown, lime, or yellow panel treatments.
+- [ ] Relocate the detachable 5D Playa control to the top-right site navigation area while preserving its queue, playback, detachment, native mix controls, downloads, and share actions.
+- [ ] Split the five-dubplate BOH! BOH! and Big Up! reactions into two independent, visibly distinct non-blocking callouts with their own trigger conditions and no game pause.
+- [ ] Restore the speaker stacks to their original in-stage position and make them dramatically larger on desktop and phone layouts without changing deployment timing, dancer thresholds, collision lanes, or DJ/dancer sprites.
+- [ ] Replace descriptor-only arcade feedback visible during live play with the intended animated or reactive visual treatments; do not leave text-only status descriptions in the playable field.
+- [ ] Remove the remaining visible lime, yellow, parchment, and brown post-hero panel treatments through concrete overrides while retaining supplied cover art, responsive typography, and existing content.
+- [ ] Make the header 5D Playa control the sole visible detach and dock affordance; hide the duplicate in-archive detach action without affecting playback, queue, downloads, or shares.
+- [ ] Give Big Up its own visual effect and reaction class rather than reusing the generic subwoofer reaction; demonstrate it independently from BOH! BOH! in the development arcade.
+- [ ] Confirm the speaker art reaches its enlarged foreground scale in a staged browser frame at both desktop and phone width, then repeat the check after publication.
+- [ ] Audit all remaining active-play feedback for text-only explanatory descriptors and remove only those that substitute for a requested animation or reactive visual.
+
+- [ ] Independently verify the current live SoundCloud embed contains no visible yellow accent or yellow artwork while its playback, sharing, and external-access controls remain usable.
+- [ ] Independently verify a fresh browser session starts the Jersh In Case release locked and cannot reveal listen or download actions before the verified Level 1 chain break.
+- [ ] Independently verify every post-hero section uses the original graphite, cyan, magenta, and signal-orange system and that no paint-drip layer remains visible anywhere on the site.
+- [ ] Independently verify no residual yellow square treatment remains in post-hero sections and that the site styling is visually consistent with the protected first hero section.
+- [ ] Independently verify the published Selectah Showdown cabinet and its immediate stage visibly present the requested mid-1990s Miami vaporwave, graffiti, gritty-neon treatment without disrupting the game surface or controls.
+
 - [x] Redesign the Selectah Showdown cabinet and its immediate stage backdrop as a mid-1990s Miami vaporwave, graffiti, gritty-neon environment while preserving game controls, sprites, scoring, release-gate, and all gameplay behavior.
 - [ ] Remove all paint-drip presentation layers and further unify site sections around the original first-page cyan, magenta, graphite, and signal-orange language without changing content, media, controls, release-gate, arcade, or adaptive-card behavior.
 - [ ] Ensure the Jersh In Case download begins locked in every fresh session and unlocks only after the verified Level 1 chain-break completion.

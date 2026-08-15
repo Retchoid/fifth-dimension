@@ -401,6 +401,19 @@ export default function Home() {
           </a>
           <button
             type="button"
+            className={`header-playa-launch${fiveDPlayerDetached ? " is-active" : ""}`}
+            onClick={() => {
+              setFiveDPlayerOpen(true);
+              setFiveDPlayerDetached((isDetached) => !isDetached);
+            }}
+            aria-expanded={fiveDPlayerDetached}
+            aria-controls="five-d-playa-queue"
+          >
+            <Radio size={16} />
+            <span>{fiveDPlayerDetached ? "DOCK 5D PLAYA" : "5D PLAYA"}</span>
+          </button>
+          <button
+            type="button"
             aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={menuOpen}
             className="menu-toggle"
@@ -475,7 +488,7 @@ export default function Home() {
             <article className="music-deck soundcloud-deck">
               <div className="deck-topline"><span>SC / PRIMARY DECK</span><span className="live-chip"><i /> LIVE PROFILE</span></div>
               <h3>SoundCloud<br /><em>5th Dimension</em></h3>
-              <div className="embed-shell">
+              <div className="embed-shell soundcloud-embed-shell">
                 <iframe
                   title="5th Dimension on SoundCloud"
                   width="100%"

@@ -1,5 +1,5 @@
 export const SOUND_CLOUD_PROFILE = "https://soundcloud.com/user6777884";
-export const SOUND_CLOUD_EMBED = "https://w.soundcloud.com/player/?visual=false&url=https%3A%2F%2Fapi.soundcloud.com%2Fusers%2F1855303&show_artwork=false&color=%23ff007a";
+export const SOUND_CLOUD_EMBED = "https://w.soundcloud.com/player/?visual=false&url=https%3A%2F%2Fapi.soundcloud.com%2Fusers%2F1855303&show_artwork=false&color=%2300e7ff";
 export const MIXCLOUD_PROFILE = "https://www.mixcloud.com/fingerbanginfaderz/";
 export const MIXCLOUD_FEATURED_MIX = "https://www.mixcloud.com/fingerbanginfaderz/logikal-grinder/";
 export const MIXCLOUD_EMBED = "https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=0&light=0&feed=%2Ffingerbanginfaderz%2Flogikal-grinder%2F";

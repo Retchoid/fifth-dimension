@@ -15,7 +15,9 @@ const postHeroStyles = readFileSync(resolve(projectRoot, "client/src/posthero-co
 const gameVisualStyles = readFileSync(resolve(projectRoot, "client/src/game-visual-system.css"), "utf8");
 const gameplayClarityStyles = readFileSync(resolve(projectRoot, "client/src/gameplay-clarity.css"), "utf8");
 const rewardCalloutStyles = readFileSync(resolve(projectRoot, "client/src/reward-callout.css"), "utf8");
+const fiveDPlayaStyles = readFileSync(resolve(projectRoot, "client/src/five-d-playa.css"), "utf8");
 const responsiveRepairStyles = readFileSync(resolve(projectRoot, "client/src/responsive-visual-repair.css"), "utf8");
+const miamiArcadeStyles = readFileSync(resolve(projectRoot, "client/src/miami-arcade-stage.css"), "utf8");
 const djLinks = readFileSync(resolve(projectRoot, "client/src/lib/djLinks.ts"), "utf8");
 
 const requirements: Array<[string, string, string]> = [
@@ -162,6 +164,11 @@ const requirements: Array<[string, string, string]> = [
   ["fair named-hazard exposure schedule", game, "scheduledNamedHazardExposure(levelRef.current, namedHazardSpawnCountRef.current)"],
   ["named-hazard exposure counter reset", game, "namedHazardSpawnCountRef.current = 0;"],
   ["BOH first award cannot be suppressed", game, "pauseForBohBonus = true;"],
+  ["separate Big Up reward trigger", game, "bigUpAwardedRef.current"],
+  ["BOH without Big Up combined copy", game, 'boh: { label: "BOH! BOH!"'],
+  ["Big Up standalone action", game, 'setComboReaction("big-up")'],
+  ["animated Big Up reward styling", rewardCalloutStyles, ".in-world-reward-big-up"],
+  ["Big Up distinct speaker-stack visual", gameplayClarityStyles, ".combo-big-up"],
   ["Run the Riddim first award cannot be suppressed", game, "pauseForRiddimBonus = true;"],
   ["Gun Finger extended readability", game, "nextReaction === \"gun-fingers\" ? 1750"],
   ["Gun Finger non-blocking in-world callout", game, "announceInWorldReward(\"GUN FINGER MASSIVE\""],
@@ -178,9 +185,18 @@ const requirements: Array<[string, string, string]> = [
   ["Mixcloud compact widget disabled", djLinks, "mini=0"],
   ["SoundCloud visual overlay disabled", djLinks, "visual=false"],
   ["SoundCloud standard-player artwork field suppressed", djLinks, "show_artwork=false"],
-  ["SoundCloud player uses signal magenta", djLinks, "color=%23ff007a"],
+  ["SoundCloud player uses signal cyan", djLinks, "color=%2300e7ff"],
+  ["SoundCloud mobile tint correction", responsiveRepairStyles, ".soundcloud-embed-shell iframe"],
+  ["all release paint artwork removed", responsiveRepairStyles, ".download-box-edge-paint"],
+  ["post-hero unified graphite field", responsiveRepairStyles, ":is(.listen-section,.bio-section,.genre-mixes-section,.projects-section,.visuals-section,.booking-section,.contact-section)"],
+  ["top-menu 5D Playa launcher", home, "header-playa-launch"],
+  ["top-right detached 5D Playa position", home, "setFiveDPlayerDetached"],
+  ["archive detach duplicate hidden", fiveDPlayaStyles, ".five-d-playa-detach { display:none!important; }"],
+  ["Miami arcade stage field", miamiArcadeStyles, ".minigame-section::before"],
+  ["Miami cyan and magenta cabinet shell", miamiArcadeStyles, ".arcade-cabinet-bezel"],
   ["DJ sprite backing blend cleanup", gameVisualStyles, "mix-blend-mode:screen"],
-  ["larger transparent speaker stage", gameplayClarityStyles, "transform:scale(1.6)"],
+  ["dramatically larger foreground speaker stage", gameplayClarityStyles, "transform:scale(2.25)!important"],
+  ["Level 2 speaker foreground position", gameplayClarityStyles, "transform:translateY(0) scale(1.42)!important"],
   ["mobile heading single column", responsiveRepairStyles, "grid-template-columns:minmax(0,1fr) !important"],
   ["mobile heading wrapping", responsiveRepairStyles, "overflow-wrap:anywhere !important"],
   ["mobile player label wrapping", responsiveRepairStyles, ".five-d-playa-now strong,.five-d-playa-label b,.five-d-playa-label em"],

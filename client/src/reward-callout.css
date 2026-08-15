@@ -1,4 +1,4 @@
-/* Non-blocking selector rewards: yellow arcade ink that never masks a play lane. */
+/* Non-blocking selector rewards: cyan/magenta arcade ink that never masks a play lane. */
 .in-world-reward {
   position: absolute;
   z-index: 12;
@@ -11,10 +11,10 @@
   justify-items: center;
   gap: .22rem;
   padding: .38rem .65rem .32rem;
-  border: 2px solid rgba(25, 21, 27, .9);
-  background: rgba(255, 218, 70, .76);
-  box-shadow: 3px 3px 0 rgba(23, 18, 27, .68), inset 0 2px 0 rgba(255, 247, 181, .8), 0 0 13px rgba(177, 255, 72, .84);
-  color: #241b24;
+  border: 2px solid rgba(0, 231, 255, .88);
+  background: rgba(16, 10, 29, .9);
+  box-shadow: 3px 3px 0 rgba(255, 0, 122, .72), inset 0 2px 0 rgba(226, 252, 255, .26), 0 0 13px rgba(0, 231, 255, .4);
+  color: #f4fbff;
   font-family: "Bungee", system-ui, sans-serif;
   text-align: center;
   text-transform: uppercase;
@@ -24,27 +24,30 @@
   font-size: clamp(.72rem, 1.35vw, 1rem);
   line-height: .98;
   letter-spacing: .025em;
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, .52);
+  text-shadow: 2px 2px 0 rgba(255, 0, 122, .72);
 }
 .in-world-reward span {
   font: 800 .44rem/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: .09em;
 }
 .in-world-reward-boh,
+.in-world-reward-big-up,
 .in-world-reward-riddim,
 .in-world-reward-gun-fingers {
   width: min(48%, 310px);
   border: 0;
-  background: linear-gradient(108deg, rgba(255, 221, 66, .92), rgba(255, 174, 43, .84));
+  background: linear-gradient(108deg, rgba(0, 231, 255, .94), rgba(255, 0, 122, .88));
   clip-path: polygon(4% 14%, 26% 3%, 46% 10%, 68% 1%, 96% 15%, 90% 89%, 69% 98%, 47% 91%, 25% 100%, 3% 85%);
   box-shadow: none;
   filter: drop-shadow(4px 5px 0 rgba(23, 18, 27, .78));
 }
 .in-world-reward-boh::before,
+.in-world-reward-big-up::before,
 .in-world-reward-riddim::before,
 .in-world-reward-gun-fingers::before { content:""; position:absolute; inset:8%; pointer-events:none; border:2px solid rgba(36,27,36,.72); clip-path:inherit; opacity:.72; }
-.in-world-reward-boh strong,.in-world-reward-riddim strong,.in-world-reward-gun-fingers strong { font-family:"Rubik Wet Paint","Bungee",system-ui,sans-serif; font-size:clamp(.85rem,1.8vw,1.26rem); text-shadow:2px 2px 0 rgba(255,247,181,.72); }
+.in-world-reward-boh strong,.in-world-reward-big-up strong,.in-world-reward-riddim strong,.in-world-reward-gun-fingers strong { font-family:"Rubik Wet Paint","Bungee",system-ui,sans-serif; font-size:clamp(.85rem,1.8vw,1.26rem); text-shadow:2px 2px 0 rgba(7,11,18,.86); }
 .in-world-reward-boh { transform:translateX(-50%) rotate(-5deg); }
+.in-world-reward-big-up { top:28%; transform:translateX(-50%) rotate(4deg); }
 .in-world-reward-riddim { transform:translateX(-50%) rotate(4deg); }
 .in-world-reward-gun-fingers { background:linear-gradient(108deg,rgba(0,231,255,.92),rgba(255,102,181,.84)); transform:translateX(-50%) rotate(-3deg); }
 @keyframes in-world-reward-pop {
@@ -56,7 +59,7 @@
 @media (max-width: 650px) {
   .in-world-reward { top: 15%; width: min(58%, 225px); padding: .3rem .45rem; }
   .in-world-reward span { font-size: .37rem; }
-  .in-world-reward-boh,.in-world-reward-riddim,.in-world-reward-gun-fingers { width:min(68%,260px); }
+  .in-world-reward-boh,.in-world-reward-big-up,.in-world-reward-riddim,.in-world-reward-gun-fingers { width:min(68%,260px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .in-world-reward { animation: none; }

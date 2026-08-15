@@ -20,7 +20,7 @@ describe("5th Dimension public channel configuration", () => {
     expect(SOUND_CLOUD_EMBED).toContain("api.soundcloud.com%2Fusers%2F1855303");
     expect(SOUND_CLOUD_EMBED).toContain("visual=false");
     expect(SOUND_CLOUD_EMBED).toContain("show_artwork=false");
-    expect(SOUND_CLOUD_EMBED).toContain("color=%23ff007a");
+    expect(SOUND_CLOUD_EMBED).toContain("color=%2300e7ff");
   });
 
   it("retains the supplied Facebook and Instagram destinations", () => {

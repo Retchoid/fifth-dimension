@@ -21,8 +21,16 @@
 :is(.mix-share,.booking-email,.contact-link,.five-d-playa-detach) { background:#ff007a!important; color:#fff!important; box-shadow:3px 3px 0 #00e7ff!important; }
 :is(.mix-download,.mix-share,.booking-submit,.booking-email,.contact-link,.five-d-playa-detach):hover { background:#ff5a1f!important; color:#09070f!important; }
 
+/* One controlled post-hero visual system: graphite surfaces, cyan signal, magenta ink, and orange actions. */
+:is(.bandcamp-strip,.deck-topline,.deck-link,.mix-archive-actions,.matrix-lockline,.project-status,.exclusive-file-info) { border-color:rgba(0,231,255,.48)!important; background-color:#151022!important; color:#dcecf5!important; }
+.music-deck h3,.music-deck h3 em,.deck-topline,.deck-link { color:#f4fbff!important; }.music-deck h3 em,.deck-topline span:first-child,.deck-link svg { color:#00e7ff!important; }
+.live-chip,.music-deck .live-chip { border-color:rgba(0,231,255,.62)!important; background:#120d1d!important; color:#ff5aa4!important; box-shadow:3px 3px 0 #00e7ff!important; }.live-chip>i,.mixcloud-live-chip>i { display:none!important; }
+.soundcloud-embed-shell { overflow:hidden; border:2px solid rgba(0,231,255,.58); background:#0d0918; box-shadow:inset 0 0 0 2px rgba(255,0,122,.22); }.soundcloud-embed-shell iframe { display:block; filter:hue-rotate(310deg) saturate(.78) brightness(.9) contrast(1.06); }
+.five-d-playa,.five-d-playa-bar,.five-d-playa-queue { border-color:#00e7ff!important; background:#151022!important; color:#f4fbff!important; }.five-d-playa::before { background:repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 1px,transparent 1px 5px),linear-gradient(90deg,transparent 0 14%,rgba(255,0,122,.16) 14% 15%,transparent 15% 84%,rgba(0,231,255,.16) 84% 85%)!important; }.five-d-playa-mark,.five-d-playa-toggle { background:#00e7ff!important; color:#09070f!important; }.five-d-playa-label b,.five-d-playa-state,.five-d-playa-queue-head { color:#00e7ff!important; text-shadow:none!important; }.five-d-playa-label em,.five-d-playa-now small,.five-d-playa-queue em { color:#ff79b5!important; }.five-d-playa-detach { background:#ff007a!important; color:#fff!important; }.five-d-playa-progress i { background:linear-gradient(90deg,#00e7ff,#ff007a)!important; box-shadow:0 0 9px rgba(0,231,255,.6)!important; }
+.header-playa-launch { display:inline-flex; align-items:center; gap:.32rem; min-height:34px; padding:.42rem .54rem; border:2px solid #00e7ff; background:#120d1d; color:#00e7ff; box-shadow:3px 3px 0 #ff007a; font:900 .48rem/1 "Bungee",Impact,sans-serif; letter-spacing:.06em; cursor:pointer; }.header-playa-launch.is-active,.header-playa-launch:hover { background:#ff007a; color:#fff; box-shadow:3px 3px 0 #00e7ff; }.header-playa-launch:active { transform:scale(.97); }
+
 /* Paint effects are presentation-only and are removed without touching release, arcade, or media controls. */
-:is(.paint-drip,.paint-drips,.download-paint-drip,.release-paint-drip,.exclusive-paint-drip,.arcade-paint-drip,.rewind-splash-drip,[class*="paint-drip"],[class*="paint_drip"],[class*="drip-cyan"],[class*="drip-lime"],[class*="drip-pink"],[class*="drip-yellow"]) { display:none!important; }
+:is(.paint-drip,.paint-drips,.download-paint-drip,.download-box-edge-paint,.release-paint-drip,.exclusive-paint-drip,.arcade-paint-drip,.rewind-splash-drip,[class*="paint-drip"],[class*="paint_drip"],[class*="drip-cyan"],[class*="drip-lime"],[class*="drip-pink"],[class*="drip-yellow"]) { display:none!important; }
 @media (max-width:720px) {
   html,body { overflow-x:hidden; }
   .section-heading,.section-heading-dark { display:grid !important; grid-template-columns:minmax(0,1fr) !important; gap:1rem !important; }
@@ -30,4 +38,12 @@
   .section-heading h2,.section-heading-dark h2 { max-width:100% !important; font-size:clamp(2.35rem,12vw,4.4rem) !important; line-height:.88 !important; white-space:normal !important; overflow-wrap:anywhere !important; word-break:normal !important; }
   .section-heading>p,.section-heading-dark>p,.mix-archive-group-heading h3,.mix-archive-titleline h3,.five-d-playa-now strong,.five-d-playa-label b,.five-d-playa-label em { white-space:normal !important; overflow-wrap:anywhere !important; text-overflow:clip !important; }
   .five-d-playa-bar { min-height:auto !important; }.five-d-playa-main { grid-template-columns:42px minmax(0,1fr) auto !important; }.five-d-playa-now { grid-column:2 / -1; }.five-d-playa-bar::after { position:static; grid-column:1 / -1; justify-self:end; padding:0 .55rem .28rem; font-size:.28rem; }
+  .header-playa-launch { min-width:34px; padding:.45rem; }.header-playa-launch span { display:none; }
 }
+
+/* Strict post-hero palette lock: only graphite, cyan, magenta, white copy, and orange actions may remain in UI panels. Supplied cover art is not filtered. */
+:is(.listen-section,.bio-section,.genre-mixes-section,.projects-section,.visuals-section,.booking-section,.contact-section) { --paper-ink:#f4fbff!important; --reward-lime:#00e7ff!important; --signal-cyan:#00e7ff!important; --flyer-magenta:#ff007a!important; --signal-orange:#ff5a1f!important; }
+:is(.music-deck,.music-deck .deck-topline,.music-deck .deck-link,.bandcamp-strip,.project-card,.project-status,.matrix-lockline,.visual-card,.booking-form,.contact-link,.mix-archive-group-heading) { background-color:#100b1b!important; color:#f4fbff!important; border-color:rgba(0,231,255,.56)!important; box-shadow:none!important; }
+:is(.music-deck .deck-topline,.music-deck .deck-link,.project-status,.matrix-lockline,.mix-archive-group-heading span,.booking-form label,.contact-link) { color:#00e7ff!important; }
+:is(.music-deck .deck-link:hover,.contact-link:hover,.booking-submit:hover,.mix-download:hover,.mix-share:hover) { background:#ff5a1f!important; color:#09070f!important; border-color:#ff5a1f!important; }
+.five-d-playa:focus-within,.five-d-playa.is-detached { border-color:#00e7ff!important; box-shadow:7px 8px 0 #050407,0 0 0 2px rgba(0,231,255,.38),0 0 22px rgba(255,0,122,.22)!important; }

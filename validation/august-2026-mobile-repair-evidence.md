@@ -40,3 +40,29 @@ The targeted arcade pass preserves the existing speaker and player markup. The o
 ## Fresh-session release-gate verification
 
 In the local browser preview, the former durable v5 value and the current-session proof were explicitly cleared before a full reload. The resulting release card displayed the locked instruction, **“Collect 25 records in Selectah Showdown to unlock the free download,”** and exposed no listen or download action. This confirms that a fresh session starts locked; only the verified in-session Level 1 chain-break proof can open the release.
+
+## Published disputed-requirements finding
+
+The published release was found in its locked state before gameplay, but its cyan lower-edge paint artwork remains visible. The global paint-removal selector did not target the `download-box-edge-paint` wrapper that mounts the artwork, so the paint-removal request remains incomplete and requires a source correction before it can be considered done.
+
+The corrected development build now targets the previously missed wrapper directly. The release retains its locked message before game completion; the correction removes only the ornamental paint layer and does not alter the card's content, release-gate state, listen/download controls, or arcade handoff.
+
+The focused post-fix development capture shows the exclusive card with its lower edge clear of the previous cyan paint silhouette while the locked notice remains present. The same review confirms the arcade mount, cabinet bezel, and stage shell are still present below the release card.
+
+## Reported visual-omission correction pass
+
+The revised development header now exposes a dedicated **5D Playa** control in the top-right action cluster. The control opens the existing archive queue and toggles its detached radio-console state without removing the archive-local player, native audio controls, downloads, or share cards. The player’s detached panel is now positioned beneath the site header rather than at the lower-right of the viewport.
+
+The development interaction check found the new header control in the persistent navigation action cluster and activated it successfully. The archive queue, its play control, detachment control, all nine download controls, and all nine share controls remained available in the DOM after the action.
+
+The focused release-card inspection found the card mounted without the previously visible lower-edge paint artwork; its locked release copy remained present. The arcade stage was then focused for the final foreground speaker and active-play-area inspection.
+
+The development-only speaker milestone hook was invoked solely to make the staged speaker state available for visual regression review; it does not exist in the production bundle's user flow.
+
+The staged speaker review was followed by a computed-style capture of both speaker tower elements to confirm the foreground size and placement rules are applied in the live development DOM.
+
+That computed-style capture exposed an inherited speaker-deployment animation returning the rendered transform to unit scale despite the requested size rule. The animation contract was then explicitly corrected so the intended large-scale transform can be asserted rather than merely declared in CSS.
+
+The browser confirmed that the corrected deployment keyframes were active and completed. Because the parent transform was still reported at unit scale after completion, the transparent speaker art itself now carries the foreground scale; this makes the visible speaker size independent of the parent animation's computed-transform reporting.
+
+The final development DOM check confirms the top-right launcher exists, the duplicate archive-local detach control is hidden, the standalone Big Up visual class is present in the loaded stylesheet, and both staged speaker images resolve to a `matrix(2.25, 0, 0, 2.25, 0, 0)` transform. The phone-width header capture retains the protected first-page identity and exposes the 5D Playa control as the cyan radio button in the right action cluster.
