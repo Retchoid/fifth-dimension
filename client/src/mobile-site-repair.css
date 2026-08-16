@@ -695,3 +695,34 @@
   color: #FFE600 !important;
   background: transparent !important;
 }
+
+/* === ISSUE 1: YELLOW BLOCK OVER JERSH IN CASE DOWNLOAD (SCOPED) === */
+.unlock-download-drop,
+.unlock-overlay-box .unlock-download-drop,
+.green-camo-award,
+.afterparty-door-ready,
+[style*="background: #FFE600"],
+[style*="background:#FFE600"],
+[style*="background: #ffe600"],
+[style*="background:#ffe600"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.unlock-download-drop {
+  background: rgba(10, 10, 18, 0.9) !important;
+  border: 3px solid #FF2D95 !important;
+  box-shadow: 4px 4px 0 #0A0A12 !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0 !important;
+}
+
+.unlock-download-drop strong {
+  color: #FF2D95 !important;
+  font-size: clamp(1rem, 3vw, 1.5rem) !important;
+}
+
+.unlock-download-drop span {
+  color: #F0EAD6 !important;
+  font-size: clamp(0.5rem, 1.5vw, 0.7rem) !important;
+}

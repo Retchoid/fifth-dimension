@@ -97,6 +97,7 @@ describe("Task 7 final consistency contract", () => {
     expect(mobileSiteRepair).toContain(".green-camo-award");
     expect(mobileSiteRepair).toContain(".afterparty-door-ready");
     expect(mobileSiteRepair).toContain(".achievement-chain-wrap");
+    expect(mobileSiteRepair).toContain("/* === ISSUE 1: YELLOW BLOCK OVER JERSH IN CASE DOWNLOAD (SCOPED) === */");
     for (const selector of [".falling-items-layer", ".falling-object", ".game-grid-bg", ".game-hud", ".dj-catcher", ".game-overlay", ".hazard-splash", ".falling-items-layer:empty::after"]) {
       expect(fallingItemsRenderFix).toContain(selector);
     }
