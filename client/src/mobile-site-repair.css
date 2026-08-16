@@ -436,3 +436,82 @@
   background: rgba(0, 212, 255, 0.15);
   color: #FFE600 !important;
 }
+
+/* Prevent logo/brand text overlap in header across viewports */
+.dj-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 1rem !important;
+  flex-wrap: nowrap !important;
+}
+
+.header-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  flex-shrink: 0 !important;
+  max-width: 60vw !important;
+  overflow: hidden !important;
+}
+
+.header-brand-copy {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+}
+
+.header-brand-copy b,
+.header-brand-copy small {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.dj-nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.8rem !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+  min-width: 0 !important;
+}
+
+/* Ensure all primary section and arcade titles sit cleanly in 1 or 2 lines */
+.section-heading h2,
+.exclusive-band h3,
+.projects-section h3,
+.visuals-section h2,
+.booking-section h2,
+.game-overlay .overlay-box h3,
+.hazard-splash .hazard-title,
+.unlock-overlay-box h3,
+.finale-box .finale-copy {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.15 !important;
+  max-width: 100% !important;
+}
+
+@media (max-width: 650px) {
+  .dj-header {
+    padding: 0.4rem 0.6rem !important;
+  }
+  .header-brand {
+    max-width: 52vw !important;
+  }
+  .header-brand-copy b {
+    font-size: 0.55rem !important;
+  }
+  .header-brand-copy small {
+    font-size: 0.35rem !important;
+  }
+  .header-seal {
+    width: 26px !important;
+    height: 26px !important;
+    flex-shrink: 0 !important;
+  }
+}

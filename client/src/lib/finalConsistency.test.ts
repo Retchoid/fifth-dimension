@@ -87,6 +87,9 @@ describe("Task 7 final consistency contract", () => {
     expect(mobileSiteRepair).toContain(".game-viewport");
     expect(mobileSiteRepair).toContain(".hazard-splash");
     expect(mobileSiteRepair).toContain(".loss-curb-copy");
+    expect(mobileSiteRepair).toContain(".header-brand");
+    expect(mobileSiteRepair).toContain("-webkit-line-clamp: 2");
+    expect(mobileSiteRepair).toContain("white-space: nowrap !important");
     for (const selector of [".falling-items-layer", ".falling-object", ".game-grid-bg", ".game-hud", ".dj-catcher", ".game-overlay", ".hazard-splash", ".falling-items-layer:empty::after"]) {
       expect(fallingItemsRenderFix).toContain(selector);
     }

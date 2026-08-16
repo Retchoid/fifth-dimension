@@ -1135,3 +1135,4 @@
 - [x] Apply the requested mobile game-cabinet and mobile site layout CSS rules from pasted_content.txt, and verify them against the responsive build.
 - [x] Implement mobile usability refinements (touch-target min-height/padding and tactile feedback) and a direct arcade quick-scroll anchor in top navigation.
 - [x] Perform a comprehensive responsive visual and design-error audit across desktop (1280x720) and mobile (375x812) viewports, covering text truncation, contrast, hierarchy, and overflow.
+- [x] Ensure the header logo/brand is never covered by text and all visible site and arcade titles sit cleanly in 1 or 2 lines without truncating important meaning.
