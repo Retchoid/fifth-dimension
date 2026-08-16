@@ -31,3 +31,7 @@ The existing gated Jersh In Case release is now presented as a dedicated 5D dubp
 ## Task 5 Booking terminal review
 
 The Booking section now reads as a Lock Into the Frequency terminal: the 5D call signal is a separate side strip, the existing heading and booking copy sit in a hard-outlined transmission sheet, and the existing form is framed as an open-channel terminal with rectangular fields, focus states, optional date/location controls, generated booking note, and preserved mailto submission. Desktop and phone captures show the form remains readable; the optional fields collapse vertically on mobile and no controls are removed.
+
+## Task 6 Site journey-flow review
+
+The site now reads as a connected physical-space transmission route. A continuous cyan/magenta signal rail runs through the post-hero content, while compact room stamps identify the Transmission Bay, Selector ID, Archive Wall, Projects Lab, Visuals Wall, Outgoing Terminal, and Open Channel. The geometry guard keeps those stamps compact instead of allowing full-section pseudo-element boxes to cover their backgrounds. Desktop and phone captures confirm the rail and labels remain unobtrusive, and the protected hero content is unchanged.
