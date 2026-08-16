@@ -49,6 +49,8 @@ describe("Task 7 final consistency contract", () => {
     expect(homeSource).toContain('id="exclusive"');
     expect(homeSource).toContain('id="booking"');
     expect(homeSource).toContain('id="selectah-showdown"');
+    expect(homeSource).toContain("nav-arcade-link");
+    expect(homeSource).toContain('["Arcade", "#selectah-showdown"]');
     expect(homeSource).toContain("five-d-playa");
     expect(homeSource).toContain("art-lightbox-trigger");
     expect(homeSource).toContain("exclusive-listen-button");

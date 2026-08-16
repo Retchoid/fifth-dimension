@@ -444,6 +444,7 @@ export default function Home() {
           <a href="#visuals">Visuals</a>
           <a href="#booking">Booking</a>
           <a href="#contact">Contact</a>
+          <a href="#selectah-showdown" className="nav-arcade-link">Arcade</a>
         </nav>
         <div className="header-actions">
           <a className="header-ig" href={INSTAGRAM_URL} target="_blank" rel="noreferrer">
@@ -482,6 +483,7 @@ export default function Home() {
               ["Visuals", "#visuals"],
               ["Booking", "#booking"],
               ["Contact", "#contact"],
+              ["Arcade", "#selectah-showdown"],
             ].map(([label, href]) => (
               <a href={href} key={href} onClick={() => setMenuOpen(false)}>{label}</a>
             ))}

@@ -409,3 +409,30 @@
     top: 8% !important;
   }
 }
+
+@media (max-width: 650px) {
+  button, a, input, select {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  button:active, a:active {
+    transform: scale(0.96) !important;
+    filter: brightness(1.2) !important;
+  }
+  .arcade-cabinet-share-bar button,
+  .arcade-start-controls button,
+  .unlock-decision-actions button,
+  .finale-actions button {
+    padding: 0.5rem 0.8rem !important;
+  }
+}
+
+.nav-arcade-link {
+  color: #00D4FF !important;
+  border: 1px dashed rgba(0, 212, 255, 0.4);
+  padding: 0.15rem 0.4rem;
+}
+.nav-arcade-link:hover {
+  background: rgba(0, 212, 255, 0.15);
+  color: #FFE600 !important;
+}
