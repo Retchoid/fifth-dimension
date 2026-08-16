@@ -32,6 +32,12 @@
   animation-play-state: paused !important;
   animation-delay: -.42s !important;
 }
+.loss-curb-overlay.viewport-verify-hold,
+.loss-curb-overlay.viewport-verify-hold .loss-curb-dj,
+.loss-curb-overlay.viewport-verify-hold .loss-curb-copy {
+  animation-play-state: paused !important;
+  animation-delay: -1.25s !important;
+}
 
 /* Brief post-loss comedown: the DJ sits outside the emptied rave before reset controls return. */
 .loss-curb-overlay {

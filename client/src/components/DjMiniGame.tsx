@@ -108,8 +108,9 @@ const BONUS_START_RECORDS = 20;
 const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "speaker", "mixer", "cdj"];
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 type ComboReaction = "big-up" | "subwoofer" | "gun-fingers" | "ground-decks" | null;
+type ComboReactionKind = Exclude<ComboReaction, null>;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; showComboReaction: (kind: ComboReactionKind) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -1466,6 +1467,25 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           return;
         }
         startArcadeSequence(sequence);
+      },
+      showComboReaction: (kind) => {
+        isPlayingRef.current = true;
+        setIsPlaying(true);
+        setGameOver(false);
+        setComboReaction(kind);
+        setShowComboBurst(true);
+        if (kind === "big-up") announceInWorldReward("BIG UP!", "BIG UP!", "big-up");
+        if (kind === "gun-fingers") {
+          announceInWorldReward("GUN FINGER MASSIVE", "SELECTOR SALUTE / CABINET UNDER PRESSURE", "gun-fingers");
+          setIsGunFingerShaking(true);
+          window.clearTimeout(gunFingerShakeTimerRef.current);
+          gunFingerShakeTimerRef.current = window.setTimeout(() => setIsGunFingerShaking(false), 1500);
+        }
+        window.clearTimeout(comboBurstTimerRef.current);
+        comboBurstTimerRef.current = window.setTimeout(() => {
+          setShowComboBurst(false);
+          setComboReaction(null);
+        }, kind === "gun-fingers" ? 1750 : 1100);
       },
       triggerRecordTransition: () => {
         window.clearTimeout(recordTransitionTimerRef.current);
@@ -3113,7 +3133,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
         {(heldLossPreview || (isLossComedownVisible && gameOver)) && !levelTwoComplete && (
-          <div className="game-overlay loss-curb-overlay" role="status" aria-live="assertive">
+          <div className={`game-overlay loss-curb-overlay${heldLossPreview ? " viewport-verify-hold" : ""}`} role="status" aria-live="assertive">
             <div className="loss-curb-night" aria-hidden="true"><span className="loss-moon" /><span className="loss-venue-sign">RAVE</span><span className="loss-venue-door" /><span className="loss-neon-spill" /></div>
             <div className="loss-curb-ground" aria-hidden="true"><i /><i /><i /></div>
             <div className="loss-curb-dj" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="loss-dj-leg loss-dj-leg-left" /><span className="loss-dj-leg loss-dj-leg-right" /><span className="loss-dj-crate" /></div>

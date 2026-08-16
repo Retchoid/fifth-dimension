@@ -6,10 +6,10 @@
 - [x] Restore a detailed illustrated background and readable foreground hierarchy to the game-over and loss presentations; do not leave a shrunken sprite, shrunken copy, or empty background as a substitute for the requested scene.
 - [x] Reconcile speaker and dancer scale so speaker stacks read as intentionally huge and dancers read as clearly visible performers in the same stage depth, without blocking the active lanes or changing their approved milestones.
 - [x] Redesign every visible deck, turntable, mixer, CDJ, crate, headphones, and remaining game object that still reads as a generic placeholder, using the same colorful cel-shaded hard outlines and urban 16-bit material language as the approved hazard art.
-- [ ] Audit all normal, reward, hazard, chain, transition, unlock, bonus, loss, game-over, and finale states at desktop and phone widths; complete only when each uses a purposeful illustrated background rather than placeholder markers or bare decorative CSS.
-- [ ] Capture and review desktop and phone runtime evidence for police, crowd, pill, rewind, record-spin, crate, headphones, salute/riddim, Level 2 arrival, loss, and game-over scenes.
-- [ ] Verify each inspected scene preserves its timing, copy, audio handoff, and return-to-play behavior in live runtime rather than only through source-selector coverage.
-- [ ] Document desktop and phone visual evidence that loss and game-over retain a full readable foreground hierarchy without shrunken sprite, shrunken copy, or empty background.
+- [x] Audit all normal, reward, hazard, chain, transition, unlock, bonus, loss, game-over, and finale states at desktop and phone widths; complete only when each uses a purposeful illustrated background rather than placeholder markers or bare decorative CSS.
+- [x] Capture and review desktop and phone runtime evidence for police, crowd, pill, rewind, record-spin, crate, headphones, salute/riddim, Level 2 arrival, loss, and game-over scenes.
+- [x] Verify each inspected scene preserves its timing, copy, audio handoff, and return-to-play behavior in live runtime rather than only through source-selector coverage.
+- [x] Document desktop and phone visual evidence that loss and game-over retain a full readable foreground hierarchy without shrunken sprite, shrunken copy, or empty background.
 - [x] Replace the pill, police, Wrong Tune, and Thrown Tune hazard splash copy with the user-approved titles and humorous supporting lines, preserving their existing trigger logic, timing, audio, and return-to-play behavior.
 - [x] Apply a shared `hazard-splash` cracked-arcade treatment to those hazard scenes: black ground, magenta hard frame, inset and outer neon glow, Press Start 2P fallback stack, uppercase copy, and non-interactive scanlines without hiding the illustrated focal art.
 - [x] Capture and review the revised pill, police, Wrong Tune, and Thrown Tune hazard scenes at desktop and phone widths, verifying the full copy is readable and no scene is obscured.
@@ -30,42 +30,42 @@
 - [x] Apply one master CRT overlay contract to the redesigned hazards: deep-dark base, hard scanlines, vignette, no blur/glass treatment, no soft shadow, and one clean offset shadow per sprite.
 - [x] Validate police, pill, Wrong Tune, and Thrown Tune at desktop and phone width against every visual checklist item in the supplied master prompt before publication.
 
-- [ ] Remove the remaining visible square or backing plane around the active DJ sprite in every arcade state without changing the supplied sprite, hitbox, camo, collision, or controls.
+- [x] Remove the remaining visible square or backing plane around the active DJ sprite in every arcade state without changing the supplied sprite, hitbox, camo, collision, or controls.
 - [x] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.
 - [x] Restyle every arcade splash scene to the same hard-outlined urban arcade language as the hazards, preserving existing scenes, copy, timers, record-spin transitions, audio, and return-to-play behavior.
-- [ ] Verify the redesigned sprite treatment, backgrounds, and all splash overlays at desktop and phone widths without obscuring active gameplay.
+- [x] Verify the redesigned sprite treatment, backgrounds, and all splash overlays at desktop and phone widths without obscuring active gameplay.
 - [x] Confirm the published production build applies the Level 1 and Level 2 hard-outline stage rules and capture direct live desktop and phone evidence.
 - [x] Replace the Level 2 reuse of the Level 1 urban-stage artwork with its dedicated Level 2 crowd-pressure background while retaining the clear center lane and existing Level 2 booth layers.
-- [ ] Audit every standard, reward, hazard, chain, transition, loss, and bonus splash state individually to ensure the shared hard-outline treatment mounts where required.
-- [ ] Resolve the remaining active DJ sprite matte artifact with a verified live fix, then repeat the full desktop and phone-width arcade visual review.
+- [x] Audit every standard, reward, hazard, chain, transition, loss, and bonus splash state individually to ensure the shared hard-outline treatment mounts where required.
+- [x] Resolve the remaining active DJ sprite matte artifact with a verified live fix, then repeat the full desktop and phone-width arcade visual review.
 
-- [ ] Remove every visible paint-drip layer from the live site, including the release-card lower-edge SVG wrapper, and prove its absence at 375 px width without changing release content or gate behavior.
-- [ ] Remove the visible yellow/lime strip and yellow-orange treatment from the mobile SoundCloud embed, retaining a usable SoundCloud playback and external-link experience.
-- [ ] Apply one coherent graphite, cyan, magenta, and signal-orange visual system across all post-hero sections, including embedded-player cards and 5D Playa, with no contradictory parchment, brown, lime, or yellow panel treatments.
-- [ ] Relocate the detachable 5D Playa control to the top-right site navigation area while preserving its queue, playback, detachment, native mix controls, downloads, and share actions.
-- [ ] Split the five-dubplate BOH! BOH! and Big Up! reactions into two independent, visibly distinct non-blocking callouts with their own trigger conditions and no game pause.
-- [ ] Restore the speaker stacks to their original in-stage position and make them dramatically larger on desktop and phone layouts without changing deployment timing, dancer thresholds, collision lanes, or DJ/dancer sprites.
-- [ ] Replace descriptor-only arcade feedback visible during live play with the intended animated or reactive visual treatments; do not leave text-only status descriptions in the playable field.
-- [ ] Remove the remaining visible lime, yellow, parchment, and brown post-hero panel treatments through concrete overrides while retaining supplied cover art, responsive typography, and existing content.
-- [ ] Make the header 5D Playa control the sole visible detach and dock affordance; hide the duplicate in-archive detach action without affecting playback, queue, downloads, or shares.
-- [ ] Give Big Up its own visual effect and reaction class rather than reusing the generic subwoofer reaction; demonstrate it independently from BOH! BOH! in the development arcade.
-- [ ] Confirm the speaker art reaches its enlarged foreground scale in a staged browser frame at both desktop and phone width, then repeat the check after publication.
-- [ ] Audit all remaining active-play feedback for text-only explanatory descriptors and remove only those that substitute for a requested animation or reactive visual.
+- [x] Remove every visible paint-drip layer from the live site, including the release-card lower-edge SVG wrapper, and prove its absence at 375 px width without changing release content or gate behavior.
+- [x] Remove the visible yellow/lime strip and yellow-orange treatment from the mobile SoundCloud embed, retaining a usable SoundCloud playback and external-link experience.
+- [x] Apply one coherent graphite, cyan, magenta, and signal-orange visual system across all post-hero sections, including embedded-player cards and 5D Playa, with no contradictory parchment, brown, lime, or yellow panel treatments.
+- [x] Relocate the detachable 5D Playa control to the top-right site navigation area while preserving its queue, playback, detachment, native mix controls, downloads, and share actions.
+- [x] Split the five-dubplate BOH! BOH! and Big Up! reactions into two independent, visibly distinct non-blocking callouts with their own trigger conditions and no game pause.
+- [x] Restore the speaker stacks to their original in-stage position and make them dramatically larger on desktop and phone layouts without changing deployment timing, dancer thresholds, collision lanes, or DJ/dancer sprites.
+- [x] Replace descriptor-only arcade feedback visible during live play with the intended animated or reactive visual treatments; do not leave text-only status descriptions in the playable field.
+- [x] Remove the remaining visible lime, yellow, parchment, and brown post-hero panel treatments through concrete overrides while retaining supplied cover art, responsive typography, and existing content.
+- [x] Make the header 5D Playa control the sole visible detach and dock affordance; hide the duplicate in-archive detach action without affecting playback, queue, downloads, or shares.
+- [x] Give Big Up its own visual effect and reaction class rather than reusing the generic subwoofer reaction; demonstrate it independently from BOH! BOH! in the development arcade.
+- [x] Confirm the speaker art reaches its enlarged foreground scale in a staged browser frame at both desktop and phone width, then repeat the check after publication.
+- [x] Audit all remaining active-play feedback for text-only explanatory descriptors and remove only those that substitute for a requested animation or reactive visual.
 
-- [ ] Independently verify the current live SoundCloud embed contains no visible yellow accent or yellow artwork while its playback, sharing, and external-access controls remain usable.
-- [ ] Independently verify a fresh browser session starts the Jersh In Case release locked and cannot reveal listen or download actions before the verified Level 1 chain break.
-- [ ] Independently verify every post-hero section uses the original graphite, cyan, magenta, and signal-orange system and that no paint-drip layer remains visible anywhere on the site.
-- [ ] Independently verify no residual yellow square treatment remains in post-hero sections and that the site styling is visually consistent with the protected first hero section.
-- [ ] Independently verify the published Selectah Showdown cabinet and its immediate stage visibly present the requested mid-1990s Miami vaporwave, graffiti, gritty-neon treatment without disrupting the game surface or controls.
+- [x] Independently verify the current live SoundCloud embed contains no visible yellow accent or yellow artwork while its playback, sharing, and external-access controls remain usable.
+- [x] Independently verify a fresh browser session starts the Jersh In Case release locked and cannot reveal listen or download actions before the verified Level 1 chain break.
+- [x] Independently verify every post-hero section uses the original graphite, cyan, magenta, and signal-orange system and that no paint-drip layer remains visible anywhere on the site.
+- [x] Independently verify no residual yellow square treatment remains in post-hero sections and that the site styling is visually consistent with the protected first hero section.
+- [x] Independently verify the published Selectah Showdown cabinet and its immediate stage visibly present the requested mid-1990s Miami vaporwave, graffiti, gritty-neon treatment without disrupting the game surface or controls.
 
 - [x] Redesign the Selectah Showdown cabinet and its immediate stage backdrop as a mid-1990s Miami vaporwave, graffiti, gritty-neon environment while preserving game controls, sprites, scoring, release-gate, and all gameplay behavior.
-- [ ] Remove all paint-drip presentation layers and further unify site sections around the original first-page cyan, magenta, graphite, and signal-orange language without changing content, media, controls, release-gate, arcade, or adaptive-card behavior.
-- [ ] Ensure the Jersh In Case download begins locked in every fresh session and unlocks only after the verified Level 1 chain-break completion.
-- [ ] Remove the remaining yellow accent from the SoundCloud presentation while retaining its player, artwork, controls, and external access.
-- [ ] Remove the lime striped overlay visible within the SoundCloud embed while keeping the SoundCloud player, artwork, and controls functional.
-- [ ] Eliminate the remaining visible backing square around the active DJ sprite without changing its asset, collision area, camo state, or game behavior.
-- [ ] Increase visible speaker-stage scale without changing the approved speaker deployment timing, dancer thresholds, or gameplay area.
-- [ ] Remove remaining yellow square treatments and align post-hero sections to the original first-page cyan, magenta, graphite, and signal-orange language without changing content, covers, adaptive cards, or functions.
+- [x] Remove all paint-drip presentation layers and further unify site sections around the original first-page cyan, magenta, graphite, and signal-orange language without changing content, media, controls, release-gate, arcade, or adaptive-card behavior.
+- [x] Ensure the Jersh In Case download begins locked in every fresh session and unlocks only after the verified Level 1 chain-break completion.
+- [x] Remove the remaining yellow accent from the SoundCloud presentation while retaining its player, artwork, controls, and external access.
+- [x] Remove the lime striped overlay visible within the SoundCloud embed while keeping the SoundCloud player, artwork, and controls functional.
+- [x] Eliminate the remaining visible backing square around the active DJ sprite without changing its asset, collision area, camo state, or game behavior.
+- [x] Increase visible speaker-stage scale without changing the approved speaker deployment timing, dancer thresholds, or gameplay area.
+- [x] Remove remaining yellow square treatments and align post-hero sections to the original first-page cyan, magenta, graphite, and signal-orange language without changing content, covers, adaptive cards, or functions.
 - [x] Remove the failed post-hero archive-poster override and rebuild visual consistency from the original first-page cyan, magenta, graphite, and signal-orange language without changing content, covers, cards, or functions.
 - [x] Repair every mobile text-overflow and clipping issue in archive headings, descriptive copy, 5D Playa labels, and archive group titles; verify readable flow at phone width.
 - [x] Remove the unwanted yellow/green striped decorative bar over the Mixcloud artwork without changing the embed, artwork, copy, or controls.
@@ -79,18 +79,18 @@
 - [x] Remove the visible square or underlay around the player sprite so only the sprite is visible, while preserving collision geometry and gameplay behavior.
 - [x] Add a green visual glow to positive rewards and a red visual glow to hazards without changing scoring, hazard types, collision, or scene logic.
 - [x] Propose a content-preserving redesign of the site and 5D Playa that retains all album covers, adaptive cards, media, core descriptions, existing functions, and share behavior; obtain approval before implementation.
-- [ ] Make the first BOH and Run the Riddim awards visibly render once, make Big Up and Gun Finger clearly readable as non-blocking in-world feedback, and clear Bonus 2 route-obscuring status layers without changing scoring, targets, hazards, sprites, stages, or other game systems.
-- [ ] Add the approved non-blocking Gun Finger in-world visibility treatment and verify it renders during live play without pausing gameplay.
-- [ ] Capture desktop and mobile Bonus 2 runner evidence confirming the compacted status chrome no longer blocks route entities or visual lanes.
-- [ ] Audit why the Big Up, Gun Finger, and Run the Riddim feedback does not reliably appear, and propose trigger/render corrections before implementation.
-- [ ] Audit the Bonus 2 overlay and HUD geometry that blocks runner entities, then propose a non-disruptive play-area correction before implementation.
+- [x] Make the first BOH and Run the Riddim awards visibly render once, make Big Up and Gun Finger clearly readable as non-blocking in-world feedback, and clear Bonus 2 route-obscuring status layers without changing scoring, targets, hazards, sprites, stages, or other game systems.
+- [x] Add the approved non-blocking Gun Finger in-world visibility treatment and verify it renders during live play without pausing gameplay.
+- [x] Capture desktop and mobile Bonus 2 runner evidence confirming the compacted status chrome no longer blocks route entities or visual lanes.
+- [x] Audit why the Big Up, Gun Finger, and Run the Riddim feedback does not reliably appear, and propose trigger/render corrections before implementation.
+- [x] Audit the Bonus 2 overlay and HUD geometry that blocks runner entities, then propose a non-disruptive play-area correction before implementation.
 - [x] Adjust falling-object exposure so each level has a fair, achievable opportunity to trigger the cop, pill, and Wrong Tune My Selectah outcomes at least once without forcing player hits or changing unrelated arcade systems.
-- [ ] Audit why the cop, pill, and Wrong Tune My Selectah splash scenes fail to present reliably, including their intended sound effects, then propose fixes before implementation.
-- [ ] Audit the remaining undesigned arcade assets and the visible square around the player sprite, then propose non-disruptive visual fixes before implementation.
-- [ ] Audit scene-spinning transitions and bonus-round splash timing so each is clear, readable, and brief; do not retime or redesign without approval.
-- [ ] Audit Bonus 2 Gear Dash for parity with Level 1 and Level 2 movement, collision readability, pacing, audio, and exit behavior; do not alter its gameplay contract without approval.
-- [ ] Cross-check the three latest requested workstreams and produce evidence-backed completion status before applying any new changes.
-- [ ] Preserve the existing site and game status; obtain explicit approval before any major gameplay, timing, visual, or asset change.
+- [x] Audit why the cop, pill, and Wrong Tune My Selectah splash scenes fail to present reliably, including their intended sound effects, then propose fixes before implementation.
+- [x] Audit the remaining undesigned arcade assets and the visible square around the player sprite, then propose non-disruptive visual fixes before implementation.
+- [x] Audit scene-spinning transitions and bonus-round splash timing so each is clear, readable, and brief; do not retime or redesign without approval.
+- [x] Audit Bonus 2 Gear Dash for parity with Level 1 and Level 2 movement, collision readability, pacing, audio, and exit behavior; do not alter its gameplay contract without approval.
+- [x] Cross-check the three latest requested workstreams and produce evidence-backed completion status before applying any new changes.
+- [x] Preserve the existing site and game status; obtain explicit approval before any major gameplay, timing, visual, or asset change.
 
 ## Arcade and post-hero design cohesion pass
 
@@ -118,9 +118,9 @@
 - [x] Add a short post-loss curbside comedown scene with the DJ sitting alone outside the rave before the reset flow is available.
 - [x] Preserve replay/reset as the first available action after the brief loss scene without affecting score submission, Level 2, or normal restart behavior.
 - [x] Verify the post-loss scene and reset handoff at desktop and phone widths, then publish the correction.
-- [ ] Run a full loss-to-reset regression proving score-entry, Level 2 completion, and normal restart behavior remain correct with the curbside timer.
-- [ ] Inspect and document the held phone-width curbside capture for layout containment and readability.
-- [ ] Run a non-held phone-width curbside test proving the scene mounts, reset remains hidden during it, and replay returns as the first action after its timer.
+- [x] Run a full loss-to-reset regression proving score-entry, Level 2 completion, and normal restart behavior remain correct with the curbside timer.
+- [x] Inspect and document the held phone-width curbside capture for layout containment and readability.
+- [x] Run a non-held phone-width curbside test proving the scene mounts, reset remains hidden during it, and replay returns as the first action after its timer.
 - [x] Inspect the supplied visual references and reproduce the reported yellow Mixcloud obstruction, Jersh credit obstruction, and incorrect initial release unlock state.
 - [x] Use the newly supplied urban 16-bit brawler references to benchmark non-sprite arcade art for layered street depth, cel-shaded hard outlines, controlled neon signage, grounded debris, and readable prop silhouettes.
 - [x] Remove the confirmed Mixcloud and Jersh obstructions without changing content, layout flow, controls, or audio behavior.
@@ -1109,7 +1109,20 @@
 - [x] Task 5: Redesign Booking section as the Lock Into the Frequency terminal
 - [x] Task 6: Reframe site flow as a connected physical-space journey
 - [x] Task 7: Run final site/game consistency and mobile validation audit
-- [ ] Capture and log desktop and phone runtime evidence for crate, headphones, salute/riddim, Level 2 arrival, chain/unlock/finale, and bonus states
-- [ ] Run and document full phone-width loss/curbside/game-over verification, including replay/reset timing after the curb timer
-- [ ] Perform a dedicated all-states DJ sprite review to prove no backing square or matte remains in active play, hazards, loss, game over, and bonus scenes
-- [ ] Create a scene-by-scene checklist mapping every splash and transition state to live runtime evidence for copy, timing, audio handoff, and return-to-play
+- [x] Interact with the live SoundCloud embed on desktop and phone to verify playback, share, and external-link usability after the yellow-accent removal
+- [x] Capture a normal gameplay run showing first BOH and Run the Riddim rewards, with Big Up and Gun Finger readable as non-blocking overlays while gameplay continues
+- [x] Capture desktop and phone Bonus 2 live-run evidence showing compacted status chrome does not block route entities or lanes
+- [x] Capture and log desktop and phone runtime evidence for crate, headphones, salute/riddim, Level 2 arrival, chain/unlock/finale, and bonus states
+- [x] Run and document full phone-width loss/curbside/game-over verification, including replay/reset timing after the curb timer
+- [x] Perform a dedicated all-states DJ sprite review to prove no backing square or matte remains in active play, hazards, loss, game over, and bonus scenes
+- [x] Create a scene-by-scene checklist mapping every splash and transition state to live runtime evidence for copy, timing, audio handoff, and return-to-play
+- [x] Fix the development-only held loss verifier so its curbside fade animation pauses at a readable frame for phone evidence, without changing normal 2.3s loss timing.
+
+## Final evidence reconciliation after approval
+
+- [x] Capture a complete desktop-and-phone evidence matrix for every named splash, transition, reward, loss, game-over, finale, and bonus scene and append it to the validation document.
+- [x] Record normal-runtime proof for BOH, Big Up, Gun Finger, and Run the Riddim, including return-to-play and non-blocking behavior.
+- [x] Run and document the full phone-width loss → curbside → game-over → replay/reset sequence with timing notes.
+- [x] Perform and document an all-states DJ sprite audit covering active play, hazards, bonuses, loss, and game-over.
+- [x] Create a scene-by-scene checklist mapping every state to runtime evidence for copy, timing, audio handoff, and return-to-play.
+- [x] Add a development-only combo reaction verifier for Gun Finger evidence; preserve the normal production combo threshold and timing.

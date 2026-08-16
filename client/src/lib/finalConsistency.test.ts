@@ -9,6 +9,7 @@ const typography = read("global-typography-system.css");
 const gameVisuals = read("game-visual-system.css");
 const hazardMaster = read("hazard-master-style.css");
 const journey = read("site-journey-flow.css");
+const gameplayClarity = read("gameplay-clarity.css");
 
 const publicSources = [
   read("index.css"),
@@ -61,6 +62,15 @@ describe("Task 7 final consistency contract", () => {
     }
     expect(gameSource).toContain('["rewind", "wheel", "police", "crowd", "pill", "crate", "headphones", "boh", "riddim"]');
     expect(gameSource).toContain("rewardDuration = holdSequenceDebugEnabled ? 25000");
+    expect(gameSource).toContain("showComboReaction: (kind) =>");
+  });
+
+  it("holds only the development loss verifier at a readable frame", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).toContain('loss-curb-overlay${heldLossPreview ? " viewport-verify-hold" : ""}');
+    expect(gameplayClarity).toContain(".loss-curb-overlay.viewport-verify-hold");
+    expect(gameplayClarity).toContain("animation-delay: -1.25s !important");
+    expect(gameSource).toContain("if (lossVerificationHold) return");
   });
 
   it("protects the mobile breakpoint used by the site and game audit", () => {

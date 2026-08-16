@@ -47,3 +47,63 @@ The supported development verifier now exposes Level 2 arrival, first bonus, Aft
 ## Final polish follow-up
 
 The approved rear-view After Party runner now uses an uploaded transparent derivative, with the rear-view asset contract updated and no change to movement, gear, collision, bonus eligibility, door, or reward logic. The development-only verifier now waits for debug API mount, holds reward previews for inspection, and exposes the full reward/transition matrix. Direct desktop and phone captures confirm Level 2 arrival, After Party runner, and unlock states; representative reward capture shows the gameplay lane remains open and the DJ sprite remains clean. The final consistency test now covers the transparent runner and verifier matrix. Latest validation: 38 tests pass, 241 selector hooks pass, TypeScript is clean, and the production build is clean. The phone loss route remains separately tracked for a direct visual capture because its query path still fell back to the base playfield in the screenshot harness despite the source-level held-loss guard.
+
+## Live interaction evidence
+
+The live preview at https://3000-ii2ajrebt3duqjw537oe6-59829d5f.us4.manus.computer/#soundcloud exposes the embedded SoundCloud player and its adjacent Open in SoundCloud link. The embedded player’s Play control changed to Pause after activation, confirming playback interaction; its Share control opened the native SoundCloud share menu with Facebook, Twitter, Tumblr, email, embed, and link options. The live page also exposed all nine archive MP3/share controls and the top-navigation 5D Playa control.
+
+A fresh arcade verifier at https://3000-ii2ajrebt3duqjw537oe6-59829d5f.us4.manus.computer/?arcade-verifier=true&arcade-cabinet-focus=true&runtime-live-audit=2 entered active play through the real Start Session control. During an active run, the development-supported trigger produced a non-blocking BOH! BOH! callout with zero full-screen overlays, and Run the Riddim produced a non-blocking callout with the game viewport still present. An attempted Wheel It Up trigger after the run had idled showed the expected game-over fallback; this is tracked separately from the first two active-run results.
+
+## Normal gameplay and Bonus 2 evidence
+
+In a fresh active arcade session, the real Start Session control was used. The live BOH trigger rendered `BOH! BOH!` as `.in-world-reward in-world-reward-boh` with zero `.game-overlay` nodes. The live Run the Riddim trigger rendered `RUN THE RIDDIM!` as `.in-world-reward in-world-reward-riddim` with the game viewport present and zero blocking overlays. A fresh active session then rendered `WHEEL IT UP` as an in-world reward with zero full-screen overlays; the earlier game-over result occurred only after the prior session had idled and is not treated as the live trigger result.
+
+The fresh After Party Bonus 2 route was verified through the supported `arcade-scene-verify=afterparty-bonus` path. After the entry splash cleared, the desktop runtime exposed `afterparty-runner-stage`, `afterparty-cityline`, `afterparty-road`, `afterparty-venue-art`, `afterparty-door`, `afterparty-hud`, `afterparty-gear-list`, `afterparty-dj-runner`, and multiple `afterparty-entity` obstacles with no blocking overlay. The corrected 375px capture shows the compact gear HUD, glowing route, rear-view runner, destination door, and clear lane composition without a white matte or route-obscuring status panel.
+
+## Bounded genuine gameplay run
+
+A fresh session was started through the real Start Session control and steered with pointer events toward visible falling record objects for 22 seconds. The run genuinely reached 6/25 records and score 1850 before the player lost all hearts and the game-over overlay mounted. No reward threshold was reached in that bounded run, so this evidence is retained as a real-play smoke test but does not replace a full first-occurrence BOH/Big Up/Gun Finger/Run the Riddim proof.
+
+## Durable leaderboard crown audit
+
+A read-only public leaderboard query returned 10 existing rows. The Level 2 rows are named and durable, but every returned row currently has `hasBonusCrown = 0`; no genuine named After Party bonus-clear row with a crown is present to verify. No score data was inserted or modified. Crown proof therefore remains user-data dependent and intentionally unseeded.
+
+## Desktop scene matrix — first capture batch
+
+The desktop evidence batch captured `police`, `crowd`, `pill`, `rewind`, `crate`, `headphones`, `boh`, and `riddim` through the live development verifier at 1280x720. The police and pill frames show the illustrated hazard art with the shared cracked-arcade frame and readable copy; rewind shows the record-spin scene; crate and headphones mount as in-world reward treatments over the clear stage; BOH and Riddim remain non-blocking in-world rewards; and the regular crowd verifier retains the unobstructed playable stage. The screenshots were captured after the final loss-verifier CSS update and the build remained clean.
+
+## Desktop scene matrix — second capture batch
+
+The second desktop evidence batch captured `thrown`, `wheel`, `level-two-arrival`, `first-bonus`, `afterparty-bonus`, `unlock`, held `loss`, and `game-over` at 1280x720. The frames show the thrown-tune hazard, the Gun Finger/Wheel It Up reward, the Level 2 crowd-pressure arrival, the Sonic-style After Party route, the chain unlock, the held curbside loss scene, and the game-over panel with PLAY AGAIN / RESET first. No placeholder-only scene or blank cabinet state appeared in the matrix.
+
+## Phone scene matrix — first capture batch
+
+The phone evidence batch captured `police`, `crowd`, `pill`, `rewind`, `crate`, `headphones`, `boh`, and `riddim` at 375x812. The hazard scenes retain readable, uppercase title/quip hierarchy inside the chunky cabinet frame; the record-spin and item states retain the player and lane surface; and the BOH/Riddim states remain compact in-world feedback without taking over the cabinet. The mobile cabinet and share/follow controls remain contained without horizontal clipping.
+
+## Phone scene matrix — second capture batch
+
+The phone evidence batch captured `thrown`, `wheel`, `level-two-arrival`, `first-bonus`, `afterparty-bonus`, `unlock`, held `loss`, and `game-over` at 375x812. The compact cabinet keeps the active lane visible; Level 2 shows the dedicated crowd-pressure stage and objective meter; After Party shows the road, gear HUD, rear-view runner, and glowing door; unlock and game-over preserve readable hierarchy and action placement; and the held curbside route is now represented by a stable readable frame rather than a transparent overlay.
+
+## Fresh active-session reward proof — BOH
+
+A fresh session entered gameplay through the real Start Session control. Within the active session, the supported runtime reward path rendered `BOH! BOH!` as an `.in-world-reward`; the game viewport remained present and the sampled DOM contained zero `.game-overlay` nodes. The live state showed score 200, Level 1, records 1/25, and three remaining hearts, so this proof was not taken from a game-over fallback.
+
+## Genuine pointer-driven reward proof — Big Up
+
+A new session was started through the real Start Session control and steered toward visible falling record objects using pointer movement. The run reached 6/25 records in 1.524 seconds of the bounded capture. The normal catch logic mounted `BIG UP!` as `.in-world-reward` with `.combo-burst-overlay combo-reaction-big-up`; the viewport remained present, zero full-screen overlays were mounted, and the sampled score was 1450. This is the first direct normal-runtime proof of the Big Up reaction rather than a scene-only preview.
+
+## Gun Finger runtime proof
+
+The development-only reaction verifier was tightened to force an active gameplay state while leaving production combo thresholds and timers unchanged. After the fix, the live runtime mounted `GUN FINGER MASSIVE` as an `.in-world-reward` with `.combo-burst-overlay combo-reaction-gun-fingers`; the cabinet carried `is-gun-finger-shaking`; the game viewport remained present; and zero full-screen overlays were mounted. The sampled state retained four hearts and Level 1 gameplay, confirming this was not an end-state overlay.
+
+## Level 2 Run the Riddim runtime proof
+
+The active verifier advanced into Level 2 and waited until the Level 2 arrival overlay had cleared. The live reward path then mounted `RUN THE RIDDIM!` while the viewport remained present, Level 2 and the `CROWD HYPE 0/50` HUD were visible, and the sampled DOM contained zero full-screen overlays. This confirms the reward is non-blocking after the transition rather than being mistaken for the arrival splash.
+
+## Record-spin transition evidence
+
+The explicit `arcade-viewport-verify=dissolve` capture was reviewed at both 1280x720 and 375x812. The transition uses the illustrated turntable/crowd/police composition with the bright record-spin dissolve field, scanlines, hard cyan cabinet frame, and a visible `SPIN DISSOLVE / ...` caption. The phone frame crops the art responsively without clipping the cabinet surface or transition label.
+
+## Normal loss-to-reset timing proof
+
+The non-held loss path was triggered through the normal loss-comedown function. After the state committed, the curbside overlay was present with the approved `LAST TUNE / CURB-SIDE COMEDOWN` copy and the game-over panel was absent. After 2,501 ms, the curbside overlay had cleared, the game-over overlay was present, and the first game action in the button sequence was `PLAY AGAIN / RESET` at index 1 after the independent `PLAY MUSIC` control. This confirms the production 2.3-second loss timer, the return to game over, and replay-first ordering.
