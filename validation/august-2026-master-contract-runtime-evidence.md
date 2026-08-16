@@ -15,3 +15,7 @@ Run the full test, selector audit, TypeScript check, and production build. Then 
 ## Task 1 global typography review
 
 The global typography layer is loaded last from `client/src/global-typography-system.css`. Headlines, navigation, buttons, score/HUD labels, and arcade display elements resolve to Press Start 2P; body copy, descriptions, captions, form text, hazard quips, and terminal-style text resolve to Courier New. The document now requests only Press Start 2P from Google Fonts. A desktop full-page capture at 1280x1000 and a phone full-page capture at 375x812 both render the site with the intended pixel-display/typewriter hierarchy. The mobile capture preserves the narrow single-column flow without a new horizontal overflow or syntax/render failure. TypeScript is clean after repairing the failed broad font normalizer’s accidental identifier substitutions.
+
+## Task 2 Visuals Archive review
+
+The Visuals Archive now uses the existing real 5D art set plus four additional archive materials: CFMU Hostile Airwaves, Deep On Rolling, Selectah Showdown splash art, and the Level 2 crowd-pressure stage. Cards are arranged as an off-kilter, hard-shadowed photocopied wall with actual cover art, screen-frame crops, archive stamps, caption bands, scanlines, vignette, and the existing lightbox trigger preserved. Desktop and phone full-page captures show the cards remain visible, labels wrap within their frames, and the section collapses to a two-column mobile collage with selected wide cards spanning the row.

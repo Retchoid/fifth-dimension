@@ -110,6 +110,30 @@ const art = [
     label: "DIMENSION TAG",
     className: "art-tall art-tag",
   },
+  {
+    src: "/manus-storage/mix-cover-cfmu-hostile-airwaves_9603abc2.png",
+    alt: "CFMU Hostile Airwaves May 9 mix cover from the 5th Dimension archive",
+    label: "CFMU HOSTILE AIRWAVES / DUBPLATE",
+    className: "art-cover art-cfmu",
+  },
+  {
+    src: "/manus-storage/png-review-deep-on-rolling_481214e6.png",
+    alt: "Deep On Rolling liquid funk mix cover from the 5th Dimension archive",
+    label: "DEEP ON ROLLING / LIQUID PRESSURE",
+    className: "art-cover art-deep-rolling",
+  },
+  {
+    src: "/manus-storage/selectah-splash-art-direction_4d1c250f.png",
+    alt: "Selectah Showdown arcade splash art direction with pirate-radio hazard energy",
+    label: "SELECTAH SHOWDOWN / SPLASH FRAME",
+    className: "art-screen art-splash",
+  },
+  {
+    src: "/manus-storage/5d-selector-level-two-detailed-stage_89e2157b.png",
+    alt: "Selectah Showdown Level 2 detailed crowd-pressure stage",
+    label: "CROWD PRESSURE / STAGE FRAME",
+    className: "art-screen art-crowd",
+  },
 ];
 
 const MIX_ARCHIVE = {

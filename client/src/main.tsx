@@ -16,6 +16,7 @@ import "./arcade-repair.css";
 import "./posthero-cohesion.css";
 import "./game-visual-system.css";
 import "./global-typography-system.css";
+import "./visuals-archive-collage.css";
 
 const queryClient = new QueryClient();
 

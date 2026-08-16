@@ -1,0 +1,317 @@
+/* ============================================================
+   5TH DIMENSION — VISUALS ARCHIVE / 04
+   Real archive material arranged as an off-kilter pirate-radio wall.
+   ============================================================ */
+
+.visuals-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0A0A12 !important;
+  color: #F0EAD6;
+}
+
+.visuals-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: .48;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.15) 0 1px, transparent 1px 5px),
+    linear-gradient(116deg, transparent 0 39%, rgba(255,45,149,.12) 39% 40%, transparent 40% 68%, rgba(0,212,255,.1) 68% 69%, transparent 69%);
+}
+
+.visuals-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 44%, rgba(0,0,0,.56) 100%);
+}
+
+.visuals-section .section-heading {
+  position: relative;
+  z-index: 1;
+}
+
+.visuals-section .section-heading > div {
+  border-left: 5px solid #00D4FF;
+  transform: rotate(-1deg);
+}
+
+.visuals-section .section-heading > div::after {
+  content: "5D / WALL OF TRANSMISSIONS";
+  color: #FFE600;
+  font-family: "Courier New" !important;
+}
+
+.visuals-section .section-heading h2 {
+  color: #F0EAD6;
+  text-shadow: 5px 5px 0 #FF2D95;
+}
+
+.visuals-section .section-heading h2 em {
+  color: #00D4FF;
+  text-shadow: 4px 4px 0 #0A0A12;
+}
+
+.visuals-section .section-heading > p {
+  border-top: 4px solid #FFE600;
+  color: #F0EAD6;
+  font-family: "Courier New" !important;
+  box-shadow: 5px 5px 0 #FF2D95;
+  transform: rotate(1.5deg) translateY(-.4rem);
+}
+
+.visuals-section .art-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: minmax(82px, auto);
+  gap: 1.05rem;
+  align-items: start;
+  margin-top: 3.5rem;
+}
+
+.visuals-section .art-card {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  overflow: visible;
+  border: 4px solid #0A0A12;
+  background: #0A0A12;
+  box-shadow: 6px 6px 0 #FF2D95;
+  transform-origin: center;
+}
+
+.visuals-section .art-card::before {
+  content: "ARCHIVE / 04";
+  position: absolute;
+  top: -.72rem;
+  left: .7rem;
+  z-index: 3;
+  padding: .24rem .38rem;
+  border: 2px solid #0A0A12;
+  background: #FFE600;
+  color: #0A0A12;
+  font: 900 .42rem/1 "Courier New";
+  letter-spacing: .12em;
+  box-shadow: 3px 3px 0 #00D4FF;
+  transform: rotate(-2deg);
+}
+
+.visuals-section .art-card:nth-child(3n)::before {
+  left: auto;
+  right: .7rem;
+  background: #00D4FF;
+  box-shadow: 3px 3px 0 #FFE600;
+  transform: rotate(2deg);
+}
+
+.visuals-section .art-lightbox-trigger {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: #0A0A12;
+  cursor: pointer;
+}
+
+.visuals-section .art-card img {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  filter: saturate(1.12) contrast(1.06);
+  transition: transform 180ms ease-out, filter 180ms ease-out;
+}
+
+.visuals-section .art-card:hover img,
+.visuals-section .art-card:focus-within img {
+  filter: saturate(1.34) contrast(1.12);
+  transform: translate(-3px, -3px);
+}
+
+.visuals-section .art-card figcaption {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  min-height: 2.45rem;
+  padding: .62rem .7rem;
+  border-top: 4px solid #0A0A12;
+  background: #FF2D95;
+  color: #0A0A12;
+  font: 900 .55rem/1.15 "Press Start 2P" !important;
+  letter-spacing: .08em;
+  box-shadow: 4px 4px 0 #00D4FF;
+}
+
+.visuals-section .art-card:nth-child(3n) figcaption {
+  background: #00D4FF;
+  box-shadow: 4px 4px 0 #FFE600;
+}
+
+.visuals-section .art-card figcaption svg {
+  flex: 0 0 auto;
+}
+
+.visuals-section .art-tall img {
+  aspect-ratio: 4 / 5;
+}
+
+.visuals-section .art-square img,
+.visuals-section .art-cover img {
+  aspect-ratio: 1;
+}
+
+.visuals-section .art-screen img {
+  aspect-ratio: 16 / 10;
+}
+
+.visuals-section .art-ragga {
+  grid-column: span 4;
+  grid-row: span 2;
+  transform: rotate(-1.8deg);
+}
+
+.visuals-section .art-cake {
+  grid-column: span 3;
+  transform: rotate(2.4deg);
+}
+
+.visuals-section .art-cool {
+  grid-column: span 3;
+  grid-row: span 2;
+  transform: rotate(-1deg);
+}
+
+.visuals-section .art-wax {
+  grid-column: span 2;
+  transform: rotate(-2.3deg);
+}
+
+.visuals-section .art-portrait {
+  grid-column: span 2;
+  transform: rotate(1.7deg);
+}
+
+.visuals-section .art-tag {
+  grid-column: span 3;
+  transform: rotate(1.4deg);
+}
+
+.visuals-section .art-cover {
+  grid-column: span 2;
+}
+
+.visuals-section .art-cfmu {
+  transform: rotate(-1.8deg);
+}
+
+.visuals-section .art-deep-rolling {
+  transform: rotate(1.5deg);
+}
+
+.visuals-section .art-splash,
+.visuals-section .art-crowd {
+  grid-column: span 3;
+  transform: rotate(-1deg);
+}
+
+.visuals-section .art-crowd {
+  transform: rotate(1.8deg);
+}
+
+.visuals-section .art-cover::after,
+.visuals-section .art-screen::after {
+  content: "5D ORIGINAL MATERIAL";
+  position: absolute;
+  right: .45rem;
+  bottom: 3.2rem;
+  z-index: 2;
+  padding: .2rem .3rem;
+  border: 2px solid #0A0A12;
+  background: #F0EAD6;
+  color: #0A0A12;
+  font: 900 .38rem/1 "Courier New";
+  letter-spacing: .1em;
+  transform: rotate(-4deg);
+}
+
+@media (max-width: 900px) {
+  .visuals-section .art-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .visuals-section .art-ragga,
+  .visuals-section .art-cool {
+    grid-column: span 3;
+  }
+
+  .visuals-section .art-cake,
+  .visuals-section .art-tag,
+  .visuals-section .art-splash,
+  .visuals-section .art-crowd {
+    grid-column: span 3;
+  }
+
+  .visuals-section .art-wax,
+  .visuals-section .art-portrait,
+  .visuals-section .art-cover {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 650px) {
+  .visuals-section .art-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .82rem;
+    margin-top: 2.5rem;
+  }
+
+  .visuals-section .art-card,
+  .visuals-section .art-ragga,
+  .visuals-section .art-cake,
+  .visuals-section .art-cool,
+  .visuals-section .art-wax,
+  .visuals-section .art-portrait,
+  .visuals-section .art-tag,
+  .visuals-section .art-cover,
+  .visuals-section .art-splash,
+  .visuals-section .art-crowd {
+    grid-column: span 1;
+    grid-row: auto;
+    transform: none;
+  }
+
+  .visuals-section .art-ragga,
+  .visuals-section .art-cool,
+  .visuals-section .art-tag,
+  .visuals-section .art-splash,
+  .visuals-section .art-crowd {
+    grid-column: span 2;
+  }
+
+  .visuals-section .art-card figcaption {
+    min-height: 2.8rem;
+    padding: .48rem .5rem;
+    font-size: .43rem !important;
+  }
+
+  .visuals-section .art-card::before {
+    font-size: .34rem;
+  }
+
+  .visuals-section .art-cover::after,
+  .visuals-section .art-screen::after {
+    bottom: 3.55rem;
+    font-size: .31rem;
+  }
+}

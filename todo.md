@@ -1103,7 +1103,7 @@
 
 ## Website Task Sequence
 
-- [ ] Task 2: Fix Visuals Archive section with actual 5D content and staggered collage layout
+- [x] Task 2: Fix Visuals Archive section with actual 5D content and staggered collage layout
 - [ ] Task 3: Redesign Selector Profile as an asymmetrical zine spread
 - [ ] Task 4: Promote Jersh In Case as a standalone dubplate card
 - [ ] Task 5: Redesign Booking section as the Lock Into the Frequency terminal
