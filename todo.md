@@ -12,7 +12,7 @@
 - [ ] Document desktop and phone visual evidence that loss and game-over retain a full readable foreground hierarchy without shrunken sprite, shrunken copy, or empty background.
 - [x] Replace the pill, police, Wrong Tune, and Thrown Tune hazard splash copy with the user-approved titles and humorous supporting lines, preserving their existing trigger logic, timing, audio, and return-to-play behavior.
 - [x] Apply a shared `hazard-splash` cracked-arcade treatment to those hazard scenes: black ground, magenta hard frame, inset and outer neon glow, Press Start 2P fallback stack, uppercase copy, and non-interactive scanlines without hiding the illustrated focal art.
-- [ ] Capture and review the revised pill, police, Wrong Tune, and Thrown Tune hazard scenes at desktop and phone widths, verifying the full copy is readable and no scene is obscured.
+- [x] Capture and review the revised pill, police, Wrong Tune, and Thrown Tune hazard scenes at desktop and phone widths, verifying the full copy is readable and no scene is obscured.
 - [x] Deliver one separate review image for each updated hazard splash: Too High to Play, Cops Seized Your Mixer, Wrong Tune My Selectah, and Thrown Tune.
 - [ ] Reposition the police recovery-combo prompt so it does not overlap the revised Cops Seized Your Mixer headline at desktop or phone width.
 - [x] Correct the desktop police hazard-copy placement so the complete Cops Seized Your Mixer title and supporting line remain inside the illustrated cracked-screen frame.
@@ -20,6 +20,15 @@
 - [x] Provide a text document containing the complete Selectah Showdown game source and its directly imported arcade stylesheets for review.
 - [x] Create and attach one consolidated plain-text Selectah Showdown export containing the full gameplay source followed by all directly imported arcade stylesheets.
 - [x] Correct the mobile and desktop crowd-hazard copy layout so the full Wrong Tune My Selectah and Thrown Tune titles are visible above their supporting lines within the cracked-screen frame.
+- [x] Remove active DJ sprite halo artifacts by replacing screen-blend and bright glow compositing with a clean pixel-safe shadow while preserving the supplied sprite asset, collision area, and gameplay.
+- [ ] Standardize police, pill, Wrong Tune, and Thrown Tune hazard splash copy into a consistent visual hierarchy with an in-frame tag, title, and quip, keeping scene-specific art behind the copy.
+- [ ] Refine the shared cracked-screen hazard layer with scanlines, vignette, clear foreground stacking, and responsive type/visual scale so desktop and phone scenes remain legible without jumbled or overlapping text.
+- [x] Capture and review the corrected active DJ sprite plus all four hazard screens at desktop and phone widths before publication.
+- [x] Save the user-supplied 5th Dimension Arcade Visual Style Bible as a project reference covering exact palette, fonts, sprite treatment, overlay structure, hard-shadow rules, and hazard humor tone.
+- [x] Rebuild the police seizure, pill overload, Wrong Tune, and Thrown Tune splashes to use only the supplied five-color palette, approved Press Start 2P/Courier typography, uppercase tracked copy, chunky square borders, and hard-offset shadows.
+- [ ] Replace the current centered hazard layouts with asymmetric photocopied-flyer compositions that retain the exact supplied quips and all scene-specific pixel art without altering trigger, timing, audio, or return-to-play logic.
+- [x] Apply one master CRT overlay contract to the redesigned hazards: deep-dark base, hard scanlines, vignette, no blur/glass treatment, no soft shadow, and one clean offset shadow per sprite.
+- [ ] Validate police, pill, Wrong Tune, and Thrown Tune at desktop and phone width against every visual checklist item in the supplied master prompt before publication.
 
 - [ ] Remove the remaining visible square or backing plane around the active DJ sprite in every arcade state without changing the supplied sprite, hitbox, camo, collision, or controls.
 - [ ] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.
@@ -1079,3 +1088,24 @@
 - [x] Repair every confirmed missing or regressed behavior in grouped, regression-safe changes, including the coin-style token sound.
 - [x] Validate the repaired site and game with fresh progression, desktop/mobile checks, console review, typecheck, and production build.
 - [x] Deliver the full requirement-to-implementation matrix with exact fixes and validation evidence.
+
+- [x] Complete normal-runtime police recovery prompt verification at desktop and phone widths after the dedicated timing fix
+- [x] Complete normal-runtime evidence sweep for police, pill, crowd, and thrown hazard scenes
+- [x] Complete master-contract trigger, timing, audio handoff, return-to-play, and visual checklist validation
+- [x] Task 1: Unify global font hierarchy to Press Start 2P headlines and Courier New body text without changing existing content or arcade gameplay
+- [ ] Pause after Task 1 and request user confirmation before Task 2
+
+## Reposted 5th Dimension Arcade Style System Reference
+
+- [x] Preserve the reposted five-color palette, font rules, pixel-sprite treatment, scanlines, vignette, chunky borders, hard shadows, asymmetric layouts, and UK rave humor as governing constraints for subsequent tasks
+- [x] Preserve exact hazard and reward copy from the reposted style system where applicable
+- [x] Preserve the no-halo sprite contract: pixelated rendering, crisp edges, normal blend mode, and one hard drop shadow
+
+## Website Task Sequence
+
+- [ ] Task 2: Fix Visuals Archive section with actual 5D content and staggered collage layout
+- [ ] Task 3: Redesign Selector Profile as an asymmetrical zine spread
+- [ ] Task 4: Promote Jersh In Case as a standalone dubplate card
+- [ ] Task 5: Redesign Booking section as the Lock Into the Frequency terminal
+- [ ] Task 6: Reframe site flow as a connected physical-space journey
+- [ ] Task 7: Run final site/game consistency and mobile validation audit

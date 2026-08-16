@@ -16,6 +16,7 @@ const gameVisualStyles = readFileSync(resolve(projectRoot, "client/src/game-visu
 const gameplayClarityStyles = readFileSync(resolve(projectRoot, "client/src/gameplay-clarity.css"), "utf8");
 const rewardCalloutStyles = readFileSync(resolve(projectRoot, "client/src/reward-callout.css"), "utf8");
 const detailedArcadeSceneStyles = readFileSync(resolve(projectRoot, "client/src/detailed-arcade-scenes.css"), "utf8");
+const masterHazardStyles = readFileSync(resolve(projectRoot, "client/src/hazard-master-style.css"), "utf8");
 const fiveDPlayaStyles = readFileSync(resolve(projectRoot, "client/src/five-d-playa.css"), "utf8");
 const responsiveRepairStyles = readFileSync(resolve(projectRoot, "client/src/responsive-visual-repair.css"), "utf8");
 const miamiArcadeStyles = readFileSync(resolve(projectRoot, "client/src/miami-arcade-stage.css"), "utf8");
@@ -123,8 +124,8 @@ const requirements: Array<[string, string, string]> = [
   ["clear-lane urban stage art", gameVisualStyles, "selectah-level-one-urban-stage-reference_43ddc07a.png"],
   ["game Level 2 background visual grammar", gameVisualStyles, ".level-two-booth"],
   ["dedicated Level 2 crowd-pressure stage art", gameVisualStyles, "5d-selector-level-two-detailed-stage_89e2157b.png"],
-  ["matte-safe DJ sprite treatment", gameVisualStyles, "mask-image:radial-gradient"],
-  ["DJ silhouette clip cleanup", gameVisualStyles, "clip-path:polygon(38% 0,62% 0"],
+  ["master safe DJ sprite treatment", gameVisualStyles, "mix-blend-mode:normal!important"],
+  ["master sprite mask removal", gameVisualStyles, "mask-image:none!important"],
   ["game player and dancer visual grammar", gameVisualStyles, ".dj-catcher-art,.dj-sprite"],
   ["game prop visual grammar", gameVisualStyles, ".falling-object"],
   ["field urban-brawler asset map", game, "const URBAN_PROP_ASSETS"],
@@ -174,7 +175,7 @@ const requirements: Array<[string, string, string]> = [
   ["thrown crowd warning", game, "crowdHazardVariantRef.current = \"thrown\";"],
   ["approved pill hazard line", game, "BRUV. YOU ATE THE PILL. THE RIDDIM IS LITERALLY MELTING. 🫠"],
   ["approved police hazard line", game, "5-0 IN THE BUILDING. THEY TOOK YOUR DECKS. YOU'RE NOW A HUMAN SPOTIFY PLAYLIST."],
-  ["approved Wrong Tune hazard line", game, "BOOOO. YOU PLAYED ‘WONDERWALL’ AT A JUNGLE RAVE. CROWD HAS LEFT THE CHAT."],
+  ["approved Wrong Tune hazard line", game, "BOOOO. YOU PLAYED 'WONDERWALL' AT A JUNGLE RAVE. CROWD HAS LEFT THE CHAT."],
   ["approved Thrown Tune hazard line", game, "BOTTLE TO THE FACE. SELECTOR DOWN! 🍾"],
   ["cracked arcade hazard splash", detailedArcadeSceneStyles, ".game-viewport .hazard-splash"],
   ["fair named-hazard exposure schedule", game, "scheduledNamedHazardExposure(levelRef.current, namedHazardSpawnCountRef.current)"],
@@ -210,7 +211,12 @@ const requirements: Array<[string, string, string]> = [
   ["archive detach duplicate hidden", fiveDPlayaStyles, ".five-d-playa-detach { display:none!important; }"],
   ["Miami arcade stage field", miamiArcadeStyles, ".minigame-section::before"],
   ["Miami cyan and magenta cabinet shell", miamiArcadeStyles, ".arcade-cabinet-bezel"],
-  ["DJ sprite backing blend cleanup", gameVisualStyles, "mix-blend-mode:screen"],
+  ["master hazard style imported last", game, 'import "@/hazard-master-style.css";'],
+  ["master hazard five-color palette", masterHazardStyles, "--hazard-pink:#FF2D95"],
+  ["master Press Start hierarchy", masterHazardStyles, 'font-family:"Press Start 2P", Courier New'],
+  ["master Courier quips", masterHazardStyles, '"Courier New"'],
+  ["master scanline field", masterHazardStyles, "rgba(0,0,0,.12)"],
+  ["master hard sprite shadow", masterHazardStyles, "filter:drop-shadow(3px 4px 0 #000)"],
   ["dramatically larger foreground speaker stage", gameplayClarityStyles, "transform:scale(2.25)!important"],
   ["persistent detailed-scene speaker foreground scale", detailedArcadeSceneStyles, ".urban-speaker-tower { transform:scale(1.86)!important;scale:1.86!important; }"],
   ["Level 2 speaker foreground position", gameplayClarityStyles, "transform:translateY(0) scale(1.42)!important"],

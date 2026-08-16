@@ -1354,7 +1354,7 @@ export default function ComponentsShowcase() {
                       onClick={() => {
                         sonnerToast.warning("Warning", {
                           description:
-                            "Please note the impact of this operation",
+                            "Please note the Press Start 2P of this operation",
                         });
                       }}
                     >

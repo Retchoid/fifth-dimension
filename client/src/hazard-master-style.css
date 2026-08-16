@@ -1,0 +1,233 @@
+/*
+ * Master hazard splash layer
+ * Governing contract: 5th Dimension Arcade Visual Style Bible (user supplied).
+ * Scoped to the four named hazard outcomes so other reward/finale scenes retain
+ * their established timing and composition.
+ */
+
+.game-viewport :is(.police-seizure-overlay,.pill-overload-overlay,.crowd-anger-overlay) {
+  --hazard-pink:#FF2D95;
+  --hazard-blue:#00D4FF;
+  --hazard-yellow:#FFE600;
+  --hazard-dark:#0A0A12;
+  --hazard-cream:#F0EAD6;
+  position:absolute !important;
+  inset:0 !important;
+  overflow:hidden !important;
+  isolation:isolate;
+  border:5px solid var(--hazard-pink) !important;
+  border-radius:0 !important;
+  box-shadow:6px 6px 0 #000, inset 0 0 0 3px var(--hazard-blue) !important;
+  color:var(--hazard-cream);
+  font-family:"Press Start 2P", Courier New !important;
+  image-rendering:pixelated;
+}
+
+.game-viewport .police-seizure-overlay {
+  background:#0A0A12 url("/manus-storage/selectah-splash-art-direction_4d1c250f.png") center / cover no-repeat !important;
+}
+.game-viewport .pill-overload-overlay {
+  background:#0A0A12 url("/manus-storage/selectah-splash-art-direction_4d1c250f.png") center / cover no-repeat !important;
+}
+.game-viewport .crowd-anger-overlay {
+  background:#0A0A12 url("/manus-storage/selectah-urban-brawler-visual-target_a56c19c4.png") center / cover no-repeat !important;
+}
+
+.game-viewport :is(.police-seizure-overlay,.pill-overload-overlay,.crowd-anger-overlay)::before {
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:4 !important;
+  pointer-events:none !important;
+  opacity:1 !important;
+  clip-path:none !important;
+  background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.12) 2px 4px) !important;
+}
+.game-viewport :is(.police-seizure-overlay,.pill-overload-overlay,.crowd-anger-overlay)::after {
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:5 !important;
+  pointer-events:none !important;
+  background:radial-gradient(ellipse at center,transparent 45%,rgba(10,10,18,.82) 100%) !important;
+  mix-blend-mode:normal !important;
+}
+
+.game-viewport :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) {
+  z-index:8 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:.55rem !important;
+  margin:0 !important;
+  font-family:"Press Start 2P", Courier New !important;
+  text-transform:uppercase !important;
+  letter-spacing:.07em !important;
+  padding:.5rem !important;
+  border-left:4px solid var(--hazard-pink);
+  border-radius:0 !important;
+  background:rgba(10,10,18,.9) !important;
+  box-shadow:4px 4px 0 #000 !important;
+}
+.game-viewport :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) span {
+  display:inline-block;
+  width:max-content;
+  max-width:100%;
+  padding:.34rem .46rem;
+  border:3px solid var(--hazard-dark);
+  border-radius:0;
+  background:var(--hazard-yellow);
+  color:var(--hazard-dark);
+  box-shadow:3px 3px 0 var(--hazard-pink);
+  font:inherit;
+  font-size:clamp(.42rem,.9vw,.62rem) !important;
+  letter-spacing:.1em !important;
+  line-height:1.25 !important;
+}
+.game-viewport :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) strong {
+  display:block;
+  color:var(--hazard-cream);
+  font:inherit;
+  font-size:clamp(1.4rem,4vw,3rem) !important;
+  line-height:1.04 !important;
+  letter-spacing:.055em !important;
+  text-shadow:4px 4px 0 var(--hazard-dark) !important;
+  -webkit-text-stroke:0 !important;
+  paint-order:normal !important;
+}
+.game-viewport .police-seizure-copy :is(span,strong,em),
+.game-viewport .crowd-anger-copy:not(.is-thrown-tune) :is(span,strong,em) { text-align:left !important; }
+.game-viewport .pill-overload-copy :is(span,strong,em),
+.game-viewport .crowd-anger-copy.is-thrown-tune :is(span,strong,em) { text-align:right !important; }
+.game-viewport :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) em {
+  display:block;
+  max-width:100% !important;
+  color:var(--hazard-cream) !important;
+  font:700 clamp(.57rem,1.15vw,.78rem)/1.45 "Courier New", Courier New !important;
+  font-style:normal !important;
+  letter-spacing:.08em !important;
+  text-shadow:3px 3px 0 var(--hazard-dark) !important;
+}
+
+/* Flyer offsets: image focal point and copy deliberately occupy different axes. */
+.game-viewport .police-seizure-overlay .police-seizure-copy {
+  position:absolute !important;
+  left:8% !important;
+  top:4% !important;
+  bottom:auto !important;
+  width:min(52%,435px) !important;
+  align-items:flex-start;
+  text-align:left;
+  transform:rotate(-1.25deg) !important;
+}
+.game-viewport .pill-overload-overlay .pill-overload-copy {
+  position:absolute !important;
+  right:7% !important;
+  bottom:9% !important;
+  left:auto !important;
+  width:min(51%,430px) !important;
+  align-items:flex-end;
+  text-align:right;
+  transform:rotate(1.1deg) !important;
+}
+.game-viewport .crowd-anger-overlay .crowd-anger-copy {
+  position:absolute !important;
+  left:9% !important;
+  top:12% !important;
+  width:min(59%,540px) !important;
+  align-items:flex-start;
+  text-align:left;
+  transform:rotate(-.8deg) !important;
+}
+.game-viewport .crowd-anger-overlay .crowd-anger-copy.is-thrown-tune {
+  left:auto !important;
+  right:9% !important;
+  align-items:flex-end;
+  text-align:right;
+  transform:rotate(1deg) !important;
+}
+.game-viewport .police-seizure-overlay .police-seizure-copy strong { font-size:clamp(1.12rem,2.34vw,1.68rem) !important; }
+.game-viewport .pill-overload-overlay .pill-overload-copy strong { font-size:clamp(1.35rem,3.1vw,2.25rem) !important; }
+.game-viewport .crowd-anger-overlay .crowd-anger-copy strong { font-size:clamp(1.3rem,3vw,2.15rem) !important; }
+.game-viewport .police-seizure-overlay .police-recovery-prompt {
+  display:grid !important;
+  right:6% !important;
+  bottom:8% !important;
+  left:auto !important;
+  z-index:9 !important;
+  width:min(35%,255px) !important;
+  padding:.34rem !important;
+  border:3px solid var(--hazard-blue) !important;
+  border-radius:0 !important;
+  background:var(--hazard-dark) !important;
+  box-shadow:3px 3px 0 #000 !important;
+  color:var(--hazard-yellow) !important;
+  font-family:"Press Start 2P", Courier New !important;
+  text-align:right !important;
+  animation:master-police-recovery 1.6s .55s steps(2,end) both !important;
+}
+.game-viewport .police-seizure-overlay .police-recovery-prompt strong {
+  padding:0 !important;
+  background:transparent !important;
+  color:var(--hazard-yellow) !important;
+  font:inherit !important;
+  font-size:clamp(.45rem,.88vw,.6rem) !important;
+  line-height:1.3 !important;
+  text-shadow:2px 2px 0 #000 !important;
+}
+.game-viewport .police-seizure-overlay .police-recovery-prompt span {
+  color:var(--hazard-cream) !important;
+  font:700 clamp(.36rem,.72vw,.5rem)/1.35 "Courier New", Courier New !important;
+  letter-spacing:.06em !important;
+}
+@keyframes master-police-recovery {
+  0% { opacity:0; transform:translateY(12px); }
+  18%,76% { opacity:1; transform:translateY(0); }
+  100% { opacity:0; transform:translateY(-5px); }
+}
+
+.game-viewport .pill-overload-overlay .dopey-dj-portrait img,
+.game-viewport .police-seizure-overlay .police-dj-reaction img,
+.game-viewport .crowd-anger-overlay .empty-club-dj img {
+  image-rendering:pixelated !important;
+  image-rendering:crisp-edges !important;
+  filter:drop-shadow(3px 4px 0 #000) !important;
+}
+.game-viewport :is(.pill-overload-overlay,.police-seizure-overlay,.crowd-anger-overlay) :is(.sega-police-car,.dopey-dj-portrait,.empty-club-room,.pill-trip-burst,.pill-floaters) {
+  z-index:3 !important;
+  border-radius:0 !important;
+}
+.game-viewport .pill-overload-overlay .pill-pitch-wobble { display:none !important; }
+
+/* The earlier detailed scene layer names `.hazard-splash`; match that specificity so this master flyer geometry wins. */
+.game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy {
+  top:4% !important;
+  bottom:auto !important;
+  width:min(52%,435px) !important;
+}
+.game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy strong { font-size:clamp(1.12rem,2.34vw,1.68rem) !important; }
+
+@media (max-width:650px) {
+  .game-viewport :is(.police-seizure-overlay,.pill-overload-overlay,.crowd-anger-overlay) { border-width:4px !important; box-shadow:4px 4px 0 #000, inset 0 0 0 2px var(--hazard-blue) !important; }
+  .game-viewport :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) { gap:.4rem !important; }
+  .game-viewport :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) strong { font-size:clamp(1.26rem,7.2vw,1.78rem) !important; line-height:1.08 !important; }
+  .game-viewport :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) em { font-size:clamp(.41rem,1.82vw,.54rem) !important; line-height:1.35 !important; }
+  .game-viewport :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) { padding:.38rem !important; }
+  .game-viewport .police-seizure-overlay .police-seizure-copy {
+    left:8% !important;
+    top:16% !important;
+    bottom:auto !important;
+    width:76% !important;
+    transform:none !important;
+  }
+  .game-viewport .police-seizure-overlay .police-seizure-copy strong {
+    font-size:clamp(1rem,5.7vw,1.36rem) !important;
+    line-height:1.16 !important;
+    white-space:nowrap !important;
+  }
+  .game-viewport .police-seizure-overlay .police-seizure-copy em { font-size:clamp(.34rem,1.56vw,.44rem) !important; }
+  .game-viewport .police-seizure-overlay .police-recovery-prompt { right:5% !important; bottom:7% !important; width:40% !important; padding:.26rem !important; }
+  .game-viewport .pill-overload-overlay .pill-overload-copy { right:5% !important; bottom:6% !important; width:64% !important; }
+  .game-viewport .crowd-anger-overlay .crowd-anger-copy { left:7% !important; top:9% !important; width:76% !important; }
+  .game-viewport .crowd-anger-overlay .crowd-anger-copy.is-thrown-tune { right:8% !important; left:auto !important; }
+  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy { left:8% !important; top:16% !important; bottom:auto !important; width:76% !important; transform:none !important; }
+}

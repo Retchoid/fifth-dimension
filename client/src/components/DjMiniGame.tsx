@@ -11,6 +11,7 @@ import "@/gameplay-clarity.css";
 import "@/miami-arcade-stage.css";
 import "@/reward-callout.css";
 import "@/detailed-arcade-scenes.css";
+import "@/hazard-master-style.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
@@ -108,7 +109,7 @@ const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "sp
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 type ComboReaction = "big-up" | "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -1445,6 +1446,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     debugWindow.__selectahDebug = {
       triggerSequence: (sequence) => {
         pendingArcadeSequenceRef.current = [];
+        if (sequence === "thrown") {
+          crowdHazardVariantRef.current = "thrown";
+          startArcadeSequence("crowd");
+          return;
+        }
         startArcadeSequence(sequence);
       },
       triggerRecordTransition: () => {
@@ -2837,7 +2843,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="empty-club-door door-one" /><span className="empty-club-door door-two" /><span className="empty-club-tumbleweed" />
             </div>
             <div className={`crowd-anger-copy${crowdHazardVariantRef.current === "thrown" ? " is-thrown-tune" : " is-wrong-tune"}`}>
-              {crowdHazardVariantRef.current === "thrown" ? <><span>THROWN TUNE / 2 HITS</span><strong>THROWN<br />TUNE</strong><em>BOTTLE TO THE FACE. SELECTOR DOWN! 🍾</em></> : <><span>WRONG TUNE / 2 HITS</span><strong>WRONG TUNE<br />MY SELECTAH</strong><em>BOOOO. YOU PLAYED ‘WONDERWALL’ AT A JUNGLE RAVE. CROWD HAS LEFT THE CHAT.</em></>}
+              {crowdHazardVariantRef.current === "thrown" ? <><span>THROWN TUNE / 2 HITS</span><strong>THROWN<br />TUNE</strong><em>BOTTLE TO THE FACE. SELECTOR DOWN! 🍾</em></> : <><span>WRONG TUNE / 2 HITS</span><strong>WRONG TUNE<br />MY SELECTAH</strong><em>BOOOO. YOU PLAYED 'WONDERWALL' AT A JUNGLE RAVE. CROWD HAS LEFT THE CHAT.</em></>}
             </div>
             {Array.from({ length: 7 }, (_, index) => <i key={index} className={`crowd-exit-arrow exit-arrow-${index % 4}`} aria-hidden="true">EXIT</i>)}
           </div>
@@ -2911,7 +2917,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <>
                   <div className="unlock-download-drop" role="status" aria-live="polite">
                     <div className="achievement-chain-wrap" aria-hidden="true">
-                      {/* 5D style: an oversized silver arcade chain bars the full release title until the unlock impact. */}
+                      {/* 5D style: an oversized silver arcade chain bars the full release title until the unlock Press Start 2P. */}
                       <span className="chain-run chain-run-text">
                         {Array.from({ length: 12 }, (_, index) => <i key={index} className="chain-link" />)}
                       </span>

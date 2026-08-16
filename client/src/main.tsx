@@ -15,6 +15,7 @@ import "./afterparty-runner.css";
 import "./arcade-repair.css";
 import "./posthero-cohesion.css";
 import "./game-visual-system.css";
+import "./global-typography-system.css";
 
 const queryClient = new QueryClient();
 

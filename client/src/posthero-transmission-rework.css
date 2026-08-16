@@ -13,9 +13,9 @@
   mix-blend-mode:screen;
 }
 .section-heading { position:relative; max-width:78rem; margin-inline:auto; padding-inline:.2rem; }
-.section-heading::before { content:"TRANSMISSION / 5D"; display:block; width:max-content; max-width:100%; margin-bottom:.36rem; color:#b9ff4f; font:800 .48rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.16em; text-shadow:1px 1px 0 #050407; }
-.section-heading h2,.section-heading-dark h2 { color:#f5ebd2; font-family:"Bungee",Impact,sans-serif; letter-spacing:.04em; text-shadow:3px 3px 0 #08070d,5px 5px 0 rgba(255,79,156,.46); }
-.section-heading p { max-width:65ch; color:#d7d1d4; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+.section-heading::before { content:"TRANSMISSION / 5D"; display:block; width:max-content; max-width:100%; margin-bottom:.36rem; color:#b9ff4f; font:800 .48rem/1 Courier New,Courier New,Courier New,Courier New; letter-spacing:.16em; text-shadow:1px 1px 0 #050407; }
+.section-heading h2,.section-heading-dark h2 { color:#f5ebd2; font-family:"Press Start 2P",Press Start 2P,Courier New; letter-spacing:.04em; text-shadow:3px 3px 0 #08070d,5px 5px 0 rgba(255,79,156,.46); }
+.section-heading p { max-width:65ch; color:#d7d1d4; font-family:Courier New,Courier New,Courier New,Courier New; }
 
 .music-deck,.bio-art-panel,.project-card,.mix-archive-card,.booking-form,.booking-copy,.contact-content {
   border:2px solid #17131f !important;
@@ -29,7 +29,7 @@
 .music-deck,.mix-archive-card,.project-card { overflow:hidden; }
 .music-deck { transform:rotate(-.35deg); }
 .music-deck:nth-of-type(even),.mix-archive-card:nth-of-type(even),.project-card:nth-of-type(even) { transform:rotate(.3deg); }
-.mix-archive-group-heading,.mix-catalog-stamp,.project-id,.project-status,.booking-signal { color:#b9ff4f !important; font-family:ui-monospace,SFMono-Regular,Menlo,monospace !important; letter-spacing:.11em; }
+.mix-archive-group-heading,.mix-catalog-stamp,.project-id,.project-status,.booking-signal { color:#b9ff4f !important; font-family:Courier New,Courier New,Courier New,Courier New !important; letter-spacing:.11em; }
 .mix-archive-id,.mix-archive-titleline h3,.project-card h3,.booking-copy h2,.contact-content h2 { color:#f9edd5 !important; text-shadow:2px 2px 0 #08070d; }
 .mix-archive-card:hover,.project-card:hover { border-color:#ff5c9f !important; transform:translate(-2px,-2px) rotate(-.15deg); box-shadow:7px 8px 0 #050407,0 0 0 1px rgba(255,79,156,.72),0 0 18px rgba(255,79,156,.2) !important; }
 .mix-archive-cover { border:2px solid #050407 !important; box-shadow:3px 3px 0 rgba(0,231,255,.64) !important; }
@@ -39,12 +39,12 @@
 .contact-link { background:#ff5c9f !important; color:#160810 !important; }
 
 .projects-grid,.mix-archive-grid { gap:1rem !important; }
-.project-card::after,.mix-archive-card::after { content:"5D / DUBPLATE ARCHIVE"; position:absolute; right:.35rem; bottom:.28rem; color:rgba(255,255,255,.31); font:800 .32rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.08em; pointer-events:none; }
+.project-card::after,.mix-archive-card::after { content:"5D / DUBPLATE ARCHIVE"; position:absolute; right:.35rem; bottom:.28rem; color:rgba(255,255,255,.31); font:800 .32rem/1 Courier New,Courier New,Courier New,Courier New; letter-spacing:.08em; pointer-events:none; }
 .visuals-section .art-card,.visuals-section figure { border:2px solid #050407; box-shadow:5px 6px 0 #050407,0 0 0 1px rgba(0,231,255,.32); background:#17111d; }
 .visuals-section .art-card:nth-child(even),.visuals-section figure:nth-child(even) { box-shadow:5px 6px 0 #050407,0 0 0 1px rgba(255,79,156,.52); }
-.visuals-section figcaption { color:#d7ff75 !important; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.08em; }
+.visuals-section figcaption { color:#d7ff75 !important; font-family:Courier New,Courier New,Courier New,Courier New; letter-spacing:.08em; }
 
-.booking-form input,.booking-form textarea { border-radius:0 !important; border-color:#494056 !important; background:#0b0a12 !important; color:#f8efd7 !important; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+.booking-form input,.booking-form textarea { border-radius:0 !important; border-color:#494056 !important; background:#0b0a12 !important; color:#f8efd7 !important; font-family:Courier New,Courier New,Courier New,Courier New; }
 .booking-form input:focus,.booking-form textarea:focus { border-color:#00d9f2 !important; box-shadow:0 0 0 2px rgba(0,217,242,.22) !important; }
 .contact-grid-bg { opacity:.48; filter:saturate(1.24) contrast(1.1); }
 

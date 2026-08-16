@@ -61,7 +61,7 @@
 /* Shared recovered-hardware grammar: cassette labels, speaker mesh, flyer ink, and pirate-radio panel lines. */
 .listen-section,.bio-section,.genre-mixes-section,.projects-section,.visuals-section,.booking-section,.contact-section { position:relative; }
 .listen-section::before,.genre-mixes-section::before,.visuals-section::before { content:""; position:absolute; left:clamp(1rem,4vw,5rem); right:clamp(1rem,4vw,5rem); top:0; height:5px; pointer-events:none; background:repeating-linear-gradient(90deg,#00e7ff 0 23px,#09070f 23px 29px,#ff4f9c 29px 45px,#09070f 45px 51px); box-shadow:0 4px 0 rgba(0,0,0,.5); opacity:.8; }
-.section-heading .eyebrow,.mix-archive-group-heading>span,.deck-topline,.project-id,.matrix-kicker,.exclusive-meta { font-family:"Courier New",monospace; letter-spacing:.1em; text-shadow:1px 1px 0 #09070f; }
+.section-heading .eyebrow,.mix-archive-group-heading>span,.deck-topline,.project-id,.matrix-kicker,.exclusive-meta { font-family:"Courier New",Courier New; letter-spacing:.1em; text-shadow:1px 1px 0 #09070f; }
 .section-heading .eyebrow { display:inline-flex; align-items:center; gap:.45rem; padding:.26rem .48rem; color:#c6ff00; background:#10091b; border:1px solid #00e7ff; box-shadow:3px 3px 0 #ff4f9c; }
 .music-deck { position:relative; overflow:hidden; border:3px solid #09070f; background:linear-gradient(130deg,#170f21,#08070e 64%); box-shadow:7px 8px 0 rgba(0,0,0,.78),11px 12px 0 rgba(255,79,156,.56); }
 .music-deck::after { content:""; position:absolute; z-index:0; right:-1.7rem; bottom:-1.7rem; width:8rem; height:8rem; pointer-events:none; border:12px dotted rgba(0,231,255,.2); border-radius:50%; box-shadow:0 0 0 7px rgba(255,79,156,.12),0 0 0 16px rgba(198,255,0,.07); }

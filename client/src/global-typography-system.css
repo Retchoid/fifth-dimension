@@ -1,0 +1,115 @@
+/* ============================================================
+   5TH DIMENSION — GLOBAL TYPOGRAPHY SYSTEM
+   Task 1: one approved display/body hierarchy for every section.
+   ============================================================ */
+
+:root {
+  --font-display: "Press Start 2P", "Courier New";
+  --font-body: "Courier New";
+  --type-track: .07em;
+}
+
+html,
+body,
+#root {
+  font-family: var(--font-body) !important;
+  letter-spacing: var(--type-track);
+}
+
+body,
+body p,
+body li,
+body label,
+body figcaption,
+body small,
+body textarea,
+body input,
+body select,
+body option {
+  font-family: var(--font-body) !important;
+  text-transform: uppercase;
+  letter-spacing: var(--type-track);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+a,
+nav,
+[role="button"],
+[aria-label],
+.section-heading,
+.section-heading-dark,
+.section-kicker,
+.eyebrow,
+.score,
+.hud,
+.marquee,
+.badge,
+.project-id,
+.project-status,
+.game-viewport,
+.game-viewport button,
+.game-viewport input,
+.game-viewport label {
+  font-family: var(--font-display) !important;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+body p,
+body li,
+body label,
+body figcaption,
+body small,
+body input,
+body textarea,
+body select,
+body option,
+.archive-description,
+.mix-description,
+.booking-copy,
+.booking-form input,
+.booking-form textarea,
+.game-viewport em,
+.game-viewport span,
+.game-viewport p {
+  font-family: var(--font-body) !important;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* Keep the approved game hierarchy explicit after the site-wide rule. */
+.game-viewport h1,
+.game-viewport h2,
+.game-viewport h3,
+.game-viewport h4,
+.game-viewport h5,
+.game-viewport h6,
+.game-viewport strong,
+.game-viewport button,
+.game-viewport [role="button"] {
+  font-family: var(--font-display) !important;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.game-viewport em,
+.game-viewport .hazard-quip,
+.game-viewport .hazard-splash em,
+.game-viewport .police-recovery-prompt span {
+  font-family: var(--font-body) !important;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body {
+    scroll-behavior: auto;
+  }
+}

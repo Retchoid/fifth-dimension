@@ -133,6 +133,20 @@ Cabinet-focused **375 × 812 px** captures then confirmed all four revised hazar
 
 Independent final mobile inspection of **Too High to Play** confirmed the full approved pill line is readable below the title without hiding the dopey-DJ art. The **Cops Seized Your Mixer** line is also complete, but the pre-existing recovery-combo prompt overlaps the headline in the reviewed scene, so that prompt must be repositioned before the mobile review can be closed.
 
-The final desktop police capture exposed clipping in the initial review composition. The police copy is now anchored inside the scene at a stable proportional position, and the refreshed capture shows the entire **COPS SEIZED YOUR MIXER** title and the complete Spotify-playlist supporting line within the magenta cracked-screen frame. The recovery prompt remains a separately timed live-play response; it is suppressed only in the development-only review wrapper to avoid a held-state diagnostic overlap.
+The final desktop police capture exposed clipping in the initial review composition. The police copy is now anchored inside the scene at a stable proportional position, and the refreshed capture shows the entire **COPS SEIZED YOUR MIXER** title and the complete Spotify-playlist supporting line within the magenta cracked-screen frame. The recovery prompt is now a separately timed lower-right flyer stamp, rather than a hidden capture-only element, and normal-runtime inspection confirmed it remains separate from the police copy.
 
 The archive verification confirms that the 5D Playa queue panel has been removed from `#other-mixes`, the header control remains present and opens the relocated top dock, and all **9** individual archive audio players remain available with their existing download and share controls.
+
+Public propagation verification on checkpoint `bf09f9be` confirmed the same final contract in the published build: the player exists outside `#other-mixes`, the top navigation control is present, and all **9** individual archive players remain in the archive body.
+
+### Supplied arcade-screen correction validation
+
+The active DJ sprite now resolves with `mix-blend-mode: normal`, no `clip-path`, no CSS mask, and one hard `3px 4px` dark drop shadow. This removes the former screen-blend/soft-glow halo without changing the supplied image or collision wrapper.
+
+The police, pill, Wrong Tune, and Thrown Tune screens were reviewed with the development-only held scene verifier at desktop and **375 px** phone width. Each keeps its illustrated scene, magenta bezel, scanline and dark-edge layer, then reads in the required order of **tag, title, quip**. The final layout corrections specifically keep the police quip clear of its headline, remove the redundant Pill “Pitch Wobble” label that crossed the quip, and constrain the three-line Wrong Tune title to its intended two-line treatment so the Wonderwall line remains in-frame.
+
+### Master arcade-contract splash redesign
+
+The police seizure, pill overload, Wrong Tune, and Thrown Tune scenes were rebuilt under the saved 5th Dimension Arcade Visual Style Bible and the supplied master prompt. Their active UI now uses the five-color signal system, Press Start 2P headline/tag treatment, Courier New quips, chunky square frames, one hard black sprite shadow, hard scanlines, and a deep-dark vignette. The copy sheets deliberately alternate left and right placement to preserve the intended photocopied-flyer imbalance while leaving the scene art visible.
+
+Desktop and **375 px** inspections confirmed that each scene retains its full tag, title, and exact quip. The live police recovery prompt was repositioned as a separate lower-right flyer stamp, avoiding overlap with the police quip while preserving its timed recovery behavior. The active DJ sprite was also checked in a normal running session: computed styling reports `mix-blend-mode: normal`, no clip path, no mask, and only one hard `3px 4px` drop shadow.
