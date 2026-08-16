@@ -90,6 +90,13 @@ describe("Task 7 final consistency contract", () => {
     expect(mobileSiteRepair).toContain(".header-brand");
     expect(mobileSiteRepair).toContain("-webkit-line-clamp: 2");
     expect(mobileSiteRepair).toContain("white-space: nowrap !important");
+    expect(mobileSiteRepair).toContain("repeating-linear-gradient");
+    expect(mobileSiteRepair).toContain("box-shadow: 4px 4px 0 #0A0A12 !important");
+    expect(mobileSiteRepair).toContain("max-width: 100% !important");
+    expect(mobileSiteRepair).toContain(".unlock-download-drop");
+    expect(mobileSiteRepair).toContain(".green-camo-award");
+    expect(mobileSiteRepair).toContain(".afterparty-door-ready");
+    expect(mobileSiteRepair).toContain(".achievement-chain-wrap");
     for (const selector of [".falling-items-layer", ".falling-object", ".game-grid-bg", ".game-hud", ".dj-catcher", ".game-overlay", ".hazard-splash", ".falling-items-layer:empty::after"]) {
       expect(fallingItemsRenderFix).toContain(selector);
     }

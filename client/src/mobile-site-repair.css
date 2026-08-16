@@ -515,3 +515,183 @@
     flex-shrink: 0 !important;
   }
 }
+
+/* ============================================================
+   ATTACHED CHECKLIST REFINEMENTS (pasted_content.txt)
+   ============================================================ */
+
+@media (max-width: 650px) {
+  h1, h2, h3, .section-heading h2, .arcade-marquee strong {
+    font-size: clamp(1.2rem, 5vw, 2rem) !important;
+    line-height: 1.2 !important;
+  }
+  h4, .section-heading .eyebrow, .overlay-box h3 {
+    font-size: clamp(0.6rem, 2.5vw, 0.9rem) !important;
+    line-height: 1.3 !important;
+  }
+  p, span, li, .arcade-instruction-brief p {
+    font-size: clamp(0.5rem, 2vw, 0.7rem) !important;
+    line-height: 1.4 !important;
+  }
+  small, .arcade-instruction-brief small, .hud-badge {
+    font-size: clamp(0.35rem, 1.5vw, 0.5rem) !important;
+    line-height: 1.2 !important;
+  }
+  .game-hud .hud-badge {
+    font-size: clamp(0.3rem, 1.2vw, 0.45rem) !important;
+  }
+  .minigame-section {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  .arcade-cabinet-bezel {
+    transform: scale(0.85) !important;
+    transform-origin: top center !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 420px !important;
+  }
+  .game-viewport {
+    aspect-ratio: 3/4 !important;
+    height: auto !important;
+    max-height: 65vh !important;
+    min-height: 400px !important;
+    width: 100% !important;
+  }
+}
+
+/* Universal overflow protection from attachment */
+* {
+  max-width: 100% !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.arcade-instruction-brief {
+  padding: 0.3rem !important;
+  max-width: 100% !important;
+}
+
+.arcade-instruction-brief p,
+.arcade-instruction-brief small,
+.section-heading p {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Design Polish: Hard shadows and consistent overlay scanlines */
+.overlay-box,
+.game-overlay .game-over-box-wide,
+.unlock-overlay-box,
+.finale-box,
+.pre-level-two-score-box {
+  box-shadow: 4px 4px 0 #0A0A12 !important;
+  border: 3px solid #FF2D95 !important;
+  position: relative !important;
+}
+
+.game-overlay::before,
+.overlay-box::before,
+.unlock-overlay-box::before,
+.finale-box::before,
+.pre-level-two-score-box::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.08) 2px, rgba(0, 0, 0, 0.08) 4px) !important;
+}
+
+.overlay-box > *,
+.unlock-overlay-box > *,
+.finale-box > *,
+.pre-level-two-score-box > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* === FIX YELLOW BLOCK OVER JERSH IN CASE === */
+
+/* Remove any yellow background from download sections */
+.unlock-download-drop,
+.unlock-overlay-box .unlock-download-drop,
+.green-camo-award,
+.afterparty-door-ready {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure the download section is visible */
+.unlock-download-drop {
+  position: relative !important;
+  z-index: 5 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  padding: 0.5rem !important;
+  background: rgba(10, 10, 18, 0.85) !important;
+  border: 3px solid #FF2D95 !important;
+  box-shadow: 4px 4px 0 #0A0A12 !important;
+}
+
+/* Fix the green camo award box */
+.green-camo-award {
+  background: linear-gradient(135deg, #9eca5b, #355b38 55%, #172817) !important;
+  border: 2px solid #132415 !important;
+  box-shadow: 3px 3px 0 #0A0A12 !important;
+  padding: 0.3rem 0.5rem !important;
+  color: #f5ffc8 !important;
+}
+
+/* Fix afterparty door ready */
+.afterparty-door-ready {
+  background: rgba(255, 45, 149, 0.2) !important;
+  border: 2px solid #FF2D95 !important;
+  box-shadow: 0 0 20px rgba(255, 45, 149, 0.3) !important;
+  color: #F0EAD6 !important;
+  padding: 0.3rem 0.6rem !important;
+}
+
+/* Remove any yellow block in the achievement chain */
+.achievement-chain-wrap {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.chain-run {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.chain-link {
+  background: #888 !important;
+  background-color: #888 !important;
+}
+
+/* Fix any other yellow elements */
+[class*="yellow"],
+[class*="YELLOW"],
+[style*="background: #FFE600"],
+[style*="background:#FFE600"],
+[style*="background: #ffe600"],
+[style*="background:#ffe600"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Only keep yellow for text/highlights, not backgrounds */
+.hazard-splash .hazard-tag,
+.police-seizure-copy span,
+.pill-overload-copy span,
+.crowd-anger-copy span {
+  color: #00D4FF !important;
+}
+
+.highlight-yellow {
+  color: #FFE600 !important;
+  background: transparent !important;
+}
