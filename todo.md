@@ -1126,3 +1126,4 @@
 - [x] Perform and document an all-states DJ sprite audit covering active play, hazards, bonuses, loss, and game-over.
 - [x] Create a scene-by-scene checklist mapping every state to runtime evidence for copy, timing, audio handoff, and return-to-play.
 - [x] Add a development-only combo reaction verifier for Gun Finger evidence; preserve the normal production combo threshold and timing.
+- [x] Generate and attach a refreshed plain-text Selectah Showdown game-code export from the current source and directly imported arcade stylesheets.

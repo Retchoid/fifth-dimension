@@ -1,6 +1,7 @@
 SELECTAH SHOWDOWN — CONSOLIDATED GAME CODE EXPORT
 
-Generated for review. Gameplay source and directly imported arcade stylesheets follow.
+Generated from the current project source. Includes the gameplay component and every arcade stylesheet directly imported by that component.
+Generated at: 2026-08-16T11:24:45.986Z
 
 ================================================================================
 FILE: client/src/components/DjMiniGame.tsx
@@ -18,6 +19,7 @@ import "@/gameplay-clarity.css";
 import "@/miami-arcade-stage.css";
 import "@/reward-callout.css";
 import "@/detailed-arcade-scenes.css";
+import "@/hazard-master-style.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
@@ -114,8 +116,9 @@ const BONUS_START_RECORDS = 20;
 const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "speaker", "mixer", "cdj"];
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 type ComboReaction = "big-up" | "subwoofer" | "gun-fingers" | "ground-decks" | null;
+type ComboReactionKind = Exclude<ComboReaction, null>;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; showComboReaction: (kind: ComboReactionKind) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -253,6 +256,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const viewportVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
   const sceneVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-scene-verify") : null;
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
+  const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
+    crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
+    headphones: { label: "HEADPHONES SECURED", quip: "THREE DECKS / READY TO SELECT", kind: "headphones" },
+    boh: { label: "BOH! BOH!", quip: "FIVE DUBPLATES / +250", kind: "boh" },
+    riddim: { label: "RUN THE RIDDIM!", quip: "CROWD PRESSURE / +500", kind: "riddim" },
+    wheel: { label: "WHEEL IT UP", quip: "GUN FINGER MASSIVE / +10", kind: "wheel" },
+  } as Record<string, InWorldReward>)[sceneVerificationMode ?? ""] ?? null : null;
+  const rewardToRender = inWorldReward ?? heldRewardPreview;
+  const heldLossPreview = import.meta.env.DEV && lossVerificationHold && sceneVerificationMode === "loss";
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
@@ -1372,7 +1384,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const announceInWorldReward = (label: string, quip: string, kind?: InWorldReward["kind"]) => {
     window.clearTimeout(inWorldRewardTimerRef.current);
     setInWorldReward({ label, quip, kind });
-    inWorldRewardTimerRef.current = window.setTimeout(() => setInWorldReward(null), kind === "boh" || kind === "big-up" || kind === "riddim" ? 1650 : 1250);
+    const rewardDuration = holdSequenceDebugEnabled ? 25000 : kind === "boh" || kind === "big-up" || kind === "riddim" ? 1650 : 1250;
+    inWorldRewardTimerRef.current = window.setTimeout(() => setInWorldReward(null), rewardDuration);
   };
 
   const queueGameFrame = () => {
@@ -1452,7 +1465,35 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     debugWindow.__selectahDebug = {
       triggerSequence: (sequence) => {
         pendingArcadeSequenceRef.current = [];
+        if (sequence !== "thrown" && ["boh", "riddim", "wheel", "crate", "headphones"].includes(sequence)) {
+          isPlayingRef.current = true;
+          setIsPlaying(true);
+        }
+        if (sequence === "thrown") {
+          crowdHazardVariantRef.current = "thrown";
+          startArcadeSequence("crowd");
+          return;
+        }
         startArcadeSequence(sequence);
+      },
+      showComboReaction: (kind) => {
+        isPlayingRef.current = true;
+        setIsPlaying(true);
+        setGameOver(false);
+        setComboReaction(kind);
+        setShowComboBurst(true);
+        if (kind === "big-up") announceInWorldReward("BIG UP!", "BIG UP!", "big-up");
+        if (kind === "gun-fingers") {
+          announceInWorldReward("GUN FINGER MASSIVE", "SELECTOR SALUTE / CABINET UNDER PRESSURE", "gun-fingers");
+          setIsGunFingerShaking(true);
+          window.clearTimeout(gunFingerShakeTimerRef.current);
+          gunFingerShakeTimerRef.current = window.setTimeout(() => setIsGunFingerShaking(false), 1500);
+        }
+        window.clearTimeout(comboBurstTimerRef.current);
+        comboBurstTimerRef.current = window.setTimeout(() => {
+          setShowComboBurst(false);
+          setComboReaction(null);
+        }, kind === "gun-fingers" ? 1750 : 1100);
       },
       triggerRecordTransition: () => {
         window.clearTimeout(recordTransitionTimerRef.current);
@@ -1493,6 +1534,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         setActiveArcadeSequence(null);
         setIsRecordTransitioning(false);
         setIsLevelTwoTransitioning(false);
+      },
+      showUnlock: () => {
+        gameRunIdRef.current += 1;
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        isPlayingRef.current = false;
+        setIsPlaying(false);
+        setLevel(1);
+        setRecordsCaught(REQUIRED_RECORDS);
+        setIsUnlockPaused(true);
+        setUnlockRevealReady(false);
+        setChainBreakComplete(false);
+        window.clearTimeout(unlockRevealTimerRef.current);
+        unlockRevealTimerRef.current = window.setTimeout(() => setUnlockRevealReady(true), 3000);
       },
       showLossComedown: () => {
         gameRunIdRef.current += 1;
@@ -1567,6 +1621,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const verifierTimer = window.setTimeout(() => {
       const debug = (window as ArcadeDebugWindow).__selectahDebug;
       if (!debug) return;
+      if (sceneVerificationMode === "level-two-arrival") {
+        debug.startLevelTwo();
+        return;
+      }
+      if (sceneVerificationMode === "first-bonus") {
+        debug.startFirstBonus();
+        return;
+      }
+      if (sceneVerificationMode === "afterparty-bonus") {
+        debug.startAfterpartyBonus();
+        return;
+      }
+      if (sceneVerificationMode === "unlock") {
+        debug.showUnlock();
+        return;
+      }
       if (sceneVerificationMode === "loss") {
         debug.showLossComedown();
         return;
@@ -1595,8 +1665,23 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const sequence = (["rewind", "wheel", "police", "crowd", "pill", "crate", "headphones", "boh", "riddim"] as ArcadeSequence[]).find(
         candidate => candidate === sceneVerificationMode,
       );
-      if (sequence) debug.triggerSequence(sequence);
-    }, 0);
+      if (sequence) {
+        debug.triggerSequence(sequence);
+        const heldRewardCopy: Record<string, InWorldReward> = {
+          crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
+          headphones: { label: "HEADPHONES SECURED", quip: "THREE DECKS / READY TO SELECT", kind: "headphones" },
+          boh: { label: "BOH! BOH!", quip: "FIVE DUBPLATES / +250", kind: "boh" },
+          riddim: { label: "RUN THE RIDDIM!", quip: "CROWD PRESSURE / +500", kind: "riddim" },
+          wheel: { label: "WHEEL IT UP", quip: "GUN FINGER MASSIVE / +10", kind: "wheel" },
+        };
+        const heldReward = heldRewardCopy[sceneVerificationMode];
+        if (heldReward) {
+          isPlayingRef.current = true;
+          setIsPlaying(true);
+          setInWorldReward(heldReward);
+        }
+      }
+    }, 180);
     return () => window.clearTimeout(verifierTimer);
   }, [sceneVerificationMode]);
 
@@ -2581,9 +2666,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <em>{"♥".repeat(damageFeedback.lives)}{"♡".repeat(Math.max(0, damageFeedback.bonus ? 3 - damageFeedback.lives : 4 - damageFeedback.lives))}</em>
           </div>
         )}
-        {inWorldReward && !gameOver && (
-          <div className={`in-world-reward${inWorldReward.kind ? ` in-world-reward-${inWorldReward.kind}` : ""}`} role="status" aria-live="polite">
-            <strong>{inWorldReward.label}</strong>
+        {rewardToRender && !gameOver && (
+          <div className={`in-world-reward${rewardToRender.kind ? ` in-world-reward-${rewardToRender.kind}` : ""}`} role="status" aria-live="polite">
+            <strong>{rewardToRender.label}</strong>
           </div>
         )}
         <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
@@ -2743,7 +2828,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             </div>
             <div className="bonus-tip">AUTO RUN · A / D OR ARROWS STEER · DRAG OR TAP A ROAD LANE · ONE HIT ENDS THE DASH</div>
             <div className={`bonus-dj-runner afterparty-dj-runner lane-${bonusLane}${bonusDoorOpen ? " is-exit-lit" : ""}`}>
-              <img src="/manus-storage/selector-dj-rear-runner_00e1ae94.png" alt="Rear-view jungle DJ running toward the after party" />
+              <img src="/manus-storage/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ running toward the after party" />
             </div>
             <div className="bonus-obstacle-layer afterparty-entity-layer" aria-hidden="true">
               {bonusObstacles.map((entity) => <span key={entity.id} className={`bonus-obstacle afterparty-entity ${entity.type} lane-${entity.lane}`} data-entity={entity.type} style={{ "--runner-depth": `${entity.depth}%` } as React.CSSProperties}><i className="urban-runner-asset" style={{ "--urban-runner-url": `url(${URBAN_RUNNER_ASSETS[entity.type]})` } as React.CSSProperties} /><b>{entity.type === "headphones" ? "HP" : entity.type === "turntable" ? "TT" : entity.type === "speaker" ? "SPK" : entity.type === "mixer" ? "MIX" : entity.type === "cart" ? "CART" : entity.type.toUpperCase()}</b></span>)}
@@ -2844,7 +2929,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="empty-club-door door-one" /><span className="empty-club-door door-two" /><span className="empty-club-tumbleweed" />
             </div>
             <div className={`crowd-anger-copy${crowdHazardVariantRef.current === "thrown" ? " is-thrown-tune" : " is-wrong-tune"}`}>
-              {crowdHazardVariantRef.current === "thrown" ? <><span>THROWN TUNE / 2 HITS</span><strong>THROWN<br />TUNE</strong><em>BOTTLE TO THE FACE. SELECTOR DOWN! 🍾</em></> : <><span>WRONG TUNE / 2 HITS</span><strong>WRONG TUNE<br />MY SELECTAH</strong><em>BOOOO. YOU PLAYED ‘WONDERWALL’ AT A JUNGLE RAVE. CROWD HAS LEFT THE CHAT.</em></>}
+              {crowdHazardVariantRef.current === "thrown" ? <><span>THROWN TUNE / 2 HITS</span><strong>THROWN<br />TUNE</strong><em>BOTTLE TO THE FACE. SELECTOR DOWN! 🍾</em></> : <><span>WRONG TUNE / 2 HITS</span><strong>WRONG TUNE<br />MY SELECTAH</strong><em>BOOOO. YOU PLAYED 'WONDERWALL' AT A JUNGLE RAVE. CROWD HAS LEFT THE CHAT.</em></>}
             </div>
             {Array.from({ length: 7 }, (_, index) => <i key={index} className={`crowd-exit-arrow exit-arrow-${index % 4}`} aria-hidden="true">EXIT</i>)}
           </div>
@@ -2918,7 +3003,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <>
                   <div className="unlock-download-drop" role="status" aria-live="polite">
                     <div className="achievement-chain-wrap" aria-hidden="true">
-                      {/* 5D style: an oversized silver arcade chain bars the full release title until the unlock impact. */}
+                      {/* 5D style: an oversized silver arcade chain bars the full release title until the unlock Press Start 2P. */}
                       <span className="chain-run chain-run-text">
                         {Array.from({ length: 12 }, (_, index) => <i key={index} className="chain-link" />)}
                       </span>
@@ -3055,8 +3140,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             ))}
           </div>
         )}
-        {isLossComedownVisible && gameOver && !levelTwoComplete && (
-          <div className="game-overlay loss-curb-overlay" role="status" aria-live="assertive">
+        {(heldLossPreview || (isLossComedownVisible && gameOver)) && !levelTwoComplete && (
+          <div className={`game-overlay loss-curb-overlay${heldLossPreview ? " viewport-verify-hold" : ""}`} role="status" aria-live="assertive">
             <div className="loss-curb-night" aria-hidden="true"><span className="loss-moon" /><span className="loss-venue-sign">RAVE</span><span className="loss-venue-door" /><span className="loss-neon-spill" /></div>
             <div className="loss-curb-ground" aria-hidden="true"><i /><i /><i /></div>
             <div className="loss-curb-dj" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="loss-dj-leg loss-dj-leg-left" /><span className="loss-dj-leg loss-dj-leg-right" /><span className="loss-dj-crate" /></div>
@@ -3326,63 +3411,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   );
 }
 
-
-================================================================================
-FILE: client/src/game-visual-system.css
-================================================================================
-/* Selectah Showdown: one gritty 1990s rave, jungle, graffiti, hip-hop arcade rendering system. Presentation only. */
-.arcade-cabinet-bezel { background:linear-gradient(90deg,#07060c 0 2.6%,#43364a 2.7% 4%,#17121f 4.1% 95.9%,#43364a 96% 97.3%,#07060c 97.4%); box-shadow:0 0 0 3px #050407,0 0 0 6px #68506d,12px 16px 0 #050407,18px 22px 0 #ff4f9c,0 0 32px rgba(0,231,255,.2),0 20px 36px rgba(0,0,0,.72); }
-.arcade-cabinet-bezel::before,.arcade-cabinet-bezel::after { background:linear-gradient(90deg,#050407,#64566b 42%,#1e1826 57%,#050407); }
-.game-viewport { isolation:isolate; background:#070611; box-shadow:inset 0 0 0 3px #050407,inset 0 0 0 7px rgba(0,231,255,.16),inset 0 -30px 36px rgba(0,0,0,.7); }
-.game-viewport::after { content:""; position:absolute; inset:0; z-index:6; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(255,255,255,.055) 0 1px,transparent 1px 5px),linear-gradient(115deg,rgba(0,231,255,.08),transparent 29%,transparent 73%,rgba(255,79,156,.09)); mix-blend-mode:screen; opacity:.58; }
-.game-grid-bg:not(.level-two-grid-bg) { background-color:#090716; filter:saturate(1.2) contrast(1.18) brightness(.76); }
-.game-grid-bg:not(.level-two-grid-bg)::before { background:linear-gradient(to top,#050407 0 7%,rgba(16,12,26,.93) 8% 25%,transparent 26%),repeating-linear-gradient(90deg,transparent 0 8%,rgba(0,231,255,.2) 8.2% 8.8%,transparent 9% 17%),linear-gradient(112deg,transparent 0 16%,rgba(0,231,255,.32) 16.3% 17%,transparent 17.3% 82%,rgba(255,79,156,.32) 82.3% 83%,transparent 83.3%); opacity:.92; }
-.game-grid-bg:not(.level-two-grid-bg)::after { background:radial-gradient(ellipse at 50% 17%,rgba(255,154,84,.35),transparent 44%),linear-gradient(160deg,#4c394c,#12131f 63%),repeating-linear-gradient(90deg,rgba(0,231,255,.28) 0 2px,transparent 2px 11%),repeating-linear-gradient(145deg,rgba(255,79,156,.3) 0 2px,transparent 2px 18%); box-shadow:inset 0 6px 0 #050407,inset 0 10px 0 rgba(255,79,156,.44),0 -10px 22px rgba(0,0,0,.55); }
-.level-two-grid-bg { background-color:#080613; filter:saturate(1.24) contrast(1.2) brightness(.75); }
-.level-two-booth { background:linear-gradient(to top,#040308 0 16%,rgba(12,8,21,.82) 17% 39%,transparent 55%),radial-gradient(ellipse at 50% 9%,rgba(0,231,255,.25),transparent 37%),radial-gradient(ellipse at 30% 24%,rgba(255,79,156,.2),transparent 27%); }
-.level-two-booth::after { border-top-color:rgba(0,231,255,.46); border-bottom-color:#050407; background:repeating-linear-gradient(90deg,rgba(0,231,255,.25) 0 2px,transparent 2px 11%),linear-gradient(164deg,rgba(89,45,78,.84),rgba(8,6,13,.94)); }
-.rave-world-dressing::before { border-top-color:rgba(0,231,255,.32); border-bottom-color:#050407; }
-.rave-world-dressing::after { opacity:.84; }
-
-.dj-catcher::before { background:transparent; filter:none; box-shadow:none; }
-.dj-catcher-art,.dj-sprite,.level-two-dancer,.speaker-stack-dancer,.level-one-streak-dancer { image-rendering:pixelated; filter:drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.32)) drop-shadow(0 0 8px rgba(255,79,156,.35)); }
-.dj-catcher-art,.dj-sprite { background:transparent!important; box-shadow:none!important; mix-blend-mode:screen; isolation:isolate; }
-.dj-sprite { filter:contrast(1.2) saturate(1.24) drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.28)) drop-shadow(0 0 8px rgba(255,79,156,.32)); }
-
-.falling-object { filter:drop-shadow(3px 4px 0 #050407) drop-shadow(-1px -1px 0 rgba(255,242,185,.26)) !important; }
-.falling-object :is(.vinyl-record-sprite,.police-badge-sprite,.crowd-throw-sprite,.turntable-pickup,.cdj-pickup,.mixer-pickup,.adapter-pickup,.lion-head-pickup) { image-rendering:pixelated; }
-.falling-object.record,.falling-object :is(.mixer,.turntable,.adapter,.cdj,.lion) { color:#b9ff4f; filter:drop-shadow(3px 4px 0 #050407) drop-shadow(0 0 8px rgba(185,255,79,.92))!important; }.falling-object :is(.cop,.bottle,.apple,.pill,.phone) { color:#ff4f67; filter:drop-shadow(3px 4px 0 #050407) drop-shadow(0 0 8px rgba(255,55,75,.94))!important; }
-.vinyl-record-sprite { background:repeating-radial-gradient(circle,#07070c 0 3px,#30263a 4px 5px,#08070d 6px 8px); }.vinyl-label { box-shadow:inset 2px 2px 0 rgba(255,255,255,.28); }
-.police-badge-sprite,.crowd-throw-sprite,.turntable-pickup,.cdj-pickup,.mixer-pickup,.adapter-pickup { border-color:#050407; }
-
-:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay) { isolation:isolate; box-shadow:inset 0 0 0 5px #050407,inset 0 0 0 8px rgba(0,231,255,.32); }
-:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay)::after { content:""; position:absolute; inset:0; z-index:12; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,transparent 1px 5px),linear-gradient(125deg,rgba(0,231,255,.13),transparent 31%,transparent 68%,rgba(255,79,156,.16)); mix-blend-mode:screen; opacity:.6; }
-.police-seizure-overlay { background:radial-gradient(circle at 50% 42%,rgba(0,231,255,.35),rgba(255,79,156,.28) 38%,#08050f 78%); }.crowd-anger-overlay { background:radial-gradient(circle at 50% 50%,rgba(255,153,72,.28),rgba(255,0,122,.23) 43%,#08050e 79%); }.crate-bonus-overlay { background:radial-gradient(circle at 50% 38%,rgba(255,172,94,.52),rgba(17,7,28,.91) 61%),repeating-linear-gradient(0deg,rgba(0,231,255,.08) 0 1px,transparent 1px 6px); }.headphones-bonus-overlay { background:radial-gradient(circle at 50% 40%,rgba(0,231,255,.46),rgba(16,6,29,.94) 62%),repeating-linear-gradient(90deg,rgba(255,79,156,.1) 0 2px,transparent 2px 10px); }
-
-.afterparty-runner-stage { box-shadow:inset 0 0 0 5px #050407,inset 0 0 0 8px rgba(0,231,255,.34),inset 0 -30px 44px rgba(0,0,0,.64); }
-.afterparty-cityline { filter:contrast(1.17) saturate(1.22); }.afterparty-road { border-top:2px solid rgba(255,79,156,.58); }.afterparty-entity i,.afterparty-dj-runner img { image-rendering:pixelated; }
-@media (prefers-reduced-motion:reduce) { .game-viewport::after,:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay)::after { display:none; } }
-
-/* 2026 hard-outline stage reframe: detail lives at the skyline and sidewalls, leaving the fall lanes dark and continuously readable. */
-.game-grid-bg:not(.level-two-grid-bg) { background-image:linear-gradient(to bottom,rgba(5,6,12,.09) 0 43%,rgba(5,6,12,.86) 86% 100%),url("/manus-storage/selectah-level-one-urban-stage-reference_43ddc07a.png")!important; background-position:center;background-size:cover!important; filter:contrast(1.14) saturate(1.18) brightness(.8)!important; }
-.game-grid-bg:not(.level-two-grid-bg)::before { background:linear-gradient(to top,#050407 0 12%,rgba(6,8,14,.56) 13% 27%,transparent 28%),linear-gradient(90deg,rgba(5,4,9,.88) 0 10%,transparent 10.5% 18%,rgba(5,4,9,.78) 18.5% 25%,transparent 25.5% 74%,rgba(5,4,9,.78) 74.5% 81%,transparent 81.5% 89%,rgba(5,4,9,.88) 90% 100%),linear-gradient(126deg,transparent 0 15%,rgba(0,231,255,.24) 15.2% 15.8%,transparent 16% 83%,rgba(255,0,122,.24) 83.2% 83.8%,transparent 84%)!important; mix-blend-mode:normal!important; opacity:.95!important; }
-.game-grid-bg:not(.level-two-grid-bg)::after { inset:auto 0 0!important;width:auto!important;height:34%!important;border-top:3px solid #050407!important;background:linear-gradient(160deg,transparent 0 44%,rgba(0,231,255,.16) 44.4% 45.5%,transparent 46% 54%,rgba(255,0,122,.18) 54.4% 55.5%,transparent 56%),linear-gradient(to bottom,rgba(20,13,28,.26),#050407 88%)!important;box-shadow:inset 0 4px 0 rgba(0,231,255,.4),0 -8px 0 rgba(5,4,7,.56)!important;clip-path:polygon(0 11%,12% 0,24% 11%,36% 0,48% 11%,60% 0,72% 11%,84% 0,100% 12%,100% 100%,0 100%)!important; }
-.level-two-grid-bg { background-image:linear-gradient(to bottom,rgba(9,5,16,.18),rgba(5,4,10,.86) 88%),radial-gradient(ellipse at 18% 18%,rgba(255,0,122,.25),transparent 23%),radial-gradient(ellipse at 82% 18%,rgba(0,231,255,.24),transparent 23%),url("/manus-storage/5d-selector-level-two-detailed-stage_89e2157b.png")!important; background-position:center;background-size:cover!important;filter:hue-rotate(18deg) contrast(1.2) saturate(1.28) brightness(.7)!important; }
-.level-two-booth { background:linear-gradient(to top,#050407 0 13%,rgba(8,7,16,.55) 14% 36%,transparent 37%),linear-gradient(90deg,rgba(6,4,11,.72) 0 8%,transparent 8.5% 91%,rgba(6,4,11,.72) 92% 100%),radial-gradient(ellipse at 50% 11%,rgba(255,0,122,.3),transparent 34%)!important; }
-.level-two-booth::after { border-top:3px solid #050407!important;border-bottom:3px solid #050407!important;background:repeating-linear-gradient(90deg,rgba(0,231,255,.24) 0 2px,transparent 2px 12px),linear-gradient(164deg,rgba(27,17,38,.9),rgba(5,4,10,.96))!important; }
-
-/* The source DJ sprite is retained intact; this matte-safe blend and edge fade removes the residual rectangular read without changing the hitbox or artwork. */
-.dj-catcher,.dj-catcher-art { overflow:visible!important;background:transparent!important;box-shadow:none!important; }
-.dj-catcher-art::before,.dj-catcher-art::after { content:none!important; }
-.dj-sprite { display:block!important;background:transparent!important;box-shadow:none!important;mix-blend-mode:screen!important;filter:brightness(.92) contrast(1.5) saturate(1.3) drop-shadow(4px 5px 0 #050407) drop-shadow(-2px -2px 0 rgba(0,231,255,.34))!important;clip-path:polygon(38% 0,62% 0,68% 12%,79% 17%,86% 31%,91% 43%,84% 58%,77% 65%,80% 79%,90% 90%,88% 100%,64% 100%,57% 84%,50% 78%,43% 84%,36% 100%,12% 100%,10% 90%,20% 79%,23% 65%,16% 58%,9% 43%,14% 31%,21% 17%,32% 12%);mask-image:radial-gradient(ellipse 73% 94% at 50% 54%,#000 52%,rgba(0,0,0,.98) 72%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 73% 94% at 50% 54%,#000 52%,rgba(0,0,0,.98) 72%,transparent 100%); }
-
-/* Every interruption receives one high-contrast, cel-shaded hazard-art frame while retaining its established copy, focal prop, audio, timing, and spin handoff. */
-:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay,.unlock-overlay,.pre-level-two-overlay,.finale-overlay,.loss-curb-overlay,.game-over-overlay,.bonus-rewind-overlay) { border:5px solid #050407!important;box-shadow:inset 0 0 0 4px #00e7ff,inset 0 0 0 8px #050407,0 0 0 4px #ff007a!important;background-color:#090712!important;background-image:linear-gradient(132deg,transparent 0 24%,rgba(0,231,255,.23) 24.4% 26.4%,transparent 26.8% 70%,rgba(255,0,122,.26) 70.4% 72.4%,transparent 72.8%),repeating-linear-gradient(145deg,rgba(255,255,255,.08) 0 2px,transparent 2px 22px),radial-gradient(ellipse at 50% 49%,rgba(30,27,49,.88),#08060f 72%)!important; }
-:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay,.unlock-overlay,.pre-level-two-overlay,.finale-overlay,.loss-curb-overlay,.game-over-overlay,.bonus-rewind-overlay)::before { content:""!important;position:absolute!important;inset:7% 4%!important;z-index:0!important;pointer-events:none!important;opacity:.72!important;background:linear-gradient(90deg,#050407 0 8%,transparent 8.5% 19%,#050407 19.5% 25%,transparent 25.5% 74%,#050407 74.5% 81%,transparent 81.5% 91%,#050407 91.5% 100%),linear-gradient(153deg,transparent 0 43%,rgba(0,231,255,.38) 43.5% 44.4%,transparent 45% 55%,rgba(255,0,122,.4) 55.5% 56.4%,transparent 57%)!important;clip-path:polygon(0 11%,12% 0,24% 11%,36% 0,48% 11%,60% 0,72% 11%,84% 0,100% 12%,100% 100%,0 100%)!important; }
-:is(.rewind-reward-overlay,.wheel-it-up-overlay,.police-seizure-overlay,.crowd-anger-overlay,.pill-overload-overlay,.crate-bonus-overlay,.headphones-bonus-overlay,.selector-salute-overlay,.run-riddim-overlay,.record-spin-transition,.level-two-arrival-overlay,.unlock-overlay,.pre-level-two-overlay,.finale-overlay,.loss-curb-overlay,.game-over-overlay,.bonus-rewind-overlay) > :not(.record-spin-transition) { position:relative;z-index:2; }
-@media (max-width:650px) { .game-grid-bg:not(.level-two-grid-bg)::after { height:29%!important; }.dj-sprite { mask-image:radial-gradient(ellipse 79% 95% at 50% 54%,#000 53%,rgba(0,0,0,.98) 74%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 79% 95% at 50% 54%,#000 53%,rgba(0,0,0,.98) 74%,transparent 100%); } }
-
-
 ================================================================================
 FILE: client/src/gameplay-clarity.css
 ================================================================================
@@ -3420,6 +3448,12 @@ FILE: client/src/gameplay-clarity.css
   animation-play-state: paused !important;
   animation-delay: -.42s !important;
 }
+.loss-curb-overlay.viewport-verify-hold,
+.loss-curb-overlay.viewport-verify-hold .loss-curb-dj,
+.loss-curb-overlay.viewport-verify-hold .loss-curb-copy {
+  animation-play-state: paused !important;
+  animation-delay: -1.25s !important;
+}
 
 /* Brief post-loss comedown: the DJ sits outside the emptied rave before reset controls return. */
 .loss-curb-overlay {
@@ -3432,7 +3466,7 @@ FILE: client/src/gameplay-clarity.css
 .loss-curb-night { position:absolute; inset:0; z-index:0; overflow:hidden; background: linear-gradient(180deg, transparent 0 50%, rgba(3,6,12,.78) 51%); }
 .loss-curb-night::before { content:""; position:absolute; inset:0; opacity:.44; background: repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 5px), linear-gradient(105deg, transparent 0 54%, rgba(255,90,31,.12) 55% 56%, transparent 57%); }
 .loss-moon { position:absolute; right:12%; top:10%; width:34px; aspect-ratio:1; border:3px solid #080611; border-radius:50%; background:#ffd98a; box-shadow:0 0 28px rgba(255,217,138,.62); }
-.loss-venue-sign { position:absolute; right:10%; top:34%; padding:.18rem .32rem; border:3px solid #080611; background:#ff5a1f; color:#160711; font:900 .56rem/1 "Bungee",Impact,sans-serif; box-shadow:4px 4px 0 #09070f,0 0 13px #ff5a1f; transform:rotate(-4deg); }
+.loss-venue-sign { position:absolute; right:10%; top:34%; padding:.18rem .32rem; border:3px solid #080611; background:#ff5a1f; color:#160711; font:900 .56rem/1 "Press Start 2P",Press Start 2P,Courier New; box-shadow:4px 4px 0 #09070f,0 0 13px #ff5a1f; transform:rotate(-4deg); }
 .loss-venue-door { position:absolute; right:13%; bottom:27%; width:48px; height:88px; border:5px solid #080611; background:linear-gradient(90deg,#23152b,#050508 74%); box-shadow:inset 12px 0 0 rgba(0,231,255,.18),0 0 17px rgba(0,231,255,.26); }
 .loss-neon-spill { position:absolute; right:5%; bottom:22%; width:43%; height:17%; opacity:.7; background:radial-gradient(ellipse at 50% 10%, rgba(0,231,255,.54), transparent 70%); filter:blur(7px); transform:rotate(-6deg); }
 .loss-curb-ground { position:absolute; z-index:1; left:0; right:0; bottom:0; height:31%; border-top:5px solid #080611; background:repeating-linear-gradient(102deg,#27222b 0 17px,#18151e 18px 33px); box-shadow:inset 0 9px 0 rgba(255,255,255,.035); }
@@ -3442,7 +3476,7 @@ FILE: client/src/gameplay-clarity.css
 .loss-dj-leg { position:absolute; bottom:-16px; width:19%; height:25%; border:4px solid #07050a; background:repeating-linear-gradient(135deg,#413a48 0 6px,#141019 6px 12px); transform-origin:top center; }.loss-dj-leg-left{left:32%;transform:rotate(22deg)}.loss-dj-leg-right{left:52%;transform:rotate(-25deg)}
 .loss-dj-crate { position:absolute; left:-14%; bottom:-19px; width:31%; height:25%; border:4px solid #12070c; background:repeating-linear-gradient(90deg,#7b3e26 0 8px,#bc6c34 8px 13px); box-shadow:4px 4px 0 #08050a; }
 .loss-curb-copy { position:relative; z-index:4; display:grid; justify-items:center; gap:.28rem; width:min(58%,430px); margin-left:clamp(6.5rem,27vw,15rem); margin-bottom:clamp(2rem,7vw,4.5rem); text-align:center; animation:loss-copy-rise 2.3s cubic-bezier(.22,.8,.3,1) both; }
-.loss-curb-copy span { color:#00e7ff; font:900 clamp(.42rem,1.15vw,.66rem)/1 "Bungee",Impact,sans-serif; letter-spacing:.09em; text-shadow:2px 2px 0 #080611; }.loss-curb-copy strong { color:#f5e5bc; font:900 clamp(1.45rem,4.8vw,3.5rem)/.83 "Rubik Wet Paint","Bungee",Impact,cursive; -webkit-text-stroke:1px #080611; paint-order:stroke fill; text-shadow:4px 4px 0 #ff5a1f,7px 7px 0 rgba(0,0,0,.65); }.loss-curb-copy em { color:#d8c7a3; font:800 clamp(.42rem,1.15vw,.66rem)/1.25 "Bungee",Impact,sans-serif; font-style:normal; letter-spacing:.04em; }
+.loss-curb-copy span { color:#00e7ff; font:900 clamp(.42rem,1.15vw,.66rem)/1 "Press Start 2P",Press Start 2P,Courier New; letter-spacing:.09em; text-shadow:2px 2px 0 #080611; }.loss-curb-copy strong { color:#f5e5bc; font:900 clamp(1.45rem,4.8vw,3.5rem)/.83 "Press Start 2P",Press Start 2P,Press Start 2P; -webkit-text-stroke:1px #080611; paint-order:stroke fill; text-shadow:4px 4px 0 #ff5a1f,7px 7px 0 rgba(0,0,0,.65); }.loss-curb-copy em { color:#d8c7a3; font:800 clamp(.42rem,1.15vw,.66rem)/1.25 "Press Start 2P",Press Start 2P,Courier New; font-style:normal; letter-spacing:.04em; }
 @keyframes loss-curb-fade { 0% { opacity:0; } 12%,79% { opacity:1; } 100% { opacity:0; } }
 @keyframes loss-dj-sink { 0% { opacity:0; transform:translateY(-20px) rotate(-8deg) scale(.86); } 20%,79% { opacity:1; transform:translateY(0) rotate(0) scale(1); } 100% { opacity:.28; transform:translateY(9px) scale(.96); } }
 @keyframes loss-copy-rise { 0% { opacity:0; transform:translateY(20px) scale(.92); } 18%,78% { opacity:1; transform:translateY(0) scale(1); } 100% { opacity:0; transform:translateY(-9px) scale(.97); } }
@@ -3471,162 +3505,6 @@ FILE: client/src/gameplay-clarity.css
 .combo-big-up i { position:absolute; bottom:0; width:30%; height:83%; border:4px solid #09070f; background:linear-gradient(135deg,#00e7ff,#167489 52%,#100a19 53%); box-shadow:inset 2px 2px 0 rgba(255,255,255,.35),inset -3px -3px 0 rgba(0,0,0,.4); }.combo-big-up i:nth-child(1){left:3%;transform:rotate(-7deg)}.combo-big-up i:nth-child(2){left:35%;height:100%;background:linear-gradient(135deg,#ff007a,#741941 52%,#100a19 53%)}.combo-big-up i:nth-child(3){right:3%;transform:rotate(7deg)}.combo-big-up b{position:absolute;left:-18%;right:-18%;bottom:-10%;height:10%;background:repeating-linear-gradient(90deg,#00e7ff 0 9px,#ff007a 10px 17px);border:3px solid #09070f;box-shadow:4px 4px 0 #09070f;}
 @keyframes big-up-stack-rise { 0% { opacity:0; transform:translateX(-50%) translateY(50px) scale(.54); } 30% { opacity:1; transform:translateX(-50%) translateY(-8px) scale(1.12); } 100% { opacity:1; transform:translateX(-50%) translateY(0) scale(1); } } @keyframes big-up-pulse { to { transform:translate(-50%,-50%) scale(2.8); opacity:0; } }
 @media (max-width:650px) { .combo-big-up { bottom:14%; width:104px; height:79px; } }
-
-
-================================================================================
-FILE: client/src/reward-callout.css
-================================================================================
-/* Non-blocking selector rewards: cyan/magenta arcade ink that never masks a play lane. */
-.in-world-reward {
-  position: absolute;
-  z-index: 12;
-  top: 18%;
-  left: 50%;
-  width: min(42%, 270px);
-  pointer-events: none;
-  transform: translateX(-50%) rotate(-2deg);
-  display: grid;
-  justify-items: center;
-  gap: .22rem;
-  padding: .38rem .65rem .32rem;
-  border: 2px solid rgba(0, 231, 255, .88);
-  background: rgba(16, 10, 29, .9);
-  box-shadow: 3px 3px 0 rgba(255, 0, 122, .72), inset 0 2px 0 rgba(226, 252, 255, .26), 0 0 13px rgba(0, 231, 255, .4);
-  color: #f4fbff;
-  font-family: "Bungee", system-ui, sans-serif;
-  text-align: center;
-  text-transform: uppercase;
-  animation: in-world-reward-pop 1250ms cubic-bezier(.22, 1, .36, 1) both;
-}
-.in-world-reward strong {
-  font-size: clamp(.72rem, 1.35vw, 1rem);
-  line-height: .98;
-  letter-spacing: .025em;
-  text-shadow: 2px 2px 0 rgba(255, 0, 122, .72);
-}
-.in-world-reward span {
-  font: 800 .44rem/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: .09em;
-}
-.in-world-reward-boh,
-.in-world-reward-big-up,
-.in-world-reward-riddim,
-.in-world-reward-gun-fingers {
-  width: min(48%, 310px);
-  border: 0;
-  background: linear-gradient(108deg, rgba(0, 231, 255, .94), rgba(255, 0, 122, .88));
-  clip-path: polygon(4% 14%, 26% 3%, 46% 10%, 68% 1%, 96% 15%, 90% 89%, 69% 98%, 47% 91%, 25% 100%, 3% 85%);
-  box-shadow: none;
-  filter: drop-shadow(4px 5px 0 rgba(23, 18, 27, .78));
-}
-.in-world-reward-boh::before,
-.in-world-reward-big-up::before,
-.in-world-reward-riddim::before,
-.in-world-reward-gun-fingers::before { content:""; position:absolute; inset:8%; pointer-events:none; border:2px solid rgba(36,27,36,.72); clip-path:inherit; opacity:.72; }
-.in-world-reward-boh strong,.in-world-reward-big-up strong,.in-world-reward-riddim strong,.in-world-reward-gun-fingers strong { font-family:"Rubik Wet Paint","Bungee",system-ui,sans-serif; font-size:clamp(.85rem,1.8vw,1.26rem); text-shadow:2px 2px 0 rgba(7,11,18,.86); }
-.in-world-reward-boh { transform:translateX(-50%) rotate(-5deg); }
-.in-world-reward-big-up { top:28%; transform:translateX(-50%) rotate(4deg); }
-.in-world-reward-riddim { transform:translateX(-50%) rotate(4deg); }
-.in-world-reward-gun-fingers { background:linear-gradient(108deg,rgba(0,231,255,.92),rgba(255,102,181,.84)); transform:translateX(-50%) rotate(-3deg); }
-@keyframes in-world-reward-pop {
-  0% { opacity: 0; transform: translateX(-50%) translateY(10px) rotate(-2deg) scale(.92); }
-  14% { opacity: 1; }
-  70% { opacity: .94; transform: translateX(-50%) translateY(-3px) rotate(1deg) scale(1); }
-  100% { opacity: 0; transform: translateX(-50%) translateY(-10px) rotate(1deg) scale(.98); }
-}
-@media (max-width: 650px) {
-  .in-world-reward { top: 15%; width: min(58%, 225px); padding: .3rem .45rem; }
-  .in-world-reward span { font-size: .37rem; }
-  .in-world-reward-boh,.in-world-reward-big-up,.in-world-reward-riddim,.in-world-reward-gun-fingers { width:min(68%,260px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .in-world-reward { animation: none; }
-}
-
-/* Camo is an attached clothing overlay, never a sprite frame or container. */
-.dj-catcher.green-camo-unlocked .dj-sprite {
-  filter: saturate(.9) contrast(1.16) sepia(.2) hue-rotate(25deg) drop-shadow(3px 4px 0 #0b1310);
-}
-.dj-catcher .bonus-camo-outfit.green {
-  border-color: #0b1310;
-  background: repeating-linear-gradient(35deg, #385336 0 7px, #172817 7px 13px, #887a36 13px 18px, #122014 18px 24px);
-  box-shadow: 2px 2px 0 #0b1310, 0 0 8px rgba(154, 206, 101, .38);
-}
-.dj-catcher .bonus-camo-outfit.green i,
-.dj-catcher .bonus-camo-outfit.green b { border-color: #0b1310; background: repeating-linear-gradient(35deg, #385336 0 6px, #172817 6px 11px, #887a36 11px 15px); }
-.dj-catcher.bonus-camo-unlocked .dj-sprite {
-  filter: saturate(1.45) hue-rotate(231deg) contrast(1.18) drop-shadow(0 0 7px #cf53ff) drop-shadow(3px 4px 0 #130618);
-}
-.dj-catcher .bonus-camo-outfit.purple {
-  border-color: #16091f;
-  background: repeating-linear-gradient(35deg, #c952ff 0 7px, #4f1776 7px 13px, #ff71cd 13px 18px, #2f0d56 18px 24px);
-  box-shadow: 2px 2px 0 #16091f, 0 0 10px rgba(208, 82, 255, .7);
-}
-.dj-catcher .bonus-camo-outfit.purple i,
-.dj-catcher .bonus-camo-outfit.purple b { border-color: #16091f; background: repeating-linear-gradient(35deg, #c952ff 0 6px, #4f1776 6px 11px, #ff71cd 11px 15px); }
-
-.green-camo-award {
-  position: relative;
-  z-index: 4;
-  display: grid;
-  gap: .12rem;
-  margin: .65rem auto 0;
-  padding: .35rem .55rem;
-  width: fit-content;
-  max-width: 100%;
-  border: 2px solid #132415;
-  background: linear-gradient(135deg, #9eca5b, #355b38 55%, #172817);
-  box-shadow: 3px 3px 0 #0a1010, inset 0 1px 0 rgba(255,255,215,.48);
-  color: #f5ffc8;
-  font-family: "Bungee", system-ui, sans-serif;
-  text-align: center;
-  text-shadow: 1px 1px 0 #102014;
-}
-.green-camo-award strong { font-size: .62rem; letter-spacing: .07em; }
-.green-camo-award span { font: 800 .43rem/1.1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; }
-
-/* Level 1 No Request Bonus: an exposed street escape, not a boxed mini-game. */
-.no-request-splash-overlay { overflow: hidden; background: radial-gradient(circle at 50% 48%, rgba(202,255,91,.22), rgba(11,9,21,.95) 67%); }
-.no-request-splash-rings { position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
-.no-request-splash-rings i { position:absolute; border:2px solid rgba(202,255,91,.52); border-radius:50%; width:20%; aspect-ratio:1; animation:no-request-ring 1.15s ease-out infinite; }
-.no-request-splash-rings i:nth-child(2){animation-delay:.28s}.no-request-splash-rings i:nth-child(3){animation-delay:.56s}
-.no-request-splash-copy { position:relative; z-index:1; display:grid; justify-items:center; gap:.45rem; max-width:88%; text-align:center; }
-.no-request-splash-copy span,.no-request-splash-copy em { color:#d8ff8a; font:900 clamp(.45rem,1.1vw,.68rem)/1.25 ui-monospace,monospace; letter-spacing:.08em; font-style:normal; }
-.no-request-splash-copy strong { color:#f8f0d2; font:900 clamp(2rem,5.8vw,4.3rem)/.8 "Bungee",Impact,sans-serif; text-shadow:4px 4px 0 #365a39,8px 8px 0 #100c18; }
-.no-request-bonus-stage { position:absolute; z-index:18; inset:0; overflow:hidden; background:linear-gradient(#121427 0 48%,#283039 49% 52%,#101218 53%); isolation:isolate; }
-.no-request-sky { position:absolute; inset:0 0 45%; background:radial-gradient(ellipse at 68% 28%,rgba(215,255,152,.38),transparent 19%),linear-gradient(120deg,#121329,#3f294c 47%,#14333a); }
-.no-request-city-depth { position:absolute; inset:18% 0 31%; display:flex; align-items:end; gap:2%; opacity:.96; }
-.no-request-city-depth i { flex:1; height:var(--h,60%); border:3px solid #090a11; border-bottom:0; background:linear-gradient(90deg,#263449,#111724 58%,#49334c); box-shadow:inset 2px 0 0 rgba(255,235,178,.18); }
-.no-request-city-depth i:nth-child(1){--h:49%}.no-request-city-depth i:nth-child(2){--h:76%}.no-request-city-depth i:nth-child(3){--h:60%}.no-request-city-depth i:nth-child(4){--h:92%}.no-request-city-depth i:nth-child(5){--h:68%}
-.no-request-street { position:absolute; inset:50% 0 0; background:repeating-linear-gradient(137deg,rgba(255,240,190,.08) 0 2px,transparent 2px 29px),linear-gradient(#55545a,#1a1c24 64%,#080a10); clip-path:polygon(18% 0,82% 0,100% 100%,0 100%); }
-.no-request-street i { position:absolute; left:50%; width:4px; height:29%; background:#d9ff82; box-shadow:0 0 0 2px #181821; transform-origin:bottom center; }.no-request-street i:nth-child(1){bottom:0;transform:translateX(-50%) rotate(0deg)}.no-request-street i:nth-child(2){bottom:28%;transform:translateX(-50%) scale(.65)}.no-request-street i:nth-child(3){bottom:47%;transform:translateX(-50%) scale(.37)}
-.no-request-exit { position:absolute; z-index:4; left:50%; top:24%; width:58px; height:83px; border:4px solid #111018; background:linear-gradient(90deg,#223127,#07100b 48%,#2e4a30); box-shadow:4px 5px 0 #07080d,0 0 20px rgba(209,255,116,.72); transform:translateX(-50%); }.no-request-exit span{position:absolute;top:-15px;left:50%;padding:2px 4px;background:#ceff66;color:#162017;font:900 8px/1 monospace;transform:translateX(-50%);}.no-request-exit b{position:absolute;inset:11px 12px;background:radial-gradient(circle,#e3ff9c 0 4%,#5d944e 6% 10%,#0c130e 12%);}
-.no-request-hud { position:absolute; z-index:8; top:7px; left:50%; display:flex; align-items:center; gap:.45rem; padding:.22rem .4rem; border:2px solid #0a0e11; background:rgba(239,246,199,.77); color:#172017; font-family:"Bungee",system-ui,sans-serif; transform:translateX(-50%); white-space:nowrap; }.no-request-hud strong{font-size:.54rem}.no-request-hud span{font-size:.48rem}.no-request-hud em{font:800 .36rem/1 monospace;font-style:normal;}
-.no-request-dj { position:absolute; z-index:7; bottom:8%; width:67px; height:94px; transform:translateX(-50%); transition:left 110ms steps(2,end); }.no-request-dj.lane-0{left:26%}.no-request-dj.lane-1{left:50%}.no-request-dj.lane-2{left:74%}.no-request-dj img { display:block; width:100%; height:100%; object-fit:contain; image-rendering:pixelated; filter:drop-shadow(3px 4px 0 #090a10); }
-.no-request-entity-layer { position:absolute; inset:0; z-index:6; pointer-events:none; }.no-request-entity { position:absolute; bottom:calc(40% - var(--no-request-depth) * .36); width:clamp(22px,4vw,48px); aspect-ratio:1; transform:translateX(-50%) scale(calc(.34 + var(--no-request-depth) * .007)); transform-origin:bottom center; }.no-request-entity.lane-0{left:26%}.no-request-entity.lane-1{left:50%}.no-request-entity.lane-2{left:74%}.no-request-entity i{position:absolute;inset:0;filter:drop-shadow(3px 3px 0 #090a10);}.no-request-entity.bottle i{border:3px solid #0a0b10;border-radius:4px 4px 11px 11px;background:linear-gradient(90deg,#f4f2dc 0 32%,#8c9ba1 35% 58%,#f3f4e9 60%);}.no-request-entity.bottle i::before{content:"";position:absolute;left:30%;top:-26%;width:36%;height:29%;border:3px solid #0a0b10;border-bottom:0;background:#edf2e4;}.no-request-entity.bracelet i{border:7px solid #f6de5d;border-radius:50%;box-shadow:inset 0 0 0 3px #c2446e,0 0 0 3px #090a10;}.no-request-entity.raver i{border:3px solid #0a0b10;border-radius:48% 48% 16% 16%;background:linear-gradient(#e8a76a 0 31%,#d74283 33% 58%,#1f3154 60%);}.no-request-entity.cd i{border:4px solid #0a0b10;border-radius:50%;background:radial-gradient(circle,#f4f3d1 0 9%,#ff6b99 11% 21%,#2ba8bd 23% 38%,#1c2338 40%);}
-@keyframes no-request-ring { from{opacity:.8;transform:scale(.2)} to{opacity:0;transform:scale(4.8)} }
-@media(max-width:650px){.no-request-hud{top:4px;gap:.25rem}.no-request-hud em{display:none}.no-request-dj{width:55px;height:78px}.no-request-exit{top:21%;transform:translateX(-50%) scale(.78)}.no-request-entity{width:29px}.no-request-splash-copy strong{font-size:clamp(1.75rem,12vw,3rem)}}
-
-/* Generated urban-brawler field props are transparent cut-outs, never UI tiles. */
-.falling-object .urban-prop-asset {
-  position: absolute;
-  inset: -16%;
-  display: block;
-  background-image: var(--urban-prop-url);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  filter: drop-shadow(2px 3px 0 rgba(8, 9, 13, .88));
-  image-rendering: pixelated;
-  transform: rotate(var(--fall-tilt, 0deg));
-}
-.falling-object .urban-prop-asset.record { animation: urban-prop-spin 850ms steps(8, end) infinite; }
-.falling-object .urban-prop-asset.cop { filter: drop-shadow(2px 3px 0 rgba(8, 9, 13, .88)) saturate(.92); }
-.falling-object .urban-prop-asset.pill,
-.falling-object .urban-prop-asset.phone { filter: drop-shadow(2px 3px 0 rgba(8, 9, 13, .88)) saturate(.85); }
-.falling-object .urban-prop-asset.cdj { filter: drop-shadow(2px 3px 0 rgba(8, 9, 13, .88)) saturate(1.08); }
-@keyframes urban-prop-spin { to { transform: rotate(calc(var(--fall-tilt, 0deg) + 360deg)); } }
-
 
 ================================================================================
 FILE: client/src/miami-arcade-stage.css
@@ -3757,6 +3635,159 @@ FILE: client/src/miami-arcade-stage.css
   .minigame-section::after { filter: none; }
 }
 
+================================================================================
+FILE: client/src/reward-callout.css
+================================================================================
+/* Non-blocking selector rewards: cyan/magenta arcade ink that never masks a play lane. */
+.in-world-reward {
+  position: absolute;
+  z-index: 12;
+  top: 18%;
+  left: 50%;
+  width: min(42%, 270px);
+  pointer-events: none;
+  transform: translateX(-50%) rotate(-2deg);
+  display: grid;
+  justify-items: center;
+  gap: .22rem;
+  padding: .38rem .65rem .32rem;
+  border: 2px solid rgba(0, 231, 255, .88);
+  background: rgba(16, 10, 29, .9);
+  box-shadow: 3px 3px 0 rgba(255, 0, 122, .72), inset 0 2px 0 rgba(226, 252, 255, .26), 0 0 13px rgba(0, 231, 255, .4);
+  color: #f4fbff;
+  font-family: "Press Start 2P", Courier New, Courier New;
+  text-align: center;
+  text-transform: uppercase;
+  animation: in-world-reward-pop 1250ms cubic-bezier(.22, 1, .36, 1) both;
+}
+.in-world-reward strong {
+  font-size: clamp(.72rem, 1.35vw, 1rem);
+  line-height: .98;
+  letter-spacing: .025em;
+  text-shadow: 2px 2px 0 rgba(255, 0, 122, .72);
+}
+.in-world-reward span {
+  font: 800 .44rem/1.1 Courier New, Courier New, Courier New, Courier New;
+  letter-spacing: .09em;
+}
+.in-world-reward-boh,
+.in-world-reward-big-up,
+.in-world-reward-riddim,
+.in-world-reward-gun-fingers {
+  width: min(48%, 310px);
+  border: 0;
+  background: linear-gradient(108deg, rgba(0, 231, 255, .94), rgba(255, 0, 122, .88));
+  clip-path: polygon(4% 14%, 26% 3%, 46% 10%, 68% 1%, 96% 15%, 90% 89%, 69% 98%, 47% 91%, 25% 100%, 3% 85%);
+  box-shadow: none;
+  filter: drop-shadow(4px 5px 0 rgba(23, 18, 27, .78));
+}
+.in-world-reward-boh::before,
+.in-world-reward-big-up::before,
+.in-world-reward-riddim::before,
+.in-world-reward-gun-fingers::before { content:""; position:absolute; inset:8%; pointer-events:none; border:2px solid rgba(36,27,36,.72); clip-path:inherit; opacity:.72; }
+.in-world-reward-boh strong,.in-world-reward-big-up strong,.in-world-reward-riddim strong,.in-world-reward-gun-fingers strong { font-family:"Press Start 2P",Courier New,Courier New; font-size:clamp(.85rem,1.8vw,1.26rem); text-shadow:2px 2px 0 rgba(7,11,18,.86); }
+.in-world-reward-boh { transform:translateX(-50%) rotate(-5deg); }
+.in-world-reward-big-up { top:28%; transform:translateX(-50%) rotate(4deg); }
+.in-world-reward-riddim { transform:translateX(-50%) rotate(4deg); }
+.in-world-reward-gun-fingers { background:linear-gradient(108deg,rgba(0,231,255,.92),rgba(255,102,181,.84)); transform:translateX(-50%) rotate(-3deg); }
+@keyframes in-world-reward-pop {
+  0% { opacity: 0; transform: translateX(-50%) translateY(10px) rotate(-2deg) scale(.92); }
+  14% { opacity: 1; }
+  70% { opacity: .94; transform: translateX(-50%) translateY(-3px) rotate(1deg) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px) rotate(1deg) scale(.98); }
+}
+@media (max-width: 650px) {
+  .in-world-reward { top: 15%; width: min(58%, 225px); padding: .3rem .45rem; }
+  .in-world-reward span { font-size: .37rem; }
+  .in-world-reward-boh,.in-world-reward-big-up,.in-world-reward-riddim,.in-world-reward-gun-fingers { width:min(68%,260px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .in-world-reward { animation: none; }
+}
+
+/* Camo is an attached clothing overlay, never a sprite frame or container. */
+.dj-catcher.green-camo-unlocked .dj-sprite {
+  filter: saturate(.9) contrast(1.16) sepia(.2) hue-rotate(25deg) drop-shadow(3px 4px 0 #0b1310);
+}
+.dj-catcher .bonus-camo-outfit.green {
+  border-color: #0b1310;
+  background: repeating-linear-gradient(35deg, #385336 0 7px, #172817 7px 13px, #887a36 13px 18px, #122014 18px 24px);
+  box-shadow: 2px 2px 0 #0b1310, 0 0 8px rgba(154, 206, 101, .38);
+}
+.dj-catcher .bonus-camo-outfit.green i,
+.dj-catcher .bonus-camo-outfit.green b { border-color: #0b1310; background: repeating-linear-gradient(35deg, #385336 0 6px, #172817 6px 11px, #887a36 11px 15px); }
+.dj-catcher.bonus-camo-unlocked .dj-sprite {
+  filter: saturate(1.45) hue-rotate(231deg) contrast(1.18) drop-shadow(0 0 7px #cf53ff) drop-shadow(3px 4px 0 #130618);
+}
+.dj-catcher .bonus-camo-outfit.purple {
+  border-color: #16091f;
+  background: repeating-linear-gradient(35deg, #c952ff 0 7px, #4f1776 7px 13px, #ff71cd 13px 18px, #2f0d56 18px 24px);
+  box-shadow: 2px 2px 0 #16091f, 0 0 10px rgba(208, 82, 255, .7);
+}
+.dj-catcher .bonus-camo-outfit.purple i,
+.dj-catcher .bonus-camo-outfit.purple b { border-color: #16091f; background: repeating-linear-gradient(35deg, #c952ff 0 6px, #4f1776 6px 11px, #ff71cd 11px 15px); }
+
+.green-camo-award {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  gap: .12rem;
+  margin: .65rem auto 0;
+  padding: .35rem .55rem;
+  width: fit-content;
+  max-width: 100%;
+  border: 2px solid #132415;
+  background: linear-gradient(135deg, #9eca5b, #355b38 55%, #172817);
+  box-shadow: 3px 3px 0 #0a1010, inset 0 1px 0 rgba(255,255,215,.48);
+  color: #f5ffc8;
+  font-family: "Press Start 2P", Courier New, Courier New;
+  text-align: center;
+  text-shadow: 1px 1px 0 #102014;
+}
+.green-camo-award strong { font-size: .62rem; letter-spacing: .07em; }
+.green-camo-award span { font: 800 .43rem/1.1 Courier New, Courier New, Courier New, Courier New; letter-spacing: .06em; }
+
+/* Level 1 No Request Bonus: an exposed street escape, not a boxed mini-game. */
+.no-request-splash-overlay { overflow: hidden; background: radial-gradient(circle at 50% 48%, rgba(202,255,91,.22), rgba(11,9,21,.95) 67%); }
+.no-request-splash-rings { position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; }
+.no-request-splash-rings i { position:absolute; border:2px solid rgba(202,255,91,.52); border-radius:50%; width:20%; aspect-ratio:1; animation:no-request-ring 1.15s ease-out infinite; }
+.no-request-splash-rings i:nth-child(2){animation-delay:.28s}.no-request-splash-rings i:nth-child(3){animation-delay:.56s}
+.no-request-splash-copy { position:relative; z-index:1; display:grid; justify-items:center; gap:.45rem; max-width:88%; text-align:center; }
+.no-request-splash-copy span,.no-request-splash-copy em { color:#d8ff8a; font:900 clamp(.45rem,1.1vw,.68rem)/1.25 Courier New,Courier New; letter-spacing:.08em; font-style:normal; }
+.no-request-splash-copy strong { color:#f8f0d2; font:900 clamp(2rem,5.8vw,4.3rem)/.8 "Press Start 2P",Press Start 2P,Courier New; text-shadow:4px 4px 0 #365a39,8px 8px 0 #100c18; }
+.no-request-bonus-stage { position:absolute; z-index:18; inset:0; overflow:hidden; background:linear-gradient(#121427 0 48%,#283039 49% 52%,#101218 53%); isolation:isolate; }
+.no-request-sky { position:absolute; inset:0 0 45%; background:radial-gradient(ellipse at 68% 28%,rgba(215,255,152,.38),transparent 19%),linear-gradient(120deg,#121329,#3f294c 47%,#14333a); }
+.no-request-city-depth { position:absolute; inset:18% 0 31%; display:flex; align-items:end; gap:2%; opacity:.96; }
+.no-request-city-depth i { flex:1; height:var(--h,60%); border:3px solid #090a11; border-bottom:0; background:linear-gradient(90deg,#263449,#111724 58%,#49334c); box-shadow:inset 2px 0 0 rgba(255,235,178,.18); }
+.no-request-city-depth i:nth-child(1){--h:49%}.no-request-city-depth i:nth-child(2){--h:76%}.no-request-city-depth i:nth-child(3){--h:60%}.no-request-city-depth i:nth-child(4){--h:92%}.no-request-city-depth i:nth-child(5){--h:68%}
+.no-request-street { position:absolute; inset:50% 0 0; background:repeating-linear-gradient(137deg,rgba(255,240,190,.08) 0 2px,transparent 2px 29px),linear-gradient(#55545a,#1a1c24 64%,#080a10); clip-path:polygon(18% 0,82% 0,100% 100%,0 100%); }
+.no-request-street i { position:absolute; left:50%; width:4px; height:29%; background:#d9ff82; box-shadow:0 0 0 2px #181821; transform-origin:bottom center; }.no-request-street i:nth-child(1){bottom:0;transform:translateX(-50%) rotate(0deg)}.no-request-street i:nth-child(2){bottom:28%;transform:translateX(-50%) scale(.65)}.no-request-street i:nth-child(3){bottom:47%;transform:translateX(-50%) scale(.37)}
+.no-request-exit { position:absolute; z-index:4; left:50%; top:24%; width:58px; height:83px; border:4px solid #111018; background:linear-gradient(90deg,#223127,#07100b 48%,#2e4a30); box-shadow:4px 5px 0 #07080d,0 0 20px rgba(209,255,116,.72); transform:translateX(-50%); }.no-request-exit span{position:absolute;top:-15px;left:50%;padding:2px 4px;background:#ceff66;color:#162017;font:900 8px/1 Courier New;transform:translateX(-50%);}.no-request-exit b{position:absolute;inset:11px 12px;background:radial-gradient(circle,#e3ff9c 0 4%,#5d944e 6% 10%,#0c130e 12%);}
+.no-request-hud { position:absolute; z-index:8; top:7px; left:50%; display:flex; align-items:center; gap:.45rem; padding:.22rem .4rem; border:2px solid #0a0e11; background:rgba(239,246,199,.77); color:#172017; font-family:"Press Start 2P",Courier New,Courier New; transform:translateX(-50%); white-space:nowrap; }.no-request-hud strong{font-size:.54rem}.no-request-hud span{font-size:.48rem}.no-request-hud em{font:800 .36rem/1 Courier New;font-style:normal;}
+.no-request-dj { position:absolute; z-index:7; bottom:8%; width:67px; height:94px; transform:translateX(-50%); transition:left 110ms steps(2,end); }.no-request-dj.lane-0{left:26%}.no-request-dj.lane-1{left:50%}.no-request-dj.lane-2{left:74%}.no-request-dj img { display:block; width:100%; height:100%; object-fit:contain; image-rendering:pixelated; filter:drop-shadow(3px 4px 0 #090a10); }
+.no-request-entity-layer { position:absolute; inset:0; z-index:6; pointer-events:none; }.no-request-entity { position:absolute; bottom:calc(40% - var(--no-request-depth) * .36); width:clamp(22px,4vw,48px); aspect-ratio:1; transform:translateX(-50%) scale(calc(.34 + var(--no-request-depth) * .007)); transform-origin:bottom center; }.no-request-entity.lane-0{left:26%}.no-request-entity.lane-1{left:50%}.no-request-entity.lane-2{left:74%}.no-request-entity i{position:absolute;inset:0;filter:drop-shadow(3px 3px 0 #090a10);}.no-request-entity.bottle i{border:3px solid #0a0b10;border-radius:4px 4px 11px 11px;background:linear-gradient(90deg,#f4f2dc 0 32%,#8c9ba1 35% 58%,#f3f4e9 60%);}.no-request-entity.bottle i::before{content:"";position:absolute;left:30%;top:-26%;width:36%;height:29%;border:3px solid #0a0b10;border-bottom:0;background:#edf2e4;}.no-request-entity.bracelet i{border:7px solid #f6de5d;border-radius:50%;box-shadow:inset 0 0 0 3px #c2446e,0 0 0 3px #090a10;}.no-request-entity.raver i{border:3px solid #0a0b10;border-radius:48% 48% 16% 16%;background:linear-gradient(#e8a76a 0 31%,#d74283 33% 58%,#1f3154 60%);}.no-request-entity.cd i{border:4px solid #0a0b10;border-radius:50%;background:radial-gradient(circle,#f4f3d1 0 9%,#ff6b99 11% 21%,#2ba8bd 23% 38%,#1c2338 40%);}
+@keyframes no-request-ring { from{opacity:.8;transform:scale(.2)} to{opacity:0;transform:scale(4.8)} }
+@media(max-width:650px){.no-request-hud{top:4px;gap:.25rem}.no-request-hud em{display:none}.no-request-dj{width:55px;height:78px}.no-request-exit{top:21%;transform:translateX(-50%) scale(.78)}.no-request-entity{width:29px}.no-request-splash-copy strong{font-size:clamp(1.75rem,12vw,3rem)}}
+
+/* Generated urban-brawler field props are transparent cut-outs, never UI tiles. */
+.falling-object .urban-prop-asset {
+  position: absolute;
+  inset: -16%;
+  display: block;
+  background-image: var(--urban-prop-url);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(2px 3px 0 rgba(8, 9, 13, .88));
+  image-rendering: pixelated;
+  transform: rotate(var(--fall-tilt, 0deg));
+}
+.falling-object .urban-prop-asset.record { animation: urban-prop-spin 850ms steps(8, end) infinite; }
+.falling-object .urban-prop-asset.cop { filter: drop-shadow(2px 3px 0 rgba(8, 9, 13, .88)) saturate(.92); }
+.falling-object .urban-prop-asset.pill,
+.falling-object .urban-prop-asset.phone { filter: drop-shadow(2px 3px 0 rgba(8, 9, 13, .88)) saturate(.85); }
+.falling-object .urban-prop-asset.cdj { filter: drop-shadow(2px 3px 0 rgba(8, 9, 13, .88)) saturate(1.08); }
+@keyframes urban-prop-spin { to { transform: rotate(calc(var(--fall-tilt, 0deg) + 360deg)); } }
 
 ================================================================================
 FILE: client/src/detailed-arcade-scenes.css
@@ -3863,7 +3894,7 @@ FILE: client/src/detailed-arcade-scenes.css
   background-color:#0a0a0a!important;
   border:4px solid #ff2d95!important;
   box-shadow:0 0 40px rgba(255,45,149,.3),inset 0 0 60px rgba(255,45,149,.1)!important;
-  font-family:"Press Start 2P","Bungee",monospace!important;
+  font-family:"Press Start 2P",Courier New!important;
   text-transform:uppercase;
   position:relative;
   isolation:isolate;
@@ -3876,7 +3907,83 @@ FILE: client/src/detailed-arcade-scenes.css
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.2) 2px,rgba(0,0,0,.2) 4px);
   pointer-events:none;
 }
-.game-viewport .hazard-splash :is(.police-seizure-copy,.crowd-anger-copy,.pill-overload-copy,.sega-police-car,.dopey-dj-portrait,.pill-pitch-wobble,.empty-club-room) { position:relative; z-index:7; }
+.game-viewport .hazard-splash :is(.police-seizure-copy,.crowd-anger-copy,.pill-overload-copy,.sega-police-car,.dopey-dj-portrait,.pill-pitch-wobble,.empty-club-room) { z-index:7; }
+
+/* Final arcade-screen pass: preserve the painted scenes while separating the CRT treatment from the reading hierarchy. */
+.game-viewport .hazard-splash {
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  isolation:isolate!important;
+  image-rendering:pixelated;
+}
+.game-viewport .hazard-splash::before {
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:5!important;
+  pointer-events:none!important;
+  opacity:.42!important;
+  background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.24) 2px 4px)!important;
+  clip-path:none!important;
+}
+.game-viewport .hazard-splash::after {
+  z-index:6!important;
+  background:radial-gradient(ellipse at center,transparent 43%,rgba(0,0,0,.58) 100%)!important;
+}
+.game-viewport .hazard-splash :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) {
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:clamp(.32rem,1vw,.62rem)!important;
+  text-align:center!important;
+}
+.game-viewport .hazard-splash :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) :is(span,strong,em) {
+  position:relative!important;
+  z-index:8!important;
+  margin:0!important;
+  text-align:center!important;
+}
+.game-viewport .hazard-splash :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) em {
+  max-width:90%!important;
+  font-style:normal!important;
+  line-height:1.35!important;
+}
+.game-viewport .hazard-splash.pill-overload-overlay .pill-overload-copy {
+  position:absolute!important;
+  right:4%!important;
+  bottom:8%!important;
+  left:auto!important;
+  width:min(56%,440px)!important;
+  margin:0!important;
+  transform:none!important;
+}
+.game-viewport .hazard-splash.pill-overload-overlay .pill-overload-copy strong {
+  font-size:clamp(1.7rem,4.6vw,3.35rem)!important;
+  line-height:.86!important;
+}
+.game-viewport .hazard-splash.pill-overload-overlay .pill-overload-copy em {
+  font-size:clamp(.58rem,1.28vw,.83rem)!important;
+  color:#ffe2a1!important;
+}
+.game-viewport .hazard-splash.pill-overload-overlay .pill-pitch-wobble {
+  display:none!important;
+}
+
+/* Remove the screen-blend halo without touching the supplied sprite source or its collision wrapper. */
+.game-viewport .dj-sprite {
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  mix-blend-mode:normal!important;
+  filter:drop-shadow(3px 4px 0 rgba(5,4,7,.85))!important;
+  image-rendering:pixelated!important;
+  clip-path:none!important;
+  mask-image:none!important;
+  -webkit-mask-image:none!important;
+}
 
 /* Development-only capture wrapper: hides the page introduction so phone review frames show the entire cabinet state. */
 .arcade-cabinet-focus .section-heading { display:none!important; }
@@ -3886,11 +3993,20 @@ FILE: client/src/detailed-arcade-scenes.css
 /* Crowd interruption copy previously inherited a negative offset intended for an older compact warning; keep both new two-line titles within the scene frame. */
 .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy {
   position:absolute!important;
-  top:12%!important;
+  top:10%!important;
   left:50%!important;
-  width:min(90%,590px)!important;
+  width:min(94%,680px)!important;
   margin:0!important;
   transform:translateX(-50%)!important;
+}
+.game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy strong {
+  font-size:clamp(2rem,4.55vw,3.3rem)!important;
+  line-height:.88!important;
+  white-space:nowrap!important;
+}
+.game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy em {
+  font-size:clamp(.56rem,1.15vw,.78rem)!important;
+  line-height:1.22!important;
 }
 .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy {
   position:absolute!important;
@@ -3903,6 +4019,10 @@ FILE: client/src/detailed-arcade-scenes.css
 .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy strong { font-size:clamp(1.65rem,4.7vw,3.65rem)!important; }
 .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy em { font-size:clamp(.64rem,1.45vw,.98rem)!important; line-height:1.08!important; letter-spacing:.045em!important; }
 @media (max-width:650px) {
+  .game-viewport .hazard-splash { padding:1rem!important; border-width:4px!important; }
+  .game-viewport .hazard-splash :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) { gap:.32rem!important; }
+  .game-viewport .hazard-splash :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) strong { font-size:clamp(1.4rem,6vw,2rem)!important; line-height:1.12!important; }
+  .game-viewport .hazard-splash :is(.police-seizure-copy,.pill-overload-copy,.crowd-anger-copy) em { max-width:95%!important; font-size:clamp(.4rem,1.8vw,.55rem)!important; }
   .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy {
     top:8%!important;
     gap:.24rem!important;
@@ -3912,145 +4032,8 @@ FILE: client/src/detailed-arcade-scenes.css
   .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy em { font-size:clamp(.47rem,2.35vw,.61rem)!important; line-height:1.12!important; letter-spacing:.035em!important; }
   .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy.is-wrong-tune strong { font-size:clamp(1.48rem,8.2vw,2.05rem)!important; line-height:.84!important; }
   .game-viewport .hazard-splash.crowd-anger-overlay .crowd-anger-copy.is-wrong-tune em { max-width:96%!important; }
-  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy { top:43%!important; width:88%!important; }
-  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy strong { font-size:clamp(1.72rem,9.1vw,2.25rem)!important; }
-  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy em { font-size:clamp(.54rem,2.55vw,.68rem)!important; }
+  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy { top:41%!important; width:88%!important; gap:.38rem!important; }
+  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy strong { font-size:clamp(1.42rem,7.6vw,1.88rem)!important; line-height:.92!important; }
+  .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy em { font-size:clamp(.42rem,2.05vw,.54rem)!important; line-height:1.24!important; max-width:92%!important; }
 }
 
-
-================================================================================
-FILE: client/src/arcade-scene-hold.css
-================================================================================
-/* Active event scenes are queue-controlled. Their focal art remains visible until
-   the queue explicitly begins the short spinning-record handoff. */
-.rewind-reward-overlay {
-  animation: scene-overlay-in .32s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.rewind-record-splash {
-  animation: scene-vinyl-stay .46s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.rewind-graffiti-copy,
-.crowd-anger-copy,
-.pill-overload-copy,
-.police-seizure-copy,
-.wheel-copy {
-  animation: scene-copy-stay .4s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.rewind-splash-drip {
-  animation: scene-drip-stay .42s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.wheel-turntable {
-  animation: wheel-vinyl-stay .46s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.wheel-ray {
-  animation: wheel-ray-stay .4s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.sega-police-car {
-  animation: police-car-stay .48s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.police-dj-reaction {
-  animation: police-dj-stay .5s .12s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.police-recovery-prompt {
-  animation: police-prompt-stay .46s .18s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.broken-record-warning {
-  animation: scene-vinyl-stay .42s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.dopey-dj-portrait {
-  animation: dopey-dj-stay .5s var(--ease-out, cubic-bezier(.23,1,.32,1)) both !important;
-}
-
-.pill-floater {
-  animation: pill-floater-stay 1.1s ease-in-out infinite alternate !important;
-}
-
-@keyframes scene-overlay-in {
-  from { opacity: .2; transform: scale(.97); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes scene-vinyl-stay {
-  from { opacity: 0; transform: scale(.68) rotate(-110deg); }
-  54% { opacity: 1; transform: scale(1.08) rotate(18deg); }
-  to { opacity: 1; transform: scale(1) rotate(8deg); }
-}
-
-@keyframes scene-copy-stay {
-  from { opacity: 0; transform: translateY(-18px) scale(.8); }
-  56% { opacity: 1; transform: translateY(2px) scale(1.05); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes scene-drip-stay {
-  from { opacity: 0; transform: scaleY(.14); }
-  to { opacity: .82; transform: scaleY(1); }
-}
-
-@keyframes wheel-vinyl-stay {
-  from { opacity: 0; transform: scale(.55) rotate(-320deg); }
-  58% { opacity: 1; transform: scale(1.08) rotate(46deg); }
-  to { opacity: 1; transform: scale(1) rotate(82deg); }
-}
-
-@keyframes wheel-ray-stay {
-  from { opacity: 0; filter: blur(5px); }
-  to { opacity: .58; filter: blur(0); }
-}
-
-@keyframes police-car-stay {
-  from { opacity: 0; transform: translateX(-115%) scale(.8); }
-  58% { opacity: 1; transform: translateX(3%) scale(1.07); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
-}
-
-@keyframes police-dj-stay {
-  from { opacity: 0; transform: translateY(24px) rotate(-12deg) scale(.8); }
-  58% { opacity: 1; transform: translateY(-5px) rotate(6deg) scale(1.05); }
-  to { opacity: 1; transform: translateY(0) rotate(-2deg) scale(1); }
-}
-
-@keyframes police-prompt-stay {
-  from { opacity: 0; transform: translate(-50%, 18px) scale(.86); }
-  60% { opacity: 1; transform: translate(-50%, -2px) scale(1.05); }
-  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
-}
-
-@keyframes dopey-dj-stay {
-  from { opacity: 0; transform: translateY(28px) rotate(-12deg) scale(.72); }
-  56% { opacity: 1; transform: translateY(-4px) rotate(6deg) scale(1.06); }
-  to { opacity: 1; transform: translateY(0) rotate(-3deg) scale(1); }
-}
-
-@keyframes pill-floater-stay {
-  from { opacity: .46; translate: 0 6px; }
-  to { opacity: 1; translate: 0 -8px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rewind-reward-overlay,
-  .rewind-record-splash,
-  .rewind-graffiti-copy,
-  .rewind-splash-drip,
-  .wheel-turntable,
-  .wheel-copy,
-  .wheel-ray,
-  .sega-police-car,
-  .police-dj-reaction,
-  .police-recovery-prompt,
-  .crowd-anger-copy,
-  .broken-record-warning,
-  .dopey-dj-portrait,
-  .pill-overload-copy,
-  .pill-floater { animation: none !important; opacity: 1; }
-}
