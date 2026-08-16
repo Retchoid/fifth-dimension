@@ -1127,3 +1127,8 @@
 - [x] Create a scene-by-scene checklist mapping every state to runtime evidence for copy, timing, audio handoff, and return-to-play.
 - [x] Add a development-only combo reaction verifier for Gun Finger evidence; preserve the normal production combo threshold and timing.
 - [x] Generate and attach a refreshed plain-text Selectah Showdown game-code export from the current source and directly imported arcade stylesheets.
+- [x] Apply and verify the user-provided falling-items-layer, falling-object, DJ catcher, and game viewport visibility override without changing gameplay logic.
+- [x] Render only `isPlaying && visibleItems.slice(-18).map(...)` for falling items while preserving item state, collision logic, and scoring.
+- [x] Add a temporary development-only falling-item diagnostic for play state, visible item count, and the mounted item-layer ref; remove it after verification.
+- [x] Apply and verify the DJ sprite normal blend-mode, hard-shadow, no-clip, and no-mask safeguard without changing the sprite asset or gameplay geometry.
+- [x] Apply and verify the complete falling-items render-fix block, including layer/object visibility, HUD and overlay stacking, hazard dimming, and the empty-layer debug helper.

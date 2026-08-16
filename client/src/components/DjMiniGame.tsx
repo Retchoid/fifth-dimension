@@ -310,6 +310,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const finaleRef = useRef(false);
   const nameJourneyPreparedRef = useRef(false);
   const itemsRef = useRef<FallingItem[]>([]);
+
   const nextIdRef = useRef(1);
   const spawnTimerRef = useRef(0);
   const namedHazardSpawnCountRef = useRef(0);
@@ -2440,7 +2441,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       launchBonus = true;
     }
     itemsRef.current = nextItems;
-    if (structureChanged) setVisibleItems(nextItems);
+    if (structureChanged) setVisibleItems([...nextItems]);
     if (pauseAfterUnlock) {
       isPlayingRef.current = false;
       if (bgMusicRef.current) bgMusicRef.current.pause();

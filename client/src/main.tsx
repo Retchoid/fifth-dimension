@@ -21,6 +21,7 @@ import "./selector-profile-zine.css";
 import "./exclusive-dubplate-promo.css";
 import "./booking-frequency-terminal.css";
 import "./site-journey-flow.css";
+import "./falling-items-render-fix.css";
 
 const queryClient = new QueryClient();
 

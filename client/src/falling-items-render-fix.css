@@ -1,0 +1,83 @@
+/* ============================================================
+   FALLING ITEMS — RENDER FIX
+   Loaded last so the visibility and stacking contract wins the cascade.
+   ============================================================ */
+
+/* Force items layer to render */
+.falling-items-layer {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 15 !important;
+  pointer-events: none !important;
+  overflow: visible !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Individual falling objects */
+.falling-object {
+  position: absolute !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 15 !important;
+  pointer-events: none !important;
+  transition: none !important;
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+  will-change: transform, top, left;
+}
+
+/* Ensure items are above game grid but below HUD */
+.game-grid-bg {
+  z-index: 1 !important;
+}
+
+.game-hud {
+  z-index: 30 !important;
+}
+
+/* DJ catcher — above items */
+.dj-catcher {
+  z-index: 20 !important;
+  pointer-events: none !important;
+}
+
+/* Overlays — above everything when active */
+.game-overlay {
+  z-index: 50 !important;
+}
+
+.hazard-splash {
+  z-index: 100 !important;
+}
+
+/* When hazard is active, dim items behind it */
+.hazard-splash.active ~ .falling-items-layer {
+  opacity: 0.3 !important;
+  filter: blur(2px) !important;
+}
+
+/* Debug helper — shows items if they exist */
+.falling-items-layer:empty::after {
+  content: "⚠️ NO ITEMS";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff2d95;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.6rem;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Preserve the approved pixel-safe DJ sprite treatment. */
+.game-viewport .dj-sprite {
+  mix-blend-mode: normal !important;
+  filter: drop-shadow(3px 4px 0 rgba(5, 4, 7, 0.85)) !important;
+  clip-path: none !important;
+  mask-image: none !important;
+}

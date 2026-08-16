@@ -10,6 +10,8 @@ const gameVisuals = read("game-visual-system.css");
 const hazardMaster = read("hazard-master-style.css");
 const journey = read("site-journey-flow.css");
 const gameplayClarity = read("gameplay-clarity.css");
+const fallingItemsRenderFix = read("falling-items-render-fix.css");
+const mainSource = read("main.tsx");
 
 const publicSources = [
   read("index.css"),
@@ -71,6 +73,25 @@ describe("Task 7 final consistency contract", () => {
     expect(gameplayClarity).toContain(".loss-curb-overlay.viewport-verify-hold");
     expect(gameplayClarity).toContain("animation-delay: -1.25s !important");
     expect(gameSource).toContain("if (lossVerificationHold) return");
+  });
+
+  it("protects the complete falling-item render and state contract", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(mainSource.indexOf('import "./site-journey-flow.css";')).toBeLessThan(mainSource.indexOf('import "./falling-items-render-fix.css";'));
+    for (const selector of [".falling-items-layer", ".falling-object", ".game-grid-bg", ".game-hud", ".dj-catcher", ".game-overlay", ".hazard-splash", ".falling-items-layer:empty::after"]) {
+      expect(fallingItemsRenderFix).toContain(selector);
+    }
+    expect(fallingItemsRenderFix).toContain("z-index: 15 !important");
+    expect(fallingItemsRenderFix).toContain("z-index: 30 !important");
+    expect(fallingItemsRenderFix).toContain("z-index: 50 !important");
+    expect(fallingItemsRenderFix).toContain("z-index: 100 !important");
+    expect(fallingItemsRenderFix).toContain("filter: blur(2px) !important");
+    expect(fallingItemsRenderFix).toContain("mix-blend-mode: normal !important");
+    expect(fallingItemsRenderFix).toContain("clip-path: none !important");
+    expect(fallingItemsRenderFix).toContain("mask-image: none !important");
+    expect(gameSource).toContain("visibleItems.slice(-18).map");
+    expect(gameSource).toContain("if (structureChanged) setVisibleItems([...nextItems]);");
+    expect(gameSource).toContain("setVisibleItems([]);\n    itemsRef.current = [];");
   });
 
   it("protects the mobile breakpoint used by the site and game audit", () => {
