@@ -742,3 +742,40 @@ p, span, h1, h2, h3, h4, li {
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
 }
+
+/* ============================================================
+   RESPONSIVE ARCHITECTURE LOCK & MOBILE FLOW REPAIRS
+   ============================================================ */
+
+@media (max-width: 650px) {
+  body, html {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  /* Ensure headings and content flow naturally without single-letter wraps */
+  h1, h2, h3, h4, p, span, a, button {
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+
+  /* Prevent absolute positioning from colliding with primary text on mobile */
+  .hero-content,
+  .bio-copy,
+  .booking-copy,
+  .exclusive-band,
+  .mix-archive-group-heading {
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  .graffiti-flare,
+  .hero-orbit,
+  .hero-noise,
+  .vapor-cityscape,
+  .hero-bg {
+    pointer-events: none !important;
+    z-index: 0 !important;
+  }
+}
