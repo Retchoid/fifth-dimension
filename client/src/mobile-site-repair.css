@@ -726,3 +726,19 @@
   color: #F0EAD6 !important;
   font-size: clamp(0.5rem, 1.5vw, 0.7rem) !important;
 }
+
+/* === ISSUE 2: FLOATING TEXT CONTAINMENT (SCOPED) === */
+.section-heading,
+.arcade-instruction-brief,
+.overlay-box,
+.finale-box,
+.unlock-overlay-box {
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+p, span, h1, h2, h3, h4, li {
+  max-width: 100% !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}

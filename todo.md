@@ -1138,3 +1138,4 @@
 - [x] Ensure the header logo/brand is never covered by text and all visible site and arcade titles sit cleanly in 1 or 2 lines without truncating important meaning.
 - [x] Apply the requested yellow-block removal CSS rules over the Jersh In Case download section and achievement chain, and verify with tests and build.
 - [x] Apply the scoped Jersh In Case yellow-block CSS fix without touching unrelated global styles.
+- [x] Verify the section order (Hero -> Listen/Mixes -> Bio -> Other Mixes -> Projects -> Selectah Showdown Arcade -> Visuals -> Booking) and apply scoped text containment rules without breaking layout or arcade positioning.
