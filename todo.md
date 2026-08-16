@@ -1105,7 +1105,7 @@
 
 - [x] Task 2: Fix Visuals Archive section with actual 5D content and staggered collage layout
 - [x] Task 3: Redesign Selector Profile as an asymmetrical zine spread
-- [ ] Task 4: Promote Jersh In Case as a standalone dubplate card
+- [x] Task 4: Promote Jersh In Case as a standalone dubplate card
 - [ ] Task 5: Redesign Booking section as the Lock Into the Frequency terminal
 - [ ] Task 6: Reframe site flow as a connected physical-space journey
 - [ ] Task 7: Run final site/game consistency and mobile validation audit

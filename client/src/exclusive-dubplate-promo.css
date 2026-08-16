@@ -1,0 +1,271 @@
+/* ============================================================
+   5TH DIMENSION — JERSH IN CASE / DUBPLATE PROMO
+   A prominent label-card treatment around the existing gated release.
+   ============================================================ */
+
+.exclusive-release {
+  position: relative;
+  isolation: isolate;
+  overflow: visible !important;
+  margin-top: clamp(2rem, 4vw, 3rem) !important;
+  border: 5px solid #0A0A12 !important;
+  background: #0A0A12 !important;
+  box-shadow: 10px 10px 0 #00D4FF, 16px 16px 0 #FF2D95 !important;
+  transform: rotate(-.7deg);
+}
+
+.exclusive-release::before {
+  content: "5D DUBPLATE / PLAY SIDE A";
+  position: absolute;
+  top: -1.25rem;
+  left: 1.25rem;
+  z-index: 5;
+  padding: .42rem .56rem;
+  border: 3px solid #0A0A12;
+  background: #FFE600;
+  color: #0A0A12;
+  font: 900 .47rem/1 "Courier New";
+  letter-spacing: .13em;
+  box-shadow: 4px 4px 0 #FF2D95;
+  transform: rotate(-3deg);
+}
+
+.exclusive-release::after {
+  content: "45 RPM / DIRECT FROM THE LOW END";
+  position: absolute;
+  right: 1rem;
+  bottom: -1rem;
+  z-index: 5;
+  padding: .38rem .5rem;
+  border: 3px solid #0A0A12;
+  background: #FF2D95;
+  color: #F0EAD6;
+  font: 900 .4rem/1 "Courier New";
+  letter-spacing: .11em;
+  box-shadow: 4px 4px 0 #FFE600;
+  transform: rotate(2deg);
+}
+
+.exclusive-release .exclusive-band {
+  position: relative;
+  min-height: 9rem;
+  padding: clamp(1rem, 2vw, 1.45rem) clamp(1rem, 2.5vw, 1.8rem) 1.2rem !important;
+  border-bottom: 5px solid #0A0A12 !important;
+  background: #FF2D95 !important;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(10,10,18,.14) 0 1px, transparent 1px 9px),
+    linear-gradient(125deg, transparent 0 44%, rgba(0,212,255,.82) 44% 48%, transparent 48% 100%) !important;
+  transform: rotate(.4deg);
+}
+
+.exclusive-release .exclusive-meta {
+  color: #0A0A12 !important;
+  font-family: "Courier New" !important;
+}
+
+.exclusive-release .exclusive-meta i {
+  background: #00D4FF !important;
+  box-shadow: 0 0 0 2px #0A0A12 !important;
+}
+
+.exclusive-release .exclusive-band h3 {
+  color: #F0EAD6 !important;
+  font-size: clamp(3rem, 6.6vw, 7.8rem) !important;
+  line-height: .74 !important;
+  letter-spacing: .04em;
+  text-shadow: 5px 5px 0 #0A0A12, 10px 10px 0 #00D4FF !important;
+  transform: rotate(-1.2deg);
+}
+
+.exclusive-release .exclusive-artist {
+  min-width: min(300px, 38%);
+  padding: .5rem;
+  border: 3px solid #0A0A12;
+  background: #00D4FF;
+  box-shadow: 4px 4px 0 #FFE600;
+  transform: rotate(2deg);
+}
+
+.exclusive-release .exclusive-artist span {
+  color: #0A0A12 !important;
+  font-family: "Courier New" !important;
+}
+
+.exclusive-release .exclusive-artist strong,
+.exclusive-release .exclusive-artist em {
+  color: #0A0A12 !important;
+  font-family: "Courier New" !important;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-shadow: none !important;
+}
+
+.exclusive-release .exclusive-track {
+  position: relative;
+  min-height: 13rem;
+  padding: clamp(1rem, 2.5vw, 1.8rem) !important;
+  border-top: 0;
+  background: #0A0A12 !important;
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.15) 0 1px, transparent 1px 5px) !important;
+}
+
+.exclusive-release .exclusive-track::before {
+  content: "";
+  position: absolute;
+  right: clamp(1rem, 7vw, 5rem);
+  top: 50%;
+  width: clamp(7rem, 16vw, 13rem);
+  aspect-ratio: 1;
+  border: 3px solid rgba(0,212,255,.32);
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, transparent 0 6px, rgba(255,45,149,.23) 7px 8px), #111322;
+  box-shadow: 0 0 0 10px rgba(0,212,255,.05), 5px 5px 0 #FF2D95;
+  transform: translateY(-50%) rotate(-14deg);
+  pointer-events: none;
+}
+
+.exclusive-release .exclusive-track::after {
+  content: "5D";
+  position: absolute;
+  right: clamp(3.9rem, 12vw, 8.8rem);
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.65rem;
+  aspect-ratio: 1;
+  border: 3px solid #0A0A12;
+  border-radius: 50%;
+  background: #FFE600;
+  color: #0A0A12;
+  font: 900 .65rem/1 "Press Start 2P";
+  transform: translateY(-50%) rotate(12deg);
+  pointer-events: none;
+}
+
+.exclusive-release .exclusive-description,
+.exclusive-release .exclusive-locked,
+.exclusive-release .exclusive-listen-actions,
+.exclusive-release .exclusive-file-info {
+  position: relative;
+  z-index: 3;
+}
+
+.exclusive-release .exclusive-description {
+  max-width: 32rem;
+  padding: .85rem 1rem;
+  border-left: 5px solid #00D4FF;
+  background: rgba(255,45,149,.1);
+  color: #F0EAD6;
+  font-family: "Courier New" !important;
+  font-size: .95rem;
+  line-height: 1.72;
+  box-shadow: 5px 5px 0 rgba(255,45,149,.52);
+}
+
+.exclusive-release .exclusive-locked {
+  border: 4px solid #FFE600 !important;
+  background: #111322 !important;
+  color: #FFE600 !important;
+  box-shadow: 4px 4px 0 #FF2D95 !important;
+  font-family: "Courier New" !important;
+}
+
+.exclusive-release .exclusive-listen-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .6rem;
+}
+
+.exclusive-release .exclusive-listen-button,
+.exclusive-release .exclusive-download,
+.exclusive-release .exclusive-share-button {
+  min-height: 3rem;
+  border: 3px solid #0A0A12 !important;
+  border-radius: 0 !important;
+  box-shadow: 4px 4px 0 #00D4FF !important;
+  font-family: "Courier New" !important;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.exclusive-release .exclusive-listen-button {
+  background: #FFE600 !important;
+  color: #0A0A12 !important;
+}
+
+.exclusive-release .exclusive-download {
+  background: #00D4FF !important;
+  color: #0A0A12 !important;
+}
+
+.exclusive-release .exclusive-share-button {
+  background: #FF2D95 !important;
+  color: #F0EAD6 !important;
+}
+
+.exclusive-release .exclusive-listen-button:hover,
+.exclusive-release .exclusive-download:hover,
+.exclusive-release .exclusive-share-button:hover {
+  transform: translate(-2px, -2px);
+  filter: contrast(1.16);
+}
+
+.exclusive-release .exclusive-file-info {
+  color: #00D4FF !important;
+  font-family: "Courier New" !important;
+  text-align: left;
+}
+
+@media (max-width: 760px) {
+  .exclusive-release {
+    transform: none;
+  }
+
+  .exclusive-release::before {
+    left: .45rem;
+    font-size: .35rem;
+  }
+
+  .exclusive-release::after {
+    right: .4rem;
+    bottom: -.8rem;
+    font-size: .31rem;
+  }
+
+  .exclusive-release .exclusive-band {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: "meta" "title" "artist";
+    gap: .8rem;
+  }
+
+  .exclusive-release .exclusive-band h3 {
+    font-size: clamp(2.45rem, 12vw, 4.4rem) !important;
+  }
+
+  .exclusive-release .exclusive-artist {
+    justify-self: start;
+    min-width: 0;
+    width: min(100%, 19rem);
+    text-align: left;
+  }
+
+  .exclusive-release .exclusive-track {
+    grid-template-columns: 1fr !important;
+  }
+
+  .exclusive-release .exclusive-track::before,
+  .exclusive-release .exclusive-track::after {
+    display: none;
+  }
+
+  .exclusive-release .exclusive-listen-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .exclusive-release .exclusive-file-info {
+    text-align: center;
+  }
+}
