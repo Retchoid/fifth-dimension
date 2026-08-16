@@ -27,3 +27,7 @@ The Selector Profile now reads as an asymmetrical zine spread: the oversized 5D 
 ## Task 4 Jersh In Case dubplate-card review
 
 The existing gated Jersh In Case release is now presented as a dedicated 5D dubplate label card with a prominent title band, preserved artist credit for 5th Dimension · Skavo featuring MC Mestup, direct-release metadata stamps, a restrained record-label visual, and hard cyan/pink/yellow shadows. The lock state remains the initial state; the existing play, download, share, and session-gate controls were not changed. Desktop and phone captures show the title and credit remain legible, and the action region stacks cleanly on mobile.
+
+## Task 5 Booking terminal review
+
+The Booking section now reads as a Lock Into the Frequency terminal: the 5D call signal is a separate side strip, the existing heading and booking copy sit in a hard-outlined transmission sheet, and the existing form is framed as an open-channel terminal with rectangular fields, focus states, optional date/location controls, generated booking note, and preserved mailto submission. Desktop and phone captures show the form remains readable; the optional fields collapse vertically on mobile and no controls are removed.

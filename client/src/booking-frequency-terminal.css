@@ -1,0 +1,326 @@
+/* ============================================================
+   5TH DIMENSION — BOOKING / LOCK INTO THE FREQUENCY
+   A pirate-radio terminal interface around the existing form.
+   ============================================================ */
+
+.booking-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(100px, .42fr) minmax(0, 1fr) minmax(300px, .92fr);
+  gap: clamp(1.4rem, 4vw, 4.2rem);
+  align-items: center;
+  background: #0A0A12 !important;
+  color: #F0EAD6;
+}
+
+.booking-section::before {
+  content: "LOCK INTO THE FREQUENCY // OUTGOING CHANNEL";
+  position: absolute;
+  top: 1.2rem;
+  left: 5%;
+  z-index: -1;
+  color: rgba(0,212,255,.18);
+  font: 900 clamp(1rem, 3vw, 3rem)/1 "Press Start 2P";
+  letter-spacing: .08em;
+  transform: rotate(-2deg);
+  white-space: nowrap;
+}
+
+.booking-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.15) 0 1px, transparent 1px 5px),
+    linear-gradient(118deg, transparent 0 43%, rgba(255,45,149,.16) 43% 44%, transparent 44% 68%, rgba(0,212,255,.15) 68% 69%, transparent 69%),
+    radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.68) 100%);
+}
+
+.booking-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.booking-signal {
+  display: grid;
+  justify-items: end;
+  align-content: center;
+  gap: .35rem;
+  padding: 1rem .9rem 1rem 0;
+  border-right: 5px solid #FF2D95;
+  color: #FFE600 !important;
+  font: 900 .58rem/1 "Courier New" !important;
+  letter-spacing: .14em;
+  text-align: right;
+  transform: rotate(2deg);
+}
+
+.booking-signal::after {
+  content: "TX / 05D";
+  padding: .3rem .4rem;
+  border: 3px solid #0A0A12;
+  background: #00D4FF;
+  color: #0A0A12;
+  font: 900 .42rem/1 "Courier New";
+  letter-spacing: .1em;
+  box-shadow: 3px 3px 0 #FFE600;
+  transform: rotate(-7deg);
+}
+
+.booking-signal strong {
+  color: #FF2D95 !important;
+  font-family: "Press Start 2P" !important;
+  font-size: clamp(5.6rem, 11vw, 11rem) !important;
+  line-height: .72 !important;
+  text-shadow: 6px 6px 0 #00D4FF, 10px 10px 0 #0A0A12 !important;
+  transform: rotate(-4deg);
+}
+
+.booking-copy {
+  padding: clamp(1rem, 3vw, 2.2rem);
+  border: 5px solid #F0EAD6;
+  background: #0A0A12;
+  box-shadow: 9px 9px 0 #00D4FF;
+  transform: rotate(-1deg);
+}
+
+.booking-copy::before {
+  content: "FREQUENCY TERMINAL / INBOUND";
+  position: absolute;
+  top: -1.05rem;
+  left: 1rem;
+  padding: .34rem .45rem;
+  border: 3px solid #0A0A12;
+  background: #FFE600;
+  color: #0A0A12;
+  font: 900 .4rem/1 "Courier New";
+  letter-spacing: .12em;
+  box-shadow: 4px 4px 0 #FF2D95;
+  transform: rotate(2deg);
+}
+
+.booking-copy .eyebrow {
+  color: #00D4FF !important;
+}
+
+.booking-copy h2 {
+  margin: 1rem 0 1.2rem;
+  color: #F0EAD6;
+  font-size: clamp(2.6rem, 5vw, 5.5rem);
+  line-height: .78;
+  text-shadow: 4px 4px 0 #FF2D95;
+}
+
+.booking-copy h2 em {
+  color: #00D4FF !important;
+  font-style: normal;
+  text-shadow: 3px 3px 0 #0A0A12 !important;
+}
+
+.booking-copy > p:not(.eyebrow) {
+  color: #F0EAD6 !important;
+  font-family: "Courier New" !important;
+  font-size: .91rem;
+  line-height: 1.7;
+}
+
+.booking-copy strong {
+  color: #FFE600;
+}
+
+.booking-email {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin-top: 1.25rem;
+  padding: .75rem .85rem;
+  border: 4px solid #FF2D95 !important;
+  background: #00D4FF;
+  color: #0A0A12 !important;
+  box-shadow: 4px 4px 0 #FFE600;
+  font: 900 .55rem/1 "Courier New" !important;
+  letter-spacing: .08em;
+  text-decoration: none;
+}
+
+.booking-email:hover {
+  background: #FFE600;
+  border-color: #0A0A12 !important;
+  color: #0A0A12 !important;
+}
+
+.booking-form {
+  position: relative;
+  display: grid;
+  gap: .72rem;
+  padding: clamp(1rem, 2.4vw, 1.7rem) !important;
+  border: 5px solid #00D4FF !important;
+  background: #111322 !important;
+  box-shadow: 9px 9px 0 #FF2D95 !important;
+  transform: rotate(1.2deg);
+}
+
+.booking-form::before {
+  content: "[ OPEN CHANNEL ]";
+  position: absolute;
+  top: -1rem;
+  right: .8rem;
+  padding: .3rem .4rem;
+  border: 3px solid #0A0A12;
+  background: #FF2D95;
+  color: #F0EAD6;
+  font: 900 .4rem/1 "Courier New";
+  letter-spacing: .12em;
+  box-shadow: 3px 3px 0 #FFE600;
+  transform: rotate(-3deg);
+}
+
+.booking-form label {
+  color: #FFE600 !important;
+  font: 900 .52rem/1 "Courier New" !important;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.booking-form label span {
+  color: #FF2D95;
+}
+
+.booking-form input,
+.booking-form textarea {
+  width: 100%;
+  min-height: 2.8rem;
+  border: 3px solid #00D4FF !important;
+  border-radius: 0 !important;
+  background: #0A0A12 !important;
+  color: #F0EAD6 !important;
+  caret-color: #FFE600;
+  font: 900 .8rem/1.35 "Courier New" !important;
+  letter-spacing: .04em;
+}
+
+.booking-form textarea {
+  min-height: 7rem;
+}
+
+.booking-form input::placeholder,
+.booking-form textarea::placeholder {
+  color: rgba(240,234,214,.52) !important;
+}
+
+.booking-form input:focus,
+.booking-form textarea:focus {
+  border-color: #FFE600 !important;
+  outline: 0;
+  box-shadow: 4px 4px 0 #FF2D95 !important;
+}
+
+.booking-optional-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+}
+
+.booking-optional-grid > div {
+  display: grid;
+  gap: .72rem;
+}
+
+.booking-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .7rem;
+  min-height: 3rem;
+  padding: .8rem 1rem;
+  border: 4px solid #0A0A12 !important;
+  border-radius: 0 !important;
+  background: #FFE600 !important;
+  color: #0A0A12 !important;
+  box-shadow: 5px 5px 0 #00D4FF !important;
+  font: 900 .62rem/1 "Courier New" !important;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.booking-submit:hover {
+  background: #FF2D95 !important;
+  color: #F0EAD6 !important;
+  box-shadow: 5px 5px 0 #FFE600 !important;
+  transform: translate(-2px, -2px);
+}
+
+.booking-note {
+  color: rgba(240,234,214,.72) !important;
+  font: 900 .48rem/1.5 "Courier New" !important;
+  letter-spacing: .06em;
+}
+
+.booking-note b {
+  color: #00D4FF;
+}
+
+@media (max-width: 980px) {
+  .booking-section {
+    grid-template-columns: minmax(72px, .25fr) minmax(0, 1fr) minmax(230px, .8fr);
+    gap: 1.35rem;
+  }
+
+  .booking-copy,
+  .booking-form {
+    transform: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .booking-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.7rem;
+    padding-block: 4.7rem;
+  }
+
+  .booking-section::before {
+    top: 2.4rem;
+    left: 1.2rem;
+    font-size: .72rem;
+    white-space: normal;
+  }
+
+  .booking-signal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: auto;
+    padding: 0 0 .75rem;
+    border-right: 0;
+    border-bottom: 4px solid #FF2D95;
+    text-align: left;
+    transform: none;
+  }
+
+  .booking-signal strong {
+    font-size: 5.5rem !important;
+  }
+
+  .booking-copy {
+    transform: rotate(.7deg);
+  }
+
+  .booking-copy h2 {
+    font-size: 3.1rem;
+  }
+
+  .booking-form {
+    transform: rotate(-.5deg);
+  }
+
+  .booking-optional-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -19,6 +19,7 @@ import "./global-typography-system.css";
 import "./visuals-archive-collage.css";
 import "./selector-profile-zine.css";
 import "./exclusive-dubplate-promo.css";
+import "./booking-frequency-terminal.css";
 
 const queryClient = new QueryClient();
 
