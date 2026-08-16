@@ -779,3 +779,40 @@ p, span, h1, h2, h3, h4, li {
     z-index: 0 !important;
   }
 }
+
+/* ============================================================
+   PRECISION VISUAL REGRESSION REPAIRS (320px - 430px)
+   ============================================================ */
+
+@media (max-width: 360px) {
+  .brand-subtitle,
+  .pirate-radio-auth {
+    font-size: 0.45rem !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .hero-title,
+  h1.hero-title {
+    font-size: clamp(1.8rem, 8vw, 2.5rem) !important;
+    line-height: 1.1 !important;
+  }
+
+  .arcade-cabinet-wrap {
+    transform: scale(0.85) !important;
+    transform-origin: top center !important;
+    margin-bottom: -15% !important;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 430px) {
+  .arcade-cabinet-wrap {
+    transform: scale(0.92) !important;
+    transform-origin: top center !important;
+  }
+}
+
+/* Ensure all interactive buttons meet mobile touch minimums without styling shifts */
+button, a.btn, .archive-cta, .booking-submit-btn {
+  min-height: 40px !important;
+  touch-action: manipulation !important;
+}
