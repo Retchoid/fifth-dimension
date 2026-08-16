@@ -109,7 +109,7 @@ const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "sp
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 type ComboReaction = "big-up" | "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -247,6 +247,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const viewportVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
   const sceneVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-scene-verify") : null;
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
+  const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
+    crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
+    headphones: { label: "HEADPHONES SECURED", quip: "THREE DECKS / READY TO SELECT", kind: "headphones" },
+    boh: { label: "BOH! BOH!", quip: "FIVE DUBPLATES / +250", kind: "boh" },
+    riddim: { label: "RUN THE RIDDIM!", quip: "CROWD PRESSURE / +500", kind: "riddim" },
+    wheel: { label: "WHEEL IT UP", quip: "GUN FINGER MASSIVE / +10", kind: "wheel" },
+  } as Record<string, InWorldReward>)[sceneVerificationMode ?? ""] ?? null : null;
+  const rewardToRender = inWorldReward ?? heldRewardPreview;
+  const heldLossPreview = import.meta.env.DEV && lossVerificationHold && sceneVerificationMode === "loss";
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
@@ -1366,7 +1375,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const announceInWorldReward = (label: string, quip: string, kind?: InWorldReward["kind"]) => {
     window.clearTimeout(inWorldRewardTimerRef.current);
     setInWorldReward({ label, quip, kind });
-    inWorldRewardTimerRef.current = window.setTimeout(() => setInWorldReward(null), kind === "boh" || kind === "big-up" || kind === "riddim" ? 1650 : 1250);
+    const rewardDuration = holdSequenceDebugEnabled ? 25000 : kind === "boh" || kind === "big-up" || kind === "riddim" ? 1650 : 1250;
+    inWorldRewardTimerRef.current = window.setTimeout(() => setInWorldReward(null), rewardDuration);
   };
 
   const queueGameFrame = () => {
@@ -1446,6 +1456,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     debugWindow.__selectahDebug = {
       triggerSequence: (sequence) => {
         pendingArcadeSequenceRef.current = [];
+        if (sequence !== "thrown" && ["boh", "riddim", "wheel", "crate", "headphones"].includes(sequence)) {
+          isPlayingRef.current = true;
+          setIsPlaying(true);
+        }
         if (sequence === "thrown") {
           crowdHazardVariantRef.current = "thrown";
           startArcadeSequence("crowd");
@@ -1492,6 +1506,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         setActiveArcadeSequence(null);
         setIsRecordTransitioning(false);
         setIsLevelTwoTransitioning(false);
+      },
+      showUnlock: () => {
+        gameRunIdRef.current += 1;
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        isPlayingRef.current = false;
+        setIsPlaying(false);
+        setLevel(1);
+        setRecordsCaught(REQUIRED_RECORDS);
+        setIsUnlockPaused(true);
+        setUnlockRevealReady(false);
+        setChainBreakComplete(false);
+        window.clearTimeout(unlockRevealTimerRef.current);
+        unlockRevealTimerRef.current = window.setTimeout(() => setUnlockRevealReady(true), 3000);
       },
       showLossComedown: () => {
         gameRunIdRef.current += 1;
@@ -1566,6 +1593,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const verifierTimer = window.setTimeout(() => {
       const debug = (window as ArcadeDebugWindow).__selectahDebug;
       if (!debug) return;
+      if (sceneVerificationMode === "level-two-arrival") {
+        debug.startLevelTwo();
+        return;
+      }
+      if (sceneVerificationMode === "first-bonus") {
+        debug.startFirstBonus();
+        return;
+      }
+      if (sceneVerificationMode === "afterparty-bonus") {
+        debug.startAfterpartyBonus();
+        return;
+      }
+      if (sceneVerificationMode === "unlock") {
+        debug.showUnlock();
+        return;
+      }
       if (sceneVerificationMode === "loss") {
         debug.showLossComedown();
         return;
@@ -1594,8 +1637,23 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const sequence = (["rewind", "wheel", "police", "crowd", "pill", "crate", "headphones", "boh", "riddim"] as ArcadeSequence[]).find(
         candidate => candidate === sceneVerificationMode,
       );
-      if (sequence) debug.triggerSequence(sequence);
-    }, 0);
+      if (sequence) {
+        debug.triggerSequence(sequence);
+        const heldRewardCopy: Record<string, InWorldReward> = {
+          crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
+          headphones: { label: "HEADPHONES SECURED", quip: "THREE DECKS / READY TO SELECT", kind: "headphones" },
+          boh: { label: "BOH! BOH!", quip: "FIVE DUBPLATES / +250", kind: "boh" },
+          riddim: { label: "RUN THE RIDDIM!", quip: "CROWD PRESSURE / +500", kind: "riddim" },
+          wheel: { label: "WHEEL IT UP", quip: "GUN FINGER MASSIVE / +10", kind: "wheel" },
+        };
+        const heldReward = heldRewardCopy[sceneVerificationMode];
+        if (heldReward) {
+          isPlayingRef.current = true;
+          setIsPlaying(true);
+          setInWorldReward(heldReward);
+        }
+      }
+    }, 180);
     return () => window.clearTimeout(verifierTimer);
   }, [sceneVerificationMode]);
 
@@ -2580,9 +2638,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <em>{"♥".repeat(damageFeedback.lives)}{"♡".repeat(Math.max(0, damageFeedback.bonus ? 3 - damageFeedback.lives : 4 - damageFeedback.lives))}</em>
           </div>
         )}
-        {inWorldReward && !gameOver && (
-          <div className={`in-world-reward${inWorldReward.kind ? ` in-world-reward-${inWorldReward.kind}` : ""}`} role="status" aria-live="polite">
-            <strong>{inWorldReward.label}</strong>
+        {rewardToRender && !gameOver && (
+          <div className={`in-world-reward${rewardToRender.kind ? ` in-world-reward-${rewardToRender.kind}` : ""}`} role="status" aria-live="polite">
+            <strong>{rewardToRender.label}</strong>
           </div>
         )}
         <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
@@ -2742,7 +2800,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             </div>
             <div className="bonus-tip">AUTO RUN · A / D OR ARROWS STEER · DRAG OR TAP A ROAD LANE · ONE HIT ENDS THE DASH</div>
             <div className={`bonus-dj-runner afterparty-dj-runner lane-${bonusLane}${bonusDoorOpen ? " is-exit-lit" : ""}`}>
-              <img src="/manus-storage/selector-dj-rear-runner_00e1ae94.png" alt="Rear-view jungle DJ running toward the after party" />
+              <img src="/manus-storage/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ running toward the after party" />
             </div>
             <div className="bonus-obstacle-layer afterparty-entity-layer" aria-hidden="true">
               {bonusObstacles.map((entity) => <span key={entity.id} className={`bonus-obstacle afterparty-entity ${entity.type} lane-${entity.lane}`} data-entity={entity.type} style={{ "--runner-depth": `${entity.depth}%` } as React.CSSProperties}><i className="urban-runner-asset" style={{ "--urban-runner-url": `url(${URBAN_RUNNER_ASSETS[entity.type]})` } as React.CSSProperties} /><b>{entity.type === "headphones" ? "HP" : entity.type === "turntable" ? "TT" : entity.type === "speaker" ? "SPK" : entity.type === "mixer" ? "MIX" : entity.type === "cart" ? "CART" : entity.type.toUpperCase()}</b></span>)}
@@ -3054,7 +3112,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             ))}
           </div>
         )}
-        {isLossComedownVisible && gameOver && !levelTwoComplete && (
+        {(heldLossPreview || (isLossComedownVisible && gameOver)) && !levelTwoComplete && (
           <div className="game-overlay loss-curb-overlay" role="status" aria-live="assertive">
             <div className="loss-curb-night" aria-hidden="true"><span className="loss-moon" /><span className="loss-venue-sign">RAVE</span><span className="loss-venue-door" /><span className="loss-neon-spill" /></div>
             <div className="loss-curb-ground" aria-hidden="true"><i /><i /><i /></div>

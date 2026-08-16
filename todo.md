@@ -2,10 +2,10 @@
 
 ## Current approval-gated arcade regression audit
 
-- [ ] Replace every placeholder-like splash and record-spin transition layer with a detailed, colorful, illustrated hard-outlined scene composition that matches the described event while preserving its existing timing, copy, audio, and return-to-play behavior.
-- [ ] Restore a detailed illustrated background and readable foreground hierarchy to the game-over and loss presentations; do not leave a shrunken sprite, shrunken copy, or empty background as a substitute for the requested scene.
-- [ ] Reconcile speaker and dancer scale so speaker stacks read as intentionally huge and dancers read as clearly visible performers in the same stage depth, without blocking the active lanes or changing their approved milestones.
-- [ ] Redesign every visible deck, turntable, mixer, CDJ, crate, headphones, and remaining game object that still reads as a generic placeholder, using the same colorful cel-shaded hard outlines and urban 16-bit material language as the approved hazard art.
+- [x] Replace every placeholder-like splash and record-spin transition layer with a detailed, colorful, illustrated hard-outlined scene composition that matches the described event while preserving its existing timing, copy, audio, and return-to-play behavior.
+- [x] Restore a detailed illustrated background and readable foreground hierarchy to the game-over and loss presentations; do not leave a shrunken sprite, shrunken copy, or empty background as a substitute for the requested scene.
+- [x] Reconcile speaker and dancer scale so speaker stacks read as intentionally huge and dancers read as clearly visible performers in the same stage depth, without blocking the active lanes or changing their approved milestones.
+- [x] Redesign every visible deck, turntable, mixer, CDJ, crate, headphones, and remaining game object that still reads as a generic placeholder, using the same colorful cel-shaded hard outlines and urban 16-bit material language as the approved hazard art.
 - [ ] Audit all normal, reward, hazard, chain, transition, unlock, bonus, loss, game-over, and finale states at desktop and phone widths; complete only when each uses a purposeful illustrated background rather than placeholder markers or bare decorative CSS.
 - [ ] Capture and review desktop and phone runtime evidence for police, crowd, pill, rewind, record-spin, crate, headphones, salute/riddim, Level 2 arrival, loss, and game-over scenes.
 - [ ] Verify each inspected scene preserves its timing, copy, audio handoff, and return-to-play behavior in live runtime rather than only through source-selector coverage.
@@ -14,28 +14,28 @@
 - [x] Apply a shared `hazard-splash` cracked-arcade treatment to those hazard scenes: black ground, magenta hard frame, inset and outer neon glow, Press Start 2P fallback stack, uppercase copy, and non-interactive scanlines without hiding the illustrated focal art.
 - [x] Capture and review the revised pill, police, Wrong Tune, and Thrown Tune hazard scenes at desktop and phone widths, verifying the full copy is readable and no scene is obscured.
 - [x] Deliver one separate review image for each updated hazard splash: Too High to Play, Cops Seized Your Mixer, Wrong Tune My Selectah, and Thrown Tune.
-- [ ] Reposition the police recovery-combo prompt so it does not overlap the revised Cops Seized Your Mixer headline at desktop or phone width.
+- [x] Reposition the police recovery-combo prompt so it does not overlap the revised Cops Seized Your Mixer headline at desktop or phone width.
 - [x] Correct the desktop police hazard-copy placement so the complete Cops Seized Your Mixer title and supporting line remain inside the illustrated cracked-screen frame.
 - [x] Remove only the main archive 5D Playa queue panel while retaining its top-navigation 5D Playa control and the archive’s individual native audio players, downloads, and share controls.
 - [x] Provide a text document containing the complete Selectah Showdown game source and its directly imported arcade stylesheets for review.
 - [x] Create and attach one consolidated plain-text Selectah Showdown export containing the full gameplay source followed by all directly imported arcade stylesheets.
 - [x] Correct the mobile and desktop crowd-hazard copy layout so the full Wrong Tune My Selectah and Thrown Tune titles are visible above their supporting lines within the cracked-screen frame.
 - [x] Remove active DJ sprite halo artifacts by replacing screen-blend and bright glow compositing with a clean pixel-safe shadow while preserving the supplied sprite asset, collision area, and gameplay.
-- [ ] Standardize police, pill, Wrong Tune, and Thrown Tune hazard splash copy into a consistent visual hierarchy with an in-frame tag, title, and quip, keeping scene-specific art behind the copy.
-- [ ] Refine the shared cracked-screen hazard layer with scanlines, vignette, clear foreground stacking, and responsive type/visual scale so desktop and phone scenes remain legible without jumbled or overlapping text.
+- [x] Standardize police, pill, Wrong Tune, and Thrown Tune hazard splash copy into a consistent visual hierarchy with an in-frame tag, title, and quip, keeping scene-specific art behind the copy.
+- [x] Refine the shared cracked-screen hazard layer with scanlines, vignette, clear foreground stacking, and responsive type/visual scale so desktop and phone scenes remain legible without jumbled or overlapping text.
 - [x] Capture and review the corrected active DJ sprite plus all four hazard screens at desktop and phone widths before publication.
 - [x] Save the user-supplied 5th Dimension Arcade Visual Style Bible as a project reference covering exact palette, fonts, sprite treatment, overlay structure, hard-shadow rules, and hazard humor tone.
 - [x] Rebuild the police seizure, pill overload, Wrong Tune, and Thrown Tune splashes to use only the supplied five-color palette, approved Press Start 2P/Courier typography, uppercase tracked copy, chunky square borders, and hard-offset shadows.
-- [ ] Replace the current centered hazard layouts with asymmetric photocopied-flyer compositions that retain the exact supplied quips and all scene-specific pixel art without altering trigger, timing, audio, or return-to-play logic.
+- [x] Replace the current centered hazard layouts with asymmetric photocopied-flyer compositions that retain the exact supplied quips and all scene-specific pixel art without altering trigger, timing, audio, or return-to-play logic.
 - [x] Apply one master CRT overlay contract to the redesigned hazards: deep-dark base, hard scanlines, vignette, no blur/glass treatment, no soft shadow, and one clean offset shadow per sprite.
-- [ ] Validate police, pill, Wrong Tune, and Thrown Tune at desktop and phone width against every visual checklist item in the supplied master prompt before publication.
+- [x] Validate police, pill, Wrong Tune, and Thrown Tune at desktop and phone width against every visual checklist item in the supplied master prompt before publication.
 
 - [ ] Remove the remaining visible square or backing plane around the active DJ sprite in every arcade state without changing the supplied sprite, hitbox, camo, collision, or controls.
-- [ ] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.
-- [ ] Restyle every arcade splash scene to the same hard-outlined urban arcade language as the hazards, preserving existing scenes, copy, timers, record-spin transitions, audio, and return-to-play behavior.
+- [x] Redesign Level 1 and Level 2 playable stage backgrounds to use the same hard-outlined, cel-shaded urban arcade language as the hazard art while keeping falling-object lanes continuously clear and readable.
+- [x] Restyle every arcade splash scene to the same hard-outlined urban arcade language as the hazards, preserving existing scenes, copy, timers, record-spin transitions, audio, and return-to-play behavior.
 - [ ] Verify the redesigned sprite treatment, backgrounds, and all splash overlays at desktop and phone widths without obscuring active gameplay.
-- [ ] Confirm the published production build applies the Level 1 and Level 2 hard-outline stage rules and capture direct live desktop and phone evidence.
-- [ ] Replace the Level 2 reuse of the Level 1 urban-stage artwork with its dedicated Level 2 crowd-pressure background while retaining the clear center lane and existing Level 2 booth layers.
+- [x] Confirm the published production build applies the Level 1 and Level 2 hard-outline stage rules and capture direct live desktop and phone evidence.
+- [x] Replace the Level 2 reuse of the Level 1 urban-stage artwork with its dedicated Level 2 crowd-pressure background while retaining the clear center lane and existing Level 2 booth layers.
 - [ ] Audit every standard, reward, hazard, chain, transition, loss, and bonus splash state individually to ensure the shared hard-outline treatment mounts where required.
 - [ ] Resolve the remaining active DJ sprite matte artifact with a verified live fix, then repeat the full desktop and phone-width arcade visual review.
 
@@ -1093,7 +1093,7 @@
 - [x] Complete normal-runtime evidence sweep for police, pill, crowd, and thrown hazard scenes
 - [x] Complete master-contract trigger, timing, audio handoff, return-to-play, and visual checklist validation
 - [x] Task 1: Unify global font hierarchy to Press Start 2P headlines and Courier New body text without changing existing content or arcade gameplay
-- [ ] Pause after Task 1 and request user confirmation before Task 2
+- [x] Pause after Task 1 and request user confirmation before Task 2
 
 ## Reposted 5th Dimension Arcade Style System Reference
 
@@ -1108,4 +1108,8 @@
 - [x] Task 4: Promote Jersh In Case as a standalone dubplate card
 - [x] Task 5: Redesign Booking section as the Lock Into the Frequency terminal
 - [x] Task 6: Reframe site flow as a connected physical-space journey
-- [ ] Task 7: Run final site/game consistency and mobile validation audit
+- [x] Task 7: Run final site/game consistency and mobile validation audit
+- [ ] Capture and log desktop and phone runtime evidence for crate, headphones, salute/riddim, Level 2 arrival, chain/unlock/finale, and bonus states
+- [ ] Run and document full phone-width loss/curbside/game-over verification, including replay/reset timing after the curb timer
+- [ ] Perform a dedicated all-states DJ sprite review to prove no backing square or matte remains in active play, hazards, loss, game over, and bonus scenes
+- [ ] Create a scene-by-scene checklist mapping every splash and transition state to live runtime evidence for copy, timing, audio handoff, and return-to-play
