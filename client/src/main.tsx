@@ -17,6 +17,7 @@ import "./posthero-cohesion.css";
 import "./game-visual-system.css";
 import "./global-typography-system.css";
 import "./visuals-archive-collage.css";
+import "./selector-profile-zine.css";
 
 const queryClient = new QueryClient();
 

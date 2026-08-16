@@ -1,0 +1,286 @@
+/* ============================================================
+   5TH DIMENSION — SELECTOR PROFILE / 02
+   An asymmetric zine spread for the Bobby Bass identity panel.
+   ============================================================ */
+
+.bio-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(90px, .42fr) minmax(0, 1.4fr) minmax(220px, .72fr);
+  gap: clamp(1.4rem, 4vw, 4.5rem);
+  align-items: center;
+  padding-block: clamp(5rem, 10vw, 9rem);
+  background: #0A0A12 !important;
+  color: #F0EAD6;
+}
+
+.bio-section::before {
+  content: "SELECTOR PROFILE / 02";
+  position: absolute;
+  top: 8%;
+  left: 5%;
+  z-index: -1;
+  color: rgba(0,212,255,.14);
+  font: 900 clamp(2rem, 8vw, 8rem)/.8 "Press Start 2P";
+  letter-spacing: .07em;
+  transform: rotate(-8deg);
+  white-space: nowrap;
+}
+
+.bio-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.15) 0 1px, transparent 1px 5px),
+    linear-gradient(140deg, transparent 0 44%, rgba(255,45,149,.16) 44% 45%, transparent 45% 74%, rgba(0,212,255,.12) 74% 75%, transparent 75%),
+    radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.66) 100%);
+}
+
+.bio-tag {
+  position: relative;
+  align-self: stretch;
+  display: grid;
+  align-content: center;
+  justify-items: end;
+  gap: .45rem;
+  padding: 1rem .75rem 1rem 0;
+  border-right: 5px solid #FFE600;
+  color: #00D4FF;
+  font: 900 .55rem/1 "Courier New";
+  letter-spacing: .14em;
+  text-align: right;
+  transform: rotate(-2deg);
+}
+
+.bio-tag::after {
+  content: "BASS / BREAKS / IDENTITY";
+  position: absolute;
+  right: -.95rem;
+  bottom: 10%;
+  padding: .3rem .38rem;
+  border: 2px solid #0A0A12;
+  background: #FF2D95;
+  color: #F0EAD6;
+  font: 900 .38rem/1 "Courier New";
+  letter-spacing: .1em;
+  box-shadow: 3px 3px 0 #00D4FF;
+  transform: rotate(8deg);
+}
+
+.bio-tag strong {
+  color: #FF2D95;
+  font: 900 clamp(5.8rem, 12vw, 13rem)/.68 "Press Start 2P";
+  letter-spacing: -.04em;
+  text-shadow: 6px 6px 0 #00D4FF, 10px 10px 0 #0A0A12;
+  transform: rotate(4deg);
+}
+
+.bio-copy {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1rem, 3vw, 2.2rem);
+  border: 5px solid #F0EAD6;
+  background: #0A0A12;
+  box-shadow: 9px 9px 0 #FF2D95;
+  transform: rotate(1.2deg);
+}
+
+.bio-copy::before {
+  content: "BOBBY BASS / 5D TRANSMISSION";
+  position: absolute;
+  top: -1.1rem;
+  right: 1rem;
+  padding: .34rem .45rem;
+  border: 3px solid #0A0A12;
+  background: #00D4FF;
+  color: #0A0A12;
+  font: 900 .42rem/1 "Courier New";
+  letter-spacing: .12em;
+  box-shadow: 4px 4px 0 #FFE600;
+  transform: rotate(3deg);
+}
+
+.bio-copy .eyebrow {
+  color: #FFE600;
+}
+
+.bio-copy h2 {
+  margin: 1.15rem 0 1.45rem;
+  color: #F0EAD6;
+  font-size: clamp(2.4rem, 4.6vw, 5rem);
+  line-height: .82;
+  text-shadow: 4px 4px 0 #FF2D95;
+}
+
+.bio-copy h2 em {
+  color: #00D4FF;
+  font-style: normal;
+  text-shadow: 3px 3px 0 #0A0A12;
+}
+
+.bio-copy p {
+  color: #F0EAD6;
+  font-family: "Courier New" !important;
+  font-size: .94rem;
+  line-height: 1.72;
+}
+
+.bio-copy .bio-lead {
+  color: #F0EAD6;
+  font-size: 1.04rem;
+}
+
+.bio-copy strong {
+  color: #FFE600;
+}
+
+.bio-copy .tags {
+  gap: .55rem;
+  margin-top: 1.6rem;
+}
+
+.bio-copy .tags span {
+  padding: .42rem .56rem;
+  border: 3px solid #00D4FF;
+  background: #FF2D95;
+  color: #0A0A12;
+  font: 900 .48rem/1 "Courier New";
+  letter-spacing: .08em;
+  box-shadow: 3px 3px 0 #FFE600;
+  transform: rotate(-1deg);
+}
+
+.bio-copy .tags span:nth-child(2n) {
+  background: #00D4FF;
+  border-color: #0A0A12;
+  box-shadow: 3px 3px 0 #FF2D95;
+  transform: rotate(2deg);
+}
+
+.bio-art-panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 330px);
+  justify-self: end;
+  padding: .65rem;
+  border: 5px solid #0A0A12;
+  background: #00D4FF;
+  box-shadow: 9px 9px 0 #FFE600;
+  transform: rotate(5deg) translateY(1.2rem);
+}
+
+.bio-art-panel::before {
+  content: "SIDE B / SELECTOR ID";
+  position: absolute;
+  top: -1.05rem;
+  left: .35rem;
+  padding: .28rem .38rem;
+  border: 3px solid #0A0A12;
+  background: #FF2D95;
+  color: #F0EAD6;
+  font: 900 .4rem/1 "Courier New";
+  letter-spacing: .1em;
+  box-shadow: 3px 3px 0 #0A0A12;
+  transform: rotate(-7deg);
+}
+
+.bio-art-panel img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 4px solid #0A0A12;
+  filter: saturate(1.18) contrast(1.1);
+}
+
+.bio-art-panel span {
+  display: block;
+  padding: .7rem .1rem .08rem;
+  color: #0A0A12;
+  font: 900 .52rem/1.1 "Courier New";
+  letter-spacing: .11em;
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .bio-section {
+    grid-template-columns: minmax(74px, .26fr) minmax(0, 1fr) minmax(170px, .58fr);
+    gap: 1.25rem;
+  }
+
+  .bio-copy {
+    transform: none;
+  }
+
+  .bio-art-panel {
+    transform: rotate(4deg) translateY(.7rem);
+  }
+}
+
+@media (max-width: 650px) {
+  .bio-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.7rem;
+    padding-block: 4.7rem;
+  }
+
+  .bio-section::before {
+    top: 4%;
+    left: 3%;
+    font-size: 1.5rem;
+  }
+
+  .bio-tag {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .55rem;
+    min-height: auto;
+    padding: 0 0 .8rem;
+    border-right: 0;
+    border-bottom: 4px solid #FFE600;
+    text-align: left;
+    transform: rotate(-1deg);
+  }
+
+  .bio-tag strong {
+    font-size: 5.5rem;
+  }
+
+  .bio-tag::after {
+    right: .4rem;
+    bottom: -.65rem;
+  }
+
+  .bio-copy {
+    padding: 1rem;
+    transform: rotate(.7deg);
+  }
+
+  .bio-copy::before {
+    right: .45rem;
+    font-size: .31rem;
+  }
+
+  .bio-copy h2 {
+    font-size: 3rem;
+  }
+
+  .bio-copy p,
+  .bio-copy .bio-lead {
+    font-size: .84rem;
+  }
+
+  .bio-art-panel {
+    width: 78%;
+    justify-self: center;
+    transform: rotate(-3deg);
+  }
+}

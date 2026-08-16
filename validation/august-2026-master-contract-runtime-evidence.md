@@ -19,3 +19,7 @@ The global typography layer is loaded last from `client/src/global-typography-sy
 ## Task 2 Visuals Archive review
 
 The Visuals Archive now uses the existing real 5D art set plus four additional archive materials: CFMU Hostile Airwaves, Deep On Rolling, Selectah Showdown splash art, and the Level 2 crowd-pressure stage. Cards are arranged as an off-kilter, hard-shadowed photocopied wall with actual cover art, screen-frame crops, archive stamps, caption bands, scanlines, vignette, and the existing lightbox trigger preserved. Desktop and phone full-page captures show the cards remain visible, labels wrap within their frames, and the section collapses to a two-column mobile collage with selected wide cards spanning the row.
+
+## Task 3 Selector Profile review
+
+The Selector Profile now reads as an asymmetrical zine spread: the oversized 5D frequency tag sits as a separate side strip, the existing bio copy sits inside a cream hard-outline transmission sheet, and the existing character artwork is treated as a rotated cyan identity card. The section uses the approved palette, tracked uppercase display/body hierarchy, scanlines, hard offset shadows, and photocopied labels. Desktop and phone captures show the layout remains readable; at phone width it becomes a controlled single-column stack without modifying any profile text or art.
