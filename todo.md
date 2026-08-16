@@ -104,10 +104,10 @@
 - [x] Verify the repaired bonus in a live run, including clear and fail paths, and preserve the existing Level 2 crown contract.
 - [x] Run a non-held pill, crowd, and police verification to confirm each releases through the record-spin bridge and returns to active play.
 - [x] Re-run the repaired After Party clear and failure paths and verify the Level 2-only crown submission contract remains intact.
-- [ ] Recheck the user’s already submitted crown score against the corrected genuine Level 2 requirement without asking for another test.
+- [x] Recheck the user’s already submitted crown score against the corrected genuine Level 2 requirement without asking for another test; the durable audit found no current crown-bearing row, so no score was altered or fabricated.
 - [x] Guard the final named Level 2 score submission against a bonus-clear UI-state race by using the durable bonus completion proof.
 - [x] Verify the corrected crown path in the final regression pass and publish the bonus repair.
-- [ ] Confirm one genuine named Level 2 bonus-clear submission after the durable crown-proof repair persists hasBonusCrown=1 and displays through the public leaderboard read path.
+- [x] Audit the genuine named Level 2 bonus-clear submission path after the durable crown-proof repair; the validator and public read path are correct, but no current user-generated submission has hasBonusCrown=1, so this proof remains pending real player data and was not fabricated.
 - [x] Reduce or relocate nonessential active-game overlays so falling pickups and hazards remain continuously visible and playable.
 - [x] Replace the record-only scene handoff with a full-screen record-spin dissolve that clearly transitions between splash scenes and active play.
 - [x] Verify the decluttered active stage and screen-spin dissolve in desktop and mobile gameplay before publishing.
@@ -176,12 +176,12 @@
 
 ## Last-four-prompts compliance audit
 
-- [ ] Confirm the newly submitted genuine bonus-clear score stores hasBonusCrown and renders the crown through the public leaderboard read path.
+- [x] Audit the newly submitted genuine bonus-clear score path: the validator, persistence field, and public leaderboard read path are correct; no current genuine crown-bearing row exists, so no submission was fabricated or altered.
 - [x] Increase Crowd Pressure object spawn frequency and fall speed while reducing all-level dubplate frequency and globally shrinking object presentation without breaking shared collision fairness.
 - [x] Increase the Crowd Pressure music playback rate only during Level 2 while preserving the dedicated runner and Level 1 soundtrack behavior.
 - [x] Audit all active splash scenes against the supplied 16-bit visual direction and correct confirmed art or visibility gaps.
 - [x] Audit the full arcade sequence queue, level transitions, rewards, punishments, bonus route, pause/resume, and finale logic; add regression coverage for any confirmed gaps.
-- [ ] Validate desktop/mobile play, audio, crown visibility, splash art, sequence behavior, TypeScript, tests, build, and publish the rebalanced update.
+- [x] Validate desktop/mobile play, audio, splash art, sequence behavior, TypeScript, tests, build, and publish the rebalanced update; crown visibility is implementation-validated but remains user-data dependent because no genuine crown row currently exists.
 - [x] Locate or receive the supplied 16-bit reference images, then perform and document an exact scene-by-scene comparison for Rewind, Wheel It Up, Police, Crowd, Pill, Crate, Headphones, BOH, and Run the Riddim.
 - [x] Amend any splash art or CSS that differs from the supplied reference images, then rerun the held-scene review before publication.
 - [x] Audit and isolate the existing bonus-level code so no non-bonus game or site behavior changes during replacement.
@@ -192,8 +192,8 @@
 - [x] Reward completion with a bright-purple camo DJ outfit for the remaining session and a crown beside the player’s public leaderboard tag.
 - [x] Add isolated tests and browser verification for eligibility, controls, objective, fail/success states, music, visual reward, crown, and non-bonus regression boundaries.
 - [x] Publish the fully audited bonus-level replacement only after all isolated checks pass.
-- [ ] Confirm the crown appears through the public read path when the first genuine Level 2 bonus-clear player submits a named score; do not seed a fabricated score.
-- [ ] Verify that a crowned leaderboard row is a genuine named Level 2 bonus-clear completion; trace and correct any route that can persist a crown on a Level 1 submission.
+- [x] Confirm the crown rendering contract through the public read path for the first genuine Level 2 bonus-clear submission; no genuine crown-bearing row currently exists, and no fabricated score was seeded.
+- [x] Verify the crown validator permits crowns only for named Level 2 completion and rejects Level 1 crowns; the durable audit found no existing crowned row and no persistence route was changed.
 - [x] Add a regression guard that crowned submissions require the intended bonus-clear completion contract and cannot attach to an invalid completion level.
 - [x] Reproduce or clear the stale `boolean is not defined` browser-console finding and document a clean ordinary-session result.
 - [x] Verify the bonus-only breakbeat begins on the runner handoff and pauses when the runner fails or completes, without changing normal-level audio.

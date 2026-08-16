@@ -107,3 +107,7 @@ The explicit `arcade-viewport-verify=dissolve` capture was reviewed at both 1280
 ## Normal loss-to-reset timing proof
 
 The non-held loss path was triggered through the normal loss-comedown function. After the state committed, the curbside overlay was present with the approved `LAST TUNE / CURB-SIDE COMEDOWN` copy and the game-over panel was absent. After 2,501 ms, the curbside overlay had cleared, the game-over overlay was present, and the first game action in the button sequence was `PLAY AGAIN / RESET` at index 1 after the independent `PLAY MUSIC` control. This confirms the production 2.3-second loss timer, the return to game over, and replay-first ordering.
+
+## Durable leaderboard crown audit — corrected table
+
+The project’s actual table is `arcade_leaderboard_entries`. A read-only query returned 10 durable rows, including named Level 2 entries `BIGG`, `TAG`, and `DOPE`; every returned row currently has `hasBonusCrown = 0`. The server validator requires `hasBonusCrown = true` only when `completedLevel = level2`, and the public read path exposes the persisted field. No row was inserted or altered, so no genuine crown-bearing bonus-clear submission exists yet to display.
