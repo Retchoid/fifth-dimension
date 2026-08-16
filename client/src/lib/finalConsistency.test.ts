@@ -11,6 +11,7 @@ const hazardMaster = read("hazard-master-style.css");
 const journey = read("site-journey-flow.css");
 const gameplayClarity = read("gameplay-clarity.css");
 const fallingItemsRenderFix = read("falling-items-render-fix.css");
+const mobileSiteRepair = read("mobile-site-repair.css");
 const mainSource = read("main.tsx");
 
 const publicSources = [
@@ -78,6 +79,12 @@ describe("Task 7 final consistency contract", () => {
   it("protects the complete falling-item render and state contract", () => {
     const gameSource = read("components/DjMiniGame.tsx");
     expect(mainSource.indexOf('import "./site-journey-flow.css";')).toBeLessThan(mainSource.indexOf('import "./falling-items-render-fix.css";'));
+    expect(mainSource.indexOf('import "./falling-items-render-fix.css";')).toBeLessThan(mainSource.indexOf('import "./mobile-site-repair.css";'));
+    expect(mobileSiteRepair).toContain("@media (max-width: 650px)");
+    expect(mobileSiteRepair).toContain(".arcade-cabinet-bezel");
+    expect(mobileSiteRepair).toContain(".game-viewport");
+    expect(mobileSiteRepair).toContain(".hazard-splash");
+    expect(mobileSiteRepair).toContain(".loss-curb-copy");
     for (const selector of [".falling-items-layer", ".falling-object", ".game-grid-bg", ".game-hud", ".dj-catcher", ".game-overlay", ".hazard-splash", ".falling-items-layer:empty::after"]) {
       expect(fallingItemsRenderFix).toContain(selector);
     }

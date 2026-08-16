@@ -1,0 +1,411 @@
+/* ============================================================
+   MOBILE SITE & ARCADE REPAIR
+   Responsive overrides for mobile viewports (max-width: 650px)
+   ============================================================ */
+
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel {
+    transform: scale(0.92);
+    transform-origin: top center;
+    margin: 0 auto;
+    border-width: 3px !important;
+    border-radius: 12px 12px 8px 8px !important;
+  }
+  .game-viewport {
+    aspect-ratio: 3/4 !important;
+    height: auto !important;
+    max-height: 75vh !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+  .game-hud {
+    font-size: 0.45rem !important;
+    gap: 0.15rem !important;
+    flex-wrap: wrap !important;
+    padding: 0.2rem !important;
+  }
+  .hud-badge {
+    padding: 0.1rem 0.2rem !important;
+    font-size: 0.35rem !important;
+    gap: 0.1rem !important;
+  }
+  .hud-badge svg {
+    width: 10px !important;
+    height: 10px !important;
+  }
+  .dj-catcher {
+    width: 14% !important;
+    bottom: 2% !important;
+  }
+  .dj-sprite {
+    width: 100% !important;
+  }
+  .falling-object {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .falling-object .urban-prop-asset {
+    inset: -8% !important;
+  }
+  .level-two-hype-meter.level-two-hype-meter-in-world {
+    width: 72px !important;
+    right: 0.2rem !important;
+    bottom: 0.2rem !important;
+    transform: scale(0.7) !important;
+  }
+  .game-overlay .overlay-box {
+    padding: 0.8rem !important;
+    width: 92% !important;
+    max-width: 92% !important;
+  }
+  .game-overlay .overlay-box h3 {
+    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+  }
+  .game-overlay .overlay-box p {
+    font-size: 0.5rem !important;
+  }
+  .arcade-control-panel {
+    flex-wrap: wrap !important;
+    gap: 0.2rem !important;
+    padding: 0.2rem !important;
+  }
+  .arcade-control-panel .arcade-coin-slot {
+    font-size: 0.4rem !important;
+  }
+  .arcade-joystick-hint span {
+    font-size: 0.35rem !important;
+  }
+  .pickup-legend {
+    display: none !important;
+  }
+  .tape-play-button {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.5rem !important;
+  }
+  .tape-play-button .tape-play-face {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .score-entry-row {
+    flex-direction: column !important;
+    gap: 0.3rem !important;
+  }
+  .score-entry-row input {
+    width: 100% !important;
+    font-size: 0.5rem !important;
+    padding: 0.3rem !important;
+  }
+  .score-entry-row button {
+    width: 100% !important;
+    font-size: 0.5rem !important;
+    padding: 0.3rem !important;
+  }
+  .arcade-score-table {
+    font-size: 0.4rem !important;
+  }
+  .arcade-score-table th,
+  .arcade-score-table td {
+    padding: 0.15rem 0.2rem !important;
+  }
+  .arcade-start-leaderboard ol {
+    font-size: 0.4rem !important;
+  }
+  .arcade-start-leaderboard ol li {
+    padding: 0.1rem 0.2rem !important;
+  }
+
+  /* General site section overrides */
+  .minigame-section {
+    padding: 0.3rem !important;
+  }
+  .section-heading {
+    padding: 0.5rem !important;
+    gap: 0.3rem !important;
+  }
+  .section-heading h2 {
+    font-size: clamp(1.5rem, 6vw, 2.2rem) !important;
+  }
+  .section-heading p {
+    font-size: 0.5rem !important;
+    line-height: 1.3 !important;
+  }
+  .section-heading .eyebrow {
+    font-size: 0.4rem !important;
+  }
+
+  .arcade-cabinet-share-bar {
+    padding: 0.3rem !important;
+  }
+  .arcade-cabinet-share-bar .arcade-share-btn {
+    font-size: 0.4rem !important;
+    padding: 0.2rem 0.4rem !important;
+  }
+  .arcade-cabinet-share-bar .arcade-share-btn svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .arcade-follow-reminder {
+    flex-direction: column !important;
+    gap: 0.4rem !important;
+    padding: 0.5rem !important;
+  }
+  .arcade-follow-reminder > div:first-child {
+    gap: 0.1rem !important;
+  }
+  .arcade-follow-reminder > div:first-child span {
+    font-size: 0.5rem !important;
+  }
+  .arcade-follow-reminder > div:first-child small {
+    font-size: 0.35rem !important;
+  }
+  .arcade-follow-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.3rem !important;
+  }
+  .arcade-follow-link,
+  .arcade-respect-button {
+    font-size: 0.4rem !important;
+    padding: 0.2rem 0.5rem !important;
+  }
+
+  .arcade-leaderboard-container {
+    padding: 0.3rem !important;
+  }
+  .arcade-leaderboard-container h4 {
+    font-size: 0.5rem !important;
+  }
+  .arcade-table-wrap {
+    overflow-x: auto !important;
+  }
+
+  .hazard-splash {
+    padding: 0.6rem !important;
+    border-width: 3px !important;
+  }
+  .hazard-splash .hazard-tag {
+    font-size: 0.35rem !important;
+  }
+  .hazard-splash .hazard-title {
+    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+  }
+  .hazard-splash .hazard-quip {
+    font-size: 0.4rem !important;
+    max-width: 95% !important;
+  }
+
+  .no-request-hud {
+    top: 3px !important;
+    padding: 0.1rem 0.25rem !important;
+    gap: 0.15rem !important;
+    font-size: 0.35rem !important;
+  }
+  .no-request-hud strong {
+    font-size: 0.4rem !important;
+  }
+  .no-request-hud span {
+    font-size: 0.35rem !important;
+  }
+  .no-request-hud em {
+    display: none !important;
+  }
+  .no-request-dj {
+    width: 42px !important;
+    height: 60px !important;
+    bottom: 6% !important;
+  }
+  .no-request-exit {
+    top: 18% !important;
+    transform: translateX(-50%) scale(0.6) !important;
+  }
+  .no-request-entity {
+    width: 22px !important;
+  }
+  .no-request-splash-copy strong {
+    font-size: clamp(1.4rem, 10vw, 2.2rem) !important;
+  }
+  .no-request-splash-copy span,
+  .no-request-splash-copy em {
+    font-size: 0.4rem !important;
+  }
+
+  .afterparty-hud {
+    font-size: 0.35rem !important;
+    padding: 0.1rem 0.25rem !important;
+    gap: 0.1rem !important;
+  }
+  .afterparty-hud span {
+    font-size: 0.3rem !important;
+  }
+  .afterparty-hud strong {
+    font-size: 0.4rem !important;
+  }
+  .afterparty-hud b {
+    font-size: 0.35rem !important;
+  }
+  .afterparty-gear-list {
+    gap: 0.1rem !important;
+    padding: 0.1rem !important;
+  }
+  .afterparty-gear-list span {
+    font-size: 0.3rem !important;
+    padding: 0.05rem 0.15rem !important;
+  }
+  .bonus-tip {
+    font-size: 0.3rem !important;
+    padding: 0.1rem !important;
+  }
+  .bonus-dj-runner {
+    width: 40px !important;
+    height: 56px !important;
+    bottom: 6% !important;
+  }
+  .bonus-obstacle {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .bonus-obstacle b {
+    font-size: 0.25rem !important;
+  }
+  .afterparty-dj-runner.is-exit-lit {
+    animation: none !important;
+  }
+
+  .rewind-graffiti-copy strong,
+  .wheel-copy strong,
+  .pickup-bonus-copy strong,
+  .selector-salute-copy strong,
+  .run-riddim-copy strong {
+    font-size: clamp(1rem, 4vw, 1.6rem) !important;
+  }
+  .rewind-graffiti-copy span,
+  .wheel-copy span,
+  .pickup-bonus-copy span,
+  .selector-salute-copy span,
+  .run-riddim-copy span {
+    font-size: 0.35rem !important;
+  }
+  .rewind-graffiti-copy em,
+  .wheel-copy em,
+  .pickup-bonus-copy em,
+  .selector-salute-copy em,
+  .run-riddim-copy em {
+    font-size: 0.4rem !important;
+  }
+  .rewind-dancer {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .rewind-record-splash {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  .rewind-record-label {
+    font-size: 0.5rem !important;
+  }
+  .wheel-turntable {
+    width: 70px !important;
+    height: 70px !important;
+  }
+  .wheel-center-label {
+    font-size: 0.5rem !important;
+  }
+  .crate-stack {
+    width: 60px !important;
+  }
+  .crate-stack i {
+    font-size: 0.4rem !important;
+  }
+  .rave-headphones {
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  .unlock-overlay-box {
+    padding: 0.6rem !important;
+    width: 94% !important;
+  }
+  .unlock-overlay-box h3 {
+    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+  }
+  .unlock-overlay-box .unlock-download-drop strong {
+    font-size: clamp(1rem, 4vw, 1.5rem) !important;
+  }
+  .unlock-overlay-box .unlock-download-drop span {
+    font-size: 0.4rem !important;
+  }
+  .unlock-overlay-box p {
+    font-size: 0.4rem !important;
+  }
+  .unlock-decision-actions {
+    flex-direction: column !important;
+    gap: 0.3rem !important;
+  }
+  .unlock-decision-actions button {
+    width: 100% !important;
+  }
+
+  .finale-box {
+    padding: 0.6rem !important;
+    width: 94% !important;
+  }
+  .finale-box .finale-kicker {
+    font-size: 0.4rem !important;
+  }
+  .finale-box .finale-copy {
+    font-size: clamp(1.2rem, 5vw, 2rem) !important;
+  }
+  .finale-box .finale-subline {
+    font-size: 0.4rem !important;
+  }
+  .finale-box .finale-high-scores span {
+    font-size: 0.4rem !important;
+  }
+  .finale-box .finale-high-scores b {
+    font-size: 0.4rem !important;
+  }
+  .finale-actions {
+    flex-direction: column !important;
+    gap: 0.3rem !important;
+  }
+  .finale-actions button,
+  .finale-actions a {
+    width: 100% !important;
+    font-size: 0.5rem !important;
+    padding: 0.3rem !important;
+  }
+
+  .loss-curb-dj {
+    width: 72px !important;
+    left: 12% !important;
+    bottom: 16% !important;
+  }
+  .loss-curb-copy {
+    width: 52% !important;
+    margin-left: 5rem !important;
+    margin-bottom: 1rem !important;
+  }
+  .loss-curb-copy strong {
+    font-size: clamp(1.2rem, 5vw, 1.6rem) !important;
+  }
+  .loss-curb-copy span,
+  .loss-curb-copy em {
+    font-size: 0.35rem !important;
+  }
+  .loss-venue-sign {
+    transform: scale(0.6) rotate(-4deg) !important;
+    right: 4% !important;
+    top: 28% !important;
+  }
+  .loss-venue-door {
+    transform: scale(0.6) !important;
+    right: 6% !important;
+    bottom: 32% !important;
+  }
+  .loss-moon {
+    width: 24px !important;
+    right: 8% !important;
+    top: 8% !important;
+  }
+}

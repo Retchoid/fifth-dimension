@@ -22,6 +22,7 @@ import "./exclusive-dubplate-promo.css";
 import "./booking-frequency-terminal.css";
 import "./site-journey-flow.css";
 import "./falling-items-render-fix.css";
+import "./mobile-site-repair.css";
 
 const queryClient = new QueryClient();
 

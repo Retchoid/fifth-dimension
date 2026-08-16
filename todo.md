@@ -1132,3 +1132,4 @@
 - [x] Add a temporary development-only falling-item diagnostic for play state, visible item count, and the mounted item-layer ref; remove it after verification.
 - [x] Apply and verify the DJ sprite normal blend-mode, hard-shadow, no-clip, and no-mask safeguard without changing the sprite asset or gameplay geometry.
 - [x] Apply and verify the complete falling-items render-fix block, including layer/object visibility, HUD and overlay stacking, hazard dimming, and the empty-layer debug helper.
+- [x] Apply the requested mobile game-cabinet and mobile site layout CSS rules from pasted_content.txt, and verify them against the responsive build.
