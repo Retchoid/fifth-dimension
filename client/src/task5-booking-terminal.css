@@ -1,0 +1,128 @@
+/* ============================================================
+   TASK 5: BOOKING FREQUENCY TERMINAL (5TH DIMENSION)
+   ============================================================ */
+
+.booking-frequency-terminal {
+  background-color: #0A0A12;
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 1rem;
+  border-top: 4px solid #00D4FF;
+}
+
+.booking-frequency-terminal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.35) 2px,
+    rgba(0, 0, 0, 0.35) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.terminal-window {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #121222;
+  border: 4px solid #00D4FF;
+  box-shadow: 8px 8px 0 #0A0A12;
+  padding: 2.5rem;
+  position: relative;
+  z-index: 3;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #FF2D95;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.terminal-title {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: #00D4FF;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 3px 3px 0 #0A0A12;
+  margin: 0;
+}
+
+.terminal-status {
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.75rem;
+  color: #FFE600;
+  background: rgba(255, 230, 0, 0.15);
+  border: 1px dashed #FFE600;
+  padding: 0.25rem 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.terminal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.terminal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.terminal-field label {
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.85rem;
+  color: #F0EAD6;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.terminal-input,
+.terminal-textarea {
+  font-family: 'Courier New', monospace !important;
+  background: #0A0A12 !important;
+  border: 2px solid #00D4FF !important;
+  color: #00D4FF !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.8);
+  outline: none;
+}
+
+.terminal-input:focus,
+.terminal-textarea:focus {
+  border-color: #FF2D95 !important;
+  color: #FF2D95 !important;
+}
+
+.terminal-submit-btn {
+  font-family: 'Press Start 2P', monospace !important;
+  background-color: #FF2D95 !important;
+  color: #F0EAD6 !important;
+  border: 3px solid #F0EAD6 !important;
+  box-shadow: 4px 4px 0 #0A0A12 !important;
+  padding: 1rem 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+  margin-top: 1rem;
+}
+
+.terminal-submit-btn:hover {
+  background-color: #00D4FF !important;
+  color: #0A0A12 !important;
+  transform: translateY(-2px);
+}

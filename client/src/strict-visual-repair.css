@@ -1,0 +1,19 @@
+/* ============================================================
+   STRICT VISUAL REPAIR (5TH DIMENSION)
+   Ensures Jersh release badge uses neon pink/cyan without yellow blocks,
+   and landing page text is properly contained without floating artifacts.
+   ============================================================ */
+
+.exclusive-release::before {
+  background: #00D4FF !important;
+  color: #0A0A12 !important;
+  border: 3px solid #0A0A12 !important;
+}
+
+.hero-content,
+.section-heading,
+.terminal-window,
+.zine-spread-container {
+  position: relative !important;
+  overflow: visible !important;
+}

@@ -1139,3 +1139,15 @@
 - [x] Apply the requested yellow-block removal CSS rules over the Jersh In Case download section and achievement chain, and verify with tests and build.
 - [x] Apply the scoped Jersh In Case yellow-block CSS fix without touching unrelated global styles.
 - [x] Verify the section order (Hero -> Listen/Mixes -> Bio -> Other Mixes -> Projects -> Selectah Showdown Arcade -> Visuals -> Booking) and apply scoped text containment rules without breaking layout or arcade positioning.
+- [x] Correct Selectah Showdown instruction, police, badge, HUD, life-icon, and mixer-damage presentation; capture a new verified screenshot.
+- [x] Inventory existing project artwork, identify broken/orphaned asset paths, and map the strongest illustrated scenes to live Level 1, Level 2, and event layers.
+- [x] Restore active Selectah Showdown and Crowd Pressure composition using only existing project artwork while preserving collision logic and performance.
+- [x] Identify and repair the root causes of the Jersh yellow block and homepage floating text without hiding content or adding global overflow rules.
+- [x] Validate the visual recovery at all required mobile widths and capture the required 390×844 review evidence; defer sound and music-player changes.
+
+## Managed media migration for publishable checkpoint
+
+- [x] Locate the user-uploaded recovery archive and verify its embedded-media inventory.
+- [x] Map all active site and arcade media references to managed storage equivalents.
+- [x] Remove the local embedded-media deployment blockers only after managed URLs are verified.
+- [x] Run regression validation, save a publishable checkpoint, and verify the public site.

@@ -1,0 +1,32 @@
+/* ============================================================
+   TASK 7: FINAL CONSISTENCY & POLISH (5TH DIMENSION)
+   ============================================================ */
+
+/* Enforce crisp square corners and hard shadows across site elements */
+.art-card,
+.project-card,
+.music-deck,
+.dubplate-card-section,
+.terminal-window,
+.zine-spread-container,
+.collage-item {
+  border-radius: 0 !important;
+}
+
+/* Eliminate sprite halo / blend modes */
+.game-viewport .dj-sprite,
+.dj-catcher img,
+.falling-object {
+  mix-blend-mode: normal !important;
+  filter: drop-shadow(4px 4px 0 #0A0A12) !important;
+}
+
+/* Reinforce scanlines on game overlays */
+.game-overlay,
+.hazard-splash,
+.dubplate-card-section::after,
+.visuals-archive-section::before,
+.selector-profile-section::after,
+.booking-frequency-terminal::before {
+  position: relative;
+}

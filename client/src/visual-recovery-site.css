@@ -1,0 +1,75 @@
+/* 5TH DIMENSION — VISUAL RECOVERY / SITE-ONLY ROOT-CAUSE REPAIRS
+   This layer is intentionally narrow: it restores normal mobile document flow
+   and prevents historical release-card pseudos from becoming oversized blocks. */
+
+@media (max-width: 980px) {
+  /* The original responsive design hides desktop links at this breakpoint.
+     mobile-site-repair.css previously overrode that state with !important. */
+  .dj-header .dj-nav {
+    display: none !important;
+  }
+
+  .dj-header .menu-toggle {
+    display: grid !important;
+    place-items: center;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 650px) {
+  /* Keep the compact 5D Playa controls legible instead of allowing letter-by-letter wrapping. */
+  .five-d-playa .five-d-playa-main,
+  .five-d-playa .five-d-playa-label,
+  .five-d-playa .five-d-playa-now,
+  .five-d-playa .five-d-playa-state {
+    min-width: 0 !important;
+  }
+
+  .five-d-playa .five-d-playa-label b,
+  .five-d-playa .five-d-playa-label em,
+  .five-d-playa .five-d-playa-now strong,
+  .five-d-playa .five-d-playa-now small,
+  .five-d-playa .five-d-playa-state {
+    display: block;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+  }
+}
+
+/* The historical Third Strike release pseudo-element was 46% of the full card height.
+   Constrain the current promo badge explicitly so it cannot become a large block. */
+.exclusive-release.dubplate-card-section::before {
+  inset: auto !important;
+  top: -1.25rem !important;
+  bottom: auto !important;
+  left: 1.25rem !important;
+  right: auto !important;
+  width: auto !important;
+  height: auto !important;
+  clip-path: none !important;
+  background: #00D4FF !important;
+}
+
+/* Preserve the direct-file-drop label while removing the large yellow decorative disk.
+   No synthetic thumbnail is introduced: the release remains copy/audio-led. */
+.exclusive-release.dubplate-card-section .exclusive-track::after {
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  aspect-ratio: 1;
+  background: #00D4FF !important;
+  color: #0A0A12 !important;
+  box-shadow: 3px 3px 0 #FF2D95 !important;
+}
+
+@media (max-width: 650px) {
+  .exclusive-release.dubplate-card-section::before {
+    left: .45rem !important;
+  }
+
+  .exclusive-release.dubplate-card-section .exclusive-track::after {
+    display: none !important;
+  }
+}

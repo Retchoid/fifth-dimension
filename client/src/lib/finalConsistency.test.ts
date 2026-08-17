@@ -12,6 +12,7 @@ const journey = read("site-journey-flow.css");
 const gameplayClarity = read("gameplay-clarity.css");
 const fallingItemsRenderFix = read("falling-items-render-fix.css");
 const mobileSiteRepair = read("mobile-site-repair.css");
+const scopedArcadeOverhaul = read("arcade-scoped-overhaul.css");
 const mainSource = read("main.tsx");
 
 const publicSources = [
@@ -121,5 +122,18 @@ describe("Task 7 final consistency contract", () => {
     expect(read("exclusive-dubplate-promo.css")).toContain("@media (max-width: 760px)");
     expect(read("booking-frequency-terminal.css")).toContain("@media (max-width: 650px)");
     expect(journey).toContain("@media (max-width: 650px)");
+  });
+
+  it("keeps Selectah Showdown copy and compact HUD contracts readable", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).not.toMatch(/TIGGER|50-RELOAD|DUMPLATES|(?:^|[^B])ADGE HIT/);
+    expect(gameSource).toContain("BADGE HIT");
+    expect(gameSource).toContain("COPS SEIZED<br />YOUR MIXER.");
+    expect(gameSource).toContain("BADGE PATROL / 2 HITS");
+    expect(gameSource).toContain("Collect 25 dubplates.");
+    expect(gameSource).toContain('"❤️".repeat(lives)');
+    expect(scopedArcadeOverhaul).toContain("flex-wrap: nowrap !important");
+    expect(scopedArcadeOverhaul).toContain("bottom: 8% !important");
+    expect(scopedArcadeOverhaul).toContain(".police-seizure-overlay > h3");
   });
 });

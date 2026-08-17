@@ -62,74 +62,74 @@ const projects = [
     title: "Frequency loading",
     detail: "A fresh 5th Dimension mix is taking shape between breakbeat pressure, bassline weight, and late-night jungle heat.",
     status: "In the lab",
-    image: "/manus-storage/5d-frequency-loading-boombox_ce5a46d2.png",
+    image: "/embedded-assets/5d-frequency-loading-boombox_ce5a46d2.png",
   },
   {
     id: "LIVE SIGNAL",
     title: "Floor rewiring sessions",
     detail: "Upcoming appearances, special broadcasts, and after-hours selections will land here when the coordinates are locked.",
     status: "Signal incoming",
-    image: "/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png",
+    image: "/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png",
   },
 ];
 
 const art = [
   {
-    src: "/manus-storage/ragga-revival_bc56c618.png",
+    src: "/embedded-assets/ragga-revival_bc56c618.png",
     alt: "Ragga Revival event poster featuring Hi Deaf",
     label: "RAGGA REVIVAL / 2012",
     className: "art-tall art-ragga",
   },
   {
-    src: "/manus-storage/graffiti-collage_bac19afe.png",
+    src: "/embedded-assets/graffiti-collage_bac19afe.png",
     alt: "Graffiti collage with retro figures and neon green paint",
     label: "GRAFFITI CAKE / 2025",
     className: "art-square art-cake",
   },
   {
-    src: "/manus-storage/cool-world-piece_b1a88e9c.png",
+    src: "/embedded-assets/cool-world-piece_b1a88e9c.png",
     alt: "Cool World-inspired painted art with a rabbit character and green graffiti",
     label: "COOL WORLD STUDY",
     className: "art-tall art-cool",
   },
   {
-    src: "/manus-storage/painted-character_15d43de1.png",
+    src: "/embedded-assets/painted-character_15d43de1.png",
     alt: "Hand-painted portrait with a wax-style graffiti cap",
     label: "WAX PORTRAIT",
     className: "art-square art-wax",
   },
   {
-    src: "/manus-storage/5th-dimension-character_a901a681.jpg",
+    src: "/embedded-assets/5th-dimension-character_a901a681.jpg",
     alt: "Neon vaporwave portrait in magenta, cyan and violet",
     label: "NEON FREQUENCY PORTRAIT",
     className: "art-square art-portrait",
   },
   {
-    src: "/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png",
+    src: "/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png",
     alt: "5th Dimension graffiti logo on cyan paint texture",
     label: "DIMENSION TAG",
     className: "art-tall art-tag",
   },
   {
-    src: "/manus-storage/mix-cover-cfmu-hostile-airwaves_9603abc2.png",
+    src: "/embedded-assets/mix-cover-cfmu-hostile-airwaves_9603abc2.png",
     alt: "CFMU Hostile Airwaves May 9 mix cover from the 5th Dimension archive",
     label: "CFMU HOSTILE AIRWAVES / DUBPLATE",
     className: "art-cover art-cfmu",
   },
   {
-    src: "/manus-storage/png-review-deep-on-rolling_481214e6.png",
+    src: "/embedded-assets/png-review-deep-on-rolling_481214e6.png",
     alt: "Deep On Rolling liquid funk mix cover from the 5th Dimension archive",
     label: "DEEP ON ROLLING / LIQUID PRESSURE",
     className: "art-cover art-deep-rolling",
   },
   {
-    src: "/manus-storage/selectah-splash-art-direction_4d1c250f.png",
+    src: "/embedded-assets/selectah-splash-art-direction_4d1c250f.png",
     alt: "Selectah Showdown arcade splash art direction with pirate-radio hazard energy",
     label: "SELECTAH SHOWDOWN / SPLASH FRAME",
     className: "art-screen art-splash",
   },
   {
-    src: "/manus-storage/5d-selector-level-two-detailed-stage_89e2157b.png",
+    src: "/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png",
     alt: "Selectah Showdown Level 2 detailed crowd-pressure stage",
     label: "CROWD PRESSURE / STAGE FRAME",
     className: "art-screen art-crowd",
@@ -143,27 +143,27 @@ const MIX_ARCHIVE = {
       title: "CFMU Hostile Airwaves May 9",
       artist: "Dj Hideaf",
       description: "Hostile Airwaves archive recording. Date: May 9; year not listed.",
-      file: "/manus-storage/cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3",
+      file: "/embedded-assets/cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3",
       downloadName: "CFMU Hostile Airwaves May 9 - Dj Hideaf.mp3",
-      cover: "/manus-storage/mix-cover-cfmu-hostile-airwaves_9603abc2.png",
+      cover: "/embedded-assets/mix-cover-cfmu-hostile-airwaves_9603abc2.png",
     },
     {
       id: "DNB / 02",
       title: "Deep On Rolling",
       artist: "Bobbyjackets",
       description: "Liquid funk feature recorded for Red.fm.",
-      file: "/manus-storage/deep-on-rolling-bobbyjackets-final_0c567ad7.mp3",
+      file: "/embedded-assets/deep-on-rolling-bobbyjackets-final_0c567ad7.mp3",
       downloadName: "Deep On Rolling - Bobbyjackets.mp3",
-      cover: "/manus-storage/png-review-deep-on-rolling_481214e6.png",
+      cover: "/embedded-assets/png-review-deep-on-rolling_481214e6.png",
     },
     {
       id: "DNB / 03",
       title: "Minianimilism 2",
       artist: "5th Dimension",
       description: "Drum-and-bass transmission from the 5D archive.",
-      file: "/manus-storage/minianimilism-2-5th-dimension-final_567b354e.mp3",
+      file: "/embedded-assets/minianimilism-2-5th-dimension-final_567b354e.mp3",
       downloadName: "Minianimilism 2 - 5th Dimension.mp3",
-      cover: "/manus-storage/png-review-minianimilism-2_f8c55f62.png",
+      cover: "/embedded-assets/png-review-minianimilism-2_f8c55f62.png",
     },
   ],
   house: [
@@ -172,54 +172,54 @@ const MIX_ARCHIVE = {
       title: "Live festival house mix 2022",
       artist: "Bobbyjackets",
       description: "Live festival house broadcast from 2022.",
-      file: "/manus-storage/live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3",
+      file: "/embedded-assets/live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3",
       downloadName: "Live festival house mix 2022 - Bobbyjackets.mp3",
-      cover: "/manus-storage/png-review-live-festival-house-2022_4dd116a7.png",
+      cover: "/embedded-assets/png-review-live-festival-house-2022_4dd116a7.png",
     },
     {
       id: "HOUSE / 02",
       title: "Holes in Our Souls",
       artist: "Bobbyjackets",
       description: "Multi-style downtempo and deep-house session.",
-      file: "/manus-storage/holes-in-our-souls-bobbyjackets-final_9ab83342.mp3",
+      file: "/embedded-assets/holes-in-our-souls-bobbyjackets-final_9ab83342.mp3",
       downloadName: "Holes in Our Souls - Bobbyjackets.mp3",
-      cover: "/manus-storage/png-review-holes-in-our-souls_ec90b79e.png",
+      cover: "/embedded-assets/png-review-holes-in-our-souls_ec90b79e.png",
     },
     {
       id: "LIVE HOUSE / A",
       title: "Festival live mix house — Side A",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part A: techy electro bass house.",
-      file: "/manus-storage/festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3",
+      file: "/embedded-assets/festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3",
       downloadName: "Festival live mix house - Side A - Bobbyjackets.mp3",
-      cover: "/manus-storage/png-review-festival-house-side-a_b1083694.png",
+      cover: "/embedded-assets/png-review-festival-house-side-a_b1083694.png",
     },
     {
       id: "LIVE HOUSE / B",
       title: "Festival live mix house — Side B",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part B: slightly harder bass.",
-      file: "/manus-storage/festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3",
+      file: "/embedded-assets/festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3",
       downloadName: "Festival live mix house - Side B - Bobbyjackets.mp3",
-      cover: "/manus-storage/png-review-festival-house-side-b_9e1003bf.png",
+      cover: "/embedded-assets/png-review-festival-house-side-b_9e1003bf.png",
     },
     {
       id: "LIVE HOUSE / C",
       title: "Festival live mix house — Side C",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part C: keep it moving on the dancefloor.",
-      file: "/manus-storage/festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3",
+      file: "/embedded-assets/festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3",
       downloadName: "Festival live mix house - Side C - Bobbyjackets.mp3",
-      cover: "/manus-storage/png-review-festival-house-side-c_dc39199f.png",
+      cover: "/embedded-assets/png-review-festival-house-side-c_dc39199f.png",
     },
     {
       id: "LIVE HOUSE / D",
       title: "Festival live mix house — Side D",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part D: sun coming up, totally turnt.",
-      file: "/manus-storage/festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3",
+      file: "/embedded-assets/festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3",
       downloadName: "Festival live mix house - Side D - Bobbyjackets.mp3",
-      cover: "/manus-storage/png-review-festival-house-side-d_a5ceb8e8.png",
+      cover: "/embedded-assets/png-review-festival-house-side-d_a5ceb8e8.png",
     },
   ],
 } as const;
@@ -434,7 +434,7 @@ export default function Home() {
       <header className="dj-header">
         <a className="header-brand" href="#top" aria-label="5th Dimension home">
           <span className="brand-pulse" aria-hidden="true" />
-          <img className="header-seal" src="/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png" alt="" />
+          <img className="header-seal" src="/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png" alt="" />
           <span className="header-brand-copy"><small>5D / PIRATE RADIO AUTH</small><b>BASS TRANSMISSION</b></span>
         </a>
         <nav className="dj-nav" aria-label="Main navigation">
@@ -557,7 +557,7 @@ export default function Home() {
           <div className="hero-logo-stage">
             <div className="logo-grid" aria-hidden="true" />
             <img
-              src="/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png"
+              src="/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png"
               alt="5th Dimension graffiti logo"
               className="hero-logo"
             />
@@ -570,6 +570,8 @@ export default function Home() {
           </div>
         </section>
 
+        <div className="room-transition-banner"><span className="room-tag">ROOM 01</span><span>TRANSMISSION BAY / AUDIO PORTAL</span><span className="room-path">WAYPOINT // 01</span></div>
+        <hr className="room-rail-divider" />
         <section id="listen" className="listen-section" aria-labelledby="listen-title">
           <div className="section-heading">
             <div>
@@ -619,18 +621,23 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="bio" className="bio-section" aria-labelledby="bio-title">
-          <div className="bio-tag"><span>THE</span><strong>5D</strong><span>FREQUENCY</span></div>
-          <div className="bio-copy">
-            <p className="eyebrow"><Zap size={15} fill="currentColor" /> SELECTOR PROFILE / 02</p>
-            <h2 id="bio-title">BASS ISN’T A GENRE.<br /><em>IT’S A GRAVITY FIELD.</em></h2>
-            <p className="bio-lead"><strong>5th Dimension is the sonic alter-ego of Bobby Bass</strong> (aka Bobby Jackets / Hi Deaf)—shaping a heavy sound-system discipline where raw dancehall attitude, ragga-steppa pressure, and intricate jungle breakbeats collide.</p>
-            <p>Rooted in sound-system culture and late-night rave frequency, every transmission moves from heavyweight basslines to hypnotic ragga vocal chops and hypnotic amen pressure. Selector rules: select the heaviest plate, test the stack, and let the bass take control.</p>
-            <div className="tags"><span>#DANCEHALLVIBES</span><span>#JUNGLEREVIVAL</span><span>#SOUNDSYSTEMWEIGHT</span><span>#BREAKBEATALCHEMIST</span></div>
-          </div>
-          <div className="bio-art-panel">
-            <img src="/manus-storage/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
-            <span>JUNGLE / GROOVE / PRESSURE</span>
+        <div className="room-transition-banner"><span className="room-tag">ROOM 02</span><span>SELECTOR PROFILE / GRAVITY FIELD</span><span className="room-path">WAYPOINT // 02</span></div>
+        <hr className="room-rail-divider" />
+        <section id="bio" className="bio-section selector-profile-section" aria-labelledby="bio-title">
+          <div className="zine-spread-container">
+            <div className="zine-left-column">
+              <p className="eyebrow"><Zap size={15} fill="currentColor" /> SELECTOR PROFILE / 02</p>
+              <h2 id="bio-title" className="zine-pullquote">BASS ISN’T A GENRE.<br /><em>IT’S A GRAVITY FIELD.</em></h2>
+              <div className="zine-bio-body">
+                <p className="bio-lead"><strong>5th Dimension is the sonic alter-ego of Bobby Bass</strong> (aka Bobby Jackets / Hi Deaf)—shaping a heavy sound-system discipline where raw dancehall attitude, ragga-steppa pressure, and intricate jungle breakbeats collide.</p>
+                <p>Rooted in sound-system culture and late-night rave frequency, every transmission moves from heavyweight basslines to hypnotic ragga vocal chops and hypnotic amen pressure. Selector rules: select the heaviest plate, test the stack, and let the bass take control.</p>
+              </div>
+              <div className="tags"><span>#DANCEHALLVIBES</span><span>#JUNGLEREVIVAL</span><span>#SOUNDSYSTEMWEIGHT</span><span>#BREAKBEATALCHEMIST</span></div>
+            </div>
+            <div className="zine-right-column">
+              <img src="/embedded-assets/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
+              <span className="zine-emblem-caption">JUNGLE / GROOVE / PRESSURE</span>
+            </div>
           </div>
         </section>
 
@@ -720,7 +727,7 @@ export default function Home() {
           </div>
           <article className="matrix-preview" aria-labelledby="matrix-title">
             <div className="matrix-art-window" aria-hidden="true">
-              <img src="/manus-storage/dimension-performance-matrix_c45b9b28.png" alt="" />
+              <img src="/embedded-assets/dimension-performance-matrix_c45b9b28.png" alt="" />
             </div>
             <div className="matrix-scrim" aria-hidden="true" />
             <div className="matrix-content">
@@ -731,7 +738,8 @@ export default function Home() {
             </div>
             <div className="matrix-seal" aria-hidden="true"><strong>5D</strong><span>SEALED<br />SIGNAL</span></div>
           </article>
-          <article id="exclusive" className="exclusive-release" aria-labelledby="exclusive-title">
+          <article id="exclusive" className="exclusive-release dubplate-card-section" aria-labelledby="exclusive-title">
+          <div className="dubplate-card-inner">
             <div className="exclusive-band">
               <p className="exclusive-meta"><Music2 size={15} /> 5D EXCLUSIVE / 001 <i /> DIRECT FILE DROP</p>
               <h3 id="exclusive-title">{EXCLUSIVE_RELEASE.title}</h3>
@@ -792,7 +800,8 @@ export default function Home() {
               )}
               <span className="exclusive-file-info">MP3 / {EXCLUSIVE_RELEASE.duration} / LISTEN OR DOWNLOAD</span>
             </div>
-            <div className="download-box-edge-paint" aria-hidden="true">
+          </div>
+          <div className="download-box-edge-paint" aria-hidden="true">
               <svg viewBox="0 0 1000 210" preserveAspectRatio="none" focusable="false">
                 <path className="release-paint-base" d="M0 0H1000V28C985 28 983 52 970 53C955 54 961 178 945 178C929 178 937 40 919 42C899 43 903 72 888 72C868 72 875 35 850 36C828 36 836 145 820 145C804 145 809 42 790 42C771 42 778 87 758 87C738 87 744 33 721 34C700 35 708 198 689 198C671 198 678 45 658 46C641 47 642 99 626 99C608 99 616 31 590 34C568 36 571 128 553 128C534 128 542 44 523 44C504 44 509 73 490 73C474 73 478 30 454 31C431 32 438 157 420 157C402 157 408 42 385 42C365 42 373 81 352 81C331 81 338 28 315 30C294 31 301 112 284 112C264 112 271 42 251 43C231 44 235 82 217 82C196 82 203 32 176 34C153 35 160 192 141 192C121 192 130 45 106 45C84 45 92 97 69 97C47 97 56 30 26 31C11 32 10 58 0 56Z" />
                 <path className="release-paint-shadow" d="M132 30C143 42 148 68 148 130C148 173 145 190 141 192C121 192 130 45 106 45C117 44 126 39 132 30ZM411 30C423 45 428 70 428 115C428 144 424 155 420 157C402 157 408 42 385 42C396 41 405 36 411 30ZM680 28C696 47 699 92 699 152C698 186 694 196 689 198C671 198 678 45 658 46C668 44 675 37 680 28ZM936 30C947 43 953 71 952 128C950 164 948 175 945 178C929 178 937 40 919 42C926 40 932 36 936 30Z" />
@@ -804,6 +813,8 @@ export default function Home() {
         </section>
 
         {/* The exclusive drop hands visitors directly into Selectah Showdown. */}
+        <div className="room-transition-banner"><span className="room-tag">ROOM 03</span><span>THE ARCADE CABINET / SELECTAH SHOWDOWN</span><span className="room-path">WAYPOINT // 03</span></div>
+        <hr className="room-rail-divider" />
         <div id="selectah-showdown" className="arcade-flow-shell">
           <DjMiniGame
             downloadUnlocked={downloadUnlocked}
@@ -815,7 +826,9 @@ export default function Home() {
           />
         </div>
 
-        <section id="visuals" className="visuals-section" aria-labelledby="visuals-title">
+        <div className="room-transition-banner"><span className="room-tag">ROOM 04</span><span>THE VISUALS ARCHIVE / SCRAPBOOK</span><span className="room-path">WAYPOINT // 04</span></div>
+        <hr className="room-rail-divider" />
+        <section id="visuals" className="visuals-section visuals-archive-section" aria-labelledby="visuals-title">
           <div className="section-heading">
             <div>
               <p className="eyebrow"><Disc3 size={15} /> VISUALS ARCHIVE / 04</p>
@@ -823,9 +836,9 @@ export default function Home() {
             </div>
             <p>Fragments from the 5D visual universe: tags, tape, static, and midnight colour.</p>
           </div>
-          <div className="art-grid">
+          <div className="art-grid visuals-collage-grid">
             {art.map((item, index) => (
-              <figure className={`art-card ${item.className}`} key={item.label}>
+              <figure className={`art-card collage-item ${index % 3 === 0 ? "collage-span-7" : index % 3 === 1 ? "collage-span-5" : "collage-span-6"} ${item.className}`} key={item.label}>
                 <button
                   type="button"
                   className="art-lightbox-trigger"
@@ -835,7 +848,7 @@ export default function Home() {
                 >
                   <img src={item.src} alt={item.alt} />
                 </button>
-                <figcaption>{item.label}<ArrowUpRight size={15} /></figcaption>
+                <figcaption className="collage-caption">{item.label} <ArrowUpRight size={15} /></figcaption>
               </figure>
             ))}
           </div>
@@ -875,54 +888,68 @@ export default function Home() {
           </Dialog>
         </section>
 
-        <section id="booking" className="booking-section" aria-labelledby="booking-title">
-          <div className="booking-signal" aria-hidden="true"><span>GIG</span><strong>5D</strong><span>CALL</span></div>
-          <div className="booking-copy">
-            <p className="eyebrow"><Zap size={15} fill="currentColor" /> BOOKING INQUIRIES / LIVE CHANNEL</p>
-            <h2 id="booking-title">BRING THE<br /><em>FREQUENCY.</em></h2>
-            <p>Send the date, place, and room details. The outgoing subject is stamped <strong>“BOOKING!”</strong> before your signal.</p>
-            <a className="booking-email" href={`mailto:${BOOKING_EMAIL}`}><Mail size={18} /> {BOOKING_EMAIL}</a>
-          </div>
-          <form className="booking-form" onSubmit={openBookingEmail}>
-            <label htmlFor="booking-subject">Your subject <span>*</span></label>
-            <input
-              id="booking-subject"
-              required
-              value={bookingSubject}
-              onChange={(event) => setBookingSubject(event.target.value)}
-              placeholder="e.g. Friday night booking"
-            />
-            <div className="booking-optional-grid">
-              <div>
-                <label htmlFor="booking-event-date">Proposed event date <span>(optional)</span></label>
-                <input
-                  id="booking-event-date"
-                  type="date"
-                  value={bookingEventDate}
-                  onChange={(event) => setBookingEventDate(event.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor="booking-event-location">Event location <span>(optional)</span></label>
-                <input
-                  id="booking-event-location"
-                  value={bookingEventLocation}
-                  onChange={(event) => setBookingEventLocation(event.target.value)}
-                  placeholder="City, venue, or region"
-                />
-              </div>
+        <div className="room-transition-banner"><span className="room-tag">ROOM 05</span><span>THE BOOTH / BOOKING TERMINAL</span><span className="room-path">WAYPOINT // 05</span></div>
+        <hr className="room-rail-divider" />
+        <section id="booking" className="booking-section booking-frequency-terminal" aria-labelledby="booking-title">
+          <div className="terminal-window">
+            <div className="terminal-header">
+              <h2 id="booking-title" className="terminal-title">LOCK INTO<br /><em>THE FREQUENCY.</em></h2>
+              <span className="terminal-status">TRANSMITTER ONLINE</span>
             </div>
-            <label htmlFor="booking-message">Your message <span>(optional)</span></label>
-            <textarea
-              id="booking-message"
-              rows={5}
-              value={bookingMessage}
-              onChange={(event) => setBookingMessage(event.target.value)}
-              placeholder="Set time, crowd, budget, and any key details."
-            />
-            <button type="submit" className="booking-submit">Create booking email <ArrowUpRight size={18} /></button>
-            <p className="booking-note">Generated subject: <b>BOOKING! — {bookingSubject || "Your subject"}</b><br />Date and location are optional and will be added to the email body.</p>
-          </form>
+            <p style={{ fontFamily: "'Courier New', monospace", textTransform: "uppercase", marginBottom: "1.5rem", color: "#F0EAD6" }}>
+              BOOKING INQUIRIES / LIVE CHANNEL. SEND THE DATE, PLACE, AND ROOM DETAILS. OUTGOING SUBJECT IS STAMPED <b>“BOOKING!”</b>. DIRECT EMAIL: <a href={`mailto:${BOOKING_EMAIL}`} style={{ color: "#00D4FF" }}>{BOOKING_EMAIL}</a>
+            </p>
+            <form className="terminal-form" onSubmit={openBookingEmail}>
+              <div className="terminal-field">
+                <label htmlFor="booking-subject">Your subject <span>*</span></label>
+                <input
+                  id="booking-subject"
+                  className="terminal-input"
+                  required
+                  value={bookingSubject}
+                  onChange={(event) => setBookingSubject(event.target.value)}
+                  placeholder="e.g. Friday night booking"
+                />
+              </div>
+              <div className="booking-optional-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className="terminal-field">
+                  <label htmlFor="booking-event-date">Proposed event date <span>(optional)</span></label>
+                  <input
+                    id="booking-event-date"
+                    className="terminal-input"
+                    type="date"
+                    value={bookingEventDate}
+                    onChange={(event) => setBookingEventDate(event.target.value)}
+                  />
+                </div>
+                <div className="terminal-field">
+                  <label htmlFor="booking-event-location">Event location <span>(optional)</span></label>
+                  <input
+                    id="booking-event-location"
+                    className="terminal-input"
+                    value={bookingEventLocation}
+                    onChange={(event) => setBookingEventLocation(event.target.value)}
+                    placeholder="City, venue, or region"
+                  />
+                </div>
+              </div>
+              <div className="terminal-field">
+                <label htmlFor="booking-message">Your message <span>(optional)</span></label>
+                <textarea
+                  id="booking-message"
+                  className="terminal-textarea"
+                  rows={5}
+                  value={bookingMessage}
+                  onChange={(event) => setBookingMessage(event.target.value)}
+                  placeholder="Set time, crowd, budget, and any key details."
+                />
+              </div>
+              <button type="submit" className="terminal-submit-btn booking-submit">Create booking email <ArrowUpRight size={18} /></button>
+              <p className="booking-note" style={{ fontFamily: "'Courier New', monospace", fontSize: "0.8rem", color: "#FFE600", textTransform: "uppercase", marginTop: "0.5rem" }}>
+                Generated subject: <b>BOOKING! — {bookingSubject || "Your subject"}</b><br />Date and location are optional and will be added to the email body.
+              </p>
+            </form>
+          </div>
         </section>
 
 
@@ -939,7 +966,7 @@ export default function Home() {
             </div>
           </div>
           <div className="contact-logo-wrap">
-            <img src="/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png" alt="5th Dimension graffiti mark" />
+            <img src="/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png" alt="5th Dimension graffiti mark" />
           </div>
         </section>
 

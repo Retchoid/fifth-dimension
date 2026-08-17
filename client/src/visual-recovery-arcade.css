@@ -1,0 +1,152 @@
+/* 5TH DIMENSION — VISUAL RECOVERY / ARCADE-ONLY LAYER
+   Uses only existing embedded project artwork and remains below the live collision plane. */
+
+.arcade-cabinet-bezel .game-viewport {
+  isolation: isolate;
+  background: #0A0A12 !important;
+}
+
+/* Level 1: retain the urban stage as the playable depth field, then place the canonical
+   Selectah comic illustration in the non-interactive left/right framing only. */
+.arcade-cabinet-bezel .game-grid-bg:not(.level-two-grid-bg) {
+  z-index: 1 !important;
+  opacity: 1 !important;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 18, .08) 0 36%, rgba(10, 10, 18, .72) 84% 100%),
+    url("/embedded-assets/selectah-level-one-urban-stage-reference_43ddc07a.png") !important;
+  background-position: center;
+  background-size: cover !important;
+  filter: saturate(1.08) contrast(1.08) brightness(.82) !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing {
+  z-index: 3 !important;
+  overflow: hidden;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before,
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
+  content: "";
+  position: absolute;
+  top: 9%;
+  bottom: 20%;
+  width: 28%;
+  pointer-events: none;
+  opacity: .42;
+  background-image: url("/embedded-assets/selectah-splash-art-direction_4d1c250f.png");
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  filter: saturate(1.12) contrast(1.16);
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before {
+  left: 0;
+  background-position: left center;
+  clip-path: polygon(0 0, 100% 9%, 82% 100%, 0 89%);
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
+  right: 0;
+  background-position: right center;
+  clip-path: polygon(19% 8%, 100% 0, 100% 89%, 0 100%);
+}
+
+/* Level 2: the canonical Crowd Pressure stage is fully retained; a central scrim protects the collision lane. */
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg {
+  z-index: 1 !important;
+  opacity: 1 !important;
+  background-image:
+    linear-gradient(180deg, rgba(10, 10, 18, .08), rgba(10, 10, 18, .58) 88%),
+    url("/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png") !important;
+  background-position: center;
+  background-size: cover !important;
+  filter: saturate(1.08) contrast(1.1) brightness(.75) !important;
+}
+
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg::before {
+  content: "";
+  position: absolute;
+  inset: 17% 18% 22%;
+  background: linear-gradient(90deg, rgba(10,10,18,.56), rgba(10,10,18,.13) 34%, rgba(10,10,18,.13) 66%, rgba(10,10,18,.56));
+  border-left: 2px solid rgba(0, 212, 255, .2);
+  border-right: 2px solid rgba(255, 45, 149, .2);
+  pointer-events: none;
+}
+
+/* Keep the collision plane visually clear. Environment sits behind z15 falling items. */
+.arcade-cabinet-bezel .falling-items-layer {
+  z-index: 15 !important;
+}
+
+.arcade-cabinet-bezel .falling-object {
+  width: var(--item-visual-size, 48px) !important;
+  height: var(--item-visual-size, 48px) !important;
+}
+
+.arcade-cabinet-bezel .falling-object .urban-prop-asset {
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+  filter: drop-shadow(3px 4px 0 rgba(5,4,7,.78)) !important;
+}
+
+/* Visual-only character enlargement: the outer catcher and all gameplay coordinates remain unchanged. */
+.arcade-cabinet-bezel .dj-catcher {
+  z-index: 20 !important;
+}
+
+.arcade-cabinet-bezel .dj-catcher-art {
+  transform: scale(1.58);
+  transform-origin: 50% 100%;
+  filter: drop-shadow(5px 6px 0 rgba(5,4,7,.84));
+}
+
+.arcade-cabinet-bezel .dj-sprite {
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+  mix-blend-mode: normal !important;
+}
+
+/* HUD remains an information strip rather than a separate panel. */
+.arcade-cabinet-bezel .game-hud {
+  min-height: 0 !important;
+  padding: .16rem .26rem !important;
+  gap: .14rem !important;
+  background: rgba(10, 10, 18, .76) !important;
+}
+
+.arcade-cabinet-bezel .hud-badge {
+  padding: .04rem .16rem !important;
+  background: rgba(10,10,18,.58) !important;
+}
+
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before,
+  .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
+    top: 12%;
+    bottom: 23%;
+    width: 24%;
+    opacity: .34;
+  }
+
+  .arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg::before {
+    inset: 16% 15% 20%;
+  }
+
+  .arcade-cabinet-bezel .dj-catcher-art {
+    transform: scale(1.72);
+  }
+
+  .arcade-cabinet-bezel .game-hud {
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .arcade-cabinet-bezel .game-hud::-webkit-scrollbar {
+    display: none;
+  }
+}

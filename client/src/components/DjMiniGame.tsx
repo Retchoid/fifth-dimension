@@ -1,6 +1,6 @@
 /* 5D design: preserve the crafted Sega-jungle cabinet while treating the bonus stage as a dawn-vaporwave pirate-radio detour, never a separate visual system. */
 /* 5D arcade style: readable late-90s fighting-game silhouettes, loud reactive cut-ins, and visible-but-nonblocking Level 2 dancers inside the vaporwave jungle cabinet. */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Disc, ShieldAlert, Play, RotateCcw, Trophy, Volume2, VolumeX, Share2, Check } from "lucide-react";
 import type { ReleaseUnlockProof } from "@/lib/releaseGate";
 import { resolveFinaleTag, sanitizeSelectorTag } from "@/lib/selectorTag";
@@ -12,6 +12,8 @@ import "@/miami-arcade-stage.css";
 import "@/reward-callout.css";
 import "@/detailed-arcade-scenes.css";
 import "@/hazard-master-style.css";
+import "@/arcade-scoped-overhaul.css";
+import "@/visual-recovery-arcade.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
@@ -25,30 +27,30 @@ type BonusRunnerType = BonusGearType | BonusHazardType;
 type FallingItemType = "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
 
 const URBAN_PROP_ASSETS: Partial<Record<FallingItemType, string>> = {
-  record: "/manus-storage/selectah-dubplate-urban_052862f6.png",
-  cop: "/manus-storage/selectah-police-siren-urban_5fb879fa.png",
-  pill: "/manus-storage/selectah-pill-urban_e2f4393e.png",
-  phone: "/manus-storage/selectah-phone-urban_0aebd4d4.png",
-  cdj: "/manus-storage/selectah-cdj-urban_79c0b46c.png",
-  mixer: "/manus-storage/selectah-mixer-urban_aa64e423.png",
-  turntable: "/manus-storage/selectah-turntable-urban_de17fd21.png",
-  adapter: "/manus-storage/selectah-adapter-urban_ab9d38ca.png",
-  bottle: "/manus-storage/selectah-bottle-urban_fc7e712f.png",
-  apple: "/manus-storage/selectah-apple-core-urban_66dacfaa.png",
-  lion: "/manus-storage/selectah-lion-urban_9431e50b.png",
+  record: "/embedded-assets/selectah-dubplate-urban_052862f6.png",
+  cop: "/embedded-assets/selectah-police-siren-urban_5fb879fa.png",
+  pill: "/embedded-assets/selectah-pill-urban_e2f4393e.png",
+  phone: "/embedded-assets/selectah-phone-urban_0aebd4d4.png",
+  cdj: "/embedded-assets/selectah-cdj-urban_79c0b46c.png",
+  mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
+  turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
+  adapter: "/embedded-assets/selectah-adapter-urban_ab9d38ca.png",
+  bottle: "/embedded-assets/selectah-bottle-urban_fc7e712f.png",
+  apple: "/embedded-assets/selectah-apple-core-urban_66dacfaa.png",
+  lion: "/embedded-assets/selectah-lion-urban_9431e50b.png",
 };
 
 const URBAN_RUNNER_ASSETS: Record<BonusRunnerType, string> = {
-  headphones: "/manus-storage/selectah-runner-gear-urban_47eea311.png",
-  turntable: "/manus-storage/selectah-turntable-urban_de17fd21.png",
-  mic: "/manus-storage/selectah-runner-gear-urban_47eea311.png",
-  speaker: "/manus-storage/selectah-speaker-stack-urban_9fd16c27.png",
-  mixer: "/manus-storage/selectah-mixer-urban_aa64e423.png",
-  cdj: "/manus-storage/selectah-cdj-urban_79c0b46c.png",
-  cart: "/manus-storage/selectah-runner-cart-urban_9a222f37.png",
-  can: "/manus-storage/selectah-runner-can-urban_b243de6f.png",
-  rock: "/manus-storage/selectah-runner-rock-urban_3cfc2fac.png",
-  rat: "/manus-storage/selectah-runner-rat-urban_42c505b7.png",
+  headphones: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
+  turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
+  mic: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
+  speaker: "/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png",
+  mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
+  cdj: "/embedded-assets/selectah-cdj-urban_79c0b46c.png",
+  cart: "/embedded-assets/selectah-runner-cart-urban_9a222f37.png",
+  can: "/embedded-assets/selectah-runner-can-urban_b243de6f.png",
+  rock: "/embedded-assets/selectah-runner-rock-urban_3cfc2fac.png",
+  rat: "/embedded-assets/selectah-runner-rat-urban_42c505b7.png",
 };
 
 const FALLING_ITEM_RULES: Record<FallingItemType, { size: number; hitRadius: number; tilt: number }> = {
@@ -98,9 +100,9 @@ interface NoRequestBonusEntity {
 }
 
 const CELEBRATION_DANCERS = [
-  { className: "dancer-lime", src: "/manus-storage/5d-jungle-dancer-lime_af13269a.png" },
-  { className: "dancer-cyan", src: "/manus-storage/5d-jungle-dancer-cyan_391dfc3c.png" },
-  { className: "dancer-magenta", src: "/manus-storage/5d-jungle-dancer-magenta_da5bea9b.png" },
+  { className: "dancer-lime", src: "/embedded-assets/5d-jungle-dancer-lime_af13269a.png" },
+  { className: "dancer-cyan", src: "/embedded-assets/5d-jungle-dancer-cyan_391dfc3c.png" },
+  { className: "dancer-magenta", src: "/embedded-assets/5d-jungle-dancer-magenta_da5bea9b.png" },
 ] as const;
 
 const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maximum Respekt"] as const;
@@ -1678,6 +1680,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     return () => window.clearTimeout(verifierTimer);
   }, [sceneVerificationMode]);
 
+  useLayoutEffect(() => {
+    if (!sceneVerificationMode || !import.meta.env.DEV || typeof window === "undefined") return;
+    document.getElementById("selectah-showdown")?.scrollIntoView({ block: "start" });
+  }, [sceneVerificationMode]);
+
   useEffect(() => {
     if (viewportVerificationPreparedRef.current || !["active", "dissolve", "live", "transition"].includes(viewportVerificationMode ?? "")) return;
     viewportVerificationPreparedRef.current = true;
@@ -2593,7 +2600,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
       <audio
         ref={bgMusicRef}
-        src="/manus-storage/5d-jungle-genesis-track_ff9d149a.mp3"
+        src="/embedded-assets/5d-jungle-genesis-track_ff9d149a.mp3"
         loop
         preload="auto"
         playsInline
@@ -2601,7 +2608,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       />
       <audio
         ref={bonusMusicRef}
-        src="/manus-storage/afterparty-runner-fast-breakbeat_0d617411.mp3"
+        src="/embedded-assets/afterparty-runner-fast-breakbeat_0d617411.mp3"
         loop
         preload="auto"
         playsInline
@@ -2788,7 +2795,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="no-request-street" aria-hidden="true"><i /><i /><i /></div>
             <div className="no-request-exit" aria-hidden="true"><span>EXIT</span><b /></div>
             <div className="no-request-hud"><strong>NO REQUEST BONUS</strong><span>EXIT {Math.round(noRequestBonusProgress)}%</span><em>A / D OR TAP A LANE</em></div>
-            <div className={`no-request-dj lane-${bonusLane}`}><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ racing for the empty-rave exit" /></div>
+            <div className={`no-request-dj lane-${bonusLane}`}><img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ racing for the empty-rave exit" /></div>
             <div className="no-request-entity-layer" aria-hidden="true">
               {noRequestBonusObstacles.map((entity) => <span key={entity.id} className={`no-request-entity ${entity.type} lane-${entity.lane}`} style={{ "--no-request-depth": `${entity.depth}%` } as React.CSSProperties}><i /></span>)}
             </div>
@@ -2821,7 +2828,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             </div>
             <div className="bonus-tip">AUTO RUN · A / D OR ARROWS STEER · DRAG OR TAP A ROAD LANE · ONE HIT ENDS THE DASH</div>
             <div className={`bonus-dj-runner afterparty-dj-runner lane-${bonusLane}${bonusDoorOpen ? " is-exit-lit" : ""}`}>
-              <img src="/manus-storage/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ running toward the after party" />
+              <img src="/embedded-assets/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ running toward the after party" />
             </div>
             <div className="bonus-obstacle-layer afterparty-entity-layer" aria-hidden="true">
               {bonusObstacles.map((entity) => <span key={entity.id} className={`bonus-obstacle afterparty-entity ${entity.type} lane-${entity.lane}`} data-entity={entity.type} style={{ "--runner-depth": `${entity.depth}%` } as React.CSSProperties}><i className="urban-runner-asset" style={{ "--urban-runner-url": `url(${URBAN_RUNNER_ASSETS[entity.type]})` } as React.CSSProperties} /><b>{entity.type === "headphones" ? "HP" : entity.type === "turntable" ? "TT" : entity.type === "speaker" ? "SPK" : entity.type === "mixer" ? "MIX" : entity.type === "cart" ? "CART" : entity.type.toUpperCase()}</b></span>)}
@@ -2898,7 +2905,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="cop-car-wheel cop-car-wheel-right" />
             </div>
             <div className="police-dj-reaction" aria-hidden="true">
-              <img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" />
+              <img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="" />
             </div>
             <div className="police-recovery-prompt" aria-hidden="true">
               <strong>RECOVERY COMBO</strong>
@@ -2918,7 +2925,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="empty-club-room" aria-hidden="true">
               <span className="empty-club-light empty-club-light-left" /><span className="empty-club-light empty-club-light-right" />
               <span className="empty-club-speaker empty-club-speaker-left" /><span className="empty-club-speaker empty-club-speaker-right" />
-              <span className="empty-club-dj"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /></span>
+              <span className="empty-club-dj"><img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /></span>
               <span className="empty-club-door door-one" /><span className="empty-club-door door-two" /><span className="empty-club-tumbleweed" />
             </div>
             <div className={`crowd-anger-copy${crowdHazardVariantRef.current === "thrown" ? " is-thrown-tune" : " is-wrong-tune"}`}>
@@ -2931,7 +2938,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {activeArcadeSequence === "pill" && !gameOver && (
           <div className="game-overlay hazard-splash pill-overload-overlay" role="status" aria-live="assertive">
             <div className="pill-trip-burst" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index} className={`pill-trip-ray pill-trip-ray-${index % 6}`} />)}</div>
-            <div className="dopey-dj-portrait" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="dopey-pupil pupil-left" /><span className="dopey-pupil pupil-right" /><span className="dopey-smile"><i /><i /><i /></span></div>
+            <div className="dopey-dj-portrait" aria-hidden="true"><img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="dopey-pupil pupil-left" /><span className="dopey-pupil pupil-right" /><span className="dopey-smile"><i /><i /><i /></span></div>
             <div className="pill-pitch-wobble" aria-hidden="true"><i>PITCH</i><b>WOBBLE</b><i>PITCH</i></div>
             <div className="pill-overload-copy"><span>PILL PRESSURE / 2 CONSECUTIVE HITS / PITCH WOBBLE</span><strong>TOO HIGH<br />TO PLAY!</strong><em>BRUV. YOU ATE THE PILL. THE RIDDIM IS LITERALLY MELTING. 🫠</em></div>
             <div className="pill-floaters" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <i key={index} className={`pill-floater pill-floater-${index % 4}`} />)}</div>
@@ -3137,7 +3144,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className={`game-overlay loss-curb-overlay${heldLossPreview ? " viewport-verify-hold" : ""}`} role="status" aria-live="assertive">
             <div className="loss-curb-night" aria-hidden="true"><span className="loss-moon" /><span className="loss-venue-sign">RAVE</span><span className="loss-venue-door" /><span className="loss-neon-spill" /></div>
             <div className="loss-curb-ground" aria-hidden="true"><i /><i /><i /></div>
-            <div className="loss-curb-dj" aria-hidden="true"><img src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="loss-dj-leg loss-dj-leg-left" /><span className="loss-dj-leg loss-dj-leg-right" /><span className="loss-dj-crate" /></div>
+            <div className="loss-curb-dj" aria-hidden="true"><img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="loss-dj-leg loss-dj-leg-left" /><span className="loss-dj-leg loss-dj-leg-right" /><span className="loss-dj-crate" /></div>
             <div className="loss-curb-copy"><span>LAST TUNE / CURB-SIDE COMEDOWN</span><strong>THE RAVE<br />LEFT YOU OUTSIDE.</strong><em>TAKE A BREATH. THE NEXT SESSION IS WAITING.</em></div>
           </div>
         )}
@@ -3222,8 +3229,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 style={{
                   left: `${item.x}%`,
                   top: `${item.y}%`,
-                  width: `${item.size}px`,
-                  height: `${item.size}px`,
+                  width: `${Math.max(48, item.size * 1.5)}px`,
+                  height: `${Math.max(48, item.size * 1.5)}px`,
+                  "--item-visual-size": `${Math.max(48, item.size * 1.5)}px`,
                   "--fall-tilt": `${item.tilt}deg`,
                 } as React.CSSProperties}
               >
@@ -3285,8 +3293,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {/* Level 1 sound-system assembly: half stack at 10, full stack at 15, and a dancer payoff at the 18-dub streak. */}
         <div className={`dj-booth-stage${level === 1 && recordsCaught >= 10 ? " speakers-half-raised" : ""}${level === 1 && recordsCaught >= 15 ? " speakers-full-raised" : ""}${level === 2 ? " level-two-speaker-stage" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
-          <div className="speaker-tower urban-speaker-tower speaker-tower-left"><img src="/manus-storage/selectah-speaker-stack-urban_9fd16c27.png" alt="" /></div>
-          <div className="speaker-tower urban-speaker-tower speaker-tower-right"><img src="/manus-storage/selectah-speaker-stack-urban_9fd16c27.png" alt="" /></div>
+          <div className="speaker-tower urban-speaker-tower speaker-tower-left"><img src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" /></div>
+          <div className="speaker-tower urban-speaker-tower speaker-tower-right"><img src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" /></div>
           {((level === 1 && recordsCaught >= 20) || (level === 2 && recordsCaught >= LEVEL_TWO_REQUIRED_RECORDS)) && (
             <div className="speaker-stack-dancers">
               <img className="speaker-stack-dancer dancer-lime" src={CELEBRATION_DANCERS[0].src} alt="" />
@@ -3329,7 +3337,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
               className="dj-sprite"
-              src="/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png"
+              src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png"
               alt=""
               onError={(event) => {
                 event.currentTarget.style.display = "none";

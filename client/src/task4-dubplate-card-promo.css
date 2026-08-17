@@ -1,0 +1,97 @@
+/* ============================================================
+   TASK 4: DUBPLATE CARD PROMO (5TH DIMENSION)
+   ============================================================ */
+
+.dubplate-card-section {
+  max-width: 900px;
+  margin: 3rem auto;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 45, 149, 0.25) 0%, #0A0A12 85%);
+  border: 4px solid #FF2D95;
+  box-shadow: 8px 8px 0 #0A0A12, inset 0 0 40px rgba(255, 45, 149, 0.1);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dubplate-card-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.25) 2px,
+    rgba(0, 0, 0, 0.25) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.dubplate-card-inner {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dubplate-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px dashed #00D4FF;
+  padding-bottom: 1rem;
+}
+
+.dubplate-card-title {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: #FFE600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 4px 4px 0 #0A0A12;
+  margin: 0;
+}
+
+.dubplate-card-subtitle {
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.85rem;
+  color: #00D4FF;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.dubplate-card-body {
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #F0EAD6;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dubplate-arcade-btn {
+  font-family: 'Press Start 2P', monospace !important;
+  background-color: #FF2D95;
+  color: #F0EAD6;
+  border: 3px solid #F0EAD6;
+  box-shadow: 4px 4px 0 #0A0A12;
+  padding: 1rem 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.dubplate-arcade-btn:hover {
+  background-color: #00D4FF;
+  color: #0A0A12;
+  transform: translateY(-2px);
+}

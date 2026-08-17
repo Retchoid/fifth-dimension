@@ -1,0 +1,100 @@
+/* ============================================================
+   TASK 2: VISUALS ARCHIVE COLLAGE (5TH DIMENSION)
+   ============================================================ */
+
+.visuals-archive-section {
+  background-color: #0A0A12;
+  background-image: radial-gradient(circle at 50% 50%, rgba(255, 45, 149, 0.08) 0%, rgba(10, 10, 18, 0.95) 80%);
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 1rem;
+}
+
+.visuals-archive-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.25) 2px,
+    rgba(0, 0, 0, 0.25) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.visuals-collage-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 3;
+}
+
+.collage-item {
+  background: #121222;
+  border: 4px solid #FF2D95;
+  box-shadow: 6px 6px 0 #0A0A12;
+  padding: 0.75rem;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+
+.collage-item:nth-child(even) {
+  border-color: #00D4FF;
+  transform: rotate(0.8deg);
+}
+
+.collage-item:nth-child(odd) {
+  transform: rotate(-1.2deg);
+}
+
+.collage-item:hover {
+  transform: translateY(-4px) scale(1.01);
+  z-index: 10;
+}
+
+.collage-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 2px solid #0A0A12;
+  filter: contrast(1.15) saturate(1.1);
+}
+
+.collage-caption {
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.75rem;
+  color: #F0EAD6;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.25rem;
+  border: 1px dashed #FF2D95;
+}
+
+/* Asymmetrical span assignments for mood-board feel */
+.collage-span-4 { grid-column: span 4; }
+.collage-span-5 { grid-column: span 5; }
+.collage-span-7 { grid-column: span 7; }
+.collage-span-8 { grid-column: span 8; }
+.collage-span-6 { grid-column: span 6; }
+
+@media (max-width: 768px) {
+  .collage-span-4,
+  .collage-span-5,
+  .collage-span-7,
+  .collage-span-8,
+  .collage-span-6 {
+    grid-column: span 12 !important;
+    transform: none !important;
+  }
+}

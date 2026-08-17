@@ -23,6 +23,18 @@ import "./booking-frequency-terminal.css";
 import "./site-journey-flow.css";
 import "./falling-items-render-fix.css";
 import "./mobile-site-repair.css";
+import "./task1-global-font-system.css";
+import "./regression-visual-integration.css";
+import "./task2-visuals-archive-collage.css";
+import "./task3-selector-profile-zine.css";
+import "./task4-dubplate-card-promo.css";
+import "./task5-booking-terminal.css";
+import "./task6-site-journey.css";
+import "./task7-final-consistency-polish.css";
+import "./final-regression-fix-pass.css";
+import "./strict-visual-repair.css";
+import "./visual-recovery-site.css";
+
 
 const queryClient = new QueryClient();
 

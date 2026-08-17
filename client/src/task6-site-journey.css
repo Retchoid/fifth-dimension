@@ -1,0 +1,46 @@
+/* ============================================================
+   TASK 6: SITE JOURNEY FLOW (5TH DIMENSION)
+   ============================================================ */
+
+.room-transition-banner {
+  background: #0A0A12;
+  border-top: 3px solid #FF2D95;
+  border-bottom: 3px solid #00D4FF;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.65rem;
+  color: #F0EAD6;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  position: relative;
+  z-index: 5;
+}
+
+.room-transition-banner span.room-tag {
+  color: #FFE600;
+  background: rgba(255, 230, 0, 0.15);
+  padding: 0.2rem 0.5rem;
+  border: 1px dashed #FFE600;
+}
+
+.room-transition-banner span.room-path {
+  color: #00D4FF;
+}
+
+.room-rail-divider {
+  height: 6px;
+  background: linear-gradient(90deg, #FF2D95, #00D4FF, #FFE600, #FF2D95);
+  background-size: 300% 100%;
+  animation: signalRailMove 12s linear infinite;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  margin: 0;
+  border: none;
+}
+
+@keyframes signalRailMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}

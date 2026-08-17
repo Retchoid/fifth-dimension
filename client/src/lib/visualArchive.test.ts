@@ -14,7 +14,7 @@ describe("Visuals Archive collage", () => {
     expect(homeSource).toContain("png-review-deep-on-rolling_481214e6.png");
     expect(homeSource).toContain("selectah-splash-art-direction_4d1c250f.png");
     expect(homeSource).toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
-    expect(homeSource).not.toContain('src: "/manus-storage/placeholder');
+    expect(homeSource).not.toContain('src: "/embedded-assets/placeholder');
   });
 
   it("protects the hard-framed, asymmetric, mobile-safe archive composition", () => {

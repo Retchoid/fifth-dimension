@@ -1,0 +1,837 @@
+/* ============================================================
+   5TH DIMENSION — SCOPED ARCADE VISUAL OVERHAUL
+   Only affects elements inside .arcade-cabinet-bezel
+   Preserves all other site styles (SoundCloud, Jersh, etc.)
+   ============================================================ */
+
+/* --- SCOPE: Everything inside the cabinet --- */
+.arcade-cabinet-bezel {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  max-width: 520px;
+  width: 100%;
+  background: linear-gradient(90deg, #050407 0%, #1a0f24 15%, #0f0818 85%, #050407 100%);
+  border: 4px solid #050407;
+  border-radius: 16px 16px 10px 10px;
+  box-shadow:
+    0 0 0 4px #050407,
+    0 0 0 8px rgba(255, 45, 149, 0.3),
+    0 0 0 12px rgba(0, 212, 255, 0.15),
+    10px 14px 0 #050407,
+    16px 20px 0 rgba(255, 45, 149, 0.4),
+    0 0 40px rgba(255, 45, 149, 0.2);
+  overflow: hidden;
+}
+
+/* --- Cabinets bolts — scoped --- */
+.arcade-cabinet-bezel .cabinet-corner-bolts {
+  position: absolute;
+  inset: 6px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.arcade-cabinet-bezel .cabinet-corner-bolts i {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 30% 30%, #888, #222 60%, #050407);
+  border: 2px solid #050407;
+  border-radius: 50%;
+  box-shadow: inset 0 -2px 2px rgba(0, 0, 0, 0.5), 0 0 4px rgba(255, 45, 149, 0.2);
+}
+
+.arcade-cabinet-bezel .cabinet-corner-bolts i:nth-child(1) { top: 0; left: 0; }
+.arcade-cabinet-bezel .cabinet-corner-bolts i:nth-child(2) { top: 0; right: 0; }
+.arcade-cabinet-bezel .cabinet-corner-bolts i:nth-child(3) { bottom: 0; left: 0; }
+.arcade-cabinet-bezel .cabinet-corner-bolts i:nth-child(4) { bottom: 0; right: 0; }
+
+/* --- Marquee — scoped --- */
+.arcade-cabinet-bezel .arcade-marquee {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  background: linear-gradient(90deg, rgba(255, 45, 149, 0.1), rgba(0, 212, 255, 0.1));
+  border-top: 3px solid #FF2D95;
+  border-bottom: 3px solid #00D4FF;
+  box-shadow: inset 0 0 30px rgba(255, 45, 149, 0.1);
+  position: relative;
+}
+
+.arcade-cabinet-bezel .arcade-marquee strong {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(0.5rem, 1.5vw, 0.8rem);
+  color: #F0EAD6;
+  text-shadow: 0 0 10px rgba(255, 45, 149, 0.5), 0 0 20px rgba(255, 45, 149, 0.2), 3px 3px 0 #050407;
+  letter-spacing: 0.1em;
+}
+
+.arcade-cabinet-bezel .marquee-seal {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.5rem;
+  padding: 0.1rem 0.4rem;
+  color: #FF2D95;
+  border: 2px solid #FF2D95;
+  box-shadow: 3px 3px 0 #050407, inset 0 0 10px rgba(255, 45, 149, 0.1);
+  text-shadow: 0 0 10px rgba(255, 45, 149, 0.3);
+}
+
+.arcade-cabinet-bezel .marquee-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FF2D95;
+  box-shadow: 0 0 15px #FF2D95;
+  animation: marquee-blink 1.2s step-end infinite;
+}
+
+.arcade-cabinet-bezel .marquee-light:last-child {
+  animation-delay: 0.6s;
+}
+
+@keyframes marquee-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.1; }
+}
+
+/* --- Game Viewport — scoped --- */
+.arcade-cabinet-bezel .game-viewport {
+  position: relative;
+  aspect-ratio: 3/4;
+  width: 100%;
+  max-height: 65vh;
+  min-height: 400px;
+  overflow: hidden;
+  background: #0A0A12;
+  border: 3px solid rgba(0, 212, 255, 0.3);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+/* --- CRT Effects — scoped to viewport --- */
+.arcade-cabinet-bezel .game-viewport::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.08) 2px, rgba(0, 0, 0, 0.08) 4px);
+  mix-blend-mode: overlay;
+}
+
+/* --- Vignette — scoped --- */
+.arcade-cabinet-bezel .game-viewport .vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+/* --- Game Grid — scoped --- */
+.arcade-cabinet-bezel .game-grid-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: 
+    radial-gradient(ellipse at 50% 30%, rgba(255, 45, 149, 0.05), transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0px, transparent 8px, rgba(255, 255, 255, 0.01) 8px, rgba(255, 255, 255, 0.01) 9px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 8px, rgba(255, 255, 255, 0.01) 8px, rgba(255, 255, 255, 0.01) 9px),
+    #0A0A12;
+}
+
+/* --- HUD — scoped --- */
+.arcade-cabinet-bezel .game-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px 6px;
+  background: rgba(10, 10, 18, 0.85);
+  border-bottom: 2px solid rgba(255, 45, 149, 0.2);
+}
+
+.arcade-cabinet-bezel .hud-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.3rem;
+  color: #F0EAD6;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 45, 149, 0.1);
+  text-shadow: 0 0 5px rgba(255, 45, 149, 0.1);
+}
+
+.arcade-cabinet-bezel .hud-badge strong {
+  color: #FF2D95;
+  font-size: 0.35rem;
+  text-shadow: 0 0 10px rgba(255, 45, 149, 0.2);
+}
+
+.arcade-cabinet-bezel .hud-badge.lives-badge strong {
+  font-size: 0.4rem;
+  letter-spacing: 0.05em;
+}
+
+.arcade-cabinet-bezel .hud-badge svg {
+  width: 10px;
+  height: 10px;
+  filter: drop-shadow(0 0 4px rgba(255, 45, 149, 0.2));
+}
+
+/* --- DJ Sprite — scoped --- */
+.arcade-cabinet-bezel .dj-catcher {
+  position: absolute;
+  bottom: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14%;
+  max-width: 60px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.arcade-cabinet-bezel .dj-sprite {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(4px 5px 0 rgba(5, 4, 7, 0.85)) drop-shadow(0 0 20px rgba(255, 45, 149, 0.15));
+}
+
+/* --- Falling Items — scoped --- */
+.arcade-cabinet-bezel .falling-items-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.arcade-cabinet-bezel .falling-object {
+  position: absolute;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.6));
+}
+
+/* --- Hazard Splash — scoped --- */
+.arcade-cabinet-bezel .hazard-splash {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  background: rgba(10, 10, 18, 0.92);
+  border: 4px solid #FF2D95;
+  box-shadow: inset 0 0 80px rgba(255, 45, 149, 0.1), 0 0 60px rgba(255, 45, 149, 0.15), 6px 6px 0 #050407;
+}
+
+.arcade-cabinet-bezel .hazard-splash::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px);
+}
+
+.arcade-cabinet-bezel .hazard-splash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.arcade-cabinet-bezel .hazard-splash > * {
+  position: relative;
+  z-index: 1;
+}
+
+.arcade-cabinet-bezel .hazard-splash span {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(0.4rem, 1vw, 0.6rem);
+  color: #00D4FF;
+  text-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+  letter-spacing: 0.15em;
+}
+
+.arcade-cabinet-bezel .hazard-splash strong {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+  color: #FF2D95;
+  text-shadow: 0 0 20px rgba(255, 45, 149, 0.3), 4px 4px 0 #050407;
+  line-height: 1.1;
+}
+
+.arcade-cabinet-bezel .hazard-splash em {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(0.45rem, 1.2vw, 0.65rem);
+  color: #F0EAD6;
+  max-width: 85%;
+  line-height: 1.5;
+  font-style: normal;
+  text-shadow: 0 0 10px rgba(255, 45, 149, 0.1);
+}
+
+/* --- Mobile — scoped --- */
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel {
+    border-radius: 12px 12px 8px 8px;
+    box-shadow: 0 0 0 3px #050407, 0 0 0 6px rgba(255, 45, 149, 0.25), 8px 10px 0 #050407;
+  }
+
+  .arcade-cabinet-bezel .game-viewport {
+    max-height: 55vh;
+    min-height: 320px;
+  }
+
+  .arcade-cabinet-bezel .game-hud {
+    gap: 2px;
+    padding: 3px 4px;
+  }
+
+  .arcade-cabinet-bezel .hud-badge {
+    font-size: 0.22rem;
+    padding: 1px 3px;
+  }
+
+  .arcade-cabinet-bezel .hud-badge strong {
+    font-size: 0.26rem;
+  }
+
+  .arcade-cabinet-bezel .hud-badge svg {
+    width: 7px;
+    height: 7px;
+  }
+
+  .arcade-cabinet-bezel .dj-catcher {
+    width: 16%;
+    max-width: 45px;
+  }
+
+  .arcade-cabinet-bezel .falling-object {
+    width: 14px;
+    height: 14px;
+  }
+
+  .arcade-cabinet-bezel .hazard-splash {
+    padding: 0.8rem;
+  }
+
+  .arcade-cabinet-bezel .hazard-splash strong {
+    font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+  }
+
+  .arcade-cabinet-bezel .hazard-splash span {
+    font-size: 0.35rem;
+  }
+
+  .arcade-cabinet-bezel .hazard-splash em {
+    font-size: 0.35rem;
+  }
+
+  .arcade-cabinet-bezel .cabinet-corner-bolts i {
+    width: 8px;
+    height: 8px;
+  }
+
+  .arcade-cabinet-bezel .arcade-marquee strong {
+    font-size: 0.4rem;
+  }
+
+  .arcade-cabinet-bezel .marquee-seal {
+    font-size: 0.35rem;
+    padding: 0.05rem 0.25rem;
+  }
+}
+
+/* --- FALLING OBJECTS — RESTORE PIXEL ART --- */
+.arcade-cabinet-bezel .falling-object .urban-prop-asset {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.6)) !important;
+  transform: rotate(var(--fall-tilt, 0deg)) !important;
+}
+
+/* Ensure each object type has distinct visual identity */
+.arcade-cabinet-bezel .falling-object.record .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.6)) drop-shadow(0 0 8px rgba(255, 45, 149, 0.15)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.cop .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.6)) drop-shadow(0 0 8px rgba(0, 212, 255, 0.15)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.pill .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.6)) drop-shadow(0 0 8px rgba(255, 45, 149, 0.2)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.mixer .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.6)) drop-shadow(0 0 8px rgba(255, 230, 0, 0.15)) !important;
+}
+
+/* Fallback — if images don't load, show colored shapes with labels */
+.arcade-cabinet-bezel .falling-object .urban-prop-asset:not([style*="url"])::after {
+  content: attr(data-label) !important;
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.3rem !important;
+  color: #F0EAD6 !important;
+  background: rgba(255, 45, 149, 0.2) !important;
+  border: 2px solid #FF2D95 !important;
+}
+
+/* --- CRT SCANLINES — RESTORE --- */
+.arcade-cabinet-bezel .game-viewport::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  ) !important;
+  mix-blend-mode: overlay !important;
+}
+
+/* --- VIGNETTE --- */
+.arcade-cabinet-bezel .game-viewport .vignette {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.6) 100%) !important;
+}
+
+/* --- DAMAGE FEEDBACK — FIX POSITION --- */
+.arcade-cabinet-bezel .damage-feedback {
+  position: absolute !important;
+  top: 15% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 40 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 2px !important;
+  padding: 6px 12px !important;
+  background: rgba(10, 10, 18, 0.9) !important;
+  border: 2px solid #FF2D95 !important;
+  box-shadow: 4px 4px 0 #0A0A12 !important;
+  animation: damage-pop 0.5s ease-out both !important;
+}
+
+@keyframes damage-pop {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.8); }
+  30% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.1); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* === FALLING OBJECTS — BIGGER & CLEARER (Scoped) === */
+.arcade-cabinet-bezel .falling-object {
+  position: absolute !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 15 !important;
+  pointer-events: none !important;
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+  width: 36px !important;
+  height: 36px !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.arcade-cabinet-bezel .falling-object .urban-prop-asset {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.record .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(255, 45, 149, 0.35)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.cop .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(0, 212, 255, 0.4)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.pill .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(255, 45, 149, 0.4)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.phone .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(255, 230, 0, 0.3)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.mixer .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(255, 230, 0, 0.25)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.turntable .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(0, 212, 255, 0.3)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.cdj .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(255, 230, 0, 0.35)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.lion .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(255, 230, 0, 0.4)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.adapter .urban-prop-asset {
+  filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) drop-shadow(0 0 16px rgba(0, 212, 255, 0.25)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object .urban-prop-asset:not([style*="url"])::after {
+  content: attr(data-label) !important;
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.4rem !important;
+  color: #F0EAD6 !important;
+  background: rgba(255, 45, 149, 0.25) !important;
+  border: 2px solid #FF2D95 !important;
+  border-radius: 4px !important;
+}
+
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel .falling-object {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+/* --- MIXER RECOVERY STATUS --- */
+.arcade-cabinet-bezel .mixer-recovery-status {
+  position: absolute !important;
+  bottom: 12% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 25 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.1rem !important;
+  padding: 0.2rem 0.5rem !important;
+  background: rgba(10, 10, 18, 0.85) !important;
+  border: 2px solid #FF2D95 !important;
+  box-shadow: 3px 3px 0 #0A0A12 !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.35rem !important;
+  color: #F0EAD6 !important;
+}
+
+.arcade-cabinet-bezel .mixer-recovery-status strong {
+  color: #FF2D95 !important;
+  font-size: 0.4rem !important;
+}
+
+.arcade-cabinet-bezel .mixer-recovery-status span {
+  color: #00D4FF !important;
+  font-size: 0.3rem !important;
+}
+
+/* --- POLICE SEIZURE OVERLAY STYLING --- */
+.arcade-cabinet-bezel .police-seizure-copy {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  text-align: center !important;
+  z-index: 2 !important;
+  max-width: 85% !important;
+}
+
+.arcade-cabinet-bezel .police-seizure-copy span {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(0.35rem, 1vw, 0.5rem) !important;
+  color: #00D4FF !important;
+}
+
+.arcade-cabinet-bezel .police-seizure-copy strong {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(1.6rem, 4.5vw, 3rem) !important;
+  color: #FF2D95 !important;
+  text-shadow: 4px 4px 0 #0A0A12 !important;
+  line-height: 1.1 !important;
+}
+
+.arcade-cabinet-bezel .police-seizure-copy em {
+  font-family: 'Courier New', monospace !important;
+  font-size: clamp(0.4rem, 1vw, 0.55rem) !important;
+  color: #F0EAD6 !important;
+  font-style: normal !important;
+  line-height: 1.4 !important;
+}
+
+.arcade-cabinet-bezel .police-recovery-prompt {
+  position: absolute !important;
+  bottom: 8% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2 !important;
+  display: flex !important;
+  gap: 0.3rem !important;
+  padding: 0.2rem 0.5rem !important;
+  background: rgba(10, 10, 18, 0.8) !important;
+  border: 2px solid #00D4FF !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.35rem !important;
+  color: #F0EAD6 !important;
+}
+
+.arcade-cabinet-bezel .police-recovery-prompt strong {
+  color: #00D4FF !important;
+}
+
+/* --- DJ CATCHER & SPRITE — PROMINENCE & SHADOW --- */
+.arcade-cabinet-bezel .dj-catcher {
+  position: absolute !important;
+  bottom: 2% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 18% !important;
+  max-width: 70px !important;
+  z-index: 20 !important;
+  pointer-events: none !important;
+}
+
+.arcade-cabinet-bezel .dj-sprite {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  image-rendering: pixelated !important;
+  filter: drop-shadow(4px 5px 0 rgba(5, 4, 7, 0.85)) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0, 0, 0, 0.08) 2px, rgba(0, 0, 0, 0.08) 4px) !important;
+  mix-blend-mode: overlay !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .vignette {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.6) 100%) !important;
+}
+
+/* --- POLICE SEIZURE COPY POSITIONING & SCALE --- */
+.arcade-cabinet-bezel .police-seizure-copy {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  text-align: center !important;
+  z-index: 2 !important;
+  max-width: 85% !important;
+  position: absolute !important;
+  top: 45% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+.arcade-cabinet-bezel .police-seizure-copy span {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(0.35rem, 1vw, 0.5rem) !important;
+  color: #00D4FF !important;
+}
+
+.arcade-cabinet-bezel .police-seizure-copy strong {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(1.4rem, 4vw, 2.8rem) !important;
+  color: #FF2D95 !important;
+  text-shadow: 4px 4px 0 #0A0A12 !important;
+  line-height: 1.1 !important;
+}
+
+.arcade-cabinet-bezel .police-seizure-copy em {
+  font-family: 'Courier New', monospace !important;
+  font-size: clamp(0.4rem, 1vw, 0.55rem) !important;
+  color: #F0EAD6 !important;
+  font-style: normal !important;
+  line-height: 1.4 !important;
+}
+
+/* --- FINAL CHECKLIST: COMPACT PLAY HUD --- */
+.arcade-cabinet-bezel .game-hud,
+.arcade-cabinet-bezel .game-hud.game-hud-clear {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.15rem !important;
+  padding: 0.15rem 0.3rem !important;
+  background: rgba(10, 10, 18, 0.8) !important;
+  border-bottom: 2px solid rgba(255, 45, 149, 0.2) !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 30 !important;
+  overflow: hidden !important;
+}
+
+.arcade-cabinet-bezel .hud-badge {
+  display: flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  gap: 0.1rem !important;
+  padding: 0.05rem 0.2rem !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(0.25rem, 0.8vw, 0.35rem) !important;
+  color: #F0EAD6 !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 45, 149, 0.1) !important;
+  white-space: nowrap !important;
+}
+
+.arcade-cabinet-bezel .hud-badge strong {
+  color: #FF2D95 !important;
+  font-size: clamp(0.3rem, 1vw, 0.4rem) !important;
+}
+
+.arcade-cabinet-bezel .pickup-flash-slot {
+  display: none !important;
+}
+
+/* --- FINAL CHECKLIST: BOTTOM-CENTRE DAMAGE / RECOVERY --- */
+.arcade-cabinet-bezel .damage-feedback {
+  top: auto !important;
+  bottom: 8% !important;
+}
+
+.arcade-cabinet-bezel .damage-feedback strong {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(0.5rem, 1.5vw, 0.7rem) !important;
+  color: #F0EAD6 !important;
+  padding: 0 0.2rem !important;
+  max-width: 100% !important;
+  word-break: break-word !important;
+}
+
+.arcade-cabinet-bezel .mixer-recovery-status {
+  bottom: 8% !important;
+  padding: 0.2rem 0.4rem !important;
+  font-size: 0.3rem !important;
+}
+
+/* The police overlay must not show any generic cabinet heading. */
+.arcade-cabinet-bezel .police-seizure-overlay > h3,
+.arcade-cabinet-bezel .police-seizure-overlay > .arcade-marquee {
+  display: none !important;
+}
+
+/* The hazard master stylesheet uses a more specific flyer rule. Reclaim the
+   police scene with a single readable vertical composition for the cabinet. */
+.arcade-cabinet-bezel .game-viewport .hazard-splash.police-seizure-overlay .sega-police-car {
+  top: 7% !important;
+  right: auto !important;
+  left: 50% !important;
+  transform: translateX(-50%) scale(0.74) !important;
+  transform-origin: center top !important;
+  z-index: 4 !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy {
+  top: 43% !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: 50% !important;
+  width: min(78%, 430px) !important;
+  transform: translateX(-50%) !important;
+  align-items: center !important;
+  text-align: center !important;
+  z-index: 12 !important;
+  gap: 0.18rem !important;
+  padding: 0.35rem 0.65rem !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy em {
+  font-size: clamp(0.35rem, 0.9vw, 0.48rem) !important;
+  line-height: 1.24 !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .hazard-splash.police-seizure-overlay .police-recovery-prompt {
+  right: auto !important;
+  bottom: 2% !important;
+  left: 50% !important;
+  width: min(74%, 330px) !important;
+  transform: translateX(-50%) !important;
+  text-align: center !important;
+  z-index: 12 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0.18rem !important;
+  padding: 0.24rem 0.4rem !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .hazard-splash.police-seizure-overlay .police-recovery-prompt strong,
+.arcade-cabinet-bezel .game-viewport .hazard-splash.police-seizure-overlay .police-recovery-prompt span {
+  white-space: normal !important;
+  text-align: center !important;
+}
+
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel .game-viewport .hazard-splash.police-seizure-overlay .sega-police-car {
+    top: 5% !important;
+    transform: translateX(-50%) scale(0.62) !important;
+  }
+
+  .arcade-cabinet-bezel .game-viewport .hazard-splash.police-seizure-overlay .police-seizure-copy {
+    top: 48% !important;
+    width: 88% !important;
+  }
+}
