@@ -23,6 +23,12 @@ The game viewport currently renders `game-grid-bg`, `rave-world-dressing`, the H
 
 **Level 2** uses `5d-selector-level-two-detailed-stage` as one coherent crowd/stage environment. Existing speaker-stack and dubplate art is confined to the edges, leaving the DJ/crowd perspective and the central object path readable. It does not tint or reuse the Level 1 skyline.
 
+## Clean-environment source review — correction pass
+
+The Level 1 asset `selectah-level-one-urban-stage-reference` is a clean 1920×1080 city/alley environment: it has no gallery UI, text, character, or embedded gameplay objects. It is suitable as the Level 1 environment source.
+
+The Level 2 asset `5d-selector-level-two-detailed-stage` is a 1920×1080 crowd/stage scene **with a baked-in back-facing DJ, decks, speakers, and foreground hardware**. It is a valid art-direction reference but not a clean active-game background under the current correction brief. The active playfield must stop using it as a full background until a clean Level 2 crowd/stage environment source is supplied. No alternative clean Level 2 environment source was found in the retained 59-asset inventory.
+
 ## Temporary selector-sprite constraint
 
 The existing `5d-selector-jungle-dj-sprite` is a square **1920×1920 source image with a baked-in dark backdrop**, not an alpha-transparent sprite. The current pass retains it unchanged as directed. The new playfield places it against dark, compositionally compatible areas and does not add a secondary translucent backing card. A genuinely transparent replacement requires the dedicated production sprite the user noted is being prepared; it is not simulated with a generated substitute in this pass.

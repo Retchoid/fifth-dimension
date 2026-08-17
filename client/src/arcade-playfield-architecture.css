@@ -25,12 +25,10 @@
 }
 
 .arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg {
-  background-image:
-    linear-gradient(180deg, rgba(10,10,18,.04) 0 32%, rgba(10,10,18,.28) 68%, rgba(10,10,18,.68) 100%),
-    url("/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png") !important;
-  background-position: center 45% !important;
-  background-size: cover !important;
-  filter: saturate(1.12) contrast(1.1) !important;
+  /* No clean Level 2 environment source exists. Do not substitute the crowd
+     gallery frame, which contains a baked-in DJ, decks, and foreground UI. */
+  background-image: none !important;
+  filter: none !important;
 }
 
 /* Remove the accumulated pseudo-panels, horizon grids, and translucent playfield
@@ -61,57 +59,13 @@
   display: none !important;
 }
 
-.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 12% !important;
-  left: -9% !important;
-  width: 31% !important;
-  height: 42% !important;
-  z-index: 1 !important;
-  opacity: .9 !important;
-  background: url("/embedded-assets/selectah-splash-art-direction_4d1c250f.png") left center / 315% auto no-repeat !important;
-  filter: saturate(1.12) contrast(1.1) drop-shadow(3px 4px 0 rgba(10,10,18,.86)) !important;
-  clip-path: polygon(0 0, 100% 8%, 84% 88%, 0 100%) !important;
-}
-
-.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
-  content: "" !important;
-  position: absolute !important;
-  right: -8% !important;
-  bottom: 7% !important;
-  width: 26% !important;
-  height: 32% !important;
-  z-index: 1 !important;
-  opacity: .82 !important;
-  background: url("/embedded-assets/selectah-police-siren-urban_5fb879fa.png") right bottom / contain no-repeat !important;
-  filter: saturate(1.08) contrast(1.12) drop-shadow(3px 4px 0 rgba(10,10,18,.9)) !important;
-}
-
-.arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::before {
-  content: "" !important;
-  position: absolute !important;
-  left: -5% !important;
-  bottom: 5% !important;
-  width: 25% !important;
-  height: 43% !important;
-  z-index: 1 !important;
-  opacity: .76 !important;
-  background: url("/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png") left bottom / contain no-repeat !important;
-  filter: saturate(1.08) contrast(1.14) drop-shadow(3px 4px 0 rgba(10,10,18,.9)) !important;
-}
-
-.arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::after {
-  content: "" !important;
-  position: absolute !important;
-  right: -7% !important;
-  top: 14% !important;
-  width: 21% !important;
-  height: 25% !important;
-  z-index: 1 !important;
-  opacity: .7 !important;
-  background: url("/embedded-assets/selectah-dubplate-urban_052862f6.png") right top / contain no-repeat !important;
-  filter: saturate(1.12) contrast(1.13) drop-shadow(3px 4px 0 rgba(10,10,18,.9)) !important;
+.arcade-cabinet-bezel .rave-world-dressing::before,
+.arcade-cabinet-bezel .rave-world-dressing::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  filter: none !important;
+  clip-path: none !important;
 }
 
 /* LAYER 4 — entities always sit over environment art. Visual scale is separate
@@ -176,10 +130,6 @@
   z-index: 30 !important;
 }
 
-.arcade-cabinet-bezel .mobile-playfield-control-hint {
-  display: none;
-}
-
 /* LAYER 7 — events remain temporary above an intact level scene. */
 .arcade-cabinet-bezel .game-overlay,
 .arcade-cabinet-bezel .hazard-splash {
@@ -196,29 +146,6 @@
     margin-right: auto !important;
     margin-bottom: 0 !important;
     margin-left: auto !important;
-  }
-
-  .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before {
-    left: -12% !important;
-    width: 35% !important;
-    opacity: .8 !important;
-  }
-
-  .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
-    right: -11% !important;
-    width: 30% !important;
-    opacity: .74 !important;
-  }
-
-  .arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::before {
-    width: 29% !important;
-    opacity: .68 !important;
-  }
-
-  .arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::after {
-    right: -10% !important;
-    width: 25% !important;
-    opacity: .62 !important;
   }
 
   .arcade-cabinet-bezel .dj-catcher-art {
@@ -273,43 +200,28 @@
   .arcade-cabinet-bezel .game-hud > .audio-toggle { grid-area: audio; justify-content: center !important; }
   .arcade-cabinet-bezel .game-hud > .pickup-flash-slot { grid-area: pickup; }
 
-  .arcade-cabinet-bezel .mobile-playfield-control-hint {
-    position: absolute;
-    right: 5%;
-    bottom: 2.5%;
-    left: 5%;
-    z-index: 22;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #F0EAD6;
-    font: .32rem/1 "Press Start 2P", monospace;
-    letter-spacing: .08em;
-    text-shadow: 2px 2px 0 #0A0A12;
-    opacity: .9;
-  }
+}
 
-  .arcade-cabinet-bezel .mobile-playfield-control-hint span,
-  .arcade-cabinet-bezel .mobile-playfield-control-hint button {
-    padding: .24rem .32rem;
-    border: 2px solid #00D4FF;
-    background: rgba(10,10,18,.66);
-    box-shadow: 2px 2px 0 #FF2D95;
-  }
+/* Recovery remains game-state information, not a large playfield card. */
+.arcade-cabinet-bezel .mixer-recovery-status {
+  right: 3% !important;
+  bottom: 14% !important;
+  left: auto !important;
+  z-index: 25 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 9rem !important;
+  padding: .18rem .28rem !important;
+  border: 1px solid #FF2D95 !important;
+  background: rgba(10,10,18,.78) !important;
+  box-shadow: 2px 2px 0 #0A0A12 !important;
+  transform: none !important;
+  font-size: .28rem !important;
+}
 
-  .arcade-cabinet-bezel .mobile-playfield-control-hint button {
-    min-width: 44px;
-    min-height: 34px;
-    color: #F0EAD6;
-    font: inherit;
-    letter-spacing: inherit;
-    touch-action: manipulation;
-  }
-
-  .arcade-cabinet-bezel .mobile-playfield-control-hint button:active {
-    transform: translate(1px, 1px);
-    box-shadow: 1px 1px 0 #FF2D95;
-  }
+.arcade-cabinet-bezel .mixer-recovery-status strong,
+.arcade-cabinet-bezel .mixer-recovery-status span {
+  font-size: inherit !important;
 }
 
 @media (max-width: 360px) {

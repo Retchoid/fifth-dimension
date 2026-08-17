@@ -75,13 +75,14 @@ describe("Task 7 final consistency contract", () => {
   it("keeps active gameplay on one explicit asset-backed playfield architecture", () => {
     const gameSource = read("components/DjMiniGame.tsx");
     expect(gameSource).toContain('import "@/arcade-playfield-architecture.css";');
-    expect(gameSource).toContain("mobile-playfield-control-hint");
-    expect(gameSource).toContain("nudgeMobileDj");
-    expect(gameSource).toContain('aria-label="Move selector left"');
-    expect(gameSource).toContain('aria-label="Move selector right"');
+    expect(gameSource).toContain("handlePointerMove");
+    expect(gameSource).toContain("onPointerMove");
+    expect(gameSource).toContain("updateDjPositionFromClientX");
+    expect(gameSource).not.toContain("mobile-playfield-control-hint");
+    expect(gameSource).not.toContain("nudgeMobileDj");
     expect(arcadePlayfieldArchitecture).toContain("selectah-level-one-urban-stage-reference_43ddc07a.png");
-    expect(arcadePlayfieldArchitecture).toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
-    expect(arcadePlayfieldArchitecture).toContain("selectah-speaker-stack-urban_9fd16c27.png");
+    expect(arcadePlayfieldArchitecture).not.toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
+    expect(arcadePlayfieldArchitecture).not.toContain("selectah-splash-art-direction_4d1c250f.png");
     expect(arcadePlayfieldArchitecture).toContain(".game-grid-bg::before");
     expect(arcadePlayfieldArchitecture).toContain("content: none !important");
     expect(arcadePlayfieldArchitecture).toContain("grid-template-areas");

@@ -1198,3 +1198,12 @@
 - [x] Reorganize the HUD at 320–430px so every required value is visible without clipping, microscopic text, or horizontal scrolling.
 - [x] Verify event overlays remain temporary above intact level environments and restore the correct level when closed.
 - [x] Capture the required 390×844 idle, active-object, event, maximum-HUD, control-use, and gallery-side-by-side evidence at mobile and desktop viewports.
+
+## Immediate arcade correction — controls and clean environment only
+
+- [x] Remove the new in-playfield left/right buttons and restore the original direct touch/pointer drag response without changing movement sensitivity or collision logic.
+- [x] Audit active Level 1 and Level 2 backgrounds for gallery screenshots or reference-frame assets, then replace them only with clean existing environment artwork if available.
+- [x] Remove the giant face, vinyl, and pasted collage fragments from active gameplay unless an existing clean environmental asset supports a restrained edge role.
+- [x] Convert persistent mixer/recovery status cards into compact in-game feedback that does not block the action area.
+- [x] Capture and verify the required 390×844 Level 1 running state with direct drag, no arrow buttons, several objects, visible player, contained HUD, no screenshot background, and no obstructive recovery card.
+- [x] Report whether suitable clean Level 1 and Level 2 environment source assets exist; stop further art replacement if they do not.
