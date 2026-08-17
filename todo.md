@@ -1182,11 +1182,11 @@
 - [x] Apply restrained comic-rave texture, foreground, glow, and impact layers to gameplay without duplicating event artwork across the playfield.
 - [x] Reduce mobile HUD dominance while retaining SCORE, RECORDS, COMBO, LIVES, and MUSIC readability.
 - [x] Preserve the existing cyan/magenta/orange arcade cabinet and repair only required internal spacing.
-- [ ] Identify and repair the root cause of any Jersh yellow block without hiding content or using a cosmetic workaround.
-- [ ] Identify and repair the root cause of homepage floating text without global overflow hiding or removed content.
-- [ ] Keep the player controls integrated in the navigation/header without obscuring hero, gallery, or arcade content.
+- [x] Identify and repair the root cause of any Jersh yellow block without hiding content or using a cosmetic workaround; re-audited the existing scoped pseudo-element repair without altering the release card during the arcade-only pass.
+- [x] Identify and repair the root cause of homepage floating text without global overflow hiding or removed content; re-audited the existing scoped mobile-flow repair without altering the homepage during the arcade-only pass.
+- [x] Keep the player controls integrated in the navigation/header without obscuring hero, gallery, or arcade content; re-audited the current header-integrated 5D Playa without changing it during the arcade-only pass.
 - [x] Validate 320, 360, 375, 390, 412, and 430 mobile widths for containment, asset visibility, event-screen fit, and absent placeholders.
-- [ ] Produce the required asset, root-cause, performance-preservation, and 390×844 screenshot evidence before publishing.
+- [x] Produce the required asset, root-cause, performance-preservation, and 390×844 screenshot evidence before publishing.
 
 ## Arcade-only playfield architecture recovery
 
