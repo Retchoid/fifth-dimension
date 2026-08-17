@@ -1,0 +1,185 @@
+/* 5TH DIMENSION — GALLERY ART ACTIVE PLAY
+   This final, arcade-scoped layer turns the existing illustrated gallery frames
+   into separated environment, foreground, pickup, and event layers. It never
+   changes gameplay coordinates, collision boxes, or spawn behaviour. */
+
+.arcade-cabinet-bezel .game-viewport {
+  background: #0A0A12 !important;
+}
+
+/* LEVEL 1: the city provides depth while two cropped regions of the canonical
+   Selectah Showdown frame introduce the illustrated selector and police world. */
+.arcade-cabinet-bezel .game-grid-bg:not(.level-two-grid-bg) {
+  background-image:
+    linear-gradient(180deg, rgba(10,10,18,.03) 0 28%, rgba(10,10,18,.34) 58%, rgba(10,10,18,.82) 100%),
+    url("/embedded-assets/selectah-splash-art-direction_4d1c250f.png") !important;
+  background-position: center, center 48% !important;
+  background-size: cover !important;
+  filter: saturate(1.12) contrast(1.12) brightness(.86) !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world) {
+  z-index: 3 !important;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255,230,0,.10) 0 14%, transparent 15% 100%),
+    repeating-linear-gradient(135deg, transparent 0 14px, rgba(255,45,149,.12) 14px 17px, transparent 17px 31px);
+  pointer-events: none;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before,
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
+  top: 8% !important;
+  bottom: 16% !important;
+  width: 45% !important;
+  opacity: .74 !important;
+  background-size: cover !important;
+  border-top: 3px solid rgba(0,212,255,.6);
+  border-bottom: 3px solid rgba(255,45,149,.6);
+  box-shadow: 5px 6px 0 rgba(10,10,18,.88);
+  filter: saturate(1.16) contrast(1.15) !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before {
+  left: -8% !important;
+  background-image: url("/embedded-assets/selectah-level-one-urban-stage-reference_43ddc07a.png") !important;
+  background-position: left center !important;
+  clip-path: polygon(0 0, 100% 6%, 82% 91%, 0 100%);
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
+  right: -8% !important;
+  background-image: url("/embedded-assets/selectah-police-siren-urban_5fb879fa.png") !important;
+  background-position: right center !important;
+  clip-path: polygon(18% 7%, 100% 0, 100% 100%, 0 92%);
+}
+
+/* LEVEL 2: let the canonical Crowd Pressure art carry the atmosphere. A deep
+   central scrim retains a generous readable fall lane without emptying the club. */
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg {
+  background-image:
+    linear-gradient(180deg, rgba(10,10,18,.05) 0 18%, rgba(10,10,18,.18) 46%, rgba(10,10,18,.66) 100%),
+    url("/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png") !important;
+  background-position: center, center 46% !important;
+  background-size: cover !important;
+  filter: saturate(1.2) contrast(1.12) brightness(.9) !important;
+}
+
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg::before {
+  inset: 13% 16% 18% !important;
+  background:
+    linear-gradient(90deg, rgba(10,10,18,.68), rgba(10,10,18,.20) 30%, rgba(10,10,18,.20) 70%, rgba(10,10,18,.68)),
+    repeating-linear-gradient(0deg, transparent 0 17px, rgba(0,212,255,.08) 17px 19px) !important;
+  border-left: 3px solid rgba(0,212,255,.42) !important;
+  border-right: 3px solid rgba(255,45,149,.42) !important;
+  box-shadow: inset 0 0 0 2px rgba(10,10,18,.56) !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::before,
+.arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  opacity: .46;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: saturate(1.12) contrast(1.15) drop-shadow(5px 6px 0 rgba(10,10,18,.82));
+}
+
+.arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::before {
+  left: -5%;
+  bottom: 8%;
+  width: 28%;
+  height: 44%;
+  background-image: url("/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png");
+  background-position: left bottom;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::after {
+  right: -13%;
+  top: 22%;
+  width: 34%;
+  height: 35%;
+  background-image: url("/embedded-assets/selectah-dubplate-urban_052862f6.png");
+  background-position: right center;
+}
+
+/* The collector retains its existing hitbox while the illustrated selector
+   becomes immediately identifiable on a phone-sized cabinet. */
+.arcade-cabinet-bezel .dj-catcher-art {
+  transform: scale(2.4) !important;
+  transform-origin: 50% 100% !important;
+  filter: drop-shadow(6px 7px 0 rgba(10,10,18,.92)) drop-shadow(0 0 0 #00D4FF) !important;
+}
+
+.arcade-cabinet-bezel .dj-catcher-art .dj-sprite {
+  transform: none !important;
+}
+
+/* Pickup silhouettes grow visually only. The wrapper dimensions and collision
+   calculations remain exactly as rendered by DjMiniGame.tsx. */
+.arcade-cabinet-bezel .falling-object :is(.urban-prop-asset, .falling-item-image) {
+  transform: rotate(var(--fall-tilt, 0deg)) scale(1.12) !important;
+  transform-origin: center !important;
+}
+
+.arcade-cabinet-bezel .falling-object.record :is(.urban-prop-asset, .falling-item-image) {
+  transform: rotate(var(--fall-tilt, 0deg)) scale(1.25) !important;
+  filter: drop-shadow(3px 4px 0 rgba(10,10,18,.9)) drop-shadow(0 0 7px rgba(255,230,0,.56)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object :is(.cop, .pill, .phone, .bottle, .apple) :is(.urban-prop-asset, .falling-item-image),
+.arcade-cabinet-bezel .falling-object.cop :is(.urban-prop-asset, .falling-item-image),
+.arcade-cabinet-bezel .falling-object.pill :is(.urban-prop-asset, .falling-item-image),
+.arcade-cabinet-bezel .falling-object.phone :is(.urban-prop-asset, .falling-item-image),
+.arcade-cabinet-bezel .falling-object.bottle :is(.urban-prop-asset, .falling-item-image),
+.arcade-cabinet-bezel .falling-object.apple :is(.urban-prop-asset, .falling-item-image) {
+  filter: drop-shadow(3px 4px 0 rgba(10,10,18,.9)) drop-shadow(0 0 7px rgba(255,45,149,.45)) !important;
+}
+
+/* Event scenes already use specific supplied illustrations. The shared hard
+   flyer frame, print texture, and cyan/magenta ink edge makes them one system. */
+.arcade-cabinet-bezel .game-viewport :is(
+  .level-two-arrival-overlay, .rewind-reward-overlay, .wheel-it-up-overlay,
+  .crate-bonus-overlay, .headphones-bonus-overlay, .selector-salute-overlay,
+  .run-riddim-overlay, .record-spin-transition, .unlock-overlay,
+  .pre-level-two-overlay, .finale-overlay, .loss-curb-overlay, .game-over-overlay,
+  .bonus-rewind-overlay, .afterparty-splash-overlay, .no-request-splash-overlay
+) {
+  outline: 3px solid #0A0A12;
+  box-shadow: inset 0 0 0 3px #00D4FF, inset 0 0 0 7px rgba(255,45,149,.78), 5px 6px 0 #0A0A12 !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .mixer-recovery-status {
+  background: #0A0A12 !important;
+  border-color: #FF2D95 !important;
+  box-shadow: 4px 4px 0 #0A0A12, inset 0 0 0 1px #00D4FF !important;
+}
+
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before,
+  .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
+    top: 11% !important;
+    bottom: 18% !important;
+    width: 48% !important;
+    opacity: .68 !important;
+  }
+
+  .arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg::before {
+    inset: 14% 12% 18% !important;
+  }
+
+  .arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::before {
+    opacity: .38;
+    width: 30%;
+  }
+
+  .arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::after {
+    opacity: .34;
+    width: 39%;
+  }
+
+  .arcade-cabinet-bezel .dj-catcher-art {
+    transform: scale(2.7) !important;
+  }
+}

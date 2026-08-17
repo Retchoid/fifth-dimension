@@ -14,6 +14,7 @@ import "@/detailed-arcade-scenes.css";
 import "@/hazard-master-style.css";
 import "@/arcade-scoped-overhaul.css";
 import "@/visual-recovery-arcade.css";
+import "@/gallery-art-active-play.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";

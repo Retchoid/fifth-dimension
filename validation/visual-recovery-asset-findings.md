@@ -53,3 +53,15 @@ The Jersh In Case release card was reviewed in its normal page position. The unw
 ## Event-overlay check
 
 The police verifier loads the police-seizure scene inside the normal embedded cabinet, including its graphic panel, the `MIXER DAMAGED / RECOVERY 0/3` status, and the record-spin transition back to the set. The browser diagnostic applies an unusually high CSS viewport with a low device-pixel ratio, so scene text was confirmed from the rendered scene state and existing overlay contract rather than from the reduced diagnostic thumbnail. The temporary review zoom was reset before ending the check.
+
+## Published media-route audit
+
+After the managed-media migration, all **58 actual image and audio assets** in the recovered inventory were requested through their former `/embedded-assets/<filename>` public paths. Each request resolved successfully to managed storage with a media content type; no mix-cover or arcade-asset route failed. The remaining inventory entry is the non-media `placeholder` file and is not used by the site or game.
+
+## Gallery-art active-play reconstruction
+
+The final scoped `gallery-art-active-play.css` layer now uses the Selectah Showdown splash frame as the Level 1 illustrated environment, with separate existing urban-stage and police-siren artwork reserved for its foreground depth layers. Level 2 retains the full Crowd Pressure stage illustration, with a protected darkened center lane, an existing speaker-stack foreground, and an existing dubplate foreground. This avoids repeating the same full-frame art while keeping the collision plane legible.
+
+The selector sprite was enlarged visually from its existing collision wrapper only; collision geometry and item-spawn code were not changed. Existing illustrated pickups and hazards keep their asset mappings and gain visual-only silhouette scaling and distinct reward/hazard glow. The existing specific police, pill, crowd, transition, bonus, win, and fail scenes retain their supplied artwork under one scoped cyan/magenta hard-flyer frame system.
+
+At **390×844**, mobile captures were produced for Level 1 active play, Level 2 active play, Level 2 arrival, record dissolve, police seizure, pill overload, crowd anger, and game over. The gallery reference endpoints were supplied by the user as the Selectah Showdown and Crowd Pressure artwork lightbox captures. Automated validation passed after the reconstruction: **15 test files / 45 tests**, TypeScript, and production build. The build retains runtime managed-storage asset resolution and has no new gameplay-loop, collision, or audio changes.

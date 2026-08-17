@@ -13,6 +13,7 @@ const gameplayClarity = read("gameplay-clarity.css");
 const fallingItemsRenderFix = read("falling-items-render-fix.css");
 const mobileSiteRepair = read("mobile-site-repair.css");
 const scopedArcadeOverhaul = read("arcade-scoped-overhaul.css");
+const galleryArtActivePlay = read("gallery-art-active-play.css");
 const mainSource = read("main.tsx");
 
 const publicSources = [
@@ -69,6 +70,18 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain('["rewind", "wheel", "police", "crowd", "pill", "crate", "headphones", "boh", "riddim"]');
     expect(gameSource).toContain("rewardDuration = holdSequenceDebugEnabled ? 25000");
     expect(gameSource).toContain("showComboReaction: (kind) =>");
+  });
+
+  it("keeps active gameplay tied to the canonical gallery-art environments", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).toContain('import "@/gallery-art-active-play.css";');
+    expect(galleryArtActivePlay).toContain("selectah-splash-art-direction_4d1c250f.png");
+    expect(galleryArtActivePlay).toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
+    expect(galleryArtActivePlay).toContain("selectah-speaker-stack-urban_9fd16c27.png");
+    expect(galleryArtActivePlay).toContain("selectah-dubplate-urban_052862f6.png");
+    expect(galleryArtActivePlay).toContain(".rave-world-dressing:not(.level-two-rave-world)::before");
+    expect(galleryArtActivePlay).toContain(".game-grid-bg.level-two-grid-bg");
+    expect(galleryArtActivePlay).toContain("transform: scale(2.7) !important");
   });
 
   it("holds only the development loss verifier at a readable frame", () => {

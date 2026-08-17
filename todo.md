@@ -1151,3 +1151,26 @@
 - [x] Map all active site and arcade media references to managed storage equivalents.
 - [x] Remove the local embedded-media deployment blockers only after managed URLs are verified.
 - [x] Run regression validation, save a publishable checkpoint, and verify the public site.
+
+## Incomplete site-and-game copy regression
+
+- [x] Compare the published project with the intended recovered site and Selectah Showdown source inventory.
+- [x] Restore every confirmed missing site section, arcade stylesheet, component, asset route, and runtime behavior.
+- [x] Run visual, gameplay, test, type, build, and live-public checks before republishing the complete version.
+- [x] Verify every mix-archive cover image resolves from managed storage in the published site.
+- [x] Verify every Selectah Showdown game asset resolves from managed storage in the published site.
+
+## Complete recovery-archive project copy
+
+- [x] Extract a clean standalone project copy from the complete recovery archive.
+- [x] Verify that the copied project contains all website source, game source, mix covers, mix audio, and arcade assets.
+- [x] Package the verified standalone project copy with clear import guidance.
+
+## Gallery-art-driven Selectah Showdown reconstruction
+
+- [x] Rebuild Level 1 active play as an animated, readable extension of the Selectah Showdown splash-frame artwork without changing collisions or performance.
+- [x] Rebuild Level 2 active play as a dense Crowd Pressure stage-frame environment with preserved clear gameplay lanes.
+- [x] Unify every splash, recovery, level-transition, win, and fail screen under the gallery artwork’s illustrated rave-comic system.
+- [x] Increase the mobile player’s illustrated visual presence while preserving the current forgiving collision box.
+- [x] Improve pickup and hazard readability using only existing illustrated project assets, without generic substitutes or repeated full-frame backgrounds.
+- [x] Capture the eight required 390×844 gallery, active-play, transition, police, and Too High comparisons before publishing.
