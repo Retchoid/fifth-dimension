@@ -72,7 +72,7 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("showComboReaction: (kind) =>");
   });
 
-  it("keeps active gameplay on one explicit asset-backed playfield architecture", () => {
+  it("keeps active gameplay on one explicit decomposed playfield architecture", () => {
     const gameSource = read("components/DjMiniGame.tsx");
     expect(gameSource).toContain('import "@/arcade-playfield-architecture.css";');
     expect(gameSource).toContain("handlePointerMove");
@@ -82,10 +82,17 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("playfieldPointerRef");
     expect(gameSource).not.toContain("mobile-playfield-control-hint");
     expect(gameSource).not.toContain("nudgeMobileDj");
-    expect(arcadePlayfieldArchitecture).toContain("selectah-level-one-urban-stage-reference_43ddc07a.png");
+    expect(gameSource).toContain("neon-backstreet-background");
+    expect(gameSource).toContain("stage-game-plane");
+    expect(gameSource).toContain("stage-foreground");
+    expect(arcadePlayfieldArchitecture).toContain("LEVEL 1 — NEON BACKSTREET / AUTHORED PLAYFIELD");
+    expect(arcadePlayfieldArchitecture).not.toContain("selectah-level-one-urban-stage-reference_43ddc07a.png");
     expect(arcadePlayfieldArchitecture).not.toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
     expect(arcadePlayfieldArchitecture).not.toContain("selectah-splash-art-direction_4d1c250f.png");
-    expect(arcadePlayfieldArchitecture).toContain("5d-selector-rave-stage_e4fdff4b.png");
+    expect(arcadePlayfieldArchitecture).not.toContain("5d-selector-rave-stage_e4fdff4b.png");
+    expect(gameSource).toContain("crowd-pressure-background");
+    expect(gameSource).toContain("club-reverse-entrance");
+    expect(arcadePlayfieldArchitecture).toContain("LEVEL 2 — CROWD PRESSURE / INSIDE THE SAME 5D CLUB");
     expect(arcadePlayfieldArchitecture).toContain("stage-reaction-combo_25");
     expect(arcadePlayfieldArchitecture).toContain("transform: scale(.96) !important");
     expect(arcadePlayfieldArchitecture).toContain(".game-grid-bg::before");
@@ -94,9 +101,11 @@ describe("Task 7 final consistency contract", () => {
     expect(arcadePlayfieldArchitecture).toContain("transform: scale(.86) !important");
     expect(arcadePlayfieldArchitecture).toContain(".dj-catcher.level-two-catcher .dj-catcher-art");
     expect(gameSource).toContain("StageReactionController");
-    expect(gameSource).toContain("triggerStageReaction(\"DUBPLATE_CATCH\")");
-    expect(gameSource).toContain("triggerStageReaction(\"MISS\")");
-    expect(gameSource).toContain("triggerStageReaction(\"HAZARD_HIT\")");
+    expect(gameSource).toContain("onCatch(item.type)");
+    expect(gameSource).toContain("onMiss()");
+    expect(gameSource).toContain("onHazard(item.type)");
+    expect(gameSource).toContain("resolveWorldCollision");
+    expect(gameSource).toContain("Math.floor(Math.random() * 6)");
     expect(gameSource).toContain("arcade-stage-verify");
   });
 

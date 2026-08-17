@@ -7,6 +7,7 @@ import { resolveFinaleTag, sanitizeSelectorTag } from "@/lib/selectorTag";
 import { shouldAwardBonusCrown } from "@/lib/bonusCrown";
 import { scheduledNamedHazardExposure } from "@/lib/hazardExposure";
 import { reactionForCombo, stageReactions, StageReactionController, type StageReaction, type StageSnapshot } from "@/lib/stageReactionController";
+import { clientXToWorldX, playerRectFromCenterX, resolveWorldCollision, type ObjectWorld, type PlayerWorld } from "@/lib/gameWorld";
 import { trpc } from "@/lib/trpc";
 import "@/gameplay-clarity.css";
 import "@/miami-arcade-stage.css";
@@ -55,18 +56,21 @@ const URBAN_RUNNER_ASSETS: Record<BonusRunnerType, string> = {
   rat: "/embedded-assets/selectah-runner-rat-urban_42c505b7.png",
 };
 
-const FALLING_ITEM_RULES: Record<FallingItemType, { size: number; hitRadius: number; tilt: number }> = {
-  record: { size: 32, hitRadius: 9, tilt: -7 },
-  cop: { size: 36, hitRadius: 10, tilt: 0 },
-  bottle: { size: 32, hitRadius: 10, tilt: 13 },
-  apple: { size: 31, hitRadius: 9, tilt: -12 },
-  lion: { size: 43, hitRadius: 12, tilt: 0 },
-  cdj: { size: 43, hitRadius: 12, tilt: -5 },
-  mixer: { size: 43, hitRadius: 12, tilt: 4 },
-  turntable: { size: 43, hitRadius: 12, tilt: -4 },
-  adapter: { size: 28, hitRadius: 8, tilt: 8 },
-  pill: { size: 29, hitRadius: 9, tilt: -14 },
-  phone: { size: 28, hitRadius: 9, tilt: 16 },
+const FALLING_ITEM_RULES: Record<FallingItemType, { width: number; height: number; visualSize: number; tilt: number }> = {
+  // `visualSize` is normalized against the unchanged selector art: regular
+  // pickups are 15–28% player height, bonus gear 30–40%, hazards 18–32%.
+  // `width` and `height` remain the sole collision values.
+  record: { width: 5, height: 5, visualSize: 14, tilt: -7 },
+  cop: { width: 6, height: 6, visualSize: 18, tilt: 0 },
+  bottle: { width: 5, height: 5, visualSize: 15, tilt: 13 },
+  apple: { width: 5, height: 5, visualSize: 15, tilt: -12 },
+  lion: { width: 8, height: 8, visualSize: 22, tilt: 0 },
+  cdj: { width: 7, height: 7, visualSize: 20, tilt: -5 },
+  mixer: { width: 7, height: 7, visualSize: 20, tilt: 4 },
+  turntable: { width: 7, height: 7, visualSize: 20, tilt: -4 },
+  adapter: { width: 4, height: 4, visualSize: 12, tilt: 8 },
+  pill: { width: 5, height: 5, visualSize: 14, tilt: -14 },
+  phone: { width: 5, height: 6, visualSize: 16, tilt: 16 },
 };
 
 const SPAWN_WEIGHTS: Record<GameLevel, Array<readonly [FallingItemType, number]>> = {
@@ -114,7 +118,7 @@ const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 type ComboReaction = "big-up" | "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ComboReactionKind = Exclude<ComboReaction, null>;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; showComboReaction: (kind: ComboReactionKind) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; showComboReaction: (kind: ComboReactionKind) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; exerciseWorldEvent: (kind: "catch" | "hazard" | "miss" | "level-complete") => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -126,14 +130,10 @@ interface InWorldReward {
   kind?: "boh" | "big-up" | "riddim" | "gun-fingers" | "wheel" | "crate" | "headphones";
 }
 
-interface FallingItem {
+interface FallingItem extends ObjectWorld {
   id: number;
-  x: number; // percentage 0-92
-  y: number; // percentage 0-90
   type: FallingItemType;
-  speed: number;
-  size: number;
-  hitRadius: number;
+  visualSize: number;
   tilt: number;
 }
 
@@ -205,7 +205,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [comboReaction, setComboReaction] = useState<ComboReaction>(null);
   const [isGunFingerShaking, setIsGunFingerShaking] = useState(false);
   const [pickupFlash, setPickupFlash] = useState<PickupFlash | null>(null);
-  const [stageSnapshot, setStageSnapshot] = useState<StageSnapshot>({ level: 1, energy: 0, reaction: null });
+  const [impactFx, setImpactFx] = useState<{ key: number; x: number; y: number; kind: "catch" | "hazard" } | null>(null);
+  const [playerImpact, setPlayerImpact] = useState<"catch" | "hit" | null>(null);
+  const [isCatchImpulsing, setIsCatchImpulsing] = useState(false);
+  const [catchReactionVariant, setCatchReactionVariant] = useState(0);
+  const [stageSnapshot, setStageSnapshot] = useState<StageSnapshot>({ level: 1, energy: 0, reaction: null, event: null, eventType: null });
   const [isRewindPaused, setIsRewindPaused] = useState(false);
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
@@ -251,8 +255,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const finaleVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-finale-verify") : null;
   const nameJourneyVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-name-journey") : null;
   const viewportVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
+  const arcadeFocusVerifier = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-focus") === "true";
+  const mobileMatrixVerifier = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-mobile-matrix") === "true";
   const sceneVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-scene-verify") : null;
   const stageReactionVerification = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-stage-verify") as StageReaction | null : null;
+  const hitboxDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hitboxes") === "true";
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
     crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
@@ -321,6 +328,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const spawnTimerRef = useRef(0);
   const namedHazardSpawnCountRef = useRef(0);
   const djXRef = useRef(50);
+  const playerWorldRef = useRef<PlayerWorld>(playerRectFromCenterX(50, "ready"));
   const bonusRequestRef = useRef<number>(0);
   const noRequestBonusRequestRef = useRef<number>(0);
   const noRequestBonusLastTimeRef = useRef(0);
@@ -350,6 +358,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const comboBurstTimerRef = useRef<number>(0);
   const gunFingerShakeTimerRef = useRef<number>(0);
   const pickupFlashTimerRef = useRef<number>(0);
+  const impactFxTimerRef = useRef<number>(0);
+  const playerImpactTimerRef = useRef<number>(0);
   const stageReactionTimerRef = useRef<number>(0);
   const playfieldPointerRef = useRef<number | null>(null);
   const stageControllerRef = useRef<StageReactionController | null>(null);
@@ -371,10 +381,37 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     stageReactionTimerRef.current = window.setTimeout(() => stageControllerRef.current?.clearReaction(), reaction === "COMBO_25" ? 900 : 520);
   };
 
+  const clearStageEventAfter = (duration = 520) => {
+    window.clearTimeout(stageReactionTimerRef.current);
+    stageReactionTimerRef.current = window.setTimeout(() => stageControllerRef.current?.clearReaction(), duration);
+  };
+
+  const showImpactFeedback = (item: FallingItem, kind: "catch" | "hazard") => {
+    window.clearTimeout(impactFxTimerRef.current);
+    window.clearTimeout(playerImpactTimerRef.current);
+    setImpactFx({ key: item.id, x: item.x + item.width / 2, y: item.y + item.height / 2, kind });
+    if (kind === "catch") setCatchReactionVariant(Math.floor(Math.random() * 6));
+    setPlayerImpact(kind === "catch" ? "catch" : "hit");
+    setIsCatchImpulsing(kind === "catch");
+    impactFxTimerRef.current = window.setTimeout(() => setImpactFx(null), kind === "catch" ? 130 : 220);
+    playerImpactTimerRef.current = window.setTimeout(() => {
+      setPlayerImpact(null);
+      setIsCatchImpulsing(false);
+    }, kind === "catch" ? 180 : 460);
+  };
+
   const setStageEnergy = (value: number) => stageControllerRef.current?.setEnergy(value);
 
   // Key state for smooth movement
   const keysRef = useRef<{ [key: string]: boolean }>({});
+
+  const setPlayerWorldX = (centerX: number, state: PlayerWorld["state"] = "playing") => {
+    const nextPlayer = playerRectFromCenterX(centerX, state);
+    playerWorldRef.current = nextPlayer;
+    const clampedCenterX = nextPlayer.x + nextPlayer.width / 2;
+    djXRef.current = clampedCenterX;
+    if (djCatcherRef.current) djCatcherRef.current.style.left = `${clampedCenterX}%`;
+  };
 
   const getAudioContext = () => {
     if (typeof window === "undefined" || !soundEnabledRef.current) return null;
@@ -1535,7 +1572,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           : (["record", "bottle", "apple", "cop", "pill", "phone", "lion", "cdj", "mixer", "turntable", "adapter"] as FallingItemType[]);
         const previewItems = types.map((type, index) => {
           const rule = FALLING_ITEM_RULES[type];
-          return { id: -900 - index, x: 6 + (index % 4) * 23, y: 12 + Math.floor(index / 4) * 30, type, speed: 0, size: rule.size, hitRadius: rule.hitRadius, tilt: rule.tilt };
+          return { id: -900 - index, x: 6 + (index % 4) * 23, y: 12 + Math.floor(index / 4) * 30, type, velocity: 0, state: "active" as const, ...rule, tilt: rule.tilt };
         });
         levelRef.current = previewLevel;
         itemsRef.current = previewItems;
@@ -1548,6 +1585,40 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         setActiveArcadeSequence(null);
         setIsRecordTransitioning(false);
         setIsLevelTwoTransitioning(false);
+      },
+      exerciseWorldEvent: (kind) => {
+        gameRunIdRef.current += 1;
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        const type: FallingItemType = kind === "hazard" ? "pill" : "record";
+        const rule = FALLING_ITEM_RULES[type];
+        const worldItem: FallingItem = {
+          id: -1200 - Math.floor(Math.random() * 100),
+          x: djXRef.current,
+          y: kind === "miss" ? 106 : 74,
+          type,
+          velocity: 0,
+          state: "active",
+          ...rule,
+          tilt: rule.tilt,
+        };
+        levelRef.current = 1;
+        livesRef.current = 4;
+        comboRef.current = 1;
+        recordsCaughtRef.current = kind === "level-complete" ? REQUIRED_RECORDS - 1 : 0;
+        itemsRef.current = [worldItem];
+        setLevel(1);
+        setLives(4);
+        setCombo(1);
+        setRecordsCaught(kind === "level-complete" ? REQUIRED_RECORDS - 1 : 0);
+        setGameOver(false);
+        setActiveArcadeSequence(null);
+        setVisibleItems([worldItem]);
+        isPlayingRef.current = true;
+        setIsPlaying(true);
+        lastTimeRef.current = performance.now() - 32;
+        // Development verification only: run the same authoritative frame function
+        // on the next task, rather than relying on an external animation-frame tick.
+        window.setTimeout(() => updateGame(performance.now()), 0);
       },
       showUnlock: () => {
         gameRunIdRef.current += 1;
@@ -1700,21 +1771,70 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, [sceneVerificationMode]);
 
   useLayoutEffect(() => {
-    if (!sceneVerificationMode || !import.meta.env.DEV || typeof window === "undefined") return;
+    if ((!sceneVerificationMode && !viewportVerificationMode) || !import.meta.env.DEV || typeof window === "undefined") return;
     document.getElementById("selectah-showdown")?.scrollIntoView({ block: "start" });
-  }, [sceneVerificationMode]);
+  }, [sceneVerificationMode, viewportVerificationMode]);
 
   useEffect(() => {
-    if (viewportVerificationPreparedRef.current || !["active", "dissolve", "live", "transition"].includes(viewportVerificationMode ?? "")) return;
+    if (!arcadeFocusVerifier || typeof document === "undefined") return;
+    document.documentElement.dataset.arcadeFocusVerifier = "true";
+    return () => { delete document.documentElement.dataset.arcadeFocusVerifier; };
+  }, [arcadeFocusVerifier]);
+
+  useEffect(() => {
+    if (!mobileMatrixVerifier || typeof window === "undefined") return;
+    let cancelled = false;
+    const wait = (milliseconds: number) => new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
+    const timer = window.setTimeout(async () => {
+      const debug = (window as ArcadeDebugWindow).__selectahDebug;
+      const playfield = document.querySelector<HTMLElement>(".game-viewport");
+      const player = document.querySelector<HTMLElement>(".dj-catcher");
+      if (cancelled || !debug || !playfield || !player) return;
+      debug.showItemPreview(1);
+      await wait(60);
+      const bounds = playfield.getBoundingClientRect();
+      const pointer = (type: string, ratio: number) => playfield.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 844, pointerType: "touch", clientX: bounds.left + bounds.width * ratio, clientY: bounds.top + bounds.height * .72 }));
+      pointer("pointerdown", .5);
+      pointer("pointermove", .08);
+      const left = player.style.left;
+      pointer("pointermove", .5);
+      const centre = player.style.left;
+      pointer("pointermove", .92);
+      const right = player.style.left;
+      pointer("pointerup", .92);
+      debug.exerciseWorldEvent("catch");
+      await wait(170);
+      const catchState = { items: document.querySelectorAll(".falling-object").length, combo: document.querySelector(".combo-badge")?.textContent ?? "", records: document.querySelector(".records-hud")?.textContent ?? "" };
+      debug.exerciseWorldEvent("hazard");
+      await wait(170);
+      const hazardState = { items: document.querySelectorAll(".falling-object").length, lives: document.querySelector(".lives-badge")?.textContent ?? "", stage: playfield.className };
+      debug.exerciseWorldEvent("miss");
+      await wait(170);
+      const missState = { items: document.querySelectorAll(".falling-object").length, combo: document.querySelector(".combo-badge")?.textContent ?? "", stage: playfield.className };
+      debug.exerciseWorldEvent("level-complete");
+      await wait(170);
+      const completionState = { items: document.querySelectorAll(".falling-object").length, records: document.querySelector(".records-hud")?.textContent ?? "", unlock: Boolean(document.querySelector(".unlock-overlay-box")), stage: playfield.className };
+      const viewport = { width: window.innerWidth, height: window.innerHeight };
+      const pass = viewport.width === 390 && viewport.height === 844 && left === "8%" && centre === "50%" && right === "90%" && catchState.items === 0 && catchState.combo.includes("2") && hazardState.items === 0 && hazardState.lives.includes("❤️❤️❤️") && missState.items === 0 && missState.combo.includes("1") && completionState.items === 0 && completionState.records.includes("25") && completionState.unlock;
+      document.documentElement.dataset.arcadeMobileMatrix = pass ? "passed" : "failed";
+      console.info("[arcade-mobile-matrix]", { viewport, touchDrag: { left, centre, right }, catchState, hazardState, missState, completionState, pass });
+    }, 180);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [mobileMatrixVerifier]);
+
+  useEffect(() => {
+    if (viewportVerificationPreparedRef.current || !["active", "dissolve", "live", "transition", "level-one", "level-one-rave"].includes(viewportVerificationMode ?? "")) return;
     viewportVerificationPreparedRef.current = true;
     let transitionReleaseTimer = 0;
     const verifierTimer = window.setTimeout(() => {
       gameRunIdRef.current += 1;
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      levelRef.current = 2;
-      recordsCaughtRef.current = 6;
+      const isLevelOneVerifier = viewportVerificationMode === "level-one" || viewportVerificationMode === "level-one-rave";
+      const levelOneRave = viewportVerificationMode === "level-one-rave";
+      levelRef.current = isLevelOneVerifier ? 1 : 2;
+      recordsCaughtRef.current = isLevelOneVerifier ? (levelOneRave ? 25 : 0) : 6;
       livesRef.current = 4;
-      comboRef.current = 3;
+      comboRef.current = isLevelOneVerifier ? (levelOneRave ? 25 : 1) : 3;
       bohBonusAwardedRef.current = true;
       riddimBonusAwardedRef.current = true;
       policeBadgeHitsRef.current = 0;
@@ -1722,24 +1842,30 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       appleCoreHitsRef.current = 0;
       pillHitsRef.current = 0;
       const verificationItems: FallingItem[] = [
-        { id: -701, x: 10, y: 3, type: "record", speed: 9, ...FALLING_ITEM_RULES.record },
-        { id: -702, x: 82, y: 11, type: "cop", speed: 9, ...FALLING_ITEM_RULES.cop },
-        { id: -703, x: 18, y: 19, type: "bottle", speed: 9, ...FALLING_ITEM_RULES.bottle },
-        { id: -704, x: 76, y: 28, type: "apple", speed: 9, ...FALLING_ITEM_RULES.apple },
-        { id: -705, x: 12, y: 37, type: "lion", speed: 9, ...FALLING_ITEM_RULES.lion },
-        { id: -706, x: 84, y: 46, type: "cdj", speed: 9, ...FALLING_ITEM_RULES.cdj },
+        { id: -701, x: 10, y: 3, type: "record", velocity: 9, state: "active", ...FALLING_ITEM_RULES.record },
+        { id: -702, x: 82, y: 11, type: "cop", velocity: 9, state: "active", ...FALLING_ITEM_RULES.cop },
+        { id: -703, x: 18, y: 19, type: "bottle", velocity: 9, state: "active", ...FALLING_ITEM_RULES.bottle },
+        { id: -704, x: 76, y: 28, type: "apple", velocity: 9, state: "active", ...FALLING_ITEM_RULES.apple },
+        { id: -705, x: 12, y: 37, type: "lion", velocity: 9, state: "active", ...FALLING_ITEM_RULES.lion },
+        { id: -706, x: 84, y: 46, type: "cdj", velocity: 9, state: "active", ...FALLING_ITEM_RULES.cdj },
       ];
-      itemsRef.current = viewportVerificationMode === "active" || viewportVerificationMode === "live" ? verificationItems : [];
+      const levelOneItems = verificationItems.filter((item) => !["bottle", "apple", "lion"].includes(item.type));
+      const showVerifierItems = ["active", "live", "level-one", "level-one-rave"].includes(viewportVerificationMode ?? "");
+      const activeVerifierItems = isLevelOneVerifier ? levelOneItems : verificationItems;
+      itemsRef.current = showVerifierItems ? activeVerifierItems : [];
       spawnTimerRef.current = viewportVerificationMode === "live" ? -1000 : 0;
-      setLevel(2);
-      setRecordsCaught(6);
+      setLevel(isLevelOneVerifier ? 1 : 2);
+      setRecordsCaught(isLevelOneVerifier ? (levelOneRave ? 25 : 0) : 6);
       setLives(4);
-      setCombo(3);
+      setCombo(isLevelOneVerifier ? (levelOneRave ? 25 : 1) : 3);
       setGameOver(false);
       setIsLevelTwoTransitioning(false);
       setIsLevelTwoMarqueeVisible(false);
       setActiveArcadeSequence(null);
-      setVisibleItems(viewportVerificationMode === "active" || viewportVerificationMode === "live" ? verificationItems : []);
+      setVisibleItems(showVerifierItems ? activeVerifierItems : []);
+      stageControllerRef.current?.setLevel(isLevelOneVerifier ? 1 : 2);
+      stageControllerRef.current?.setEnergy(isLevelOneVerifier && levelOneRave ? 1 : 0);
+      setPlayerWorldX(50, "playing");
       isPlayingRef.current = true;
       setIsPlaying(true);
       lastTimeRef.current = performance.now();
@@ -2138,7 +2264,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setRecordsCaught(0);
     setCombo(1);
     setLives(4);
-    djXRef.current = 50;
+    setPlayerWorldX(50, "ready");
     setVisibleItems([]);
     itemsRef.current = [];
     nextIdRef.current = 1;
@@ -2158,8 +2284,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (keysRef.current["left"]) currentX = Math.max(4, currentX - moveSpeed * dt);
     if (keysRef.current["right"]) currentX = Math.min(90, currentX + moveSpeed * dt);
     if (currentX !== djXRef.current) {
-      djXRef.current = currentX;
-      if (djCatcherRef.current) djCatcherRef.current.style.left = `${currentX}%`;
+      setPlayerWorldX(currentX);
     }
 
     let structureChanged = false;
@@ -2181,12 +2306,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
       itemsRef.current.push({
         id: nextIdRef.current++,
-        x: Math.floor(Math.random() * 84) + 6,
-        y: -10,
+        x: Math.floor(Math.random() * (88 - itemRule.width)) + 4,
+        y: -itemRule.height,
         type: spawnedType,
-        speed: Math.floor(Math.random() * (levelRef.current === 2 ? 12 : 10)) + baseSpeed + speedRamp,
-        size: itemRule.size,
-        hitRadius: itemRule.hitRadius,
+        velocity: Math.floor(Math.random() * (levelRef.current === 2 ? 12 : 10)) + baseSpeed + speedRamp,
+        state: "active",
+        width: itemRule.width,
+        height: itemRule.height,
+        visualSize: itemRule.visualSize,
         tilt: itemRule.tilt * (Math.random() > 0.5 ? 1 : -1),
       });
       structureChanged = true;
@@ -2209,16 +2336,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     let completeLevelTwo = false;
     let currentLives = livesRef.current;
     let currentScore = scoreRef.current;
-    const itemNodes = itemsLayerRef.current?.children;
-
     for (let index = 0; index < itemsRef.current.length; index += 1) {
       const item = itemsRef.current[index];
-      const newY = item.y + item.speed * dt;
-      const itemNode = itemNodes?.[index] as HTMLElement | undefined;
+      const newY = item.y + item.velocity * dt;
+      const movedItem = { ...item, y: newY };
+      const itemNode = itemsLayerRef.current?.querySelector<HTMLElement>(`[data-game-object-id="${item.id}"]`);
       if (itemNode) itemNode.style.top = `${newY}%`;
 
-      const catcherReach = 13 + item.hitRadius;
-      if (newY >= 64 && newY <= 96 && item.x >= currentX - catcherReach && item.x <= currentX + catcherReach) {
+      const resolvedItem = resolveWorldCollision(playerWorldRef.current, movedItem);
+      if (resolvedItem) {
         structureChanged = true;
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
           if (item.type === "turntable") {
@@ -2232,9 +2358,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const nextCombo = comboRef.current + 1;
           comboRef.current = nextCombo;
           setCombo(nextCombo);
-          if (item.type === "record") triggerStageReaction("DUBPLATE_CATCH");
+          stageControllerRef.current?.onCatch(item.type);
+          clearStageEventAfter(520);
+          showImpactFeedback(movedItem, "catch");
           const milestoneReaction = reactionForCombo(nextCombo);
-          if (milestoneReaction) triggerStageReaction(milestoneReaction);
+          if (milestoneReaction) {
+            window.setTimeout(() => {
+              stageControllerRef.current?.onCombo(nextCombo);
+              clearStageEventAfter(milestoneReaction === "COMBO_25" ? 900 : 520);
+            }, 130);
+          }
           setStageEnergy(nextCombo / 25);
           const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : item.type === "mixer" ? 4 : item.type === "turntable" ? 3 : item.type === "adapter" ? 2 : 1;
           const pickupLabel = item.type === "lion" ? "LION +2" : item.type === "cdj" ? "CDJ +5" : item.type === "mixer" ? "MIX +4" : item.type === "turntable" ? "DECK +3" : item.type === "adapter" ? "45 +2" : "DUB +1";
@@ -2352,6 +2485,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             }
           }
           if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS) {
+            stageControllerRef.current?.onLevelComplete();
+            clearStageEventAfter(900);
             const firstBonusEligible = currentLives >= 3;
             bonusEligibleRef.current = firstBonusEligible;
             setIsBonusEligible(firstBonusEligible);
@@ -2374,8 +2509,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           }
         } else {
           playCopSiren();
-          triggerStageReaction("HAZARD_HIT");
-          setStageEnergy(.04);
+          stageControllerRef.current?.onHazard(item.type);
+          stageControllerRef.current?.onDamage();
+          clearStageEventAfter(620);
+          showImpactFeedback(movedItem, "hazard");
+          setStageEnergy(0);
           comboRef.current = 1;
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
@@ -2449,8 +2587,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         // Extended 25/50-record sessions remain fair: a missed record breaks
         // the combo, while only a caught hazard removes a life.
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
-          triggerStageReaction("MISS");
-          setStageEnergy(.04);
+          stageControllerRef.current?.onMiss();
+          clearStageEventAfter(520);
+          setStageEnergy(0);
           comboRef.current = 1;
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
@@ -2465,7 +2604,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         continue;
       }
 
-      nextItems.push({ ...item, y: newY });
+      nextItems.push(movedItem);
     }
 
     if (bonusThresholdReached && currentLives === 4 && !bonusTriggeredRef.current) {
@@ -2491,6 +2630,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
     if (completeLevelTwo) {
       isPlayingRef.current = false;
+      stageControllerRef.current?.onLevelComplete();
+      clearStageEventAfter(900);
       if (bgMusicRef.current) bgMusicRef.current.pause();
       const finaleName = resolveFinaleTag(submittedName, playerName);
       if (finaleName) {
@@ -2590,9 +2731,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (isBonusLevelActive) return;
     if (!isPlayingRef.current || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const percentage = Math.max(4, Math.min(90, ((clientX - rect.left) / rect.width) * 100));
-    djXRef.current = percentage;
-    if (djCatcherRef.current) djCatcherRef.current.style.left = `${percentage}%`;
+    setPlayerWorldX(clientXToWorldX(clientX, rect.left, rect.width));
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -2649,7 +2788,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         playsInline
         aria-label="Fast 16-bit after-party runner soundtrack"
       />
-      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}${isRespectShaking ? " is-respect-shaking" : ""}${damageFeedback ? " is-damage-shaking" : ""}`}>
+      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}${isRespectShaking ? " is-respect-shaking" : ""}${damageFeedback ? " is-damage-shaking" : ""}${isCatchImpulsing ? " is-catch-impulsing" : ""}`}>
         <div className="cabinet-corner-bolts" aria-hidden="true"><i /><i /><i /><i /></div>
         <div className="arcade-marquee">
           <span className="marquee-light" />
@@ -2664,7 +2803,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div className="cabinet-service-plate" aria-hidden="true"><span>5D MODEL 95</span><b>INSERT 25¢</b></div>
         <div
           ref={containerRef}
-          className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}`}
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled ? " show-world-hitboxes" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
           onPointerMove={(e) => {
             if (!isBonusLevelActive && !isNoRequestBonusActive) {
               if (playfieldPointerRef.current === e.pointerId) handlePointerMove(e);
@@ -2691,6 +2830,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               return;
             }
             if (playfieldPointerRef.current === e.pointerId) {
+              updateDjPositionFromClientX(e.clientX);
               if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
               playfieldPointerRef.current = null;
             }
@@ -2702,6 +2842,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             }
             bonusPointerStartRef.current = null;
             bonusGestureHandledRef.current = false;
+          }}
+          onLostPointerCapture={(e) => {
+            if (playfieldPointerRef.current === e.pointerId) playfieldPointerRef.current = null;
           }}
         >
         {damageFeedback && !gameOver && (
@@ -2716,14 +2859,72 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <strong>{rewardToRender.label}</strong>
           </div>
         )}
-        <div className={`game-grid-bg stage-background${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
-        <div className="stage-midground" aria-hidden="true" />
+        <div className={`game-grid-bg stage-background${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true">
+          {level === 1 && (
+            <div className="neon-backstreet-background">
+              <i className="backstreet-rooftop rooftop-left" /><i className="backstreet-rooftop rooftop-centre" /><i className="backstreet-rooftop rooftop-right" />
+              <i className="backstreet-distant-building distant-one" /><i className="backstreet-distant-building distant-two" /><i className="backstreet-distant-building distant-three" />
+              <i className="backstreet-antenna antenna-one" /><i className="backstreet-antenna antenna-two" />
+              <span className="backstreet-moon" />
+            </div>
+          )}
+          {level === 2 && (
+            <div className="crowd-pressure-background">
+              <span className="club-ceiling-beam beam-one" /><span className="club-ceiling-beam beam-two" /><span className="club-ceiling-beam beam-three" />
+              <span className="club-rear-wall" /><span className="club-distant-bar"><i /><i /><i /></span>
+              <span className="club-reverse-entrance"><i /><b>5D</b><em>ALLEY</em></span>
+            </div>
+          )}
+        </div>
+        <div className="stage-midground" aria-hidden="true">
+          {level === 1 && (
+            <>
+              <div className="backstreet-brick-facade facade-left"><i className="backstreet-window window-a" /><i className="backstreet-window window-b" /><span className="backstreet-graffiti">5D</span></div>
+              <div className="backstreet-rear-archway"><i /><span>ALLEY</span><b /></div>
+              <div className="backstreet-club-front"><span className="club-neon-sign">CLUB<br />5D</span><i className="club-door club-door-left" /><i className="club-door club-door-right" /><b className="club-awning" /></div>
+              <div className="backstreet-record-shop"><span>RECORDS</span><i /><i /></div>
+              <div className="backstreet-fire-escape"><i /><i /><i /><b /><b /></div>
+              <div className="backstreet-pipe pipe-left" /><div className="backstreet-pipe pipe-right" />
+              <div className="backstreet-dumpster dumpster-left"><i /></div><div className="backstreet-dumpster dumpster-right"><i /></div>
+              <div className="backstreet-police-van"><b>POLICE</b><i /><i /></div>
+              <div className="backstreet-security"><i /><b /></div><div className="backstreet-smoker"><i /><b /></div><div className="backstreet-shop-worker"><i /><b /></div><div className="backstreet-raver"><i /><b /></div>
+              <span className="backstreet-poster poster-transmission">BASS<br />TRANS</span><span className="backstreet-poster poster-showdown">SHOW<br />DOWN</span><span className="backstreet-sticker sticker-five">5</span><span className="backstreet-sticker sticker-tape">TAPE</span>
+            </>
+          )}
+          {level === 2 && (
+            <>
+              <div className="club-pillar club-pillar-left"><i /><b /></div><div className="club-pillar club-pillar-right"><i /><b /></div>
+              <div className="club-speaker-wall"><i /><i /><i /><i /></div>
+              <div className="club-poster-wall"><span>BASS<br />IN THE<br />CHEST</span><span>5D<br />DUBS</span><span>RAVE<br />LIFE</span></div>
+              <div className="club-crowd-mid crowd-left"><i /><i /><i /><i /></div><div className="club-crowd-mid crowd-right"><i /><i /><i /><i /></div>
+              <div className="club-mc"><i /><b /></div><div className="club-security-inside"><i /><b /></div>
+            </>
+          )}
+        </div>
+        <div className="stage-game-plane" aria-hidden="true">
+          {level === 1 && <><i className="alley-puddle puddle-left" /><i className="alley-puddle puddle-right" /><b className="alley-drain" /><span className="alley-flyer flyer-a">DUB</span><span className="alley-flyer flyer-b">5D</span><span className="alley-debris debris-a" /><span className="alley-debris debris-b" /></>}
+          {level === 2 && <><i className="club-booth-floor" /><i className="club-booth-cable cable-left" /><i className="club-booth-cable cable-right" /><span className="club-record-crate">5D<br />DUBS</span><span className="club-monitor monitor-left" /><span className="club-monitor monitor-right" /><span className="club-cup cup-left" /><span className="club-cup cup-right" /></>}
+        </div>
         <div className="stage-reactive" aria-hidden="true">
           <span className="stage-sign stage-sign-left" /><span className="stage-sign stage-sign-right" />
+          {level === 1 && <><span className="backstreet-hanging-sign">NO<br />REQUESTS</span><span className="backstreet-steam steam-left" /><span className="backstreet-steam steam-right" /><span className="backstreet-searchlight" /><span className="backstreet-npc npc-left" /><span className="backstreet-npc npc-right" /></>}
+          {level === 2 && <><span className="club-light-rig"><i /><i /><i /></span><span className="club-laser laser-left" /><span className="club-laser laser-right" /><span className="club-smoke smoke-left" /><span className="club-smoke smoke-right" /><span className="club-banner">5D<br />CLUB</span><span className="club-equipment-leds"><i /><i /><i /><i /></span></>}
           <img className="stage-edge-speaker" src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" />
           <img className="stage-npc-reaction" src={CELEBRATION_DANCERS[1].src} alt="" />
           <i className="stage-flyer stage-flyer-one" /><i className="stage-flyer stage-flyer-two" /><i className="stage-flyer stage-flyer-three" />
         </div>
+        <div className="stage-foreground" aria-hidden="true">
+          {level === 1 && <><i className="foreground-railing" /><i className="foreground-cable cable-a" /><i className="foreground-cable cable-b" /><span className="foreground-speaker-edge" /><span className="foreground-bin" /><span className="foreground-tag">5D</span></>}
+          {level === 2 && <><i className="club-booth-edge" /><i className="club-foreground-deck deck-left" /><i className="club-foreground-deck deck-right" /><span className="club-foreground-mixer"><i /><i /><i /></span><span className="club-foreground-fader" /><span className="club-crowd-hands hands-left" /><span className="club-crowd-hands hands-right" /></>}
+        </div>
+        {impactFx && (
+          <div
+            key={impactFx.key}
+            className={`game-impact-fx game-impact-${impactFx.kind}`}
+            style={{ left: `${impactFx.x}%`, top: `${impactFx.y}%` }}
+            aria-hidden="true"
+          />
+        )}
         <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>
@@ -3278,12 +3479,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <div
                 key={item.id}
                 className={`falling-object ${item.type}`}
+                data-game-object-id={item.id}
                 style={{
                   left: `${item.x}%`,
                   top: `${item.y}%`,
-                  width: `${Math.max(48, item.size * 1.5)}px`,
-                  height: `${Math.max(48, item.size * 1.5)}px`,
-                  "--item-visual-size": `${Math.max(48, item.size * 1.5)}px`,
+                  width: `${item.width}%`,
+                  height: `${item.height}%`,
+                  "--item-visual-size": `${item.visualSize}px`,
                   "--fall-tilt": `${item.tilt}deg`,
                 } as React.CSSProperties}
               >
@@ -3385,7 +3587,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
 
         {/* DJ selector with turntable at bottom */}
-        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}`} style={{ left: `${djXRef.current}%` }}>
+        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
               className="dj-sprite"

@@ -1,5 +1,30 @@
 # Project TODO
 
+## Supplied Level 1 sunset-stage implementation brief
+
+- [x] Execute and document the active interaction matrix in an actual 390×844 development viewport, distinct from the prior 390px playfield-width check.
+
+- [x] Run and document the live 390×844 interaction matrix: pointer drag left/centre/right, one-time catch and hazard resolution, miss/combo reset, lives decrement, and level-complete transition.
+
+- [x] Change localized catch-response selection from deterministic object-ID cycling to a true non-blocking reaction pool.
+- [x] Run and record live desktop and 390×844 checks for keyboard movement, catch/hazard one-time resolution, score/combo increment-reset, miss/damage, and level-complete state transitions.
+- [x] Scope the retained illustrated hazard overlays to their existing post-hit pause contract and document that active play uses stage-native responses before the overlays mount.
+
+- [x] Validate the combined references as one coherent world: Level 1 exterior-to-Level 2 interior continuity, parallax layer order, compact selector scale, normalized prop scale, reactive environment tiers, and clear 390×844 play planes.
+
+- [x] Build Level 2 as the inside of the same 5D club, with a reverse view of the Level 1 entrance/alley and no generic festival-stage replacement.
+- [x] Decompose Level 2 into booth foreground, crowd/midground, venue architecture/background, entrance/corridor continuity, and non-blocking reactive FX layers.
+- [x] Implement Level 2’s 1x/5x/10x/15x/20x/25x early-club-to-5th-Dimension environmental progression while preserving readable gameplay lanes.
+- [x] Verify the final art-sheet contracts: Pointer Events and keyboard fallback, one world-coordinate system, one-time collision resolution, smaller selector scale, normalized objects, hitbox-only development mode, and reactive events without large UI panels.
+
+- [x] Complete functional input, collision, catch, hazard, score, combo, and game-state validation before adding further visual-stage detail.
+- [x] Convert Level 1’s authored base state to late-summer sunset with a visible warm skyline, warm brick, and physical street surfaces; preserve responsive readability and remove retired backdrop-image dependence.
+- [x] Build the supplied independent parallax layers: skyline, distant buildings, rear archway/alley, main 5D club building, left shop, street/vehicles, interactive props, player/object plane, foreground props, particles, HUD, and event overlay.
+- [x] Add physically grounded selector integration with a subtle contact shadow, consistent play-plane perspective, controlled foreground occlusion, and no selector scale change.
+- [x] Implement the 1x/5x/10x/15x/20x/25x sunset-to-rave progression through environmental state changes rather than large in-playfield text panels.
+- [x] Add randomized small catch reactions, differentiated police/pill/miss/damage reactions, subtle background characters, and hidden environmental discoveries without obscuring gameplay.
+- [x] Verify the supplied reference requirements at 390×844 and desktop, including play-plane clarity, object scale, touch drag, keyboard control, catches, hazards, combo transitions, and performance safeguards.
+
 ## Current approval-gated arcade regression audit
 
 - [x] Replace every placeholder-like splash and record-spin transition layer with a detailed, colorful, illustrated hard-outlined scene composition that matches the described event while preserving its existing timing, copy, audio, and return-to-play behavior.
@@ -1221,3 +1246,14 @@
 - [x] Keep feedback fast, minimal, nonpersistent, and visually separate from the player and active-object lane.
 - [x] Validate the complete 390×844 acceptance checklist, motion/input continuity, HUD containment, temporary event restoration, tests, typecheck, build, and performance safeguards.
 - [x] Deliver changed-file list, stage architecture, restored drag-control explanation, scale change, reactive-event map, required production-asset list, 390px evidence, and performance confirmation.
+
+## Functional gameplay and stage rebuild — input before art
+
+- [ ] Audit and instrument the real player state, pointer conversion, falling-object world data, and collision-state flow before visual-stage changes.
+- [ ] Repair direct captured pointer drag so client X maps to the actual player game-world X and collision coordinates with bounded touch/mouse support and keyboard fallback.
+- [ ] Define player and object world bounds from the same X/Y/width/height data, add a development hitbox mode, and prevent an object from resolving collision more than once.
+- [ ] Add automated pointer-coordinate conversion and pickup/hazard collision transition tests that cover score, combo, recovery, removal, and reaction effects.
+- [ ] Normalize regular pickup, large-bonus, and hazard visual scales against the unchanged selector height without modifying collision dimensions.
+- [ ] Build a decomposed Level 1 neon backstreet architecture from clean assets/placeholders only; do not use static screenshots, wallpaper composition, or unrelated site changes.
+- [ ] Implement environment state responses for catch, miss, hazard, 5/10/15/20/25 combo milestones, and level completion without persistent gameplay banners.
+- [ ] Verify continuous left/centre/right pointer drag, keyboard movement, pickup/hazard hitboxes, animations, combo increment/reset, reactions, 390×844 mobile, desktop, and performance safeguards before publishing.

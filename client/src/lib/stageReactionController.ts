@@ -12,6 +12,12 @@ export interface StageController {
   setLevel(level: 1 | 2): void;
   trigger(reaction: StageReaction): void;
   setEnergy(value: number): void;
+  onCatch(type: string): void;
+  onHazard(type: string): void;
+  onCombo(level: number): void;
+  onMiss(): void;
+  onDamage(): void;
+  onLevelComplete(): void;
 }
 
 export const stageReactions: Record<StageReaction, readonly string[]> = {
@@ -29,10 +35,12 @@ export type StageSnapshot = {
   level: 1 | 2;
   energy: number;
   reaction: StageReaction | null;
+  event: "catch" | "hazard" | "combo" | "miss" | "damage" | "level-complete" | null;
+  eventType: string | null;
 };
 
 export class StageReactionController implements StageController {
-  private state: StageSnapshot = { level: 1, energy: 0, reaction: null };
+  private state: StageSnapshot = { level: 1, energy: 0, reaction: null, event: null, eventType: null };
 
   constructor(private readonly onChange: (snapshot: StageSnapshot) => void) {}
 
@@ -41,7 +49,7 @@ export class StageReactionController implements StageController {
   }
 
   setLevel(level: 1 | 2) {
-    this.publish({ ...this.state, level, reaction: null });
+    this.publish({ ...this.state, level, reaction: null, event: null, eventType: null });
   }
 
   trigger(reaction: StageReaction) {
@@ -52,8 +60,33 @@ export class StageReactionController implements StageController {
     this.publish({ ...this.state, energy: Math.max(0, Math.min(1, value)) });
   }
 
+  onCatch(type: string) {
+    this.publish({ ...this.state, reaction: "DUBPLATE_CATCH", event: "catch", eventType: type });
+  }
+
+  onHazard(type: string) {
+    this.publish({ ...this.state, reaction: "HAZARD_HIT", event: "hazard", eventType: type });
+  }
+
+  onCombo(level: number) {
+    const reaction = reactionForCombo(level);
+    this.publish({ ...this.state, reaction, event: "combo", eventType: String(level) });
+  }
+
+  onMiss() {
+    this.publish({ ...this.state, reaction: "MISS", event: "miss", eventType: null });
+  }
+
+  onDamage() {
+    this.publish({ ...this.state, event: "damage", eventType: this.state.eventType });
+  }
+
+  onLevelComplete() {
+    this.publish({ ...this.state, event: "level-complete", eventType: null });
+  }
+
   clearReaction() {
-    this.publish({ ...this.state, reaction: null });
+    this.publish({ ...this.state, reaction: null, event: null, eventType: null });
   }
 
   private publish(next: StageSnapshot) {
