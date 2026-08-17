@@ -30,6 +30,7 @@ type GameMode = "LEVEL_1" | "BONUS_CROWD_PRESSURE" | "LEVEL_2" | "BONUS_LEVEL_2"
 type GameplayState = "PLAYING" | "BONUS" | "DAMAGED" | "RECOVERY" | "LEVEL_COMPLETE" | "GAME_OVER" | "LEVEL_TRANSITION";
 type RealPointerDiagnostics = {
   phase: "idle" | "down" | "move" | "up" | "cancel";
+  touchActive: boolean;
   pointerId: number | null;
   pointerX: number | null;
   rectLeft: number | null;
@@ -40,8 +41,14 @@ type RealPointerDiagnostics = {
   playerTargetX: number;
   playerActualX: number;
   lastAssignment: string;
+  lastWriteSource: string;
+  lastWritePreviousX: number;
+  lastWriteNextX: number;
+  lastWriteTimestamp: number | null;
   captured: boolean;
   domTarget: string;
+  eventTarget: string;
+  captureElement: string;
 };
 type BonusGearType = "headphones" | "turntable" | "mic" | "speaker" | "mixer" | "cdj";
 type BonusHazardType = "cart" | "can" | "rock" | "rat";
@@ -291,7 +298,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [cleanDubplateStreak, setCleanDubplateStreak] = useState(0);
   const cleanDubplateStreakRef = useRef(0);
   const [hazardSinceStreakStart, setHazardSinceStreakStart] = useState(false);
-  const [realPointerDiagnostics, setRealPointerDiagnostics] = useState<RealPointerDiagnostics>({ phase: "idle", pointerId: null, pointerX: null, rectLeft: null, rectWidth: null, localX: null, normalizedX: null, worldX: null, playerTargetX: 50, playerActualX: 50, lastAssignment: "none", captured: false, domTarget: "not yet sampled" });
+  const [realPointerDiagnostics, setRealPointerDiagnostics] = useState<RealPointerDiagnostics>({ phase: "idle", touchActive: false, pointerId: null, pointerX: null, rectLeft: null, rectWidth: null, localX: null, normalizedX: null, worldX: null, playerTargetX: 50, playerActualX: 50, lastAssignment: "none", lastWriteSource: "none", lastWritePreviousX: 50, lastWriteNextX: 50, lastWriteTimestamp: null, captured: false, domTarget: "not yet sampled", eventTarget: "not yet sampled", captureElement: "not yet sampled" });
   const arcadeUtils = trpc.useUtils();
   const sharedLeaderboardQuery = trpc.arcade.leaderboard.useQuery(undefined, { staleTime: 15_000, refetchOnWindowFocus: true });
   const submitSharedScore = trpc.arcade.submitScore.useMutation({
@@ -315,9 +322,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const stageReactionVerification = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-stage-verify") as StageReaction | null : null;
   const hitboxDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hitboxes") === "true";
   const mechanicsDebugEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-mechanics-debug") === "true";
-  // Deliberately query-gated rather than environment-gated: this temporary
-  // readout is required to diagnose touch delivery on the published build.
-  const realInputDebugEnabled = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-real-input-debug") === "true";
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
     crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
@@ -329,6 +333,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const rewardToRender = inWorldReward ?? heldRewardPreview;
   const heldLossPreview = import.meta.env.DEV && lossVerificationHold && sceneVerificationMode === "loss";
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputCaptureRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
   const crowdHandRef = useRef<HTMLDivElement>(null);
@@ -512,14 +517,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   // Key state for smooth movement
   const keysRef = useRef<{ [key: string]: boolean }>({});
-  const playerPositionWriteRef = useRef("none");
+  const playerPositionWriteRef = useRef({ source: "none", previousX: 50, nextX: 50, timestamp: null as number | null });
 
   const setPlayerWorldX = (centerX: number, state: PlayerWorld["state"] = "playing", source = "runtime") => {
+    const previousX = playerWorldRef.current.x + playerWorldRef.current.width / 2;
     const nextPlayer = playerRectFromCenterX(centerX, state);
     playerWorldRef.current = nextPlayer;
     const clampedCenterX = nextPlayer.x + nextPlayer.width / 2;
     djXRef.current = clampedCenterX;
-    playerPositionWriteRef.current = `${source}:${clampedCenterX.toFixed(2)}`;
+    playerPositionWriteRef.current = {
+      source,
+      previousX,
+      nextX: clampedCenterX,
+      timestamp: performance.now(),
+    };
     if (djCatcherRef.current) djCatcherRef.current.style.left = `${clampedCenterX}%`;
     if (mechanicsDebugPlayerHitboxRef.current) mechanicsDebugPlayerHitboxRef.current.style.left = `${nextPlayer.x}%`;
   };
@@ -3172,7 +3183,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const inspectRealPointerEvent = (phase: RealPointerDiagnostics["phase"], e: React.PointerEvent<HTMLDivElement>) => {
-    if (!realInputDebugEnabled) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const worldX = clientXToWorldX(e.clientX, rect.left, rect.width);
     const normalizedX = rect.width > 0 ? (e.clientX - rect.left) / rect.width : 0;
@@ -3180,9 +3190,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const domTarget = elementAtPointer
       ? `${elementAtPointer.tagName.toLowerCase()}${elementAtPointer.id ? `#${elementAtPointer.id}` : ""}${elementAtPointer.className ? `.${String(elementAtPointer.className).trim().replace(/\s+/g, ".")}` : ""}`
       : "none";
+    const describeElement = (element: EventTarget | null) => element instanceof Element
+      ? `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ""}${element.className ? `.${String(element.className).trim().replace(/\s+/g, ".")}` : ""}`
+      : "none";
     const actualLeft = Number.parseFloat(djCatcherRef.current?.style.left ?? `${djXRef.current}`);
     setRealPointerDiagnostics({
       phase,
+      touchActive: phase === "down" || phase === "move" || playfieldPointerRef.current === e.pointerId,
       pointerId: e.pointerId,
       pointerX: Number(e.clientX.toFixed(1)),
       rectLeft: Number(rect.left.toFixed(1)),
@@ -3192,9 +3206,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       worldX: Number(worldX.toFixed(2)),
       playerTargetX: Number(djXRef.current.toFixed(2)),
       playerActualX: Number(actualLeft.toFixed(2)),
-      lastAssignment: playerPositionWriteRef.current,
+      lastAssignment: `${playerPositionWriteRef.current.source}:${playerPositionWriteRef.current.previousX.toFixed(2)}→${playerPositionWriteRef.current.nextX.toFixed(2)}@${playerPositionWriteRef.current.timestamp?.toFixed(1) ?? "—"}`,
+      lastWriteSource: playerPositionWriteRef.current.source,
+      lastWritePreviousX: Number(playerPositionWriteRef.current.previousX.toFixed(2)),
+      lastWriteNextX: Number(playerPositionWriteRef.current.nextX.toFixed(2)),
+      lastWriteTimestamp: playerPositionWriteRef.current.timestamp,
       captured: e.currentTarget.hasPointerCapture(e.pointerId),
       domTarget,
+      eventTarget: describeElement(e.target),
+      captureElement: describeElement(e.currentTarget),
     });
   };
 
@@ -3203,6 +3223,54 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (e.pointerType === "touch") e.preventDefault();
     updateDjPositionFromClientX(e.clientX, e.currentTarget);
   };
+
+  const normalPlayfieldPointerEnabled = isPlaying && (gameMode === "LEVEL_1" || gameMode === "LEVEL_2");
+
+  const handleInputCapturePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!normalPlayfieldPointerEnabled) return;
+    e.preventDefault();
+    e.stopPropagation();
+    playfieldPointerRef.current = e.pointerId;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    updateDjPositionFromClientX(e.clientX, e.currentTarget);
+    inspectRealPointerEvent("down", e);
+  };
+
+  const handleInputCapturePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (playfieldPointerRef.current !== e.pointerId) return;
+    e.preventDefault();
+    e.stopPropagation();
+    updateDjPositionFromClientX(e.clientX, e.currentTarget);
+    inspectRealPointerEvent("move", e);
+  };
+
+  const releaseInputCapturePointer = (phase: "up" | "cancel", e: React.PointerEvent<HTMLDivElement>) => {
+    if (playfieldPointerRef.current === e.pointerId) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+      playfieldPointerRef.current = null;
+    }
+    inspectRealPointerEvent(phase, e);
+  };
+
+  useEffect(() => {
+    const handler = (event: PointerEvent) => {
+      const target = event.target as Element | null;
+      console.log("[capture-phase]", {
+        type: event.type,
+        target: target?.className || target?.tagName || "none",
+        id: event.pointerId,
+        clientX: event.clientX,
+      });
+    };
+    window.addEventListener("pointerdown", handler, true);
+    window.addEventListener("pointermove", handler, true);
+    return () => {
+      window.removeEventListener("pointerdown", handler, true);
+      window.removeEventListener("pointermove", handler, true);
+    };
+  }, []);
 
   useEffect(() => {
     stageControllerRef.current?.setLevel(level);
@@ -3271,14 +3339,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
           onPointerMove={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
-            if (!usesAlternatePointerRoute) {
-              if (playfieldPointerRef.current === e.pointerId || e.currentTarget.hasPointerCapture(e.pointerId)) {
-                playfieldPointerRef.current = e.pointerId;
-                handlePointerMove(e);
-              }
-              inspectRealPointerEvent("move", e);
-              return;
-            }
+            if (!usesAlternatePointerRoute) return;
             if (e.pointerType === "touch") e.preventDefault();
             setBonusLaneFromClientX(e.clientX);
             inspectRealPointerEvent("move", e);
@@ -3286,7 +3347,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           onPointerDown={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
             const interactiveChild = e.target instanceof Element && Boolean(e.target.closest("button, a, input, textarea, select"));
-            if (interactiveChild || (!usesAlternatePointerRoute && !isPlayingRef.current)) {
+            if (interactiveChild || !usesAlternatePointerRoute) {
               inspectRealPointerEvent("down", e);
               return;
             }
@@ -3297,11 +3358,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               inspectRealPointerEvent("down", e);
               return;
             }
-            e.preventDefault();
-            playfieldPointerRef.current = e.pointerId;
-            e.currentTarget.setPointerCapture(e.pointerId);
-            updateDjPositionFromClientX(e.clientX, e.currentTarget);
-            inspectRealPointerEvent("down", e);
           }}
           onPointerUp={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
@@ -3311,26 +3367,28 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               inspectRealPointerEvent("up", e);
               return;
             }
-            if (playfieldPointerRef.current === e.pointerId) {
-              updateDjPositionFromClientX(e.clientX, e.currentTarget);
-              if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
-              playfieldPointerRef.current = null;
-            }
-            inspectRealPointerEvent("up", e);
+            if (!usesAlternatePointerRoute) return;
           }}
           onPointerCancel={(e) => {
-            if (playfieldPointerRef.current === e.pointerId) {
-              if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
-              playfieldPointerRef.current = null;
-            }
+            const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
+            if (!usesAlternatePointerRoute) return;
             bonusPointerStartRef.current = null;
             bonusGestureHandledRef.current = false;
             inspectRealPointerEvent("cancel", e);
           }}
+        >
+        <div
+          ref={inputCaptureRef}
+          className={`input-capture-layer${normalPlayfieldPointerEnabled ? " is-active" : ""}`}
+          aria-label="Level playfield touch control"
+          onPointerDown={handleInputCapturePointerDown}
+          onPointerMove={handleInputCapturePointerMove}
+          onPointerUp={(e) => releaseInputCapturePointer("up", e)}
+          onPointerCancel={(e) => releaseInputCapturePointer("cancel", e)}
           onLostPointerCapture={(e) => {
             if (playfieldPointerRef.current === e.pointerId) playfieldPointerRef.current = null;
           }}
-        >
+        />
         {damageFeedback && !gameOver && (
           <div className="damage-feedback" role="status" aria-live="assertive">
             <span>{damageFeedback.bonus ? "BONUS DAMAGE" : "HEART LOST"}</span>
@@ -4038,15 +4096,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             ))}
         </div>
         {mechanicsDebugEnabled && <aside className="mechanics-debug-log" aria-live="polite"><strong>WORLD DEBUG</strong><span>PLAYER {playerWorldRef.current.x.toFixed(1)},{playerWorldRef.current.y} {playerWorldRef.current.width}×{playerWorldRef.current.height}</span>{mechanicsDebugLog.map((entry) => <small key={entry}>{entry}</small>)}</aside>}
-        {realInputDebugEnabled && (
+        {isPlaying && (
           <aside className="real-input-debug-panel" aria-live="polite">
             <strong>REAL INPUT TRACE</strong>
+            <span>TOUCH ACTIVE: {realPointerDiagnostics.touchActive ? "YES" : "NO"}</span>
+            <span>POINTER ID: {realPointerDiagnostics.pointerId ?? "—"} / PHASE: {realPointerDiagnostics.phase.toUpperCase()} / CAPTURED: {realPointerDiagnostics.captured ? "YES" : "NO"}</span>
+            <span>EVENT TARGET: {realPointerDiagnostics.eventTarget}</span>
+            <span>CAPTURE ELEMENT: {realPointerDiagnostics.captureElement}</span>
             <span>TOUCH TARGET: {realPointerDiagnostics.domTarget}</span>
-            <span>POINTER {realPointerDiagnostics.phase.toUpperCase()}: {realPointerDiagnostics.phase === "idle" ? "NO" : "YES"} / ID: {realPointerDiagnostics.pointerId ?? "—"} / CAPTURED: {realPointerDiagnostics.captured ? "YES" : "NO"}</span>
             <span>CLIENT X: {realPointerDiagnostics.pointerX ?? "—"} / RECT LEFT: {realPointerDiagnostics.rectLeft ?? "—"} / RECT WIDTH: {realPointerDiagnostics.rectWidth ?? "—"}</span>
             <span>LOCAL X: {realPointerDiagnostics.localX ?? "—"} / NORMALIZED X: {realPointerDiagnostics.normalizedX ?? "—"} / WORLD X: {realPointerDiagnostics.worldX ?? "—"}</span>
-            <span>TARGET PLAYER X: {realPointerDiagnostics.playerTargetX.toFixed(2)} / ACTUAL PLAYER X: {realPointerDiagnostics.playerActualX.toFixed(2)}</span>
+            <span>PLAYER X: {realPointerDiagnostics.playerTargetX.toFixed(2)} / RENDERED X: {realPointerDiagnostics.playerActualX.toFixed(2)}</span>
             <span>LAST PLAYER WRITE: {realPointerDiagnostics.lastAssignment}</span>
+            <span>WRITE SOURCE: {realPointerDiagnostics.lastWriteSource} / PREVIOUS X: {realPointerDiagnostics.lastWritePreviousX.toFixed(2)} / NEXT X: {realPointerDiagnostics.lastWriteNextX.toFixed(2)} / TIME: {realPointerDiagnostics.lastWriteTimestamp?.toFixed(1) ?? "—"}</span>
             <span>PLAYER HITBOX: {playerWorldRef.current.x.toFixed(2)},{playerWorldRef.current.y} {playerWorldRef.current.width}×{playerWorldRef.current.height}</span>
             <span>CLEAN STREAK: {cleanDubplateStreak}/15 / HAZARD SINCE START: {hazardSinceStreakStart ? "YES" : "NO"}</span>
             <span>BONUS ELIGIBLE: {isBonusEligible ? "YES" : "NO"} / TRIGGERED: {gameMode === "BONUS_CROWD_PRESSURE" ? "YES" : "NO"}</span>

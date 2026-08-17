@@ -5,7 +5,7 @@ const browser = await chromium.launch({ headless: true, executablePath: "/usr/bi
 const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 const page = await context.newPage();
 
-await page.goto(`${origin}/?arcade-real-input-debug=true`, { waitUntil: "domcontentloaded" });
+await page.goto(origin, { waitUntil: "domcontentloaded" });
 const start = page.locator(".tape-play-button");
 await start.scrollIntoViewIfNeeded();
 await start.click();
@@ -13,7 +13,8 @@ await page.waitForFunction(() => !document.querySelector(".game-overlay"), null,
 
 const playfield = page.locator(".game-viewport");
 await playfield.scrollIntoViewIfNeeded();
-const bounds = await playfield.boundingBox();
+const captureSurface = page.locator(".input-capture-layer.is-active");
+const bounds = await captureSurface.boundingBox();
 if (!bounds) throw new Error("Rendered playfield was not available");
 const y = bounds.y + bounds.height * .74;
 const pointerAt = (ratio) => bounds.x + bounds.width * ratio;
@@ -40,13 +41,25 @@ const atFifty = { pointerRatio: .50, target: await hitTarget(pointerAt(.50)), tr
 await page.mouse.move(pointerAt(.90), y, { steps: 8 });
 await page.waitForTimeout(80);
 const atNinety = { pointerRatio: .90, target: await hitTarget(pointerAt(.90)), trace: (await trace()).replace(/\s+/g, " ").trim(), playerLeft: await playerLeft() };
+const repeatedCycles = [];
+for (let cycle = 1; cycle <= 10; cycle += 1) {
+  await page.mouse.move(pointerAt(.10), y);
+  await page.waitForTimeout(2);
+  const returnTen = Number.parseFloat(await playerLeft());
+  await page.mouse.move(pointerAt(.90), y);
+  await page.waitForTimeout(2);
+  const returnNinety = Number.parseFloat(await playerLeft());
+  repeatedCycles.push({ cycle, atTen: returnTen, atNinety: returnNinety });
+}
 await page.mouse.up();
 
 const playerPositions = [atTen, atFifty, atNinety].map((sample) => Number.parseFloat(sample.playerLeft));
-const accepted = playerPositions[0] <= 12 && playerPositions[1] >= 45 && playerPositions[1] <= 55 && playerPositions[2] >= 85 && atTen.target.includes("game-viewport") && atFifty.target.includes("game-viewport") && atNinety.target.includes("game-viewport") && hudBandTarget.includes("game-viewport");
+const traceHasCaptureSurface = (sample) => sample.trace.includes("TOUCH TARGET: div.input-capture-layer.is-active") && sample.trace.includes("CAPTURE ELEMENT: div.input-capture-layer.is-active");
+const cyclesPass = repeatedCycles.every((cycle) => cycle.atTen <= 12 && cycle.atNinety >= 85);
+const accepted = playerPositions[0] <= 12 && playerPositions[1] >= 45 && playerPositions[1] <= 55 && playerPositions[2] >= 85 && traceHasCaptureSurface(atTen) && traceHasCaptureSurface(atFifty) && traceHasCaptureSurface(atNinety) && hudBandTarget.includes("input-capture-layer") && cyclesPass;
 await playfield.screenshot({ path: "/home/ubuntu/webdev-static-assets/selectah-published-pointer-hotfix-390.png" });
 
-console.log(JSON.stringify({ origin, viewport: "390x844", hudBandTarget, atTen, atFifty, atNinety, accepted }, null, 2));
+console.log(JSON.stringify({ origin, viewport: "390x844", hudBandTarget, atTen, atFifty, atNinety, repeatedCycles, accepted }, null, 2));
 if (!accepted) process.exitCode = 1;
 await context.close();
 await browser.close();

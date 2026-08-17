@@ -1,5 +1,15 @@
 # Project TODO
 
+## Final real-touch input fix — publish control changes only
+
+- [x] Create a transparent dedicated `.input-capture-layer` covering only the active playable field and route all normal Level 1/2 Pointer Events through it.
+- [x] Instrument all normal-play selector-X writes with source, old/new X, and timestamp; remove any competing normal-play X writer discovered during real drag.
+- [x] Display live production pointer/capture diagnostics: touch active, pointer ID, client/normalized/world X, authoritative/rendered X, event target, and capture element.
+- [x] Add temporary capture-phase browser diagnostics that report whether the window, the real target, and the dedicated capture layer receive physical pointer events; remove them after repair confirmation.
+- [x] Ensure player rendering mirrors the single authoritative world X without CSS centering or movement smoothing competing with direct touch tracking.
+- [ ] Test direct production and Manus preview routes separately with repeated 10%→90%→10% held drags plus a post-catch movement check; do not declare success before the user confirms real-device behavior.
+- [ ] Publish only the control fix and provide the exact direct public URL used for verification; then await real-device confirmation.
+
 ## Published mobile input hotfix — no art, collision, spawn, bonus, or level changes
 
 - [x] Complete and document the remaining overlay/HUD pointer-event audit, including temporary event overlays and active HUD controls above the playfield.

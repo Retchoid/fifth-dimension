@@ -15,6 +15,25 @@
   -webkit-touch-callout: none;
 }
 
+/* Transparent normal-play Pointer Events plane: above all scenery and selector
+   visuals, below interactive HUD controls and modal state overlays. */
+.arcade-cabinet-bezel .input-capture-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  background: transparent;
+  pointer-events: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.arcade-cabinet-bezel .input-capture-layer.is-active {
+  display: block;
+  pointer-events: auto;
+}
+
 /* The viewport is the only normal-play input receiver. These layers are visual
    only—even when their rectangles span the whole scene—and cannot retarget a
    physical touch away from the Pointer Events handler above. */
@@ -60,6 +79,8 @@
 .arcade-cabinet-bezel .game-hud > .audio-toggle * {
   pointer-events: auto !important;
 }
+.arcade-cabinet-bezel .game-hud { z-index: 41 !important; }
+.arcade-cabinet-bezel .dj-catcher { transition: none !important; }
 
 /* LAYER 1 — one full original environment for each level. */
 .arcade-cabinet-bezel .game-grid-bg {

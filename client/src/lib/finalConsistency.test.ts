@@ -201,16 +201,20 @@ describe("Task 7 final consistency contract", () => {
     expect(arcadePlayfieldArchitecture).toContain(".mechanics-debug-object.bonus");
   });
 
-  it("protects the real public pointer path from start-button cancellation and exposes its visible trace", () => {
+  it("isolates the real public pointer path on one capture plane and exposes its visible trace", () => {
     const gameSource = read("components/DjMiniGame.tsx");
-    expect(gameSource).toContain('arcade-real-input-debug');
-    expect(gameSource).toContain('e.target.closest("button, a, input, textarea, select")');
-    expect(gameSource).toContain('(!usesAlternatePointerRoute && !isPlayingRef.current)');
+    expect(gameSource).toContain("const handleInputCapturePointerDown");
+    expect(gameSource).toContain("const handleInputCapturePointerMove");
+    expect(gameSource).toContain("const releaseInputCapturePointer");
+    expect(gameSource).toContain("const normalPlayfieldPointerEnabled");
+    expect(gameSource).toContain('window.addEventListener("pointerdown", handler, true)');
     expect(gameSource).toContain("REAL INPUT TRACE");
     expect(gameSource).toContain("TOUCH TARGET:");
-    expect(gameSource).toContain("ACTUAL PLAYER X:");
+    expect(gameSource).toContain("RENDERED X:");
+    expect(gameSource).toContain("CAPTURE ELEMENT:");
     expect(gameSource).toContain("mixer-recovery-status");
     expect(arcadePlayfieldArchitecture).toContain(".real-input-debug-panel");
+    expect(arcadePlayfieldArchitecture).toContain(".input-capture-layer.is-active");
   });
 
   it("keeps mobile arcade input in document flow above the preceding Projects card", () => {
@@ -236,17 +240,27 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain('if (mixerDamagedRef.current && item.type === "record")');
   });
 
-  it("keeps published mobile pointer input bound to the actual game viewport", () => {
+  it("keeps published mobile pointer input bound to one dedicated capture surface", () => {
     const gameSource = read("components/DjMiniGame.tsx");
-    expect(gameSource).toContain("const realInputDebugEnabled = typeof window !== \"undefined\"");
+    expect(gameSource).toContain("const inputCaptureRef = useRef<HTMLDivElement>(null);");
+    expect(gameSource).toContain('className={`input-capture-layer${normalPlayfieldPointerEnabled ? " is-active" : ""}`}');
+    expect(gameSource).toContain("onPointerDown={handleInputCapturePointerDown}");
+    expect(gameSource).toContain("e.currentTarget.setPointerCapture(e.pointerId)");
     expect(gameSource).toContain("updateDjPositionFromClientX(e.clientX, e.currentTarget)");
     expect(gameSource).toContain("e.currentTarget.hasPointerCapture(e.pointerId)");
+    expect(gameSource).toContain("TOUCH ACTIVE:");
+    expect(gameSource).toContain("CAPTURE ELEMENT:");
+    expect(gameSource).toContain("lastWritePreviousX");
+    expect(gameSource).toContain("lastWriteNextX");
+    expect(gameSource).toContain("lastWriteTimestamp");
+    expect(gameSource).toContain("WRITE SOURCE:");
     expect(gameSource).toContain("TOUCH TARGET:");
     expect(gameSource).toContain("RECT LEFT:");
     expect(gameSource).toContain("NORMALIZED X:");
     expect(gameSource).toContain("LAST PLAYER WRITE:");
     expect(arcadePlayfieldArchitecture).toContain("touch-action: none !important");
     expect(arcadePlayfieldArchitecture).toContain("pointer-events: auto !important");
+    expect(arcadePlayfieldArchitecture).toContain(".input-capture-layer");
     expect(arcadePlayfieldArchitecture).toContain(".game-grid-bg,");
     expect(arcadePlayfieldArchitecture).toContain(".falling-items-layer *,");
     expect(arcadePlayfieldArchitecture).toContain(".dj-catcher *,");
