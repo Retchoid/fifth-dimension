@@ -54,7 +54,7 @@ for (let cycle = 1; cycle <= 10; cycle += 1) {
 await page.mouse.up();
 
 const playerPositions = [atTen, atFifty, atNinety].map((sample) => Number.parseFloat(sample.playerLeft));
-const traceHasCaptureSurface = (sample) => sample.trace.includes("TOUCH TARGET: div.input-capture-layer.is-active") && sample.trace.includes("CAPTURE ELEMENT: div.input-capture-layer.is-active");
+const traceHasCaptureSurface = (sample) => sample.trace.includes("EVENT TARGET: div.input-capture-layer.is-active") && sample.trace.includes("CAPTURE ELEMENT: div.input-capture-layer.is-active");
 const cyclesPass = repeatedCycles.every((cycle) => cycle.atTen <= 12 && cycle.atNinety >= 85);
 const accepted = playerPositions[0] <= 12 && playerPositions[1] >= 45 && playerPositions[1] <= 55 && playerPositions[2] >= 85 && traceHasCaptureSurface(atTen) && traceHasCaptureSurface(atFifty) && traceHasCaptureSurface(atNinety) && hudBandTarget.includes("input-capture-layer") && cyclesPass;
 await playfield.screenshot({ path: "/home/ubuntu/webdev-static-assets/selectah-published-pointer-hotfix-390.png" });
