@@ -1,0 +1,325 @@
+/* SELECTAH SHOWDOWN — EXPLICIT PLAYFIELD ARCHITECTURE
+   Active gameplay only. This final scoped layer removes obsolete panel/backdrop
+   treatments and establishes one coherent environment beneath each level.
+   It does not alter scoring, spawning, collisions, timing, audio, or release gates. */
+
+.arcade-cabinet-bezel .game-viewport {
+  isolation: isolate !important;
+  overflow: hidden !important;
+  background: #0A0A12 !important;
+  touch-action: none;
+}
+
+/* LAYER 1 — one full original environment for each level. */
+.arcade-cabinet-bezel .game-grid-bg {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  background-color: #0A0A12 !important;
+  background-image:
+    linear-gradient(180deg, rgba(10,10,18,.04) 0 35%, rgba(10,10,18,.38) 70%, rgba(10,10,18,.72) 100%),
+    url("/embedded-assets/selectah-level-one-urban-stage-reference_43ddc07a.png") !important;
+  background-position: center !important;
+  background-size: cover !important;
+  filter: saturate(1.1) contrast(1.08) !important;
+}
+
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg {
+  background-image:
+    linear-gradient(180deg, rgba(10,10,18,.04) 0 32%, rgba(10,10,18,.28) 68%, rgba(10,10,18,.68) 100%),
+    url("/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png") !important;
+  background-position: center 45% !important;
+  background-size: cover !important;
+  filter: saturate(1.12) contrast(1.1) !important;
+}
+
+/* Remove the accumulated pseudo-panels, horizon grids, and translucent playfield
+   decorations from legacy active-game styles. Readability now comes from the
+   environment's natural street/stage negative space and entity treatment. */
+.arcade-cabinet-bezel .game-grid-bg::before,
+.arcade-cabinet-bezel .game-grid-bg::after,
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg::before,
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* LAYERS 2–3 — limited original-asset edge fragments. They never form a central
+   card and remain below gameplay entities. */
+.arcade-cabinet-bezel .rave-world-dressing {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  background: none !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing .rave-glowstick {
+  display: none !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 12% !important;
+  left: -9% !important;
+  width: 31% !important;
+  height: 42% !important;
+  z-index: 1 !important;
+  opacity: .9 !important;
+  background: url("/embedded-assets/selectah-splash-art-direction_4d1c250f.png") left center / 315% auto no-repeat !important;
+  filter: saturate(1.12) contrast(1.1) drop-shadow(3px 4px 0 rgba(10,10,18,.86)) !important;
+  clip-path: polygon(0 0, 100% 8%, 84% 88%, 0 100%) !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -8% !important;
+  bottom: 7% !important;
+  width: 26% !important;
+  height: 32% !important;
+  z-index: 1 !important;
+  opacity: .82 !important;
+  background: url("/embedded-assets/selectah-police-siren-urban_5fb879fa.png") right bottom / contain no-repeat !important;
+  filter: saturate(1.08) contrast(1.12) drop-shadow(3px 4px 0 rgba(10,10,18,.9)) !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::before {
+  content: "" !important;
+  position: absolute !important;
+  left: -5% !important;
+  bottom: 5% !important;
+  width: 25% !important;
+  height: 43% !important;
+  z-index: 1 !important;
+  opacity: .76 !important;
+  background: url("/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png") left bottom / contain no-repeat !important;
+  filter: saturate(1.08) contrast(1.14) drop-shadow(3px 4px 0 rgba(10,10,18,.9)) !important;
+}
+
+.arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::after {
+  content: "" !important;
+  position: absolute !important;
+  right: -7% !important;
+  top: 14% !important;
+  width: 21% !important;
+  height: 25% !important;
+  z-index: 1 !important;
+  opacity: .7 !important;
+  background: url("/embedded-assets/selectah-dubplate-urban_052862f6.png") right top / contain no-repeat !important;
+  filter: saturate(1.12) contrast(1.13) drop-shadow(3px 4px 0 rgba(10,10,18,.9)) !important;
+}
+
+/* LAYER 4 — entities always sit over environment art. Visual scale is separate
+   from the existing wrapper size so collision geometry is preserved. */
+.arcade-cabinet-bezel .falling-items-layer {
+  z-index: 20 !important;
+}
+
+.arcade-cabinet-bezel .falling-object {
+  z-index: 20 !important;
+  overflow: visible !important;
+}
+
+.arcade-cabinet-bezel .falling-object .urban-prop-asset {
+  transform: rotate(var(--fall-tilt, 0deg)) scale(1.22) !important;
+  transform-origin: center !important;
+  filter: drop-shadow(3px 4px 0 rgba(10,10,18,.96)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object.record .urban-prop-asset {
+  transform: rotate(var(--fall-tilt, 0deg)) scale(1.34) !important;
+  filter: drop-shadow(3px 4px 0 rgba(10,10,18,.96)) drop-shadow(0 0 5px rgba(255,230,0,.48)) !important;
+}
+
+.arcade-cabinet-bezel .falling-object:is(.cop,.pill,.phone,.bottle,.apple) .urban-prop-asset {
+  filter: drop-shadow(3px 4px 0 rgba(10,10,18,.96)) drop-shadow(0 0 5px rgba(255,45,149,.43)) !important;
+}
+
+.arcade-cabinet-bezel .dj-catcher {
+  z-index: 21 !important;
+  overflow: visible !important;
+}
+
+.arcade-cabinet-bezel .dj-catcher-art {
+  transform: scale(1.72) !important;
+  transform-origin: 50% 100% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: drop-shadow(5px 6px 0 rgba(10,10,18,.94)) !important;
+}
+
+/* Level 2 already has a larger catcher wrapper. Scaling it like the smaller
+   Level 1 wrapper lifts the selector into the HUD instead of grounding it. */
+.arcade-cabinet-bezel .dj-catcher.level-two-catcher .dj-catcher-art {
+  transform: scale(1.16) !important;
+}
+
+.arcade-cabinet-bezel .dj-catcher-art .dj-sprite {
+  background: transparent !important;
+  box-shadow: none !important;
+  mix-blend-mode: normal !important;
+}
+
+/* LAYER 5 — short-lived status FX above entities and below the HUD. */
+.arcade-cabinet-bezel .damage-feedback,
+.arcade-cabinet-bezel .in-world-reward {
+  z-index: 25 !important;
+}
+
+/* LAYER 6 — contained, compact mobile HUD. */
+.arcade-cabinet-bezel .game-hud {
+  z-index: 30 !important;
+}
+
+.arcade-cabinet-bezel .mobile-playfield-control-hint {
+  display: none;
+}
+
+/* LAYER 7 — events remain temporary above an intact level scene. */
+.arcade-cabinet-bezel .game-overlay,
+.arcade-cabinet-bezel .hazard-splash {
+  z-index: 50 !important;
+}
+
+@media (max-width: 650px) {
+  .arcade-cabinet-wrap,
+  .arcade-cabinet-bezel {
+    transform: none !important;
+    transform-origin: top center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: auto !important;
+    margin-bottom: 0 !important;
+    margin-left: auto !important;
+  }
+
+  .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before {
+    left: -12% !important;
+    width: 35% !important;
+    opacity: .8 !important;
+  }
+
+  .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
+    right: -11% !important;
+    width: 30% !important;
+    opacity: .74 !important;
+  }
+
+  .arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::before {
+    width: 29% !important;
+    opacity: .68 !important;
+  }
+
+  .arcade-cabinet-bezel .rave-world-dressing.level-two-rave-world::after {
+    right: -10% !important;
+    width: 25% !important;
+    opacity: .62 !important;
+  }
+
+  .arcade-cabinet-bezel .dj-catcher-art {
+    transform: scale(1.92) !important;
+  }
+
+  .arcade-cabinet-bezel .dj-catcher.level-two-catcher .dj-catcher-art {
+    transform: scale(1.28) !important;
+  }
+
+  .arcade-cabinet-bezel .game-hud {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 2.7rem minmax(0, 1.18fr) !important;
+    grid-template-areas:
+      "score level records"
+      "combo high lives"
+      "audio audio pickup" !important;
+    gap: 2px !important;
+    padding: 3px 4px !important;
+    align-items: stretch !important;
+    background: rgba(10,10,18,.88) !important;
+  }
+
+  .arcade-cabinet-bezel .game-hud > .hud-badge,
+  .arcade-cabinet-bezel .game-hud > .pickup-flash-slot {
+    min-width: 0 !important;
+    min-height: 1.2rem !important;
+    padding: 2px 3px !important;
+    font-size: clamp(.29rem, 1.55vw, .39rem) !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+  }
+
+  .arcade-cabinet-bezel .game-hud > .hud-badge svg {
+    width: 10px !important;
+    height: 10px !important;
+    flex: 0 0 auto;
+  }
+
+  .arcade-cabinet-bezel .game-hud > .hud-badge strong {
+    font-size: inherit !important;
+  }
+
+  .arcade-cabinet-bezel .game-hud > .hud-badge:nth-child(1) { grid-area: score; }
+  .arcade-cabinet-bezel .game-hud > .level-hud { grid-area: level; justify-content: center !important; }
+  .arcade-cabinet-bezel .game-hud > .records-hud { grid-area: records; }
+  .arcade-cabinet-bezel .game-hud > .combo-badge { grid-area: combo; }
+  .arcade-cabinet-bezel .game-hud > .high-score-badge { grid-area: high; }
+  .arcade-cabinet-bezel .game-hud > .lives-badge { grid-area: lives; }
+  .arcade-cabinet-bezel .game-hud > .audio-toggle { grid-area: audio; justify-content: center !important; }
+  .arcade-cabinet-bezel .game-hud > .pickup-flash-slot { grid-area: pickup; }
+
+  .arcade-cabinet-bezel .mobile-playfield-control-hint {
+    position: absolute;
+    right: 5%;
+    bottom: 2.5%;
+    left: 5%;
+    z-index: 22;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #F0EAD6;
+    font: .32rem/1 "Press Start 2P", monospace;
+    letter-spacing: .08em;
+    text-shadow: 2px 2px 0 #0A0A12;
+    opacity: .9;
+  }
+
+  .arcade-cabinet-bezel .mobile-playfield-control-hint span,
+  .arcade-cabinet-bezel .mobile-playfield-control-hint button {
+    padding: .24rem .32rem;
+    border: 2px solid #00D4FF;
+    background: rgba(10,10,18,.66);
+    box-shadow: 2px 2px 0 #FF2D95;
+  }
+
+  .arcade-cabinet-bezel .mobile-playfield-control-hint button {
+    min-width: 44px;
+    min-height: 34px;
+    color: #F0EAD6;
+    font: inherit;
+    letter-spacing: inherit;
+    touch-action: manipulation;
+  }
+
+  .arcade-cabinet-bezel .mobile-playfield-control-hint button:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 #FF2D95;
+  }
+}
+
+@media (max-width: 360px) {
+  .arcade-cabinet-bezel .game-hud {
+    grid-template-columns: minmax(0, 1fr) 2.35rem minmax(0, 1.1fr) !important;
+  }
+
+  .arcade-cabinet-bezel .game-hud > .hud-badge,
+  .arcade-cabinet-bezel .game-hud > .pickup-flash-slot {
+    font-size: .27rem !important;
+    padding: 2px !important;
+  }
+}

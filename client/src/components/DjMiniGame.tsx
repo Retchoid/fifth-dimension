@@ -14,7 +14,7 @@ import "@/detailed-arcade-scenes.css";
 import "@/hazard-master-style.css";
 import "@/arcade-scoped-overhaul.css";
 import "@/visual-recovery-arcade.css";
-import "@/gallery-art-active-play.css";
+import "@/arcade-playfield-architecture.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
@@ -2574,6 +2574,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     updateDjPositionFromClientX(e.clientX);
   };
 
+  const nudgeMobileDj = (direction: -1 | 1) => {
+    if (isBonusLevelActive || isNoRequestBonusActive) return;
+    const next = Math.max(12, Math.min(88, djXRef.current + direction * 18));
+    const viewport = containerRef.current;
+    if (!viewport) return;
+    const bounds = viewport.getBoundingClientRect();
+    updateDjPositionFromClientX(bounds.left + (bounds.width * next) / 100);
+  };
+
   const raveBanter = level === 2
     ? recordsCaught >= 25
       ? "CROWD: ONE MORE? SCHEDULED FOR 1999."
@@ -2676,6 +2685,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>
+        {isPlaying && !isBonusLevelActive && !isNoRequestBonusActive && (
+          <div className="mobile-playfield-control-hint">
+            <button type="button" aria-label="Move selector left" onPointerDown={(event) => { event.preventDefault(); event.stopPropagation(); nudgeMobileDj(-1); }} onClick={() => nudgeMobileDj(-1)}>◀ LEFT</button>
+            <span aria-hidden="true">DRAG PLAYFIELD</span>
+            <button type="button" aria-label="Move selector right" onPointerDown={(event) => { event.preventDefault(); event.stopPropagation(); nudgeMobileDj(1); }} onClick={() => nudgeMobileDj(1)}>RIGHT ▶</button>
+          </div>
+        )}
         <div className="game-hud game-hud-clear">
           <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
           <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>

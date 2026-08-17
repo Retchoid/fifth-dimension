@@ -13,7 +13,7 @@ const gameplayClarity = read("gameplay-clarity.css");
 const fallingItemsRenderFix = read("falling-items-render-fix.css");
 const mobileSiteRepair = read("mobile-site-repair.css");
 const scopedArcadeOverhaul = read("arcade-scoped-overhaul.css");
-const galleryArtActivePlay = read("gallery-art-active-play.css");
+const arcadePlayfieldArchitecture = read("arcade-playfield-architecture.css");
 const mainSource = read("main.tsx");
 
 const publicSources = [
@@ -72,16 +72,21 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("showComboReaction: (kind) =>");
   });
 
-  it("keeps active gameplay tied to the canonical gallery-art environments", () => {
+  it("keeps active gameplay on one explicit asset-backed playfield architecture", () => {
     const gameSource = read("components/DjMiniGame.tsx");
-    expect(gameSource).toContain('import "@/gallery-art-active-play.css";');
-    expect(galleryArtActivePlay).toContain("selectah-splash-art-direction_4d1c250f.png");
-    expect(galleryArtActivePlay).toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
-    expect(galleryArtActivePlay).toContain("selectah-speaker-stack-urban_9fd16c27.png");
-    expect(galleryArtActivePlay).toContain("selectah-dubplate-urban_052862f6.png");
-    expect(galleryArtActivePlay).toContain(".rave-world-dressing:not(.level-two-rave-world)::before");
-    expect(galleryArtActivePlay).toContain(".game-grid-bg.level-two-grid-bg");
-    expect(galleryArtActivePlay).toContain("transform: scale(2.7) !important");
+    expect(gameSource).toContain('import "@/arcade-playfield-architecture.css";');
+    expect(gameSource).toContain("mobile-playfield-control-hint");
+    expect(gameSource).toContain("nudgeMobileDj");
+    expect(gameSource).toContain('aria-label="Move selector left"');
+    expect(gameSource).toContain('aria-label="Move selector right"');
+    expect(arcadePlayfieldArchitecture).toContain("selectah-level-one-urban-stage-reference_43ddc07a.png");
+    expect(arcadePlayfieldArchitecture).toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
+    expect(arcadePlayfieldArchitecture).toContain("selectah-speaker-stack-urban_9fd16c27.png");
+    expect(arcadePlayfieldArchitecture).toContain(".game-grid-bg::before");
+    expect(arcadePlayfieldArchitecture).toContain("content: none !important");
+    expect(arcadePlayfieldArchitecture).toContain("grid-template-areas");
+    expect(arcadePlayfieldArchitecture).toContain("transform: scale(1.92) !important");
+    expect(arcadePlayfieldArchitecture).toContain(".dj-catcher.level-two-catcher .dj-catcher-art");
   });
 
   it("holds only the development loss verifier at a readable frame", () => {

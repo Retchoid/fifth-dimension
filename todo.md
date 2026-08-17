@@ -1174,3 +1174,27 @@
 - [x] Increase the mobile player’s illustrated visual presence while preserving the current forgiving collision box.
 - [x] Improve pickup and hazard readability using only existing illustrated project assets, without generic substitutes or repeated full-frame backgrounds.
 - [x] Capture the eight required 390×844 gallery, active-play, transition, police, and Too High comparisons before publishing.
+
+## Ordered visual recovery pass — existing artwork only
+
+- [x] Enumerate all repository image, sprite, background, SVG, and audio assets; report broken, unused, and previously referenced assets before visual changes.
+- [x] Restore active player, pickup, hazard, foreground, and background scale using only existing illustrated game-event artwork while preserving collision logic and performance.
+- [x] Apply restrained comic-rave texture, foreground, glow, and impact layers to gameplay without duplicating event artwork across the playfield.
+- [x] Reduce mobile HUD dominance while retaining SCORE, RECORDS, COMBO, LIVES, and MUSIC readability.
+- [x] Preserve the existing cyan/magenta/orange arcade cabinet and repair only required internal spacing.
+- [ ] Identify and repair the root cause of any Jersh yellow block without hiding content or using a cosmetic workaround.
+- [ ] Identify and repair the root cause of homepage floating text without global overflow hiding or removed content.
+- [ ] Keep the player controls integrated in the navigation/header without obscuring hero, gallery, or arcade content.
+- [x] Validate 320, 360, 375, 390, 412, and 430 mobile widths for containment, asset visibility, event-screen fit, and absent placeholders.
+- [ ] Produce the required asset, root-cause, performance-preservation, and 390×844 screenshot evidence before publishing.
+
+## Arcade-only playfield architecture recovery
+
+- [x] Remove obsolete translucent playfield panels and sparse legacy backgrounds instead of layering new artwork over them.
+- [x] Establish explicit background, midground, foreground, gameplay-entity, FX, HUD, and event-overlay stacking rules for both levels.
+- [x] Build distinct Level 1 comic-rave and Level 2 crowd-stage environments from existing assets without repeated full-frame artwork.
+- [x] Ensure the player, pickups, hazards, bonuses, and touch controls render above environmental layers without rectangular backing cards.
+- [x] Restore clear mobile touch/drag playfield movement and visible secondary control affordances while retaining desktop keyboard controls.
+- [x] Reorganize the HUD at 320–430px so every required value is visible without clipping, microscopic text, or horizontal scrolling.
+- [x] Verify event overlays remain temporary above intact level environments and restore the correct level when closed.
+- [x] Capture the required 390×844 idle, active-object, event, maximum-HUD, control-use, and gallery-side-by-side evidence at mobile and desktop viewports.
