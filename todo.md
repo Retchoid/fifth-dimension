@@ -1,5 +1,17 @@
 # Project TODO
 
+## Emergency mechanics lock — Level 1 only, no art pass
+
+- [x] Audit the actual pointer, keyboard, player-world, CSS transform, and hitbox code against the latest checkpoint and repository history to identify the mobile movement regression root cause.
+- [x] Restore one Pointer Events movement path: captured pointer down establishes target X, move updates target X, release/cancel releases capture, and the gameplay surface alone prevents gesture stealing.
+- [x] Confirm the fixed logical world contract for player and all Level 1 entities, independent from responsive rendering scale or CSS transform dimensions.
+- [x] Add development-only Level 1 collision-debug rectangles, overlap flash, and structured logs covering entity, collision, reaction, score, life/damage, and combo changes.
+- [x] Add a debug-object Level 1 verifier using green collectible, red hazard, and yellow bonus rectangles without changing or generating final art.
+- [x] Explicitly separate Level 1 playing, bonus, damaged, recovery, level-complete, game-over, and transition state ownership so reaction screens cannot persist in normal gameplay.
+- [x] Execute and document mechanics acceptance at 320×800, 360×800, 375×812, 390×844, 412×915, and 430×932, including continuous left-right drag, keyboard fallback, collectible/hazard/miss one-time outcomes, and no page gesture theft.
+- [x] Confirm and document the retained game-content lock: Level 1 is 25 dubplates with 15 clean unlocking Crowd Pressure; Level 2 stays at 50; Crowd Pressure uses the hand behind the decks; Level 3 remains the pseudo-3D Pit Run.
+- [x] Deliver the emergency mechanics report with root cause, files/functions, world-to-screen model, collision pipeline, viewport results, Level 1 proof, Level 2 target confirmation, no-art confirmation, and collision-debug screenshot; then stop.
+
 ## Amended three-chapter underground-night game structure
 
 - [x] Restrict this pass to Passes A–E only, use temporary geometry/placeholders where final art is unavailable, and do not generate final artwork or proceed to Passes F–I.

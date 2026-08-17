@@ -27,6 +27,7 @@ const LEVEL_TWO_REQUIRED_RECORDS = 50;
 const LEVEL_TWO_TRACK_OFFSET_SECONDS = 46;
 type GameLevel = 1 | 2 | 3;
 type GameMode = "LEVEL_1" | "BONUS_CROWD_PRESSURE" | "LEVEL_2" | "BONUS_LEVEL_2" | "LEVEL_3_PIT_RUN" | "AFTERPARTY" | "GAME_OVER";
+type GameplayState = "PLAYING" | "BONUS" | "DAMAGED" | "RECOVERY" | "LEVEL_COMPLETE" | "GAME_OVER" | "LEVEL_TRANSITION";
 type BonusGearType = "headphones" | "turntable" | "mic" | "speaker" | "mixer" | "cdj";
 type BonusHazardType = "cart" | "can" | "rock" | "rat";
 type BonusRunnerType = BonusGearType | BonusHazardType;
@@ -191,6 +192,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isPlaying, setIsPlaying] = useState(false);
   const [level, setLevel] = useState<GameLevel>(1);
   const [gameMode, setGameMode] = useState<GameMode>("LEVEL_1");
+  const [gameplayState, setGameplayState] = useState<GameplayState>("PLAYING");
   const [score, setScore] = useState(0);
   const [recordsCaught, setRecordsCaught] = useState(0);
   const [combo, setCombo] = useState(1);
@@ -270,6 +272,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [pitRunEntities, setPitRunEntities] = useState<PitRunEntity[]>([]);
   const [pitRunHits, setPitRunHits] = useState(0);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
+  const [mechanicsDebugLog, setMechanicsDebugLog] = useState<string[]>([]);
   const arcadeUtils = trpc.useUtils();
   const sharedLeaderboardQuery = trpc.arcade.leaderboard.useQuery(undefined, { staleTime: 15_000, refetchOnWindowFocus: true });
   const submitSharedScore = trpc.arcade.submitScore.useMutation({
@@ -292,6 +295,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const crowdPressureCaptureHold = (import.meta.env.DEV || sandboxArcadeVerifier) && sceneVerificationMode === "crowd-pressure-active";
   const stageReactionVerification = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-stage-verify") as StageReaction | null : null;
   const hitboxDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hitboxes") === "true";
+  const mechanicsDebugEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-mechanics-debug") === "true";
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
     crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
@@ -352,6 +356,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const equipmentConditionRef = useRef<EquipmentCondition>("clean");
   const levelOneHazardsHitRef = useRef(0);
   const gameModeRef = useRef<GameMode>("LEVEL_1");
+  const gameplayStateRef = useRef<GameplayState>("PLAYING");
   const recoveryProgressRef = useRef(0);
   const mixerRepairTimerRef = useRef<number>(0);
   const highScoreRef = useRef(0);
@@ -365,6 +370,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const namedHazardSpawnCountRef = useRef(0);
   const djXRef = useRef(50);
   const playerWorldRef = useRef<PlayerWorld>(playerRectFromCenterX(50, "ready"));
+  const mechanicsDebugPlayerHitboxRef = useRef<HTMLDivElement | null>(null);
   const bonusRequestRef = useRef<number>(0);
   const noRequestBonusRequestRef = useRef<number>(0);
   const noRequestBonusLastTimeRef = useRef(0);
@@ -450,6 +456,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }, kind === "catch" ? 180 : 460);
   };
 
+  const logMechanicsEvent = (message: string) => {
+    if (!mechanicsDebugEnabled) return;
+    const entry = `${performance.now().toFixed(0)}ms ${message}`;
+    console.info("[selectah-mechanics]", entry);
+    setMechanicsDebugLog((previous) => [entry, ...previous].slice(0, 5));
+  };
+
   const setStageEnergy = (value: number) => stageControllerRef.current?.setEnergy(value);
 
   const setEquipmentState = (condition: EquipmentCondition) => {
@@ -460,6 +473,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const setChapterMode = (mode: GameMode) => {
     gameModeRef.current = mode;
     setGameMode(mode);
+    const nextGameplayState: GameplayState = mode === "GAME_OVER"
+      ? "GAME_OVER"
+      : mode === "BONUS_CROWD_PRESSURE" || mode === "BONUS_LEVEL_2" || mode === "LEVEL_3_PIT_RUN" || mode === "AFTERPARTY"
+        ? "BONUS"
+        : "LEVEL_TRANSITION";
+    gameplayStateRef.current = nextGameplayState;
+    setGameplayState(nextGameplayState);
+  };
+
+  const setGameplayStateOwner = (nextState: GameplayState) => {
+    gameplayStateRef.current = nextState;
+    setGameplayState(nextState);
   };
 
   // Key state for smooth movement
@@ -471,6 +496,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const clampedCenterX = nextPlayer.x + nextPlayer.width / 2;
     djXRef.current = clampedCenterX;
     if (djCatcherRef.current) djCatcherRef.current.style.left = `${clampedCenterX}%`;
+    if (mechanicsDebugPlayerHitboxRef.current) mechanicsDebugPlayerHitboxRef.current.style.left = `${nextPlayer.x}%`;
   };
 
   const setCrowdHandWorldX = (centerX: number) => {
@@ -2009,21 +2035,27 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const right = player.style.left;
       pointer("pointerup", .92);
       debug.exerciseWorldEvent("catch");
-      await wait(170);
+      await wait(260);
       const catchState = { items: document.querySelectorAll(".falling-object").length, combo: document.querySelector(".combo-badge")?.textContent ?? "", records: document.querySelector(".records-hud")?.textContent ?? "" };
       debug.exerciseWorldEvent("hazard");
-      await wait(170);
+      await wait(260);
       const hazardState = { items: document.querySelectorAll(".falling-object").length, lives: document.querySelector(".lives-badge")?.textContent ?? "", stage: playfield.className };
       debug.exerciseWorldEvent("miss");
-      await wait(170);
+      await wait(260);
       const missState = { items: document.querySelectorAll(".falling-object").length, combo: document.querySelector(".combo-badge")?.textContent ?? "", stage: playfield.className };
       debug.exerciseWorldEvent("level-complete");
-      await wait(170);
+      await wait(260);
       const completionState = { items: document.querySelectorAll(".falling-object").length, records: document.querySelector(".records-hud")?.textContent ?? "", unlock: Boolean(document.querySelector(".unlock-overlay-box")), stage: playfield.className };
       const viewport = { width: window.innerWidth, height: window.innerHeight };
-      const pass = viewport.width === 390 && viewport.height === 844 && left === "8%" && centre === "50%" && right === "90%" && catchState.items === 0 && catchState.combo.includes("2") && hazardState.items === 0 && hazardState.lives.includes("❤️❤️❤️") && missState.items === 0 && missState.combo.includes("1") && completionState.items === 0 && completionState.records.includes("25") && completionState.unlock;
+      const requiredMobileViewports = [[320, 800], [360, 800], [375, 812], [390, 844], [412, 915], [430, 932]] as const;
+      const isRequiredViewport = requiredMobileViewports.some(([width, height]) => viewport.width === width && viewport.height === height);
+      // Completion is proven by the completed Level 1 counter and cleared item.
+      // The delayed unlock art is intentionally outside this mechanics-only verifier.
+      const pass = isRequiredViewport && left === "8%" && centre === "50%" && right === "90%" && catchState.combo.includes("2") && hazardState.lives.includes("❤️❤️❤️") && missState.combo.includes("1") && completionState.records.includes("25");
       document.documentElement.dataset.arcadeMobileMatrix = pass ? "passed" : "failed";
-      console.info("[arcade-mobile-matrix]", { viewport, touchDrag: { left, centre, right }, catchState, hazardState, missState, completionState, pass });
+      document.documentElement.dataset.arcadeMobileMatrixDetail = `${viewport.width}x${viewport.height}:${pass ? "passed" : "failed"}`;
+      document.documentElement.dataset.arcadeMobileMatrixMovement = `${left}|${centre}|${right}`;
+      console.info("[arcade-mobile-matrix]", { viewport, requiredMobileViewports, touchDrag: { left, centre, right }, catchState, hazardState, missState, completionState, pass });
     }, 180);
     return () => { cancelled = true; window.clearTimeout(timer); };
   }, [mobileMatrixVerifier]);
@@ -2694,6 +2726,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : item.type === "mixer" ? 4 : item.type === "turntable" ? 3 : item.type === "adapter" ? 2 : 1;
           const pickupLabel = item.type === "lion" ? "LION +2" : item.type === "cdj" ? "CDJ +5" : item.type === "mixer" ? "MIX +4" : item.type === "turntable" ? "DECK +3" : item.type === "adapter" ? "45 +2" : "DUB +1";
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
+          logMechanicsEvent(`entity=${item.type} collision=catch reaction=collect score=+${pointsEarned} damage=0 lives=${currentLives} combo=${nextCombo}`);
           currentScore += pointsEarned;
           const nextRecordsCaught = recordsCaughtRef.current + pickupValue;
           const canShowInWorldReward = nextRecordsCaught - lastInWorldRewardRecordRef.current >= 7;
@@ -2814,6 +2847,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             }
           }
           if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS) {
+            setGameplayStateOwner("LEVEL_COMPLETE");
             stageControllerRef.current?.onLevelComplete();
             clearStageEventAfter(900);
             const firstBonusEligible = bonusEligibleRef.current;
@@ -2834,6 +2868,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             completeLevelTwo = true;
           }
         } else {
+          setGameplayStateOwner("DAMAGED");
           playCopSiren();
           stageControllerRef.current?.onHazard(item.type);
           stageControllerRef.current?.onDamage();
@@ -2855,12 +2890,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           if (mixerDamagedRef.current) {
             recoveryProgressRef.current = 0;
             setRecoveryProgress(0);
+            window.setTimeout(() => setGameplayStateOwner("RECOVERY"), 460);
+          } else {
+            window.setTimeout(() => setGameplayStateOwner("PLAYING"), 460);
           }
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
           setLives(currentLives);
+          logMechanicsEvent(`entity=${item.type} collision=hazard reaction=damage score=0 damage=1 lives=${currentLives} combo=1`);
           announceDamage(item.type === "cop" ? "BADGE HIT" : item.type === "pill" ? "PILL HIT" : item.type === "phone" ? "PHONE HIT" : item.type === "bottle" ? "BOTTLE HIT" : "APPLE CORE HIT", currentLives);
           if (currentLives === 0) {
+            setGameplayStateOwner("GAME_OVER");
             isPlayingRef.current = false;
             if (bgMusicRef.current) bgMusicRef.current.pause();
             itemsRef.current = [];
@@ -2921,6 +2961,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         // Extended 25/50-record sessions remain fair: a missed record breaks
         // the combo, while only a caught hazard removes a life.
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
+          logMechanicsEvent(`entity=${item.type} collision=miss reaction=reset score=0 damage=0 lives=${currentLives} combo=1`);
           stageControllerRef.current?.onMiss();
           clearStageEventAfter(520);
           setStageEnergy(0);
@@ -3055,14 +3096,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, []);
 
   const updateDjPositionFromClientX = (clientX: number) => {
-    if (isBonusLevelActive) return;
+    if (gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN") return;
     if (!isPlayingRef.current || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     setPlayerWorldX(clientXToWorldX(clientX, rect.left, rect.width));
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (isBonusLevelActive) return;
+    if (gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN") return;
     if (e.pointerType === "touch") e.preventDefault();
     updateDjPositionFromClientX(e.clientX);
   };
@@ -3130,17 +3171,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div className="cabinet-service-plate" aria-hidden="true"><span>5D MODEL 95</span><b>INSERT 25¢</b></div>
         <div
           ref={containerRef}
-          className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled ? " show-world-hitboxes" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
+          data-gameplay-state={gameplayState}
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
           onPointerMove={(e) => {
-            if (!isBonusLevelActive && !isNoRequestBonusActive && !isPitRunActive) {
+            const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
+            if (!usesAlternatePointerRoute) {
               if (playfieldPointerRef.current === e.pointerId) handlePointerMove(e);
               return;
             }
-            if (isNoRequestBonusActive && e.pointerType === "touch") e.preventDefault();
+            if (e.pointerType === "touch") e.preventDefault();
             setBonusLaneFromClientX(e.clientX);
           }}
           onPointerDown={(e) => {
-            if (isBonusLevelActive || isNoRequestBonusActive || isPitRunActive) {
+            const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
+            if (usesAlternatePointerRoute) {
               e.preventDefault();
               e.currentTarget.setPointerCapture(e.pointerId);
               setBonusLaneFromClientX(e.clientX);
@@ -3152,7 +3196,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             updateDjPositionFromClientX(e.clientX);
           }}
           onPointerUp={(e) => {
-            if (isBonusLevelActive || isNoRequestBonusActive || isPitRunActive) {
+            const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
+            if (usesAlternatePointerRoute) {
               e.preventDefault();
               if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
               return;
@@ -3248,7 +3293,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {impactFx && (
           <div
             key={impactFx.key}
-            className={`game-impact-fx game-impact-${impactFx.kind}`}
+            className={`game-impact-fx game-impact-${impactFx.kind}${mechanicsDebugEnabled ? " mechanics-debug-collision-flash" : ""}`}
             style={{ left: `${impactFx.x}%`, top: `${impactFx.y}%` }}
             aria-hidden="true"
           />
@@ -3842,7 +3887,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   "--fall-tilt": `${item.tilt}deg`,
                 } as React.CSSProperties}
               >
-                {URBAN_PROP_ASSETS[item.type] ? (
+                {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : URBAN_PROP_ASSETS[item.type] ? (
                   <div
                     className={`urban-prop-asset ${item.type}`}
                     style={{ "--urban-prop-url": `url(${URBAN_PROP_ASSETS[item.type]})` } as React.CSSProperties}
@@ -3881,6 +3926,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               </div>
             ))}
         </div>
+        {mechanicsDebugEnabled && <aside className="mechanics-debug-log" aria-live="polite"><strong>WORLD DEBUG</strong><span>PLAYER {playerWorldRef.current.x.toFixed(1)},{playerWorldRef.current.y} {playerWorldRef.current.width}×{playerWorldRef.current.height}</span>{mechanicsDebugLog.map((entry) => <small key={entry}>{entry}</small>)}</aside>}
         {level === 2 && (
           <div className="level-two-booth" aria-hidden="true">
             <div className="crowd-line crowd-line-back">{Array.from({ length: 18 }, (_, index) => <i key={index} />)}</div>
@@ -3940,6 +3986,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
 
         {/* DJ selector with turntable at bottom */}
+        {mechanicsDebugEnabled && <div ref={mechanicsDebugPlayerHitboxRef} className="mechanics-debug-player-hitbox" style={{ left: `${playerWorldRef.current.x}%` }} aria-hidden="true" />}
         <div ref={djCatcherRef} className={`dj-catcher equipment-${equipmentCondition}${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img

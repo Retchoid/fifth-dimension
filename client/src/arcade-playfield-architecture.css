@@ -78,6 +78,23 @@
   overflow: visible !important;
 }
 
+/* Development-only mechanics acceptance surface. Query-gated markup applies these
+   rectangles without changing production art or collision mathematics. */
+.arcade-cabinet-bezel .mechanics-debug-mode .falling-object { border: 2px solid #f0ead6 !important; box-shadow: 0 0 0 2px #080910, 0 0 10px rgba(255,255,255,.55) !important; }
+.arcade-cabinet-bezel .mechanics-debug-object { position:absolute; inset:0; border:2px solid #080910; box-shadow:2px 2px 0 #080910; }
+.arcade-cabinet-bezel .mechanics-debug-object.collectible { background:#31e66f; }
+.arcade-cabinet-bezel .mechanics-debug-object.hazard { background:#ff4040; }
+.arcade-cabinet-bezel .mechanics-debug-object.bonus { background:#ffe600; }
+.arcade-cabinet-bezel .mechanics-debug-player-hitbox { position:absolute; top:70%; width:15%; height:20%; z-index:22; box-sizing:border-box; border:2px solid #00d4ff; background:rgba(0,212,255,.12); pointer-events:none; }
+.arcade-cabinet-bezel .mechanics-debug-collision-flash { z-index:59 !important; width:9% !important; aspect-ratio:1; border:3px solid #f0ead6 !important; background:rgba(255,230,0,.58) !important; box-shadow:0 0 0 3px #080910, 0 0 18px #ffe600 !important; animation: mechanics-collision-flash .22s steps(2,end) both !important; }
+.arcade-cabinet-bezel .mechanics-debug-mode .dj-catcher { outline:2px solid #00d4ff; outline-offset:2px; }
+.arcade-cabinet-bezel .mechanics-debug-mode.stage-event-catch .dj-catcher,
+.arcade-cabinet-bezel .mechanics-debug-mode.stage-event-hazard .dj-catcher { animation: mechanics-hitbox-flash .18s steps(2,end) 3; }
+.arcade-cabinet-bezel .mechanics-debug-log { position:absolute; left:4px; bottom:4px; z-index:60; display:grid; gap:2px; max-width:calc(100% - 8px); padding:4px; border:1px solid #f0ead6; background:rgba(8,9,16,.88); color:#f0ead6; font:600 7px/1.25 "Courier New",monospace; pointer-events:none; }
+.arcade-cabinet-bezel .mechanics-debug-log strong { color:#ffe600; font-family:"Press Start 2P",monospace; font-size:7px; }.arcade-cabinet-bezel .mechanics-debug-log span { color:#00d4ff; }.arcade-cabinet-bezel .mechanics-debug-log small { color:#31e66f; font:600 6px/1.25 "Courier New",monospace; }
+@keyframes mechanics-hitbox-flash { 50% { outline-color:#ffe600; filter:brightness(1.65); } }
+@keyframes mechanics-collision-flash { from { transform:translate(-50%,-50%) scale(.45); opacity:1; } to { transform:translate(-50%,-50%) scale(1.35); opacity:0; } }
+
 .arcade-cabinet-bezel .falling-object .urban-prop-asset {
   transform: rotate(var(--fall-tilt, 0deg)) scale(1.22) !important;
   transform-origin: center !important;

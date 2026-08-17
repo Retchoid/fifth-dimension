@@ -183,4 +183,21 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("BONUS_START_RECORDS");
     expect(gameSource).toContain('setChapterMode("BONUS_LEVEL_2")');
   });
+
+  it("keeps the emergency Level 1 mechanics matrix and query-gated collision diagnostics", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    for (const viewport of ["[320, 800]", "[360, 800]", "[375, 812]", "[390, 844]", "[412, 915]", "[430, 932]"]) {
+      expect(gameSource).toContain(viewport);
+    }
+    expect(gameSource).toContain("arcade-mechanics-debug");
+    expect(gameSource).toContain("logMechanicsEvent");
+    expect(gameSource).toContain("collision=catch");
+    expect(gameSource).toContain("collision=hazard");
+    expect(gameSource).toContain("collision=miss");
+    expect(gameSource).toContain("setPointerCapture");
+    expect(gameSource).toContain("releasePointerCapture");
+    expect(arcadePlayfieldArchitecture).toContain(".mechanics-debug-object.collectible");
+    expect(arcadePlayfieldArchitecture).toContain(".mechanics-debug-object.hazard");
+    expect(arcadePlayfieldArchitecture).toContain(".mechanics-debug-object.bonus");
+  });
 });
