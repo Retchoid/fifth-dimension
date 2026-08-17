@@ -1207,3 +1207,17 @@
 - [x] Convert persistent mixer/recovery status cards into compact in-game feedback that does not block the action area.
 - [x] Capture and verify the required 390×844 Level 1 running state with direct drag, no arrow buttons, several objects, visible player, contained HUD, no screenshot background, and no obstructive recovery card.
 - [x] Report whether suitable clean Level 1 and Level 2 environment source assets exist; stop further art replacement if they do not.
+
+## Final visual architecture pass — clean assets and reactive stage
+
+- [x] Audit clean existing environmental, reactive, object, and event assets against the supplied stage references; do not use reference screenshots as backgrounds.
+- [x] Reduce normal gameplay player art to approximately 40–55% of its current visual scale while preserving the forgiving independent collision box.
+- [x] Restore continuous pointer capture and direct finger/mouse X-position movement, retaining keyboard fallback and no directional buttons.
+- [x] Implement explicit background, midground, reactive, object, player, FX, HUD, cabinet-glass, and temporary event stacking without flat screenshot composition.
+- [x] Build clean-asset-backed Level 1 depth and Level 2 crowd-stage depth using the confirmed clean `5d-selector-rave-stage` source.
+- [x] Add lightweight nonblocking environment reactions for pickups, combo/milestone state, misses, and hazards using transforms, opacity, and existing clean assets only.
+- [x] Implement the supplied exact stage reaction map: DUBPLATE_CATCH, COMBO_5/10/15/20/25, MISS, and HAZARD_HIT with their named environment responses.
+- [x] Retain existing splash/event screens and align shared presentation hooks without inventing new event artwork.
+- [x] Keep feedback fast, minimal, nonpersistent, and visually separate from the player and active-object lane.
+- [x] Validate the complete 390×844 acceptance checklist, motion/input continuity, HUD containment, temporary event restoration, tests, typecheck, build, and performance safeguards.
+- [x] Deliver changed-file list, stage architecture, restored drag-control explanation, scale change, reactive-event map, required production-asset list, 390px evidence, and performance confirmation.

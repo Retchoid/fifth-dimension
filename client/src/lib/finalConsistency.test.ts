@@ -78,16 +78,26 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("handlePointerMove");
     expect(gameSource).toContain("onPointerMove");
     expect(gameSource).toContain("updateDjPositionFromClientX");
+    expect(gameSource).toContain("setPointerCapture");
+    expect(gameSource).toContain("playfieldPointerRef");
     expect(gameSource).not.toContain("mobile-playfield-control-hint");
     expect(gameSource).not.toContain("nudgeMobileDj");
     expect(arcadePlayfieldArchitecture).toContain("selectah-level-one-urban-stage-reference_43ddc07a.png");
     expect(arcadePlayfieldArchitecture).not.toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
     expect(arcadePlayfieldArchitecture).not.toContain("selectah-splash-art-direction_4d1c250f.png");
+    expect(arcadePlayfieldArchitecture).toContain("5d-selector-rave-stage_e4fdff4b.png");
+    expect(arcadePlayfieldArchitecture).toContain("stage-reaction-combo_25");
+    expect(arcadePlayfieldArchitecture).toContain("transform: scale(.96) !important");
     expect(arcadePlayfieldArchitecture).toContain(".game-grid-bg::before");
     expect(arcadePlayfieldArchitecture).toContain("content: none !important");
     expect(arcadePlayfieldArchitecture).toContain("grid-template-areas");
-    expect(arcadePlayfieldArchitecture).toContain("transform: scale(1.92) !important");
+    expect(arcadePlayfieldArchitecture).toContain("transform: scale(.86) !important");
     expect(arcadePlayfieldArchitecture).toContain(".dj-catcher.level-two-catcher .dj-catcher-art");
+    expect(gameSource).toContain("StageReactionController");
+    expect(gameSource).toContain("triggerStageReaction(\"DUBPLATE_CATCH\")");
+    expect(gameSource).toContain("triggerStageReaction(\"MISS\")");
+    expect(gameSource).toContain("triggerStageReaction(\"HAZARD_HIT\")");
+    expect(gameSource).toContain("arcade-stage-verify");
   });
 
   it("holds only the development loss verifier at a readable frame", () => {

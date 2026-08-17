@@ -6,6 +6,7 @@ import type { ReleaseUnlockProof } from "@/lib/releaseGate";
 import { resolveFinaleTag, sanitizeSelectorTag } from "@/lib/selectorTag";
 import { shouldAwardBonusCrown } from "@/lib/bonusCrown";
 import { scheduledNamedHazardExposure } from "@/lib/hazardExposure";
+import { reactionForCombo, stageReactions, StageReactionController, type StageReaction, type StageSnapshot } from "@/lib/stageReactionController";
 import { trpc } from "@/lib/trpc";
 import "@/gameplay-clarity.css";
 import "@/miami-arcade-stage.css";
@@ -204,6 +205,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [comboReaction, setComboReaction] = useState<ComboReaction>(null);
   const [isGunFingerShaking, setIsGunFingerShaking] = useState(false);
   const [pickupFlash, setPickupFlash] = useState<PickupFlash | null>(null);
+  const [stageSnapshot, setStageSnapshot] = useState<StageSnapshot>({ level: 1, energy: 0, reaction: null });
   const [isRewindPaused, setIsRewindPaused] = useState(false);
   const [isWheelItUpPaused, setIsWheelItUpPaused] = useState(false);
   const [isPoliceSeizurePaused, setIsPoliceSeizurePaused] = useState(false);
@@ -250,6 +252,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const nameJourneyVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-name-journey") : null;
   const viewportVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
   const sceneVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-scene-verify") : null;
+  const stageReactionVerification = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-stage-verify") as StageReaction | null : null;
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
     crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
@@ -347,6 +350,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const comboBurstTimerRef = useRef<number>(0);
   const gunFingerShakeTimerRef = useRef<number>(0);
   const pickupFlashTimerRef = useRef<number>(0);
+  const stageReactionTimerRef = useRef<number>(0);
+  const playfieldPointerRef = useRef<number | null>(null);
+  const stageControllerRef = useRef<StageReactionController | null>(null);
   const respectSplashTimerRef = useRef<number>(0);
   const respectShakeTimerRef = useRef<number>(0);
   const damageFeedbackTimerRef = useRef<number>(0);
@@ -354,6 +360,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const lastInWorldRewardRecordRef = useRef(-999);
   const lossComedownTimerRef = useRef<number>(0);
   downloadUnlockedRef.current = downloadUnlocked;
+
+  if (!stageControllerRef.current) {
+    stageControllerRef.current = new StageReactionController(setStageSnapshot);
+  }
+
+  const triggerStageReaction = (reaction: StageReaction) => {
+    stageControllerRef.current?.trigger(reaction);
+    window.clearTimeout(stageReactionTimerRef.current);
+    stageReactionTimerRef.current = window.setTimeout(() => stageControllerRef.current?.clearReaction(), reaction === "COMBO_25" ? 900 : 520);
+  };
+
+  const setStageEnergy = (value: number) => stageControllerRef.current?.setEnergy(value);
 
   // Key state for smooth movement
   const keysRef = useRef<{ [key: string]: boolean }>({});
@@ -2214,6 +2232,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const nextCombo = comboRef.current + 1;
           comboRef.current = nextCombo;
           setCombo(nextCombo);
+          if (item.type === "record") triggerStageReaction("DUBPLATE_CATCH");
+          const milestoneReaction = reactionForCombo(nextCombo);
+          if (milestoneReaction) triggerStageReaction(milestoneReaction);
+          setStageEnergy(nextCombo / 25);
           const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : item.type === "mixer" ? 4 : item.type === "turntable" ? 3 : item.type === "adapter" ? 2 : 1;
           const pickupLabel = item.type === "lion" ? "LION +2" : item.type === "cdj" ? "CDJ +5" : item.type === "mixer" ? "MIX +4" : item.type === "turntable" ? "DECK +3" : item.type === "adapter" ? "45 +2" : "DUB +1";
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
@@ -2352,6 +2374,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           }
         } else {
           playCopSiren();
+          triggerStageReaction("HAZARD_HIT");
+          setStageEnergy(.04);
           comboRef.current = 1;
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
@@ -2425,6 +2449,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         // Extended 25/50-record sessions remain fair: a missed record breaks
         // the combo, while only a caught hazard removes a life.
         if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
+          triggerStageReaction("MISS");
+          setStageEnergy(.04);
           comboRef.current = 1;
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
@@ -2549,6 +2575,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.clearTimeout(comboBurstTimerRef.current);
       window.clearTimeout(gunFingerShakeTimerRef.current);
       window.clearTimeout(pickupFlashTimerRef.current);
+      window.clearTimeout(stageReactionTimerRef.current);
       window.clearTimeout(respectSplashTimerRef.current);
       window.clearTimeout(respectShakeTimerRef.current);
       window.clearTimeout(damageFeedbackTimerRef.current);
@@ -2574,6 +2601,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     updateDjPositionFromClientX(e.clientX);
   };
 
+  useEffect(() => {
+    stageControllerRef.current?.setLevel(level);
+  }, [level]);
+
   const raveBanter = level === 2
     ? recordsCaught >= 25
       ? "CROWD: ONE MORE? SCHEDULED FOR 1999."
@@ -2588,6 +2619,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const bonusGearReady = bonusGear.length === BONUS_GEAR_TYPES.length;
   const afterPartyFloor = Math.max(0, Math.min(5, Math.floor(bonusProgress / 17)));
+  const renderedStageSnapshot = stageReactionVerification && stageReactionVerification in stageReactions
+    ? { ...stageSnapshot, energy: 1, reaction: stageReactionVerification }
+    : stageSnapshot;
 
   return (
     <section id="minigame" className="minigame-section" aria-labelledby="minigame-title">
@@ -2630,10 +2664,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div className="cabinet-service-plate" aria-hidden="true"><span>5D MODEL 95</span><b>INSERT 25¢</b></div>
         <div
           ref={containerRef}
-          className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}`}
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}`}
           onPointerMove={(e) => {
             if (!isBonusLevelActive && !isNoRequestBonusActive) {
-              handlePointerMove(e);
+              if (playfieldPointerRef.current === e.pointerId) handlePointerMove(e);
               return;
             }
             setBonusLaneFromClientX(e.clientX);
@@ -2645,10 +2679,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               setBonusLaneFromClientX(e.clientX);
               return;
             }
-            if (e.pointerType === "touch") {
-              e.currentTarget.setPointerCapture(e.pointerId);
-              updateDjPositionFromClientX(e.clientX);
-            }
+            e.preventDefault();
+            playfieldPointerRef.current = e.pointerId;
+            e.currentTarget.setPointerCapture(e.pointerId);
+            updateDjPositionFromClientX(e.clientX);
           }}
           onPointerUp={(e) => {
             if (isBonusLevelActive || isNoRequestBonusActive) {
@@ -2656,9 +2690,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
               return;
             }
-            if (e.pointerType === "touch" && e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+            if (playfieldPointerRef.current === e.pointerId) {
+              if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+              playfieldPointerRef.current = null;
+            }
           }}
-          onPointerCancel={() => { bonusPointerStartRef.current = null; bonusGestureHandledRef.current = false; }}
+          onPointerCancel={(e) => {
+            if (playfieldPointerRef.current === e.pointerId) {
+              if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+              playfieldPointerRef.current = null;
+            }
+            bonusPointerStartRef.current = null;
+            bonusGestureHandledRef.current = false;
+          }}
         >
         {damageFeedback && !gameOver && (
           <div className="damage-feedback" role="status" aria-live="assertive">
@@ -2672,7 +2716,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <strong>{rewardToRender.label}</strong>
           </div>
         )}
-        <div className={`game-grid-bg${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
+        <div className={`game-grid-bg stage-background${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true" />
+        <div className="stage-midground" aria-hidden="true" />
+        <div className="stage-reactive" aria-hidden="true">
+          <span className="stage-sign stage-sign-left" /><span className="stage-sign stage-sign-right" />
+          <img className="stage-edge-speaker" src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" />
+          <img className="stage-npc-reaction" src={CELEBRATION_DANCERS[1].src} alt="" />
+          <i className="stage-flyer stage-flyer-one" /><i className="stage-flyer stage-flyer-two" /><i className="stage-flyer stage-flyer-three" />
+        </div>
         <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>

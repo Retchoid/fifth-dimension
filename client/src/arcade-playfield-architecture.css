@@ -25,10 +25,12 @@
 }
 
 .arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg {
-  /* No clean Level 2 environment source exists. Do not substitute the crowd
-     gallery frame, which contains a baked-in DJ, decks, and foreground UI. */
-  background-image: none !important;
-  filter: none !important;
+  background-image:
+    linear-gradient(180deg, rgba(10,10,18,.05), rgba(10,10,18,.45) 82%, rgba(10,10,18,.76)),
+    url("/embedded-assets/5d-selector-rave-stage_e4fdff4b.png") !important;
+  background-position: center !important;
+  background-size: cover !important;
+  filter: saturate(1.04) contrast(1.04) !important;
 }
 
 /* Remove the accumulated pseudo-panels, horizon grids, and translucent playfield
@@ -100,7 +102,7 @@
 }
 
 .arcade-cabinet-bezel .dj-catcher-art {
-  transform: scale(1.72) !important;
+  transform: scale(.86) !important;
   transform-origin: 50% 100% !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -110,7 +112,7 @@
 /* Level 2 already has a larger catcher wrapper. Scaling it like the smaller
    Level 1 wrapper lifts the selector into the HUD instead of grounding it. */
 .arcade-cabinet-bezel .dj-catcher.level-two-catcher .dj-catcher-art {
-  transform: scale(1.16) !important;
+  transform: scale(.62) !important;
 }
 
 .arcade-cabinet-bezel .dj-catcher-art .dj-sprite {
@@ -149,11 +151,11 @@
   }
 
   .arcade-cabinet-bezel .dj-catcher-art {
-    transform: scale(1.92) !important;
+    transform: scale(.96) !important;
   }
 
   .arcade-cabinet-bezel .dj-catcher.level-two-catcher .dj-catcher-art {
-    transform: scale(1.28) !important;
+    transform: scale(.7) !important;
   }
 
   .arcade-cabinet-bezel .game-hud {
@@ -223,6 +225,98 @@
 .arcade-cabinet-bezel .mixer-recovery-status span {
   font-size: inherit !important;
 }
+
+/* Explicit stage order: background → midground → reactive → objects → player
+   → short FX → HUD → cabinet → temporary events. */
+.arcade-cabinet-bezel .stage-background { z-index: 1 !important; }
+.arcade-cabinet-bezel .stage-midground { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.arcade-cabinet-bezel .stage-reactive { position: absolute; inset: 0; z-index: 3; overflow: hidden; pointer-events: none; }
+.arcade-cabinet-bezel .falling-items-layer { z-index: 20 !important; }
+.arcade-cabinet-bezel .dj-catcher { z-index: 21 !important; }
+.arcade-cabinet-bezel .damage-feedback,
+.arcade-cabinet-bezel .in-world-reward { z-index: 25 !important; }
+.arcade-cabinet-bezel .game-hud { z-index: 30 !important; }
+.arcade-cabinet-bezel .game-overlay,
+.arcade-cabinet-bezel .hazard-splash { z-index: 50 !important; }
+
+.arcade-cabinet-bezel .stage-sign {
+  position: absolute;
+  top: 28%;
+  width: 7%;
+  height: 2px;
+  opacity: .16;
+  background: #00D4FF;
+  box-shadow: 0 0 0 #00D4FF;
+}
+.arcade-cabinet-bezel .stage-sign-left { left: 7%; }
+.arcade-cabinet-bezel .stage-sign-right { right: 7%; background: #FF2D95; }
+.arcade-cabinet-bezel .stage-edge-speaker {
+  position: absolute;
+  bottom: -12%;
+  left: -10%;
+  width: 25%;
+  max-width: 132px;
+  opacity: .24;
+  transform: translate3d(0, 0, 0) scale(.78);
+  transform-origin: left bottom;
+}
+.arcade-cabinet-bezel .stage-npc-reaction {
+  position: absolute;
+  right: 4%;
+  bottom: 4%;
+  width: 8%;
+  min-width: 28px;
+  opacity: 0;
+  transform: translate3d(0, 5px, 0) scale(.82);
+  transform-origin: bottom center;
+}
+.arcade-cabinet-bezel .stage-flyer {
+  position: absolute;
+  top: 33%;
+  width: 5px;
+  height: 7px;
+  opacity: 0;
+  background: #FFE600;
+  transform: translate3d(0, 0, 0) rotate(18deg);
+}
+.arcade-cabinet-bezel .stage-flyer-one { left: 26%; }
+.arcade-cabinet-bezel .stage-flyer-two { left: 62%; background: #00D4FF; }
+.arcade-cabinet-bezel .stage-flyer-three { left: 76%; background: #FF2D95; }
+
+.arcade-cabinet-bezel .stage-energy-1 .stage-sign { opacity: .3; }
+.arcade-cabinet-bezel .stage-energy-2 .stage-sign,
+.arcade-cabinet-bezel .stage-energy-3 .stage-sign { opacity: .52; }
+.arcade-cabinet-bezel .stage-energy-3 .stage-edge-speaker { opacity: .4; }
+.arcade-cabinet-bezel .stage-energy-4 .stage-sign,
+.arcade-cabinet-bezel .stage-energy-5 .stage-sign { opacity: .75; animation: stage-sign-pulse .52s steps(2,end) infinite alternate; }
+.arcade-cabinet-bezel .stage-energy-4 .stage-edge-speaker,
+.arcade-cabinet-bezel .stage-energy-5 .stage-edge-speaker { opacity: .58; animation: stage-speaker-kick .3s steps(2,end) infinite alternate; }
+.arcade-cabinet-bezel .stage-energy-4 .stage-npc-reaction,
+.arcade-cabinet-bezel .stage-energy-5 .stage-npc-reaction { opacity: .78; }
+
+.arcade-cabinet-bezel .stage-reaction-dubplate_catch .stage-sign { opacity: .95; animation: stage-sign-pulse .28s steps(2,end) 2; }
+.arcade-cabinet-bezel .stage-reaction-dubplate_catch .stage-edge-speaker { opacity: .72; animation: stage-speaker-kick .22s steps(2,end) 2; }
+.arcade-cabinet-bezel .stage-reaction-dubplate_catch .stage-npc-reaction { opacity: .88; animation: stage-npc-boh .42s steps(2,end) 1; }
+.arcade-cabinet-bezel .stage-reaction-combo_5 .stage-sign { opacity: .72; animation: stage-sign-pulse .36s steps(2,end) 2; }
+.arcade-cabinet-bezel .stage-reaction-combo_10 .stage-edge-speaker { opacity: .76; animation: stage-speaker-kick .22s steps(2,end) 3; }
+.arcade-cabinet-bezel .stage-reaction-combo_10 .stage-npc-reaction { opacity: .92; animation: stage-npc-boh .44s steps(2,end) 2; }
+.arcade-cabinet-bezel .stage-reaction-combo_15 .stage-sign { opacity: .84; animation: stage-sign-pulse .24s steps(2,end) 3; }
+.arcade-cabinet-bezel .stage-reaction-combo_20 .stage-edge-speaker { opacity: .8; animation: stage-speaker-kick .2s steps(2,end) 3; }
+.arcade-cabinet-bezel .stage-reaction-combo_20 .stage-npc-reaction { opacity: .96; animation: stage-npc-boh .35s steps(2,end) 3; }
+.arcade-cabinet-bezel .stage-reaction-combo_25 .stage-sign { opacity: 1; animation: stage-sign-pulse .16s steps(2,end) 5; }
+.arcade-cabinet-bezel .stage-reaction-combo_25 .stage-edge-speaker { opacity: .9; animation: stage-speaker-kick .14s steps(2,end) 5; }
+.arcade-cabinet-bezel .stage-reaction-combo_25 .stage-npc-reaction { opacity: 1; animation: stage-npc-boh .22s steps(2,end) 4; }
+.arcade-cabinet-bezel .stage-reaction-combo_25 .stage-flyer { opacity: .9; animation: stage-flyer-pop .7s steps(4,end) 1; }
+.arcade-cabinet-bezel .stage-reaction-miss .stage-sign { animation: stage-light-flicker .45s steps(2,end) 1; }
+.arcade-cabinet-bezel .stage-reaction-miss .stage-npc-reaction { opacity: .42; transform: translate3d(0, 7px, 0) scale(.72); }
+.arcade-cabinet-bezel .stage-reaction-hazard_hit::after { content: ""; position: absolute; inset: 0; opacity: .34; background: repeating-linear-gradient(0deg, transparent 0 6px, rgba(255,45,149,.24) 7px 8px); animation: stage-glitch .36s steps(2,end) 1; }
+
+@keyframes stage-sign-pulse { from { transform: scaleX(.72); } to { transform: scaleX(1); box-shadow: 0 0 10px currentColor; } }
+@keyframes stage-speaker-kick { from { transform: translate3d(0, 0, 0) scale(.78); } to { transform: translate3d(0, -2px, 0) scale(.84); } }
+@keyframes stage-npc-boh { from { transform: translate3d(0, 5px, 0) scale(.82); } to { transform: translate3d(0, -4px, 0) scale(.92); } }
+@keyframes stage-flyer-pop { from { transform: translate3d(0, 0, 0) rotate(18deg); } to { transform: translate3d(10px, 32px, 0) rotate(208deg); opacity: 0; } }
+@keyframes stage-light-flicker { from { opacity: .06; } to { opacity: .72; } }
+@keyframes stage-glitch { from { transform: translate3d(-2px, 0, 0); } to { transform: translate3d(2px, 0, 0); opacity: .08; } }
 
 @media (max-width: 360px) {
   .arcade-cabinet-bezel .game-hud {
