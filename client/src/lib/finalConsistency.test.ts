@@ -174,4 +174,13 @@ describe("Task 7 final consistency contract", () => {
     expect(scopedArcadeOverhaul).toContain("bottom: 8% !important");
     expect(scopedArcadeOverhaul).toContain(".police-seizure-overlay > h3");
   });
+
+  it("keeps Pass D Level 2 as a 50-item chapter with its earned bonus hook", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).toContain("const LEVEL_TWO_REQUIRED_RECORDS = 50;");
+    expect(gameSource).toContain("nextRecordsCaught >= LEVEL_TWO_REQUIRED_RECORDS");
+    expect(gameSource).toContain("recordsCaught}/{level === 2 ? LEVEL_TWO_REQUIRED_RECORDS : REQUIRED_RECORDS}");
+    expect(gameSource).toContain("BONUS_START_RECORDS");
+    expect(gameSource).toContain('setChapterMode("BONUS_LEVEL_2")');
+  });
 });

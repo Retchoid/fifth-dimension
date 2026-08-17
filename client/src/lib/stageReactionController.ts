@@ -6,10 +6,13 @@ export type StageReaction =
   | "COMBO_10"
   | "COMBO_15"
   | "COMBO_20"
-  | "COMBO_25";
+  | "COMBO_25"
+  | "GEAR_RECOVERED"
+  | "STREET_HAZARD"
+  | "NEAR_MISS";
 
 export interface StageController {
-  setLevel(level: 1 | 2): void;
+  setLevel(level: 1 | 2 | 3): void;
   trigger(reaction: StageReaction): void;
   setEnergy(value: number): void;
   onCatch(type: string): void;
@@ -18,6 +21,9 @@ export interface StageController {
   onMiss(): void;
   onDamage(): void;
   onLevelComplete(): void;
+  onGearRecovered(type: string): void;
+  onStreetHazard(type: string): void;
+  onNearMiss(type: string): void;
 }
 
 export const stageReactions: Record<StageReaction, readonly string[]> = {
@@ -29,10 +35,13 @@ export const stageReactions: Record<StageReaction, readonly string[]> = {
   COMBO_25: ["stage-frenzy", "bass-flash", "confetti-flyers"],
   MISS: ["light-flicker", "npc-disappointed"],
   HAZARD_HIT: ["stage-glitch"],
+  GEAR_RECOVERED: ["gear-flash", "inventory-tick"],
+  STREET_HAZARD: ["street-impact", "light-sputter"],
+  NEAR_MISS: ["near-miss-twitch", "street-swerve"],
 };
 
 export type StageSnapshot = {
-  level: 1 | 2;
+  level: 1 | 2 | 3;
   energy: number;
   reaction: StageReaction | null;
   event: "catch" | "hazard" | "combo" | "miss" | "damage" | "level-complete" | null;
@@ -48,7 +57,7 @@ export class StageReactionController implements StageController {
     return this.state;
   }
 
-  setLevel(level: 1 | 2) {
+  setLevel(level: 1 | 2 | 3) {
     this.publish({ ...this.state, level, reaction: null, event: null, eventType: null });
   }
 
@@ -83,6 +92,18 @@ export class StageReactionController implements StageController {
 
   onLevelComplete() {
     this.publish({ ...this.state, event: "level-complete", eventType: null });
+  }
+
+  onGearRecovered(type: string) {
+    this.publish({ ...this.state, reaction: "GEAR_RECOVERED", event: "catch", eventType: type });
+  }
+
+  onStreetHazard(type: string) {
+    this.publish({ ...this.state, reaction: "STREET_HAZARD", event: "hazard", eventType: type });
+  }
+
+  onNearMiss(type: string) {
+    this.publish({ ...this.state, reaction: "NEAR_MISS", event: "miss", eventType: type });
   }
 
   clearReaction() {

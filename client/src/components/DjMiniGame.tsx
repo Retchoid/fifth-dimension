@@ -8,6 +8,8 @@ import { shouldAwardBonusCrown } from "@/lib/bonusCrown";
 import { scheduledNamedHazardExposure } from "@/lib/hazardExposure";
 import { reactionForCombo, stageReactions, StageReactionController, type StageReaction, type StageSnapshot } from "@/lib/stageReactionController";
 import { clientXToWorldX, playerRectFromCenterX, resolveWorldCollision, type ObjectWorld, type PlayerWorld } from "@/lib/gameWorld";
+import { equipmentIsDamaged, worsenEquipmentCondition, type EquipmentCondition } from "@/lib/equipmentCondition";
+import { applyCrowdPressureOutcome, applyPitRunHazard, canUnlockCrowdPressure, pitRunCompletes, pitRunProgressLimit, recoverPitGear, resolveCrowdPressureOutcome, transitionChapter } from "@/lib/chapterProgression";
 import { trpc } from "@/lib/trpc";
 import "@/gameplay-clarity.css";
 import "@/miami-arcade-stage.css";
@@ -23,10 +25,14 @@ const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
 const REQUIRED_RECORDS = 25;
 const LEVEL_TWO_REQUIRED_RECORDS = 50;
 const LEVEL_TWO_TRACK_OFFSET_SECONDS = 46;
-type GameLevel = 1 | 2;
+type GameLevel = 1 | 2 | 3;
+type GameMode = "LEVEL_1" | "BONUS_CROWD_PRESSURE" | "LEVEL_2" | "BONUS_LEVEL_2" | "LEVEL_3_PIT_RUN" | "AFTERPARTY" | "GAME_OVER";
 type BonusGearType = "headphones" | "turntable" | "mic" | "speaker" | "mixer" | "cdj";
 type BonusHazardType = "cart" | "can" | "rock" | "rat";
 type BonusRunnerType = BonusGearType | BonusHazardType;
+type PitGearType = "crate" | "mic" | "mixer" | "cdj" | "turntable" | "headphones";
+type PitHazardType = "bin" | "rat" | "bottle" | "cart" | "barrier" | "pothole";
+type PitEntityType = PitGearType | PitHazardType;
 type FallingItemType = "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
 
 const URBAN_PROP_ASSETS: Partial<Record<FallingItemType, string>> = {
@@ -78,6 +84,7 @@ const SPAWN_WEIGHTS: Record<GameLevel, Array<readonly [FallingItemType, number]>
   1: [["record", 45.5], ["cop", 11.7], ["pill", 7.5], ["phone", 5.9], ["cdj", 7.2], ["mixer", 8.2], ["turntable", 8.2], ["adapter", 5.8]],
   // Crowd Pressure raises non-record pressure while preserving all Level 2-positive gear and crowd-only hazards.
   2: [["record", 37], ["bottle", 6.5], ["apple", 6.5], ["cop", 7], ["pill", 5.5], ["phone", 5], ["lion", 7], ["cdj", 6.5], ["mixer", 7], ["turntable", 7], ["adapter", 5]],
+  3: [["record", 100]],
 };
 
 function pickFallingItemType(level: GameLevel, roll: number): FallingItemType {
@@ -99,10 +106,18 @@ interface BonusRunnerEntity {
 
 interface NoRequestBonusEntity {
   id: number;
+  x: number;
+  depth: number;
+  speed: number;
+  type: "cigarette" | "beer" | "spit" | "bottle";
+}
+
+interface PitRunEntity {
+  id: number;
   lane: number;
   depth: number;
   speed: number;
-  type: "bottle" | "bracelet" | "raver" | "cd";
+  type: PitEntityType;
 }
 
 const CELEBRATION_DANCERS = [
@@ -115,10 +130,12 @@ const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maxim
 const BONUS_START_RECORDS = 20;
 const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "speaker", "mixer", "cdj"];
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
+const PIT_REQUIRED_GEAR: PitGearType[] = ["crate", "mic", "mixer", "cdj", "turntable", "headphones"];
+const PIT_HAZARD_TYPES: PitHazardType[] = ["bin", "rat", "bottle", "cart", "barrier", "pothole"];
 type ComboReaction = "big-up" | "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ComboReactionKind = Exclude<ComboReaction, null>;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; showComboReaction: (kind: ComboReactionKind) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; exerciseWorldEvent: (kind: "catch" | "hazard" | "miss" | "level-complete") => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; showComboReaction: (kind: ComboReactionKind) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; exerciseWorldEvent: (kind: "catch" | "hazard" | "miss" | "level-complete") => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; startCrowdPressureActive: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void; startPitRun: () => void; recoverPitGear: (gear: PitGearType) => void; hitPitHazard: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -173,6 +190,7 @@ function PickupLegend({ level }: { level: GameLevel }) {
 export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete, downloadUnlocked = false, isUnlockCelebrating = false, supporterGateRequired = false, onSupporterConfirmed }: DjMiniGameProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [level, setLevel] = useState<GameLevel>(1);
+  const [gameMode, setGameMode] = useState<GameMode>("LEVEL_1");
   const [score, setScore] = useState(0);
   const [recordsCaught, setRecordsCaught] = useState(0);
   const [combo, setCombo] = useState(1);
@@ -222,6 +240,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [activeArcadeSequence, setActiveArcadeSequence] = useState<ArcadeSequence | null>(null);
   const [isLevelTwoTransitioning, setIsLevelTwoTransitioning] = useState(false);
   const [mixerDamaged, setMixerDamaged] = useState(false);
+  const [equipmentCondition, setEquipmentCondition] = useState<EquipmentCondition>("clean");
+  const [levelOneHazardsHit, setLevelOneHazardsHit] = useState(0);
   const [recoveryProgress, setRecoveryProgress] = useState(0);
   const [mixerRepairBurst, setMixerRepairBurst] = useState(false);
   const [isBonusEligible, setIsBonusEligible] = useState(false);
@@ -229,6 +249,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isNoRequestBonusActive, setIsNoRequestBonusActive] = useState(false);
   const [noRequestBonusProgress, setNoRequestBonusProgress] = useState(0);
   const [noRequestBonusObstacles, setNoRequestBonusObstacles] = useState<NoRequestBonusEntity[]>([]);
+  const [crowdHandX, setCrowdHandX] = useState(50);
+  const [crowdPressureBlocks, setCrowdPressureBlocks] = useState(0);
+  const [crowdReaction, setCrowdReaction] = useState<"block" | "damage" | null>(null);
   const [isBonusSplashVisible, setIsBonusSplashVisible] = useState(false);
   const [isBonusLevelActive, setIsBonusLevelActive] = useState(false);
   const [isBonusRewinding, setIsBonusRewinding] = useState(false);
@@ -239,6 +262,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [greenCamoUnlocked, setGreenCamoUnlocked] = useState(false);
   const [bonusCamoUnlocked, setBonusCamoUnlocked] = useState(false);
   const [bonusObstacles, setBonusObstacles] = useState<BonusRunnerEntity[]>([]);
+  const [isPitRunActive, setIsPitRunActive] = useState(false);
+  const [isAfterpartyUnlocked, setIsAfterpartyUnlocked] = useState(false);
+  const [pitRunProgress, setPitRunProgress] = useState(0);
+  const [pitRunLane, setPitRunLane] = useState(1);
+  const [pitRunInventory, setPitRunInventory] = useState<PitGearType[]>([]);
+  const [pitRunEntities, setPitRunEntities] = useState<PitRunEntity[]>([]);
+  const [pitRunHits, setPitRunHits] = useState(0);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const arcadeUtils = trpc.useUtils();
   const sharedLeaderboardQuery = trpc.arcade.leaderboard.useQuery(undefined, { staleTime: 15_000, refetchOnWindowFocus: true });
@@ -254,10 +284,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const holdSequenceDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hold") === "true";
   const finaleVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-finale-verify") : null;
   const nameJourneyVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-name-journey") : null;
-  const viewportVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
-  const arcadeFocusVerifier = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-focus") === "true";
+  const sandboxArcadeVerifier = typeof window !== "undefined" && window.location.hostname.endsWith(".manus.computer");
+  const viewportVerificationMode = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
+  const arcadeFocusVerifier = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-focus") === "true";
   const mobileMatrixVerifier = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-mobile-matrix") === "true";
-  const sceneVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-scene-verify") : null;
+  const sceneVerificationMode = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-scene-verify") : null;
+  const crowdPressureCaptureHold = (import.meta.env.DEV || sandboxArcadeVerifier) && sceneVerificationMode === "crowd-pressure-active";
   const stageReactionVerification = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-stage-verify") as StageReaction | null : null;
   const hitboxDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hitboxes") === "true";
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
@@ -273,6 +305,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsLayerRef = useRef<HTMLDivElement>(null);
   const djCatcherRef = useRef<HTMLDivElement>(null);
+  const crowdHandRef = useRef<HTMLDivElement>(null);
   const requestRef = useRef<number>(0);
   const viewportVerificationPreparedRef = useRef(false);
   const gameRunIdRef = useRef(0);
@@ -316,6 +349,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const arcadeSequenceTimerRef = useRef<number>(0);
   const recordTransitionTimerRef = useRef<number>(0);
   const mixerDamagedRef = useRef(false);
+  const equipmentConditionRef = useRef<EquipmentCondition>("clean");
+  const levelOneHazardsHitRef = useRef(0);
+  const gameModeRef = useRef<GameMode>("LEVEL_1");
   const recoveryProgressRef = useRef(0);
   const mixerRepairTimerRef = useRef<number>(0);
   const highScoreRef = useRef(0);
@@ -335,6 +371,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const noRequestBonusProgressRef = useRef(0);
   const noRequestBonusSpawnTimerRef = useRef(0);
   const noRequestBonusNextIdRef = useRef(1);
+  const noRequestBonusObstaclesRef = useRef<NoRequestBonusEntity[]>([]);
+  const crowdHandXRef = useRef(50);
+  const crowdPressureBlocksRef = useRef(0);
+  const crowdReactionTimerRef = useRef<number>(0);
   const noRequestBonusTimerRef = useRef<number>(0);
   const noRequestBonusActiveRef = useRef(false);
   const bonusLastTimeRef = useRef(0);
@@ -348,6 +388,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusObstaclesRef = useRef<BonusRunnerEntity[]>([]);
   const bonusSpawnTimerRef = useRef(0);
   const bonusNextIdRef = useRef(1);
+  const pitRunRequestRef = useRef<number>(0);
+  const pitRunActiveRef = useRef(false);
+  const pitRunLastTimeRef = useRef(0);
+  const pitRunProgressRef = useRef(0);
+  const pitRunLaneRef = useRef(1);
+  const pitRunInventoryRef = useRef<PitGearType[]>([]);
+  const pitRunEntitiesRef = useRef<PitRunEntity[]>([]);
+  const pitRunSpawnTimerRef = useRef(0);
+  const pitRunNextIdRef = useRef(1);
+  const pitRunHitsRef = useRef(0);
   const bonusPointerStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
   const bonusGestureHandledRef = useRef(false);
   const bonusSplashTimerRef = useRef<number>(0);
@@ -402,6 +452,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const setStageEnergy = (value: number) => stageControllerRef.current?.setEnergy(value);
 
+  const setEquipmentState = (condition: EquipmentCondition) => {
+    equipmentConditionRef.current = condition;
+    setEquipmentCondition(condition);
+  };
+
+  const setChapterMode = (mode: GameMode) => {
+    gameModeRef.current = mode;
+    setGameMode(mode);
+  };
+
   // Key state for smooth movement
   const keysRef = useRef<{ [key: string]: boolean }>({});
 
@@ -411,6 +471,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const clampedCenterX = nextPlayer.x + nextPlayer.width / 2;
     djXRef.current = clampedCenterX;
     if (djCatcherRef.current) djCatcherRef.current.style.left = `${clampedCenterX}%`;
+  };
+
+  const setCrowdHandWorldX = (centerX: number) => {
+    const clampedCenterX = Math.max(6, Math.min(94, centerX));
+    crowdHandXRef.current = clampedCenterX;
+    setCrowdHandX(clampedCenterX);
+    if (crowdHandRef.current) crowdHandRef.current.style.left = `${clampedCenterX}%`;
+  };
+
+  const reactToCrowdPressure = (reaction: "block" | "damage") => {
+    window.clearTimeout(crowdReactionTimerRef.current);
+    setCrowdReaction(reaction);
+    crowdReactionTimerRef.current = window.setTimeout(() => setCrowdReaction(null), 360);
   };
 
   const getAudioContext = () => {
@@ -1199,6 +1272,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     levelRef.current = 2;
+    setChapterMode("LEVEL_2");
     setLevel(2);
     recordsCaughtRef.current = 0;
     livesRef.current = 4;
@@ -1223,7 +1297,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     bonusGearRef.current = [];
     bonusObstaclesRef.current = [];
     bonusSpawnTimerRef.current = 0;
-    mixerDamagedRef.current = false;
+    mixerDamagedRef.current = equipmentIsDamaged(equipmentConditionRef.current);
     recoveryProgressRef.current = 0;
     scoreRef.current = scoreRef.current;
     setRecordsCaught(0);
@@ -1240,7 +1314,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsHeadphonesBonusPaused(false);
     setIsRecordTransitioning(false);
     setActiveArcadeSequence(null);
-    setMixerDamaged(false);
+    setMixerDamaged(mixerDamagedRef.current);
     setRecoveryProgress(0);
     setMixerRepairBurst(false);
     setComboReaction(null);
@@ -1310,6 +1384,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (levelRef.current !== 1 || !bonusEligibleRef.current) return;
     gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    setChapterMode("BONUS_CROWD_PRESSURE");
     isPlayingRef.current = false;
     setIsPlaying(false);
     setIsUnlockPaused(false);
@@ -1317,6 +1392,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setIsNoRequestBonusSplashVisible(true);
     setNoRequestBonusProgress(0);
     setNoRequestBonusObstacles([]);
+    noRequestBonusObstaclesRef.current = [];
+    crowdHandXRef.current = 50;
+    crowdPressureBlocksRef.current = 0;
+    setCrowdHandX(50);
+    setCrowdPressureBlocks(0);
+    setCrowdReaction(null);
     noRequestBonusActiveRef.current = false;
     noRequestBonusProgressRef.current = 0;
     noRequestBonusSpawnTimerRef.current = 0;
@@ -1337,11 +1418,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (noRequestBonusRequestRef.current) cancelAnimationFrame(noRequestBonusRequestRef.current);
     noRequestBonusActiveRef.current = false;
     setIsNoRequestBonusActive(false);
+    setChapterMode("LEVEL_1");
     setNoRequestBonusObstacles([]);
+    noRequestBonusObstaclesRef.current = [];
     bonusEligibleRef.current = false;
     setIsBonusEligible(false);
     if (cleared) {
       setGreenCamoUnlocked(true);
+      setEquipmentState("repaired");
       announceInWorldReward("NO REQUEST BONUS CLEARED", "GREEN CAMO EQUIPPED FOR LEVEL 2");
     }
     setPreLevelTwoHighScore(true);
@@ -1351,6 +1435,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (levelRef.current !== 2 || livesRef.current !== 4 || recordsCaughtRef.current < BONUS_START_RECORDS) return;
     gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    setChapterMode("BONUS_LEVEL_2");
     isPlayingRef.current = false;
     bonusCompletedRef.current = false;
     bonusGameActiveRef.current = false;
@@ -1401,6 +1486,55 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     playRecordScratch();
   };
 
+  const startPitRun = () => {
+    gameRunIdRef.current += 1;
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    if (bonusRequestRef.current) cancelAnimationFrame(bonusRequestRef.current);
+    levelRef.current = 3;
+    setLevel(3);
+    setChapterMode(transitionChapter("LEVEL_2", "start-pit"));
+    stageControllerRef.current?.setLevel(3);
+    stageControllerRef.current?.setEnergy(0);
+    isPlayingRef.current = false;
+    pitRunActiveRef.current = true;
+    pitRunProgressRef.current = 0;
+    pitRunLaneRef.current = 1;
+    pitRunInventoryRef.current = [];
+    pitRunEntitiesRef.current = [];
+    pitRunSpawnTimerRef.current = 0;
+    pitRunNextIdRef.current = 1;
+    pitRunHitsRef.current = 0;
+    setIsPlaying(false);
+    setIsPitRunActive(true);
+    setIsAfterpartyUnlocked(false);
+    setPitRunProgress(0);
+    setPitRunLane(1);
+    setPitRunInventory([]);
+    setPitRunEntities([]);
+    setPitRunHits(0);
+    setVisibleItems([]);
+    itemsRef.current = [];
+    if (bgMusicRef.current) bgMusicRef.current.pause();
+    primeAudio();
+    playRecordScratch();
+    pitRunLastTimeRef.current = performance.now();
+    pitRunRequestRef.current = requestAnimationFrame(updatePitRun);
+  };
+
+  const finishPitRun = (afterpartyUnlocked: boolean) => {
+    if (pitRunRequestRef.current) cancelAnimationFrame(pitRunRequestRef.current);
+    pitRunActiveRef.current = false;
+    setIsPitRunActive(false);
+    if (afterpartyUnlocked) {
+      setChapterMode(transitionChapter("LEVEL_3_PIT_RUN", "afterparty"));
+      setIsAfterpartyUnlocked(true);
+      stageControllerRef.current?.onLevelComplete();
+      announceInWorldReward("AFTERPARTY UNLOCKED", "SOUND SYSTEM DELIVERED — ROCK THE JAM", "riddim");
+      return;
+    }
+    announceInWorldReward("FINAL RECOVERY", "CRITICAL GEAR STILL OUT THERE", "crate");
+  };
+
   const handleBonusGesture = (start: { x: number; y: number; time: number }, endX: number, endY: number) => {
     const dx = endX - start.x;
     if (Math.abs(dx) > 14) {
@@ -1409,6 +1543,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const moveBonusSideways = (direction: -1 | 1) => {
+    if (pitRunActiveRef.current) {
+      const nextPitLane = Math.max(0, Math.min(2, pitRunLaneRef.current + direction));
+      pitRunLaneRef.current = nextPitLane;
+      setPitRunLane(nextPitLane);
+      return;
+    }
     if (!bonusGameActiveRef.current && !isNoRequestBonusActive) return;
     const nextLane = Math.max(0, Math.min(2, bonusLaneRef.current + direction));
     bonusLaneRef.current = nextLane;
@@ -1416,10 +1556,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const setBonusLaneFromClientX = (clientX: number) => {
-    if ((!bonusGameActiveRef.current && !isNoRequestBonusActive) || !containerRef.current) return;
+    if ((!bonusGameActiveRef.current && !isNoRequestBonusActive && !pitRunActiveRef.current) || !containerRef.current) return;
     const bounds = containerRef.current.getBoundingClientRect();
+    if (isNoRequestBonusActive) {
+      setCrowdHandWorldX(clientXToWorldX(clientX, bounds.left, bounds.width));
+      return;
+    }
     const normalizedX = Math.max(0, Math.min(0.999, (clientX - bounds.left) / bounds.width));
     const nextLane = Math.floor(normalizedX * 3);
+    if (pitRunActiveRef.current) {
+      pitRunLaneRef.current = nextLane;
+      setPitRunLane(nextLane);
+      return;
+    }
     if (nextLane !== bonusLaneRef.current) {
       bonusLaneRef.current = nextLane;
       setBonusLane(nextLane);
@@ -1673,6 +1822,28 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         setIsBonusEligible(true);
         startLevelOneNoRequestBonus();
       },
+      startCrowdPressureActive: () => {
+        gameRunIdRef.current += 1;
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        window.clearTimeout(noRequestBonusTimerRef.current);
+        levelRef.current = 1;
+        setLevel(1);
+        setChapterMode("BONUS_CROWD_PRESSURE");
+        setIsNoRequestBonusSplashVisible(false);
+        noRequestBonusActiveRef.current = true;
+        noRequestBonusProgressRef.current = 0;
+        noRequestBonusSpawnTimerRef.current = .72;
+        noRequestBonusObstaclesRef.current = [{ id: -1301, x: 50, depth: 63, speed: 0, type: "bottle" }];
+        crowdHandXRef.current = 50;
+        crowdPressureBlocksRef.current = 0;
+        setCrowdHandX(50);
+        setCrowdPressureBlocks(0);
+        setNoRequestBonusProgress(0);
+        setNoRequestBonusObstacles([...noRequestBonusObstaclesRef.current]);
+        setIsNoRequestBonusActive(true);
+        noRequestBonusLastTimeRef.current = performance.now();
+        updateNoRequestBonusGame(noRequestBonusLastTimeRef.current);
+      },
       clearFirstBonus: () => finishLevelOneNoRequestBonus(true),
       failFirstBonus: () => finishLevelOneNoRequestBonus(false),
       startAfterpartyBonus: () => {
@@ -1695,6 +1866,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         if (!bonusGameActiveRef.current) return;
         finishNoRequestBonus(false);
       },
+      startPitRun,
+      recoverPitGear: (gear) => {
+        if (!pitRunActiveRef.current || pitRunInventoryRef.current.includes(gear)) return;
+        const nextInventory = [...pitRunInventoryRef.current, gear];
+        pitRunInventoryRef.current = nextInventory;
+        setPitRunInventory(nextInventory);
+        stageControllerRef.current?.onGearRecovered(gear);
+        clearStageEventAfter(260);
+      },
+      hitPitHazard: () => {
+        if (!pitRunActiveRef.current) return;
+        pitRunHitsRef.current += 1;
+        setPitRunHits(pitRunHitsRef.current);
+        stageControllerRef.current?.onStreetHazard("barrier");
+        clearStageEventAfter(260);
+      },
     };
     return () => {
       delete debugWindow.__selectahDebug;
@@ -1702,9 +1889,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, []);
 
   useEffect(() => {
-    if (!sceneVerificationMode || !import.meta.env.DEV || typeof window === "undefined") return;
-    const verifierTimer = window.setTimeout(() => {
+    if (!sceneVerificationMode || (!import.meta.env.DEV && !sandboxArcadeVerifier) || typeof window === "undefined") return;
+    let attempts = 0;
+    const launchVerifier = () => {
       const debug = (window as ArcadeDebugWindow).__selectahDebug;
+      if (!debug && attempts < 4) {
+        attempts += 1;
+        window.setTimeout(launchVerifier, 60);
+        return;
+      }
       if (!debug) return;
       if (sceneVerificationMode === "level-two-arrival") {
         debug.startLevelTwo();
@@ -1712,6 +1905,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       }
       if (sceneVerificationMode === "first-bonus") {
         debug.startFirstBonus();
+        return;
+      }
+      if (sceneVerificationMode === "crowd-pressure") {
+        debug.startFirstBonus();
+        return;
+      }
+      if (sceneVerificationMode === "crowd-pressure-active") {
+        debug.startCrowdPressureActive();
+        return;
+      }
+      if (sceneVerificationMode === "pit-run") {
+        debug.startPitRun();
         return;
       }
       if (sceneVerificationMode === "afterparty-bonus") {
@@ -1766,7 +1971,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           setInWorldReward(heldReward);
         }
       }
-    }, 180);
+    };
+    const verifierTimer = window.setTimeout(launchVerifier, 0);
     return () => window.clearTimeout(verifierTimer);
   }, [sceneVerificationMode]);
 
@@ -1823,7 +2029,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, [mobileMatrixVerifier]);
 
   useEffect(() => {
-    if (viewportVerificationPreparedRef.current || !["active", "dissolve", "live", "transition", "level-one", "level-one-rave"].includes(viewportVerificationMode ?? "")) return;
+    if (viewportVerificationPreparedRef.current || !["active", "dissolve", "live", "transition", "level-one", "level-one-rave", "level-two-50"].includes(viewportVerificationMode ?? "")) return;
     viewportVerificationPreparedRef.current = true;
     let transitionReleaseTimer = 0;
     const verifierTimer = window.setTimeout(() => {
@@ -1831,8 +2037,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       const isLevelOneVerifier = viewportVerificationMode === "level-one" || viewportVerificationMode === "level-one-rave";
       const levelOneRave = viewportVerificationMode === "level-one-rave";
+      const levelTwoFifty = viewportVerificationMode === "level-two-50";
       levelRef.current = isLevelOneVerifier ? 1 : 2;
-      recordsCaughtRef.current = isLevelOneVerifier ? (levelOneRave ? 25 : 0) : 6;
+      recordsCaughtRef.current = isLevelOneVerifier ? (levelOneRave ? 25 : 0) : levelTwoFifty ? LEVEL_TWO_REQUIRED_RECORDS : 6;
       livesRef.current = 4;
       comboRef.current = isLevelOneVerifier ? (levelOneRave ? 25 : 1) : 3;
       bohBonusAwardedRef.current = true;
@@ -1855,7 +2062,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       itemsRef.current = showVerifierItems ? activeVerifierItems : [];
       spawnTimerRef.current = viewportVerificationMode === "live" ? -1000 : 0;
       setLevel(isLevelOneVerifier ? 1 : 2);
-      setRecordsCaught(isLevelOneVerifier ? (levelOneRave ? 25 : 0) : 6);
+      setRecordsCaught(isLevelOneVerifier ? (levelOneRave ? 25 : 0) : levelTwoFifty ? LEVEL_TWO_REQUIRED_RECORDS : 6);
       setLives(4);
       setCombo(isLevelOneVerifier ? (levelOneRave ? 25 : 1) : 3);
       setGameOver(false);
@@ -1889,42 +2096,152 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     };
   }, [viewportVerificationMode]);
 
+  const updatePitRun = (time: number) => {
+    if (!pitRunActiveRef.current) return;
+    const elapsed = Math.max(0, time - pitRunLastTimeRef.current);
+    const dt = Math.min(.032, elapsed / 1000);
+    pitRunLastTimeRef.current = time;
+    if (keysRef.current["left"]) moveBonusSideways(-1);
+    if (keysRef.current["right"]) moveBonusSideways(1);
+
+    const missingGear = PIT_REQUIRED_GEAR.filter((gear) => !pitRunInventoryRef.current.includes(gear));
+    const progressRate = 8 + Math.min(9, pitRunProgressRef.current / 13);
+    const canApproachAfterparty = missingGear.length === 0;
+    const nextProgress = pitRunProgressLimit(pitRunProgressRef.current + progressRate * dt, canApproachAfterparty);
+    pitRunProgressRef.current = nextProgress;
+    setPitRunProgress(nextProgress);
+
+    pitRunSpawnTimerRef.current += dt;
+    const nextEntities = pitRunEntitiesRef.current
+      .map((entity) => ({ ...entity, depth: entity.depth + entity.speed * dt }))
+      .filter((entity) => entity.depth < 112);
+    if (pitRunSpawnTimerRef.current >= Math.max(.42, .86 - pitRunProgressRef.current / 180) && nextEntities.length < 4) {
+      pitRunSpawnTimerRef.current = 0;
+      const shouldForceGear = missingGear.length > 0 && (pitRunProgressRef.current > 48 || Math.random() < .68);
+      const type: PitEntityType = shouldForceGear
+        ? missingGear[Math.floor(Math.random() * missingGear.length)]
+        : PIT_HAZARD_TYPES[Math.floor(Math.random() * PIT_HAZARD_TYPES.length)];
+      const openLanes = [0, 1, 2].filter((lane) => !nextEntities.some((entity) => entity.lane === lane && entity.depth < 58));
+      const lanePool = openLanes.length ? openLanes : [0, 1, 2];
+      nextEntities.push({
+        id: pitRunNextIdRef.current++,
+        lane: lanePool[Math.floor(Math.random() * lanePool.length)],
+        depth: 1,
+        speed: 22 + Math.min(17, pitRunProgressRef.current / 5) + Math.random() * 5,
+        type,
+      });
+    }
+
+    const surviving: PitRunEntity[] = [];
+    for (const entity of nextEntities) {
+      const intersectsRunner = entity.lane === pitRunLaneRef.current && entity.depth >= 82 && entity.depth <= 98;
+      if (intersectsRunner) {
+        if ((PIT_REQUIRED_GEAR as readonly string[]).includes(entity.type)) {
+          const gear = entity.type as PitGearType;
+          if (!pitRunInventoryRef.current.includes(gear)) {
+            const nextPitState = recoverPitGear({ score: scoreRef.current, combo: comboRef.current, hits: pitRunHitsRef.current, inventory: pitRunInventoryRef.current, progress: pitRunProgressRef.current }, gear);
+            const nextInventory = [...nextPitState.inventory] as PitGearType[];
+            pitRunInventoryRef.current = nextInventory;
+            setPitRunInventory(nextInventory);
+            scoreRef.current = nextPitState.score;
+            setScore(nextPitState.score);
+            comboRef.current = nextPitState.combo;
+            setCombo(nextPitState.combo);
+            stageControllerRef.current?.onGearRecovered(gear);
+            clearStageEventAfter(380);
+            announceInWorldReward(`${gear.toUpperCase()} SECURED`, "PIT RUN RECOVERY", "crate");
+          }
+          continue;
+        }
+        const nextPitState = applyPitRunHazard({ score: scoreRef.current, combo: comboRef.current, hits: pitRunHitsRef.current, inventory: pitRunInventoryRef.current, progress: pitRunProgressRef.current });
+        pitRunHitsRef.current = nextPitState.hits;
+        setPitRunHits(nextPitState.hits);
+        comboRef.current = nextPitState.combo;
+        setCombo(nextPitState.combo);
+        const nextCondition = worsenEquipmentCondition(equipmentConditionRef.current);
+        setEquipmentState(nextCondition);
+        mixerDamagedRef.current = equipmentIsDamaged(nextCondition);
+        setMixerDamaged(mixerDamagedRef.current);
+        stageControllerRef.current?.onStreetHazard(entity.type);
+        stageControllerRef.current?.onDamage();
+        clearStageEventAfter(420);
+        announceDamage(`${entity.type.toUpperCase()} IN THE PIT`, Math.max(0, 3 - pitRunHitsRef.current), true);
+        continue;
+      }
+      if (entity.lane !== pitRunLaneRef.current && entity.depth >= 86 && entity.depth <= 92) {
+        stageControllerRef.current?.onNearMiss(entity.type);
+        clearStageEventAfter(180);
+      }
+      surviving.push(entity);
+    }
+    pitRunEntitiesRef.current = surviving;
+    setPitRunEntities(surviving);
+    if (pitRunCompletes(pitRunProgressRef.current, pitRunInventoryRef.current, PIT_REQUIRED_GEAR)) {
+      finishPitRun(true);
+      return;
+    }
+    pitRunRequestRef.current = requestAnimationFrame(updatePitRun);
+  };
+
   const updateNoRequestBonusGame = (time: number) => {
     if (!noRequestBonusActiveRef.current) return;
     const elapsed = Math.max(0, time - noRequestBonusLastTimeRef.current);
     const dt = Math.min(0.032, elapsed / 1000);
     noRequestBonusLastTimeRef.current = time;
-    if (keysRef.current["left"]) moveBonusSideways(-1);
-    if (keysRef.current["right"]) moveBonusSideways(1);
-    const nextProgress = Math.min(100, noRequestBonusProgressRef.current + dt * 17.5);
+    if (keysRef.current["left"]) setCrowdHandWorldX(crowdHandXRef.current - 78 * dt);
+    if (keysRef.current["right"]) setCrowdHandWorldX(crowdHandXRef.current + 78 * dt);
+    const nextProgress = crowdPressureCaptureHold
+      ? Math.max(38, noRequestBonusProgressRef.current)
+      : Math.min(100, noRequestBonusProgressRef.current + dt * 20);
     noRequestBonusProgressRef.current = nextProgress;
     setNoRequestBonusProgress(nextProgress);
 
     noRequestBonusSpawnTimerRef.current += dt;
-    const nextEntities = noRequestBonusObstacles
+    const nextEntities = noRequestBonusObstaclesRef.current
       .map((entity) => ({ ...entity, depth: entity.depth + entity.speed * dt }))
       .filter((entity) => entity.depth < 112);
 
-    if (noRequestBonusSpawnTimerRef.current >= 1.15 && nextEntities.length < 3) {
+    if (noRequestBonusSpawnTimerRef.current >= .68 && nextEntities.length < 4) {
       noRequestBonusSpawnTimerRef.current = 0;
-      const lane = Math.floor(Math.random() * 3);
-      const types: NoRequestBonusEntity["type"][] = ["bottle", "bracelet", "raver", "cd"];
+      const types: NoRequestBonusEntity["type"][] = ["cigarette", "beer", "spit", "bottle"];
       nextEntities.push({
         id: noRequestBonusNextIdRef.current++,
-        lane,
+        x: 9 + Math.random() * 82,
         depth: 0,
-        speed: 32 + Math.random() * 8,
+        speed: 46 + Math.random() * 13,
         type: types[Math.floor(Math.random() * types.length)],
       });
     }
 
-    const collided = nextEntities.some((entity) => entity.lane === bonusLaneRef.current && entity.depth >= 75 && entity.depth <= 93);
-    if (collided) {
-      announceDamage("NO REQUEST BONUS MISSED", 0, true);
-      finishLevelOneNoRequestBonus(false);
-      return;
+    const survivingEntities: NoRequestBonusEntity[] = [];
+    for (const entity of nextEntities) {
+      const crowdOutcome = resolveCrowdPressureOutcome(crowdHandXRef.current, entity.x, entity.depth);
+      if (crowdOutcome === "block") {
+        const nextCrowdState = applyCrowdPressureOutcome({ score: scoreRef.current, blocks: crowdPressureBlocksRef.current, equipmentHits: 0 }, crowdOutcome);
+        crowdPressureBlocksRef.current = nextCrowdState.blocks;
+        setCrowdPressureBlocks(nextCrowdState.blocks);
+        scoreRef.current = nextCrowdState.score;
+        setScore(nextCrowdState.score);
+        stageControllerRef.current?.onCatch(entity.type);
+        clearStageEventAfter(360);
+        reactToCrowdPressure("block");
+        continue;
+      }
+      if (crowdOutcome === "equipment-hit") {
+        const nextCondition = worsenEquipmentCondition(equipmentConditionRef.current);
+        setEquipmentState(nextCondition);
+        mixerDamagedRef.current = equipmentIsDamaged(nextCondition);
+        setMixerDamaged(mixerDamagedRef.current);
+        stageControllerRef.current?.onHazard(entity.type);
+        stageControllerRef.current?.onDamage();
+        clearStageEventAfter(460);
+        reactToCrowdPressure("damage");
+        continue;
+      }
+      survivingEntities.push(entity);
     }
-    setNoRequestBonusObstacles(nextEntities);
+    noRequestBonusObstaclesRef.current = survivingEntities;
+    setNoRequestBonusObstacles(survivingEntities);
     if (nextProgress >= 100) {
       finishLevelOneNoRequestBonus(true);
       return;
@@ -2195,6 +2512,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setDamageFeedback(null);
     setInWorldReward(null);
     levelRef.current = 1;
+    setChapterMode("LEVEL_1");
+    levelOneHazardsHitRef.current = 0;
+    setLevelOneHazardsHit(0);
+    setEquipmentState("clean");
     setLevel(1);
     setLevelTwoComplete(false);
     setFinale(false);
@@ -2295,11 +2616,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (spawnTimerRef.current >= spawnInterval) {
       spawnTimerRef.current -= spawnInterval;
       namedHazardSpawnCountRef.current += 1;
-      const scheduledNamedHazard = scheduledNamedHazardExposure(levelRef.current, namedHazardSpawnCountRef.current);
+      const activeFallingLevel: 1 | 2 = levelRef.current === 3 ? 2 : levelRef.current;
+      const scheduledNamedHazard = scheduledNamedHazardExposure(activeFallingLevel, namedHazardSpawnCountRef.current);
       const roll = Math.random();
       // Each scheduled pair is an avoidable chance to deliberately trigger a named scene.
       // Level 1 remains free of bottles and apple cores; only Level 2 crowd throws them.
-      const spawnedType = scheduledNamedHazard ?? pickFallingItemType(levelRef.current, roll);
+      const spawnedType = scheduledNamedHazard ?? pickFallingItemType(activeFallingLevel, roll);
       const itemRule = FALLING_ITEM_RULES[spawnedType];
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 50 : 36;
@@ -2439,6 +2761,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             }
           }
           if (mixerDamagedRef.current) {
+            setEquipmentState("repairing");
             const nextRecoveryProgress = Math.min(3, recoveryProgressRef.current + pickupValue);
             recoveryProgressRef.current = nextRecoveryProgress;
             setRecoveryProgress(nextRecoveryProgress);
@@ -2449,6 +2772,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               recoveryProgressRef.current = 0;
               currentScore += 500;
               setMixerDamaged(false);
+              setEquipmentState("repaired");
               setRecoveryProgress(0);
               setMixerRepairBurst(true);
               window.clearTimeout(mixerRepairTimerRef.current);
@@ -2459,6 +2783,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           recordsCaughtRef.current = nextRecordsCaught;
           setScore(currentScore);
           setRecordsCaught(nextRecordsCaught);
+          if (levelRef.current === 1 && canUnlockCrowdPressure(nextRecordsCaught, levelOneHazardsHitRef.current) && !bonusEligibleRef.current) {
+            bonusEligibleRef.current = true;
+            setIsBonusEligible(true);
+            announceInWorldReward("CROWD PRESSURE READY", "15 CLEAN DUBPLATES / HOLD THE BOOTH", "riddim");
+          }
           consecutiveHazardRef.current = null;
           consecutiveHazardCountRef.current = 0;
           if (levelRef.current === 2 && nextRecordsCaught >= 25 && !crowdCheerPlayedRef.current) {
@@ -2487,12 +2816,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           if (levelRef.current === 1 && nextRecordsCaught >= REQUIRED_RECORDS) {
             stageControllerRef.current?.onLevelComplete();
             clearStageEventAfter(900);
-            const firstBonusEligible = currentLives >= 3;
+            const firstBonusEligible = bonusEligibleRef.current;
             bonusEligibleRef.current = firstBonusEligible;
             setIsBonusEligible(firstBonusEligible);
-            if (firstBonusEligible) {
-              setGreenCamoUnlocked(true);
-            }
             if (!downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
               unlockJinglePlayedRef.current = true;
               playUnlockJingle();
@@ -2514,6 +2840,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           clearStageEventAfter(620);
           showImpactFeedback(movedItem, "hazard");
           setStageEnergy(0);
+          const nextEquipmentCondition = worsenEquipmentCondition(equipmentConditionRef.current);
+          setEquipmentState(nextEquipmentCondition);
+          mixerDamagedRef.current = equipmentIsDamaged(nextEquipmentCondition);
+          setMixerDamaged(mixerDamagedRef.current);
+          if (levelRef.current === 1) {
+            levelOneHazardsHitRef.current += 1;
+            setLevelOneHazardsHit(levelOneHazardsHitRef.current);
+          }
           comboRef.current = 1;
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
@@ -2633,21 +2967,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       stageControllerRef.current?.onLevelComplete();
       clearStageEventAfter(900);
       if (bgMusicRef.current) bgMusicRef.current.pause();
-      const finaleName = resolveFinaleTag(submittedName, playerName);
-      if (finaleName) {
-        recordHighScore(currentScore, finaleName, "level2");
-        setSubmittedName(finaleName);
-        setScoreSubmitted(true);
-      } else {
-        setScoreSubmitted(false);
-      }
       setIsPlaying(false);
       setLevelTwoComplete(true);
-      setGameOver(!finaleName);
+      setGameOver(false);
       setIsUnlockPaused(false);
       setIsNewRecord(currentScore > highScoreRef.current);
-      finaleRef.current = Boolean(finaleName);
-      setFinale(Boolean(finaleName));
+      finaleRef.current = false;
+      setFinale(false);
+      startPitRun();
       return;
     }
     if (advanceToLevelTwo) {
@@ -2769,7 +3096,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <p className="eyebrow"><Disc size={15} /> DUBPLATE AUTHENTICATION / 06</p>
           <h2 id="minigame-title">SELECTAH<br /><em>SHOWDOWN.</em></h2>
         </div>
-          <p>Catch 25 heavy 5D dubplates to trigger the chained “Jersh In Case” release, then command a 50-record Level 2 crowd run. Missed records reset a streak and hazards remove hearts. Use A/D keys or pointer movement to position the turntable; a clean 20-dubplate Level 2 run opens the after-party gear dash.</p>
+          <p>Catch 25 heavy 5D dubplates to trigger the chained “Jersh In Case” release, then command a 50-record Level 2 crowd run and take the gear through Level 3 Pit Run. Missed records reset a streak and hazards remove hearts. Use A/D keys or pointer movement throughout; 15 clean Level 1 dubplates unlock Crowd Pressure behind the decks.</p>
       </div>
 
       <audio
@@ -2805,14 +3132,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           ref={containerRef}
           className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled ? " show-world-hitboxes" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
           onPointerMove={(e) => {
-            if (!isBonusLevelActive && !isNoRequestBonusActive) {
+            if (!isBonusLevelActive && !isNoRequestBonusActive && !isPitRunActive) {
               if (playfieldPointerRef.current === e.pointerId) handlePointerMove(e);
               return;
             }
+            if (isNoRequestBonusActive && e.pointerType === "touch") e.preventDefault();
             setBonusLaneFromClientX(e.clientX);
           }}
           onPointerDown={(e) => {
-            if (isBonusLevelActive || isNoRequestBonusActive) {
+            if (isBonusLevelActive || isNoRequestBonusActive || isPitRunActive) {
               e.preventDefault();
               e.currentTarget.setPointerCapture(e.pointerId);
               setBonusLaneFromClientX(e.clientX);
@@ -2824,7 +3152,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             updateDjPositionFromClientX(e.clientX);
           }}
           onPointerUp={(e) => {
-            if (isBonusLevelActive || isNoRequestBonusActive) {
+            if (isBonusLevelActive || isNoRequestBonusActive || isPitRunActive) {
               e.preventDefault();
               if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
               return;
@@ -3008,7 +3336,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
               <div className="arcade-instruction-brief">
-                {level === 2 ? <><span>LEVEL 2 / CROWD PRESSURE</span><p>Collect 50 dubplates to complete the transmission. Bottles and apple cores join the sirens, pills, and phones as hazards. At 25 dubplates the crowd cheers; keep the booth alive to reach the terminal finale.</p><small>Mixers, turntables, adapters, CDJs, and the Lion of Judah add value. Three mixers or three decks trigger bonus scenes.</small></> : <><span>LEVEL 1 / DUBPLATE TEST</span><p>Collect 25 dubplates. The release stays locked until the chain lands and breaks. Missed dubplates reset a streak; sirens, pills, and phones remove hearts.</p><small>Six clean catches deploy the sub, 12 shakes the set, 18 rewinds with dancers, and 24 breaks open the deck floor. A zero-hit Level 2 run opens the 20-dubplate After Party Gear Dash.</small></>}
+                {level === 2 ? <><span>LEVEL 2 / INSIDE 5D CLUB</span><p>Collect 50 dubplates to complete the club chapter. Bottles and apple cores join the sirens, pills, and phones as hazards. Keep the booth alive to earn its skilled-play bonus, then take the recovered kit into Pit Run.</p><small>Mixers, turntables, adapters, CDJs, and the Lion of Judah add value. Three mixers or three decks trigger bonus scenes.</small></> : level === 3 ? <><span>LEVEL 3 / PIT RUN</span><p>Move left or right through the approaching city, recover every critical sound-system item, and avoid street chaos.</p><small>The afterparty only opens when the full kit is secured.</small></> : <><span>LEVEL 1 / DUBPLATE TEST</span><p>Collect 25 dubplates. The release stays locked until the chain lands and breaks. Missed dubplates reset a streak; sirens, pills, and phones remove hearts.</p><small>Six clean catches deploy the sub, 12 shakes the set, 18 rewinds with dancers, and 15 clean dubplates unlock Crowd Pressure behind the decks.</small></>}
               </div>
               <button type="button" className="tape-play-button" onClick={startGame}>
                 <span className="tape-play-face" aria-hidden="true">
@@ -3036,21 +3364,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
 
         {isNoRequestBonusSplashVisible && (
-          <div className="game-overlay no-request-splash-overlay" role="status" aria-live="assertive">
-            <div className="no-request-splash-rings" aria-hidden="true"><i /><i /><i /></div>
-            <div className="no-request-splash-copy"><span>LEVEL 1 CLEAN RUN / 25 DUBPLATES / ONE HIT MAX</span><strong>NO REQUEST<br />BONUS!</strong><em>FIND THE EXIT BEFORE THE CLUB CLOSES.</em></div>
+          <div className="game-overlay crowd-pressure-splash-overlay" role="status" aria-live="assertive">
+            <div className="crowd-pressure-splash-crowd" aria-hidden="true"><i /><i /><i /><i /><i /></div>
+            <div className="crowd-pressure-splash-copy"><span>15 CLEAN DUBPLATES / BEHIND THE DECKS</span><strong>CROWD<br />PRESSURE!</strong><em>BLOCK THE MESS BEFORE IT HITS YOUR MIXER.</em></div>
           </div>
         )}
 
         {isNoRequestBonusActive && (
-          <div className="no-request-bonus-stage" role="application" aria-label="No Request Bonus. Steer left or right through the empty rave exterior and reach the exit door without hitting any obstacle.">
-            <div className="no-request-sky" aria-hidden="true" /><div className="no-request-city-depth" aria-hidden="true"><i /><i /><i /><i /><i /></div>
-            <div className="no-request-street" aria-hidden="true"><i /><i /><i /></div>
-            <div className="no-request-exit" aria-hidden="true"><span>EXIT</span><b /></div>
-            <div className="no-request-hud"><strong>NO REQUEST BONUS</strong><span>EXIT {Math.round(noRequestBonusProgress)}%</span><em>A / D OR TAP A LANE</em></div>
-            <div className={`no-request-dj lane-${bonusLane}`}><img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="Jungle DJ racing for the empty-rave exit" /></div>
-            <div className="no-request-entity-layer" aria-hidden="true">
-              {noRequestBonusObstacles.map((entity) => <span key={entity.id} className={`no-request-entity ${entity.type} lane-${entity.lane}`} style={{ "--no-request-depth": `${entity.depth}%` } as React.CSSProperties}><i /></span>)}
+          <div className={`crowd-pressure-bonus-stage crowd-reaction-${crowdReaction ?? "idle"}`} role="application" aria-label="Crowd Pressure. Move the DJ hand left and right across the decks to block cigarettes, beer, spit, and bottles before they hit the equipment.">
+            <div className="crowd-pressure-club-depth" aria-hidden="true"><i /><i /><i /><i /></div>
+            <div className="crowd-pressure-archetypes" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /></div>
+            <div className="crowd-pressure-light-rig" aria-hidden="true"><i /><i /><i /></div>
+            <div className="crowd-pressure-booth" aria-hidden="true"><i className="booth-cdj booth-cdj-left" /><i className="booth-cdj booth-cdj-right" /><i className="booth-turntable" /><i className="booth-mixer" /><i className="booth-headphones" /><i className="booth-mic" /><i className="booth-cable" /><i className="booth-drink" /><i className="booth-sleeve" /></div>
+            <div className="crowd-pressure-hud"><strong>CROWD PRESSURE</strong><span>HOLD THE BOOTH {Math.round(noRequestBonusProgress)}%</span><em>BLOCKS {crowdPressureBlocks} · A / D OR DRAG</em></div>
+            <div ref={crowdHandRef} className="crowd-pressure-hand" style={{ left: `${crowdHandX}%` }} aria-label="DJ hand controlled across the decks"><i /><b /></div>
+            <div className="crowd-pressure-hazard-layer" aria-hidden="true">
+              {noRequestBonusObstacles.map((entity) => <span key={entity.id} className={`no-request-entity ${entity.type}`} style={{ "--no-request-depth": `${entity.depth}%`, "--crowd-hazard-x": `${entity.x}%` } as React.CSSProperties}><i /></span>)}
             </div>
           </div>
         )}
@@ -3087,6 +3416,30 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               {bonusObstacles.map((entity) => <span key={entity.id} className={`bonus-obstacle afterparty-entity ${entity.type} lane-${entity.lane}`} data-entity={entity.type} style={{ "--runner-depth": `${entity.depth}%` } as React.CSSProperties}><i className="urban-runner-asset" style={{ "--urban-runner-url": `url(${URBAN_RUNNER_ASSETS[entity.type]})` } as React.CSSProperties} /><b>{entity.type === "headphones" ? "HP" : entity.type === "turntable" ? "TT" : entity.type === "speaker" ? "SPK" : entity.type === "mixer" ? "MIX" : entity.type === "cart" ? "CART" : entity.type.toUpperCase()}</b></span>)}
             </div>
             {bonusGearReady && <div className="afterparty-door-ready" role="status">ALL GEAR SECURED — RUN FOR THE DOOR</div>}
+          </div>
+        )}
+
+        {isPitRunActive && (
+          <div className="pit-run-stage" role="application" aria-label="Level 3 Pit Run. Move left or right, recover all six critical sound-system items, and avoid the approaching street hazards.">
+            <div className="pit-run-skyline" aria-hidden="true"><i /><i /><i /><i /><i /></div>
+            <div className="pit-run-zone-sign" aria-hidden="true"><span>{pitRunProgress < 22 ? "SERVICE ALLEY" : pitRunProgress < 44 ? "GRIMY STREET" : pitRunProgress < 66 ? "UNDERPASS" : pitRunProgress < 83 ? "WAREHOUSE DISTRICT" : "AFTERPARTY APPROACH"}</span></div>
+            <div className="pit-run-road" aria-hidden="true"><i /><i /><i /><b /><b /></div>
+            <div className="pit-run-foreground" aria-hidden="true"><i /><i /><i /></div>
+            <div className="pit-run-hud"><strong>LEVEL 3 · PIT RUN</strong><span>DISTANCE {Math.round(pitRunProgress)}%</span><em>HITS {pitRunHits} · A / D OR DRAG</em></div>
+            <div className="pit-run-inventory" aria-label="Critical gear recovery inventory">
+              {PIT_REQUIRED_GEAR.map((gear) => <span key={gear} className={pitRunInventory.includes(gear) ? "secured" : "missing"}>{gear === "turntable" ? "TT" : gear === "headphones" ? "HP" : gear === "crate" ? "CRT" : gear.toUpperCase()}</span>)}
+            </div>
+            <div className={`pit-runner lane-${pitRunLane}`}><img src="/embedded-assets/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ moving through the pit run" /></div>
+            <div className="pit-run-entity-layer" aria-hidden="true">
+              {pitRunEntities.map((entity) => <span key={entity.id} className={`pit-run-entity ${entity.type} lane-${entity.lane}`} style={{ "--pit-depth": `${entity.depth}%` } as React.CSSProperties}><i /><b>{(PIT_REQUIRED_GEAR as readonly string[]).includes(entity.type) ? entity.type === "crate" ? "CRT" : entity.type === "turntable" ? "TT" : entity.type === "headphones" ? "HP" : entity.type.toUpperCase() : "!"}</b></span>)}
+            </div>
+          </div>
+        )}
+
+        {isAfterpartyUnlocked && !isPitRunActive && (
+          <div className="afterparty-placeholder-stage" role="status" aria-live="polite">
+            <div className="afterparty-placeholder-door" aria-hidden="true"><i /><b>AFTER<br />PARTY</b></div>
+            <div className="afterparty-placeholder-copy"><span>SOUND SYSTEM DELIVERED</span><strong>ROCK THE JAM</strong><em>{pitRunInventory.map((gear) => gear === "turntable" ? "TT" : gear === "headphones" ? "HP" : gear === "crate" ? "CRT" : gear.toUpperCase()).join(" · ")}</em></div>
           </div>
         )}
 
@@ -3587,7 +3940,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         </div>
 
         {/* DJ selector with turntable at bottom */}
-        <div ref={djCatcherRef} className={`dj-catcher${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ left: `${djXRef.current}%` }}>
+        <div ref={djCatcherRef} className={`dj-catcher equipment-${equipmentCondition}${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
               className="dj-sprite"
@@ -3599,12 +3952,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               }}
             />
             {(greenCamoUnlocked || bonusCamoUnlocked) && <span className={`bonus-camo-outfit${greenCamoUnlocked && !bonusCamoUnlocked ? " green" : " purple"}`} aria-label={bonusCamoUnlocked ? "Purple After Party camo outfit unlocked" : "Green No Request camo outfit unlocked"}><i /><b /><em /></span>}
-            {(mixerDamaged || mixerRepairBurst) && (
-              <div className="mixer-recovery-status" aria-live="polite">
-                <strong>{mixerRepairBurst ? "MIXER REPAIRED +500" : "MIXER DAMAGED"}</strong>
-                {!mixerRepairBurst && <span>RECOVERY {recoveryProgress}/3</span>}
-              </div>
-            )}
+            <div className="equipment-condition-rig" aria-label={`Mixer condition: ${equipmentCondition}`}>
+              <i className="equipment-deck-screen" /><i className="equipment-fader" /><i className="equipment-knob equipment-knob-one" /><i className="equipment-knob equipment-knob-two" /><i className="equipment-warning-led" /><i className="equipment-cable" /><i className="equipment-spill" /><i className="equipment-spark" /><i className="equipment-smoke" />
+            </div>
+            {(equipmentCondition === "repairing" || mixerRepairBurst) && <span className="equipment-condition-callout" aria-live="polite">{mixerRepairBurst ? "REPAIRED!" : `FIXING MIXER ${recoveryProgress}/3`}</span>}
             <div className="dj-sprite-fallback" aria-hidden="true">
               <span className="dj-selector-head">5D</span>
               <span className="dj-selector-body" />

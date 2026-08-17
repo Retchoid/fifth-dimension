@@ -1,5 +1,23 @@
 # Project TODO
 
+## Amended three-chapter underground-night game structure
+
+- [x] Restrict this pass to Passes A–E only, use temporary geometry/placeholders where final art is unavailable, and do not generate final artwork or proceed to Passes F–I.
+- [x] Provide working mobile evidence for Level 1 controls/collision, Crowd Pressure hand blocking, Level 2 50-item progression, and Level 3 pseudo-3D movement/inventory, then stop.
+
+- [x] Map the existing Level 1, current Level 2, No Request bonus, and After Party systems to the amended chapter order without undoing the repaired shared input, collision, stage, or responsive work.
+- [x] Add a physical mixer/equipment condition model with visible clean-to-broken states, repair restoration, and compact supporting comic callouts instead of a primary abstract damage box.
+- [x] Change Level 1’s 15-dubplate zero-hazard qualification into an earned Crowd Pressure bonus entry that preserves and returns the appropriate Level 1 state.
+- [x] Build Crowd Pressure as a behind-the-decks, hand-interception bonus: crowd-origin hazards, DJ booth equipment plane, reactive comic crowd, fair faster trajectories, and existing pointer/keyboard control semantics.
+- [x] Confirm all Level 2 counters, thresholds, StageController paths, tests, HUD, and documentation retain the required 50-item completion contract and integrate the existing earned Level 2 bonus.
+- [x] Promote the former final runner concept into a full Level 3 Pit Run: pseudo-3D forward world, left/right selector control, gear recovery, environmental hazards, club-to-afterparty geography, and full-level completion state.
+- [ ] Add direct update-loop coverage for Crowd Pressure and Pit Run state transitions rather than helper-only contracts.
+- [ ] Add a transition test for the 15-clean-dubplate Crowd Pressure eligibility and safe return-state contract.
+- [ ] Add Crowd Pressure update-loop tests for hand-blocked hazards versus equipment-hit outcomes.
+- [ ] Add Pit Run update-loop tests for gear collection, street hazards, final recovery gating, and all-gear afterparty unlock.
+- [ ] Add cross-chapter state-restoration tests for Level 1 → Crowd Pressure → Level 1, Level 2 → bonus → Level 2, and Level 2 → Level 3 → Afterparty contracts.
+- [ ] Verify desktop and actual 390×844 touch/mobile play through all chapter handoffs, no unintended site or cabinet changes, and performance safeguards before publication.
+
 ## Supplied Level 1 sunset-stage implementation brief
 
 - [x] Execute and document the active interaction matrix in an actual 390×844 development viewport, distinct from the prior 390px playfield-width check.

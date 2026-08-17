@@ -47,4 +47,15 @@ describe("StageReactionController", () => {
       expect(controller.snapshot).toMatchObject({ reaction, event: "combo", eventType: String(combo) });
     }
   });
+
+  it("publishes explicit Pit Run gear, street-hazard, and near-miss events", () => {
+    const controller = new StageReactionController(() => undefined);
+    controller.setLevel(3);
+    controller.onGearRecovered("mixer");
+    expect(controller.snapshot).toMatchObject({ level: 3, reaction: "GEAR_RECOVERED", event: "catch", eventType: "mixer" });
+    controller.onStreetHazard("barrier");
+    expect(controller.snapshot).toMatchObject({ reaction: "STREET_HAZARD", event: "hazard", eventType: "barrier" });
+    controller.onNearMiss("rat");
+    expect(controller.snapshot).toMatchObject({ reaction: "NEAR_MISS", event: "miss", eventType: "rat" });
+  });
 });
