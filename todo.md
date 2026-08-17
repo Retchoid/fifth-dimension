@@ -1,5 +1,18 @@
 # Project TODO
 
+## Published mobile input hotfix — no art, collision, spawn, bonus, or level changes
+
+- [x] Complete and document the remaining overlay/HUD pointer-event audit, including temporary event overlays and active HUD controls above the playfield.
+- [x] Re-run a mobile pointer-target trace while a HUD and a temporary overlay state are present, confirming the intended active surface owns drag input and overlays do not steal it.
+- [x] Prove the temporary overlay contract: it is a deliberate modal paused-state surface, never coexists with active drag gameplay, and has a recorded hit-test target at mobile width.
+
+- [x] Instrument the real published playfield input with visible target, pointer, rect, local/normalized/world X, target/actual player X, capture state, and player-position assignment trace.
+- [x] Audit every live player-X assignment and identify any exact post-input overwrite that keeps the player centered on a physical mobile drag.
+- [x] Make the complete rendered game viewport the Pointer Events input surface: down captures, move maps actual playfield `clientX`, and up/cancel releases without suppressing site scroll outside the active playfield.
+- [x] Audit and correct scoped mobile pointer-event ownership for every playfield overlay, pseudo-element, HUD, background, foreground, glass, scanline, effect, and player visual layer.
+- [ ] Verify the published mobile build with one held real-pointer drag at 10%, 50%, and 90%, demonstrating matching target/actual player X at each step before collision testing.
+- [ ] Deliver the exact receiving element, coordinate conversion values, overwrite result, scoped CSS result, and real mobile acceptance evidence; then stop.
+
 ## Real-device mechanics failure — verifier rejection, no art pass
 
 - [x] Record that the former internal mobile matrix is rejected/quarantined and is not an accepted evidence path.

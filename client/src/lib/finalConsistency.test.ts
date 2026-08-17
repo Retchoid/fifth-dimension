@@ -207,8 +207,8 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain('e.target.closest("button, a, input, textarea, select")');
     expect(gameSource).toContain('(!usesAlternatePointerRoute && !isPlayingRef.current)');
     expect(gameSource).toContain("REAL INPUT TRACE");
-    expect(gameSource).toContain("DOM TARGET:");
-    expect(gameSource).toContain("PLAYER ACTUAL X:");
+    expect(gameSource).toContain("TOUCH TARGET:");
+    expect(gameSource).toContain("ACTUAL PLAYER X:");
     expect(gameSource).toContain("mixer-recovery-status");
     expect(arcadePlayfieldArchitecture).toContain(".real-input-debug-panel");
   });
@@ -234,5 +234,21 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("RECOVER: {recoveryProgress}/3 DUBPLATES");
     expect(gameSource).toContain('const objectiveIncrement = levelRef.current === 1 ? (item.type === "record" ? 1 : 0) : pickupValue;');
     expect(gameSource).toContain('if (mixerDamagedRef.current && item.type === "record")');
+  });
+
+  it("keeps published mobile pointer input bound to the actual game viewport", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).toContain("const realInputDebugEnabled = typeof window !== \"undefined\"");
+    expect(gameSource).toContain("updateDjPositionFromClientX(e.clientX, e.currentTarget)");
+    expect(gameSource).toContain("e.currentTarget.hasPointerCapture(e.pointerId)");
+    expect(gameSource).toContain("TOUCH TARGET:");
+    expect(gameSource).toContain("RECT LEFT:");
+    expect(gameSource).toContain("NORMALIZED X:");
+    expect(gameSource).toContain("LAST PLAYER WRITE:");
+    expect(arcadePlayfieldArchitecture).toContain("touch-action: none !important");
+    expect(arcadePlayfieldArchitecture).toContain("pointer-events: auto !important");
+    expect(arcadePlayfieldArchitecture).toContain(".game-grid-bg,");
+    expect(arcadePlayfieldArchitecture).toContain(".falling-items-layer *,");
+    expect(arcadePlayfieldArchitecture).toContain(".dj-catcher *,");
   });
 });

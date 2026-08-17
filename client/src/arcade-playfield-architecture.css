@@ -4,10 +4,61 @@
    It does not alter scoring, spawning, collisions, timing, audio, or release gates. */
 
 .arcade-cabinet-bezel .game-viewport {
+  position: relative !important;
   isolation: isolate !important;
   overflow: hidden !important;
   background: #0A0A12 !important;
-  touch-action: none;
+  touch-action: none !important;
+  pointer-events: auto !important;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* The viewport is the only normal-play input receiver. These layers are visual
+   only—even when their rectangles span the whole scene—and cannot retarget a
+   physical touch away from the Pointer Events handler above. */
+.arcade-cabinet-bezel .game-viewport::before,
+.arcade-cabinet-bezel .game-viewport::after,
+.arcade-cabinet-bezel .game-grid-bg,
+.arcade-cabinet-bezel .game-grid-bg *,
+.arcade-cabinet-bezel .stage-background,
+.arcade-cabinet-bezel .stage-background *,
+.arcade-cabinet-bezel .stage-midground,
+.arcade-cabinet-bezel .stage-midground *,
+.arcade-cabinet-bezel .stage-game-plane,
+.arcade-cabinet-bezel .stage-game-plane *,
+.arcade-cabinet-bezel .stage-reactive,
+.arcade-cabinet-bezel .stage-reactive *,
+.arcade-cabinet-bezel .stage-foreground,
+.arcade-cabinet-bezel .stage-foreground *,
+.arcade-cabinet-bezel .falling-items-layer,
+.arcade-cabinet-bezel .falling-items-layer *,
+.arcade-cabinet-bezel .dj-catcher,
+.arcade-cabinet-bezel .dj-catcher *,
+.arcade-cabinet-bezel .game-impact-fx,
+.arcade-cabinet-bezel .damage-feedback,
+.arcade-cabinet-bezel .in-world-reward,
+.arcade-cabinet-bezel .real-input-debug-panel,
+.arcade-cabinet-bezel .mechanics-debug-log,
+.arcade-cabinet-bezel .mechanics-debug-player-hitbox,
+.arcade-cabinet-bezel .mechanics-debug-collision-flash {
+  pointer-events: none !important;
+}
+
+/* The compact HUD is visually above the playfield but must not create a dead
+   horizontal drag zone. Its one real control opts back in explicitly. Temporary
+   `.game-overlay` / `.hazard-splash` layers are intentionally excluded: they
+   only mount during a paused start, transition, or damage state and are modal
+   by design rather than active-play decoration. */
+.arcade-cabinet-bezel .game-hud,
+.arcade-cabinet-bezel .game-hud > :not(.audio-toggle),
+.arcade-cabinet-bezel .game-hud > :not(.audio-toggle) * {
+  pointer-events: none !important;
+}
+.arcade-cabinet-bezel .game-hud > .audio-toggle,
+.arcade-cabinet-bezel .game-hud > .audio-toggle * {
+  pointer-events: auto !important;
 }
 
 /* LAYER 1 — one full original environment for each level. */
