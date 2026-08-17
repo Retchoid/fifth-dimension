@@ -378,7 +378,7 @@ h1,h2,h3 { margin-top:0; font-family:"Press Start 2P",Press Start 2P,Courier New
 }
 /* 5D style: twin graffiti ribbons begin at the exclusive-drop stamp, then sweep
    out and down around either side of the cabinet like a painted arcade route. */
-.arcade-flow-shell { position: relative; overflow: hidden; background: #0b0713; }
+.arcade-flow-shell { position: relative; z-index: 6; isolation: isolate; overflow: visible; background: #0b0713; }
 .arcade-flow-shell .minigame-section { position: relative; z-index: 3; }
 .arcade-graffiti-flow { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
 .arcade-flow-stamp { position: absolute; top: clamp(.85rem, 2vw, 1.5rem); left: 50%; z-index: 7; isolation: isolate; padding: .32rem .62rem; border: 2px solid #09070f; background: #c6ff00; color: #09070f; font: 900 clamp(.52rem, 1.1vw, .68rem)/1 "Press Start 2P", Press Start 2P, Courier New; letter-spacing: .1em; text-align: center; box-shadow: 4px 4px 0 #ff007a; transform: translateX(-50%) rotate(-2deg); }.arcade-flow-stamp::before { content: ""; position: absolute; inset: -.22rem -.38rem; z-index: -1; border: 2px solid #09070f; background: #110c1d; transform: rotate(2deg); }.arcade-flow-stamp::after { content: ""; position: absolute; left: 24%; top: calc(100% - 1px); width: 7px; height: clamp(20px, 3.6vw, 39px); border: 2px solid #09070f; border-top: 0; border-radius: 0 0 10px 10px; background: #c6ff00; box-shadow: 25px 7px 0 -1px #c6ff00, 25px 7px 0 1px #09070f, 51px 1px 0 -1px #00e7ff, 51px 1px 0 1px #09070f; }

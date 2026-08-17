@@ -1,0 +1,113 @@
+EMERGENCY MECHANICS LOCK — LEVEL 1 REPORT
+
+1. ROOT CAUSE OF THE MOBILE-CONTROL REGRESSION
+
+The selector already used correct pointer-to-world conversion, but input routing was selected by temporary bonus presentation flags. A stale isBonusLevelActive, isNoRequestBonusActive, or isPitRunActive flag could send normal Level 1 pointer movement to bonus-lane input. The normal route also correctly required the captured playfieldPointerRef; this made the misroute look like a dead zone instead of a visible routing error.
+
+The repair selects the route from authoritative gameModeRef chapter ownership. LEVEL_1 and LEVEL_2 use the selector path. BONUS_CROWD_PRESSURE, BONUS_LEVEL_2, and LEVEL_3_PIT_RUN use alternate lane input. The playfield keeps one Pointer Events lifecycle: pointer down records and captures; pointer move updates; pointer up and cancel release.
+
+2. FILES AND FUNCTIONS RESPONSIBLE
+
+client/src/components/DjMiniGame.tsx
+  Functions/contracts: updateDjPositionFromClientX, handlePointerMove, setPlayerWorldX, playfield Pointer Events, game loop.
+  Completed change: repaired routing, captured-pointer lifecycle, explicit gameplay state, debug diagnostics, browser-verifier hooks.
+
+client/src/lib/gameWorld.ts
+  Functions/contracts: clientXToWorldX, playerRectFromCenterX, resolveWorldCollision.
+  Completed change: retained as the single coordinate and collision authority.
+
+client/src/arcade-playfield-architecture.css
+  Functions/contracts: scoped playfield styles.
+  Completed change: preserved scoped gesture containment and added query-gated debug rectangles, impact flash, and log panel.
+
+client/src/lib/finalConsistency.test.ts
+  Functions/contracts: regression assertions.
+  Completed change: locked the six target viewports, debug mode, capture/release behavior, and color-debug contracts.
+
+scripts/verify-mobile-mechanics.mjs
+  Functions/contracts: browser acceptance runner.
+  Completed change: added repeatable six-viewport touch/collision and keyboard fallback evidence.
+
+3. CHANGES MADE
+
+Normal selector and bonus controls now route from chapter state rather than animation or presentation flags. touch-action: none is scoped to the active playfield alone. The debug surface is query-gated with ?arcade-mechanics-debug=true and does not run in ordinary sessions.
+
+An explicit gameplay ownership signal now distinguishes PLAYING, BONUS, DAMAGED, RECOVERY, LEVEL_COMPLETE, GAME_OVER, and LEVEL_TRANSITION. The collision branch owns damage, recovery, completion, and game-over transitions. Resumed normal play explicitly returns to PLAYING.
+
+4. WORLD-TO-SCREEN COORDINATE CONTRACT
+
+The rendered playfield bounds are measured at interaction time. clientXToWorldX(clientX, rect.left, rect.width) converts screen X into the shared 0–100 world. playerRectFromCenterX produces the authoritative player rectangle, 15 by 20 at world Y 70, and clamps it to the allowed range. CSS scales the DJ artwork independently and does not modify item positions or collision geometry.
+
+5. COLLISION SYSTEM
+
+Every active item moves in the authoritative frame loop and is checked once with resolveWorldCollision(playerWorldRef.current, movedItem). A catch changes score and combo. A hazard removes exactly one life and resets combo. A miss resets combo without life damage. The development log records entity, collision, reaction, score effect, damage, remaining lives, and combo.
+
+6. MOBILE VIEWPORT ACCEPTANCE RESULTS
+
+The browser runner used a touch-enabled mobile context for all required dimensions. At each viewport it asserted captured touch drag mappings of 8% to 50% to 90%, touch-action: none, one-time catch/hazard/miss handling, and a completed Level 1 counter. Keyboard fallback was checked in a live 390 by 844 session: the selector moved from 50% to 35.7026% while A was held.
+
+Viewport: 320 x 800
+Touch drag: 8% | 50% | 90%
+Collision probe: catch, hazard, miss, completion
+Scoped gesture containment: touch-action: none
+Result: PASS
+
+Viewport: 360 x 800
+Touch drag: 8% | 50% | 90%
+Collision probe: catch, hazard, miss, completion
+Scoped gesture containment: touch-action: none
+Result: PASS
+
+Viewport: 375 x 812
+Touch drag: 8% | 50% | 90%
+Collision probe: catch, hazard, miss, completion
+Scoped gesture containment: touch-action: none
+Result: PASS
+
+Viewport: 390 x 844
+Touch drag: 8% | 50% | 90%
+Collision probe: catch, hazard, miss, completion
+Scoped gesture containment: touch-action: none
+Result: PASS
+
+Viewport: 412 x 915
+Touch drag: 8% | 50% | 90%
+Collision probe: catch, hazard, miss, completion
+Scoped gesture containment: touch-action: none
+Result: PASS
+
+Viewport: 430 x 932
+Touch drag: 8% | 50% | 90%
+Collision probe: catch, hazard, miss, completion
+Scoped gesture containment: touch-action: none
+Result: PASS
+
+7. LEVEL 1 COLLECTIBLE, HAZARD, AND MISS PROOF
+
+Each target viewport recorded the same one-time event sequence.
+
+Dubplate catch: score=+200, lives=4, combo=2.
+Pill hazard: damage=1, lives=3, combo=1.
+Miss: damage=0, lives=4, combo=1.
+Completion: the probe cleared its item and reached the Level 1 target of 25 records.
+
+8. LEVEL 2 TARGET CONFIRMATION
+
+Level 2 remains 50 items. The source retains: const LEVEL_TWO_REQUIRED_RECORDS = 50. Completion compares against that constant, and the HUD uses the same target. No progression target or gameplay rule was changed in this repair.
+
+9. COLLISION-DEBUG MODE
+
+Debug mode uses green collectible rectangles, red hazard rectangles, and yellow bonus rectangles. It also displays exact item bounds, a cyan authoritative player hitbox, a collision-region flash, and the five latest structured event records.
+
+Development route:
+?arcade-mobile-matrix=true&arcade-mechanics-debug=true&arcade-focus=true
+
+10. NO-ART CONFIRMATION AND STOP CONDITION
+
+No final artwork, background generation, cabinet redesign, new UI, splash redesign, decorative animation, typography change, character replacement, or game-rule change was performed. This pass was limited to game-engine input repair, explicit state ownership, collision diagnostics, automated acceptance evidence, and documentation.
+
+The mechanics lock stops here.
+
+VALIDATION
+
+The final automated suite passed with 19 test files and 60 tests. pnpm check completed with no TypeScript errors. A production build completed successfully. The final source and verifier changes are covered by the complete test suite and compiler pass.

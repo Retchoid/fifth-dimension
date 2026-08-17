@@ -545,7 +545,7 @@
     padding-bottom: 1rem !important;
   }
   .arcade-cabinet-bezel {
-    transform: scale(0.85) !important;
+    transform: none !important;
     transform-origin: top center !important;
     margin: 0 auto !important;
     width: 100% !important;
@@ -798,16 +798,17 @@ p, span, h1, h2, h3, h4, li {
   }
 
   .arcade-cabinet-wrap {
-    transform: scale(0.85) !important;
+    transform: none !important;
     transform-origin: top center !important;
-    margin-bottom: -15% !important;
+    margin-bottom: 0 !important;
   }
 }
 
 @media (min-width: 361px) and (max-width: 430px) {
   .arcade-cabinet-wrap {
-    transform: scale(0.92) !important;
+    transform: none !important;
     transform-origin: top center !important;
+    margin-bottom: 0 !important;
   }
 }
 

@@ -28,6 +28,16 @@ const LEVEL_TWO_TRACK_OFFSET_SECONDS = 46;
 type GameLevel = 1 | 2 | 3;
 type GameMode = "LEVEL_1" | "BONUS_CROWD_PRESSURE" | "LEVEL_2" | "BONUS_LEVEL_2" | "LEVEL_3_PIT_RUN" | "AFTERPARTY" | "GAME_OVER";
 type GameplayState = "PLAYING" | "BONUS" | "DAMAGED" | "RECOVERY" | "LEVEL_COMPLETE" | "GAME_OVER" | "LEVEL_TRANSITION";
+type RealPointerDiagnostics = {
+  phase: "idle" | "down" | "move" | "up" | "cancel";
+  pointerX: number | null;
+  localX: number | null;
+  worldX: number | null;
+  playerTargetX: number;
+  playerActualX: number;
+  captured: boolean;
+  domTarget: string;
+};
 type BonusGearType = "headphones" | "turntable" | "mic" | "speaker" | "mixer" | "cdj";
 type BonusHazardType = "cart" | "can" | "rock" | "rat";
 type BonusRunnerType = BonusGearType | BonusHazardType;
@@ -273,6 +283,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [pitRunHits, setPitRunHits] = useState(0);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const [mechanicsDebugLog, setMechanicsDebugLog] = useState<string[]>([]);
+  const [cleanDubplateStreak, setCleanDubplateStreak] = useState(0);
+  const cleanDubplateStreakRef = useRef(0);
+  const [hazardSinceStreakStart, setHazardSinceStreakStart] = useState(false);
+  const [realPointerDiagnostics, setRealPointerDiagnostics] = useState<RealPointerDiagnostics>({ phase: "idle", pointerX: null, localX: null, worldX: null, playerTargetX: 50, playerActualX: 50, captured: false, domTarget: "not yet sampled" });
   const arcadeUtils = trpc.useUtils();
   const sharedLeaderboardQuery = trpc.arcade.leaderboard.useQuery(undefined, { staleTime: 15_000, refetchOnWindowFocus: true });
   const submitSharedScore = trpc.arcade.submitScore.useMutation({
@@ -296,6 +310,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const stageReactionVerification = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-stage-verify") as StageReaction | null : null;
   const hitboxDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hitboxes") === "true";
   const mechanicsDebugEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-mechanics-debug") === "true";
+  const realInputDebugEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-real-input-debug") === "true";
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
     crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
@@ -386,6 +401,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusLastTimeRef = useRef(0);
   const bonusGameActiveRef = useRef(false);
   const bonusEligibleRef = useRef(false);
+  const crowdPressureTriggeredRef = useRef(false);
   const bonusCompletedRef = useRef(false);
   const bonusTriggeredRef = useRef(false);
   const bonusProgressRef = useRef(0);
@@ -1453,6 +1469,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setGreenCamoUnlocked(true);
       setEquipmentState("repaired");
       announceInWorldReward("NO REQUEST BONUS CLEARED", "GREEN CAMO EQUIPPED FOR LEVEL 2");
+    }
+    if (recordsCaughtRef.current < REQUIRED_RECORDS) {
+      // Crowd Pressure was earned mid-Level 1: return directly to the same
+      // playable chapter rather than showing the Level 2 score handoff early.
+      setPreLevelTwoHighScore(false);
+      setGameplayStateOwner("PLAYING");
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      lastTimeRef.current = performance.now();
+      queueGameFrame();
+      return;
     }
     setPreLevelTwoHighScore(true);
   };
@@ -2585,6 +2612,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(comboBurstTimerRef.current);
     window.clearTimeout(gunFingerShakeTimerRef.current);
     bonusEligibleRef.current = false;
+    crowdPressureTriggeredRef.current = false;
     bonusCompletedRef.current = false;
     bonusTriggeredRef.current = false;
     bonusGameActiveRef.current = false;
@@ -2596,6 +2624,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     turntablePickupCountRef.current = 0;
     pendingArcadeSequenceRef.current = [];
     setIsBonusEligible(false);
+    cleanDubplateStreakRef.current = 0;
+    setCleanDubplateStreak(0);
+    setHazardSinceStreakStart(false);
     setIsBonusSplashVisible(false);
     setIsBonusLevelActive(false);
     setIsBonusRewinding(false);
@@ -2688,6 +2719,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     let bonusThresholdReached = false;
     let advanceToLevelTwo = false;
     let completeLevelTwo = false;
+    let launchCrowdPressure = false;
     let currentLives = livesRef.current;
     let currentScore = scoreRef.current;
     for (let index = 0; index < itemsRef.current.length; index += 1) {
@@ -2728,7 +2760,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
           logMechanicsEvent(`entity=${item.type} collision=catch reaction=collect score=+${pointsEarned} damage=0 lives=${currentLives} combo=${nextCombo}`);
           currentScore += pointsEarned;
-          const nextRecordsCaught = recordsCaughtRef.current + pickupValue;
+          // Level 1 is specifically a 25-dubplate chapter. Supporting gear can
+          // award score and combo value, but cannot silently advance its record
+          // target or skip the 15-clean-dubplate Crowd Pressure qualification.
+          // Level 2 retains its established 50-item counter.
+          const objectiveIncrement = levelRef.current === 1 ? (item.type === "record" ? 1 : 0) : pickupValue;
+          const nextRecordsCaught = recordsCaughtRef.current + objectiveIncrement;
           const canShowInWorldReward = nextRecordsCaught - lastInWorldRewardRecordRef.current >= 7;
           window.clearTimeout(pickupFlashTimerRef.current);
           setPickupFlash({ key: item.id, label: pickupLabel });
@@ -2793,9 +2830,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               }
             }
           }
-          if (mixerDamagedRef.current) {
+          if (mixerDamagedRef.current && item.type === "record") {
             setEquipmentState("repairing");
-            const nextRecoveryProgress = Math.min(3, recoveryProgressRef.current + pickupValue);
+            const nextRecoveryProgress = Math.min(3, recoveryProgressRef.current + 1);
             recoveryProgressRef.current = nextRecoveryProgress;
             setRecoveryProgress(nextRecoveryProgress);
             if (nextRecoveryProgress >= 3) {
@@ -2816,10 +2853,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           recordsCaughtRef.current = nextRecordsCaught;
           setScore(currentScore);
           setRecordsCaught(nextRecordsCaught);
-          if (levelRef.current === 1 && canUnlockCrowdPressure(nextRecordsCaught, levelOneHazardsHitRef.current) && !bonusEligibleRef.current) {
-            bonusEligibleRef.current = true;
-            setIsBonusEligible(true);
-            announceInWorldReward("CROWD PRESSURE READY", "15 CLEAN DUBPLATES / HOLD THE BOOTH", "riddim");
+          if (levelRef.current === 1 && item.type === "record") {
+            const nextCleanStreak = cleanDubplateStreakRef.current + 1;
+            cleanDubplateStreakRef.current = nextCleanStreak;
+            setCleanDubplateStreak(nextCleanStreak);
+            setHazardSinceStreakStart(false);
+            if (canUnlockCrowdPressure(nextCleanStreak, 0) && !bonusEligibleRef.current) {
+              bonusEligibleRef.current = true;
+              setIsBonusEligible(true);
+              announceInWorldReward("CROWD PRESSURE READY", "15 CLEAN DUBPLATES / HOLD THE BOOTH", "riddim");
+              if (!crowdPressureTriggeredRef.current) {
+                crowdPressureTriggeredRef.current = true;
+                launchCrowdPressure = true;
+              }
+            }
           }
           consecutiveHazardRef.current = null;
           consecutiveHazardCountRef.current = 0;
@@ -2882,6 +2929,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           if (levelRef.current === 1) {
             levelOneHazardsHitRef.current += 1;
             setLevelOneHazardsHit(levelOneHazardsHitRef.current);
+            cleanDubplateStreakRef.current = 0;
+            setCleanDubplateStreak(0);
+            setHazardSinceStreakStart(true);
           }
           comboRef.current = 1;
           rewindAwardedRef.current = false;
@@ -2960,7 +3010,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         structureChanged = true;
         // Extended 25/50-record sessions remain fair: a missed record breaks
         // the combo, while only a caught hazard removes a life.
-        if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
+          if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
           logMechanicsEvent(`entity=${item.type} collision=miss reaction=reset score=0 damage=0 lives=${currentLives} combo=1`);
           stageControllerRef.current?.onMiss();
           clearStageEventAfter(520);
@@ -2971,9 +3021,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           if (mixerDamagedRef.current) {
             recoveryProgressRef.current = 0;
             setRecoveryProgress(0);
+            }
+            setCombo(1);
+            if (levelRef.current === 1 && item.type === "record") {
+              cleanDubplateStreakRef.current = 0;
+              setCleanDubplateStreak(0);
+              setHazardSinceStreakStart(false);
+            }
           }
-          setCombo(1);
-        }
         consecutiveHazardRef.current = null;
         consecutiveHazardCountRef.current = 0;
         continue;
@@ -2990,6 +3045,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     }
     itemsRef.current = nextItems;
     if (structureChanged) setVisibleItems([...nextItems]);
+    if (launchCrowdPressure) {
+      startLevelOneNoRequestBonus();
+      return;
+    }
     if (pauseAfterUnlock) {
       isPlayingRef.current = false;
       if (bgMusicRef.current) bgMusicRef.current.pause();
@@ -3102,6 +3161,27 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setPlayerWorldX(clientXToWorldX(clientX, rect.left, rect.width));
   };
 
+  const inspectRealPointerEvent = (phase: RealPointerDiagnostics["phase"], e: React.PointerEvent<HTMLDivElement>) => {
+    if (!realInputDebugEnabled) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const worldX = clientXToWorldX(e.clientX, rect.left, rect.width);
+    const elementAtPointer = document.elementFromPoint(e.clientX, e.clientY);
+    const domTarget = elementAtPointer
+      ? `${elementAtPointer.tagName.toLowerCase()}${elementAtPointer.id ? `#${elementAtPointer.id}` : ""}${elementAtPointer.className ? `.${String(elementAtPointer.className).trim().replace(/\s+/g, ".")}` : ""}`
+      : "none";
+    const actualLeft = Number.parseFloat(djCatcherRef.current?.style.left ?? `${djXRef.current}`);
+    setRealPointerDiagnostics({
+      phase,
+      pointerX: Number(e.clientX.toFixed(1)),
+      localX: Number((e.clientX - rect.left).toFixed(1)),
+      worldX: Number(worldX.toFixed(2)),
+      playerTargetX: Number(djXRef.current.toFixed(2)),
+      playerActualX: Number(actualLeft.toFixed(2)),
+      captured: e.currentTarget.hasPointerCapture(e.pointerId),
+      domTarget,
+    });
+  };
+
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN") return;
     if (e.pointerType === "touch") e.preventDefault();
@@ -3177,29 +3257,39 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
             if (!usesAlternatePointerRoute) {
               if (playfieldPointerRef.current === e.pointerId) handlePointerMove(e);
+              inspectRealPointerEvent("move", e);
               return;
             }
             if (e.pointerType === "touch") e.preventDefault();
             setBonusLaneFromClientX(e.clientX);
+            inspectRealPointerEvent("move", e);
           }}
           onPointerDown={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
+            const interactiveChild = e.target instanceof Element && Boolean(e.target.closest("button, a, input, textarea, select"));
+            if (interactiveChild || (!usesAlternatePointerRoute && !isPlayingRef.current)) {
+              inspectRealPointerEvent("down", e);
+              return;
+            }
             if (usesAlternatePointerRoute) {
               e.preventDefault();
               e.currentTarget.setPointerCapture(e.pointerId);
               setBonusLaneFromClientX(e.clientX);
+              inspectRealPointerEvent("down", e);
               return;
             }
             e.preventDefault();
             playfieldPointerRef.current = e.pointerId;
             e.currentTarget.setPointerCapture(e.pointerId);
             updateDjPositionFromClientX(e.clientX);
+            inspectRealPointerEvent("down", e);
           }}
           onPointerUp={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
             if (usesAlternatePointerRoute) {
               e.preventDefault();
               if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+              inspectRealPointerEvent("up", e);
               return;
             }
             if (playfieldPointerRef.current === e.pointerId) {
@@ -3207,6 +3297,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
               playfieldPointerRef.current = null;
             }
+            inspectRealPointerEvent("up", e);
           }}
           onPointerCancel={(e) => {
             if (playfieldPointerRef.current === e.pointerId) {
@@ -3215,6 +3306,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             }
             bonusPointerStartRef.current = null;
             bonusGestureHandledRef.current = false;
+            inspectRealPointerEvent("cancel", e);
           }}
           onLostPointerCapture={(e) => {
             if (playfieldPointerRef.current === e.pointerId) playfieldPointerRef.current = null;
@@ -3927,6 +4019,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             ))}
         </div>
         {mechanicsDebugEnabled && <aside className="mechanics-debug-log" aria-live="polite"><strong>WORLD DEBUG</strong><span>PLAYER {playerWorldRef.current.x.toFixed(1)},{playerWorldRef.current.y} {playerWorldRef.current.width}×{playerWorldRef.current.height}</span>{mechanicsDebugLog.map((entry) => <small key={entry}>{entry}</small>)}</aside>}
+        {realInputDebugEnabled && (
+          <aside className="real-input-debug-panel" aria-live="polite">
+            <strong>REAL INPUT TRACE</strong>
+            <span>PHASE: {realPointerDiagnostics.phase.toUpperCase()} / CAPTURED: {realPointerDiagnostics.captured ? "YES" : "NO"}</span>
+            <span>POINTER X: {realPointerDiagnostics.pointerX ?? "—"} / LOCAL X: {realPointerDiagnostics.localX ?? "—"}</span>
+            <span>WORLD X: {realPointerDiagnostics.worldX ?? "—"} / TARGET X: {realPointerDiagnostics.playerTargetX.toFixed(2)}</span>
+            <span>PLAYER ACTUAL X: {realPointerDiagnostics.playerActualX.toFixed(2)}</span>
+            <span>DOM TARGET: {realPointerDiagnostics.domTarget}</span>
+            <span>PLAYER HITBOX: {playerWorldRef.current.x.toFixed(2)},{playerWorldRef.current.y} {playerWorldRef.current.width}×{playerWorldRef.current.height}</span>
+            <span>CLEAN STREAK: {cleanDubplateStreak}/15 / HAZARD SINCE START: {hazardSinceStreakStart ? "YES" : "NO"}</span>
+            <span>BONUS ELIGIBLE: {isBonusEligible ? "YES" : "NO"} / TRIGGERED: {gameMode === "BONUS_CROWD_PRESSURE" ? "YES" : "NO"}</span>
+          </aside>
+        )}
         {level === 2 && (
           <div className="level-two-booth" aria-hidden="true">
             <div className="crowd-line crowd-line-back">{Array.from({ length: 18 }, (_, index) => <i key={index} />)}</div>
@@ -3987,6 +4092,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {/* DJ selector with turntable at bottom */}
         {mechanicsDebugEnabled && <div ref={mechanicsDebugPlayerHitboxRef} className="mechanics-debug-player-hitbox" style={{ left: `${playerWorldRef.current.x}%` }} aria-hidden="true" />}
+        {mixerDamaged && (
+          <div className="mixer-recovery-status" role="status" aria-live="polite">
+            <strong>MIXER DAMAGED</strong>
+            <span>RECOVER: {recoveryProgress}/3 DUBPLATES</span>
+          </div>
+        )}
         <div ref={djCatcherRef} className={`dj-catcher equipment-${equipmentCondition}${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ left: `${djXRef.current}%` }}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
@@ -4002,7 +4113,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="equipment-condition-rig" aria-label={`Mixer condition: ${equipmentCondition}`}>
               <i className="equipment-deck-screen" /><i className="equipment-fader" /><i className="equipment-knob equipment-knob-one" /><i className="equipment-knob equipment-knob-two" /><i className="equipment-warning-led" /><i className="equipment-cable" /><i className="equipment-spill" /><i className="equipment-spark" /><i className="equipment-smoke" />
             </div>
-            {(equipmentCondition === "repairing" || mixerRepairBurst) && <span className="equipment-condition-callout" aria-live="polite">{mixerRepairBurst ? "REPAIRED!" : `FIXING MIXER ${recoveryProgress}/3`}</span>}
+            {(mixerDamaged || mixerRepairBurst) && <span className="equipment-condition-callout" aria-live="polite">{mixerRepairBurst ? "REPAIRED!" : `RECOVERY ${recoveryProgress}/3`}</span>}
             <div className="dj-sprite-fallback" aria-hidden="true">
               <span className="dj-selector-head">5D</span>
               <span className="dj-selector-body" />

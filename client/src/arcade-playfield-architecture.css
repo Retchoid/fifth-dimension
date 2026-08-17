@@ -95,6 +95,11 @@
 @keyframes mechanics-hitbox-flash { 50% { outline-color:#ffe600; filter:brightness(1.65); } }
 @keyframes mechanics-collision-flash { from { transform:translate(-50%,-50%) scale(.45); opacity:1; } to { transform:translate(-50%,-50%) scale(1.35); opacity:0; } }
 
+/* Development-only real-device pointer trace. This sits below temporary events and never receives input. */
+.arcade-cabinet-bezel .real-input-debug-panel { position:absolute; z-index:45; right:1.5%; bottom:2%; width:min(94%,17rem); display:flex; flex-direction:column; gap:2px; padding:.32rem; color:#f0ead6; background:rgba(8,9,16,.94); border:2px solid #00d4ff; box-shadow:3px 3px 0 #0a0a12; font:600 clamp(.27rem,1.2vw,.39rem)/1.35 "Press Start 2P",monospace; pointer-events:none; text-transform:uppercase; }
+.arcade-cabinet-bezel .real-input-debug-panel strong { color:#ffe600; font-size:inherit; }
+.arcade-cabinet-bezel .real-input-debug-panel span { overflow-wrap:anywhere; }
+
 .arcade-cabinet-bezel .falling-object .urban-prop-asset {
   transform: rotate(var(--fall-tilt, 0deg)) scale(1.22) !important;
   transform-origin: center !important;

@@ -1,5 +1,18 @@
 # Project TODO
 
+## Real-device mechanics failure — verifier rejection, no art pass
+
+- [x] Record that the former internal mobile matrix is rejected/quarantined and is not an accepted evidence path.
+- [x] Produce one normal public-page 390×844 browser-pointer run that proves drag, catch, hazard, visible recovery, and 15-clean Crowd Pressure trigger without verifier/focus routing or internal APIs.
+- [x] Revise the corrected report with the exact intercepted selector and the final single-route normal public-page proof.
+
+- [x] Audit and remove internal-state, debug-hook, and injected-collision paths from mobile acceptance evidence; acceptance must use only rendered public playfield pointer input.
+- [x] Add on-screen real-pointer diagnostics for DOM target, pointer down/move, local/playfield/world coordinates, target/actual player position, capture status, numerical hitboxes, and Crowd Pressure qualifying state.
+- [x] Trace and repair the actual touch interception or player-state overwrite causing the real mobile selector to remain stuck.
+- [x] Establish and verify explicit gameplay render order so objects, player, impact feedback, foreground edges, HUD, and event overlays have a predictable visible relationship.
+- [x] Prove real public-UI drag, catch, hazard, recovery movement, and 15-clean-catch Crowd Pressure start in a touch-emulated 390×844 browser session without calling any internal debug APIs.
+- [x] Deliver a corrected mechanics-only report identifying false-positive cause, receiving DOM element, any player-state overwrite, visual-layer cause, Crowd Pressure cause, exact fixes, and real-input proof; then stop.
+
 ## Emergency mechanics lock — Level 1 only, no art pass
 
 - [x] Audit the actual pointer, keyboard, player-world, CSS transform, and hitbox code against the latest checkpoint and repository history to identify the mobile movement regression root cause.

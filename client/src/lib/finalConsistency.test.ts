@@ -200,4 +200,39 @@ describe("Task 7 final consistency contract", () => {
     expect(arcadePlayfieldArchitecture).toContain(".mechanics-debug-object.hazard");
     expect(arcadePlayfieldArchitecture).toContain(".mechanics-debug-object.bonus");
   });
+
+  it("protects the real public pointer path from start-button cancellation and exposes its visible trace", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).toContain('arcade-real-input-debug');
+    expect(gameSource).toContain('e.target.closest("button, a, input, textarea, select")');
+    expect(gameSource).toContain('(!usesAlternatePointerRoute && !isPlayingRef.current)');
+    expect(gameSource).toContain("REAL INPUT TRACE");
+    expect(gameSource).toContain("DOM TARGET:");
+    expect(gameSource).toContain("PLAYER ACTUAL X:");
+    expect(gameSource).toContain("mixer-recovery-status");
+    expect(arcadePlayfieldArchitecture).toContain(".real-input-debug-panel");
+  });
+
+  it("keeps mobile arcade input in document flow above the preceding Projects card", () => {
+    const cyanPaintSystem = read("cyan-paint-system.css");
+    const baseStyles = read("index.css");
+    expect(cyanPaintSystem).toContain(".arcade-flow-shell { position: relative; z-index: 9; isolation: isolate; overflow: visible; }");
+    expect(baseStyles).toContain(".arcade-flow-shell { position: relative; z-index: 6; isolation: isolate; overflow: visible;");
+    expect(mobileSiteRepair).toContain("transform: none !important;");
+    expect(mobileSiteRepair).not.toContain("transform: scale(0.85) !important;");
+    expect(mobileSiteRepair).not.toContain("transform: scale(0.92) !important;");
+  });
+
+  it("triggers Crowd Pressure once from 15 clean real Level 1 dubplates and returns to Level 1", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).toContain("cleanDubplateStreakRef.current + 1");
+    expect(gameSource).toContain("canUnlockCrowdPressure(nextCleanStreak, 0)");
+    expect(gameSource).toContain("crowdPressureTriggeredRef.current");
+    expect(gameSource).toContain("if (launchCrowdPressure)");
+    expect(gameSource).toContain("startLevelOneNoRequestBonus();");
+    expect(gameSource).toContain("if (recordsCaughtRef.current < REQUIRED_RECORDS)");
+    expect(gameSource).toContain("RECOVER: {recoveryProgress}/3 DUBPLATES");
+    expect(gameSource).toContain('const objectiveIncrement = levelRef.current === 1 ? (item.type === "record" ? 1 : 0) : pickupValue;');
+    expect(gameSource).toContain('if (mixerDamagedRef.current && item.type === "record")');
+  });
 });

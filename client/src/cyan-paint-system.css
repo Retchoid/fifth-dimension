@@ -3,7 +3,7 @@
 .projects-grid { position: relative; z-index: 5; }
 .matrix-preview { z-index: 3; }
 .exclusive-release { position: relative; z-index: 8; }
-.arcade-flow-shell { position: relative; z-index: 3; overflow: visible; }
+.arcade-flow-shell { position: relative; z-index: 9; isolation: isolate; overflow: visible; }
 .arcade-graffiti-flow { z-index: 7; }
 .project-card { z-index: 1; overflow: visible; isolation: isolate; }
 .project-cyan-paint {
