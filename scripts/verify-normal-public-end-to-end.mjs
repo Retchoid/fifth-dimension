@@ -1,6 +1,7 @@
 import { chromium } from "playwright";
 
 const origin = process.env.MECHANICS_ORIGIN ?? "http://127.0.0.1:3000";
+const crowdBonusMode = process.env.CROWD_BONUS_MODE ?? "block";
 const browser = await chromium.launch({ headless: true, executablePath: "/usr/bin/chromium", args: ["--no-sandbox"] });
 const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 const page = await context.newPage();
@@ -15,7 +16,8 @@ await page.waitForFunction(() => !document.querySelector(".game-overlay"), null,
 
 const field = page.locator(".game-viewport");
 await field.scrollIntoViewIfNeeded();
-const bounds = await field.boundingBox();
+const captureSurface = page.locator(".input-capture-layer.is-active");
+const bounds = await captureSurface.boundingBox();
 if (!bounds) throw new Error("Normal public playfield is not visible");
 const gestureY = bounds.y + bounds.height * .74;
 const xAt = (ratio) => bounds.x + bounds.width * Math.max(.08, Math.min(.92, ratio));
@@ -38,7 +40,10 @@ const hud = async () => page.evaluate(() => {
     livesText,
   };
 });
-const trace = () => page.locator(".real-input-debug-panel").textContent().then((text) => text ?? "");
+const trace = async () => {
+  const panel = page.locator(".real-input-debug-panel");
+  return (await panel.count()) > 0 ? (await panel.textContent()) ?? "" : "";
+};
 const streak = (text) => Number(/CLEAN STREAK:\s*(\d+)\/15/.exec(text)?.[1] ?? 0);
 const bonusTriggered = (text) => /TRIGGERED:\s*YES/.test(text) || page.locator(".crowd-pressure-splash-overlay").count().then(Boolean);
 const inBand = (item) => {
@@ -119,6 +124,77 @@ while (Date.now() < cleanDeadline) {
 await page.mouse.up();
 const finalTrace = await trace();
 const completed = await bonusTriggered(finalTrace);
+
+const crowdPressureEvidence = {
+  stageVisible: false,
+  handPositions: [],
+  blocksBefore: null,
+  blocksAfter: null,
+  blockObserved: false,
+  equipmentHitObserved: false,
+};
+if (completed) {
+  const stage = page.locator(".crowd-pressure-bonus-stage");
+  await stage.waitFor({ state: "visible", timeout: 7000 }).catch(() => undefined);
+  crowdPressureEvidence.stageVisible = await stage.count() > 0;
+  if (crowdPressureEvidence.stageVisible) {
+    const hand = page.locator(".crowd-pressure-hand");
+    const stageBox = await stage.boundingBox();
+    const readBlocks = async () => Number(/BLOCKS\s+(\d+)/.exec((await page.locator(".crowd-pressure-hud").textContent()) ?? "")?.[1] ?? 0);
+    crowdPressureEvidence.blocksBefore = await readBlocks();
+    if (stageBox) {
+      const handY = stageBox.y + stageBox.height * .74;
+      for (const ratio of [.08, .5, .92, .08]) {
+        await page.mouse.move(stageBox.x + stageBox.width * ratio, handY);
+        await page.mouse.down();
+        await page.waitForTimeout(50);
+        await page.mouse.up();
+        crowdPressureEvidence.handPositions.push(await hand.getAttribute("style"));
+      }
+      const bonusDeadline = Date.now() + 3200;
+      while (Date.now() < bonusDeadline) {
+        const hazards = await page.locator(".crowd-pressure-hazard-layer > *").evaluateAll((nodes) => nodes.map((node) => ({
+          x: Number.parseFloat(node.style.getPropertyValue("--crowd-hazard-x")),
+          depth: Number.parseFloat(node.style.getPropertyValue("--no-request-depth")),
+        })));
+        const hazard = hazards.find((item) => Number.isFinite(item.x) && item.depth >= 50);
+        if (hazard) {
+          await page.mouse.move(stageBox.x + stageBox.width * (hazard.x / 100), handY);
+          await page.mouse.down();
+          await page.waitForTimeout(90);
+          await page.mouse.up();
+        }
+        const stageClasses = await stage.getAttribute("class");
+        crowdPressureEvidence.blockObserved ||= /crowd-reaction-block/.test(stageClasses ?? "");
+        crowdPressureEvidence.equipmentHitObserved ||= /crowd-reaction-damage/.test(stageClasses ?? "");
+        if (crowdPressureEvidence.blockObserved && crowdPressureEvidence.equipmentHitObserved) break;
+        await page.waitForTimeout(45);
+      }
+      if (crowdBonusMode === "damage" && !crowdPressureEvidence.equipmentHitObserved) {
+        const damageDeadline = Date.now() + 1800;
+        while (Date.now() < damageDeadline) {
+          const hazards = await page.locator(".crowd-pressure-hazard-layer > *").evaluateAll((nodes) => nodes.map((node) => ({
+            x: Number.parseFloat(node.style.getPropertyValue("--crowd-hazard-x")),
+            depth: Number.parseFloat(node.style.getPropertyValue("--no-request-depth")),
+          })));
+          const hazard = hazards.find((item) => Number.isFinite(item.x) && item.depth >= 42);
+          if (hazard) {
+            await page.mouse.move(stageBox.x + stageBox.width * (hazard.x < 50 ? .92 : .08), handY);
+            await page.mouse.down();
+            await page.waitForTimeout(80);
+            await page.mouse.up();
+          }
+          const stageClasses = await stage.getAttribute("class");
+          crowdPressureEvidence.equipmentHitObserved ||= /crowd-reaction-damage/.test(stageClasses ?? "");
+          if (crowdPressureEvidence.equipmentHitObserved) break;
+          await page.waitForTimeout(45);
+        }
+      }
+      crowdPressureEvidence.blocksAfter = await readBlocks();
+      crowdPressureEvidence.blockObserved ||= (crowdPressureEvidence.blocksAfter ?? 0) > (crowdPressureEvidence.blocksBefore ?? 0);
+    }
+  }
+}
 await field.screenshot({ path: "/home/ubuntu/webdev-static-assets/selectah-normal-public-e2e-390.png" });
 console.log(JSON.stringify({
   route: "/?arcade-real-input-debug=true",
@@ -131,8 +207,11 @@ console.log(JSON.stringify({
   highestCleanStreak,
   finalTrace: finalTrace.replace(/\s+/g, " ").trim(),
   crowdPressureTriggered: completed,
+  crowdBonusMode,
+  crowdPressureEvidence,
 }, null, 2));
 
-if (!completed || highestCleanStreak < 15 || !visibleRecovery?.includes("MIXER DAMAGED")) process.exitCode = 1;
+const requiredCrowdOutcome = crowdBonusMode === "damage" ? crowdPressureEvidence.equipmentHitObserved : crowdPressureEvidence.blockObserved;
+if (!completed || !crowdPressureEvidence.stageVisible || crowdPressureEvidence.handPositions.length !== 4 || !requiredCrowdOutcome || !visibleRecovery?.includes("MIXER DAMAGED")) process.exitCode = 1;
 await context.close();
 await browser.close();

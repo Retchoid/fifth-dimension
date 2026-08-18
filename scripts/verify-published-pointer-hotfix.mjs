@@ -5,7 +5,7 @@ const browser = await chromium.launch({ headless: true, executablePath: "/usr/bi
 const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 const page = await context.newPage();
 
-await page.goto(origin, { waitUntil: "domcontentloaded" });
+await page.goto(`${origin}/?debugInput=1`, { waitUntil: "domcontentloaded" });
 const start = page.locator(".tape-play-button");
 await start.scrollIntoViewIfNeeded();
 await start.click();

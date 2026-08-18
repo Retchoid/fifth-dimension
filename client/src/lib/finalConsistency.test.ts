@@ -207,6 +207,9 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("const handleInputCapturePointerMove");
     expect(gameSource).toContain("const releaseInputCapturePointer");
     expect(gameSource).toContain("const normalPlayfieldPointerEnabled");
+    expect(gameSource).toContain('params.get("debugInput") === "1"');
+    expect(gameSource).toContain('params.get("arcade-real-input-debug") === "true"');
+    expect(gameSource).toContain("if (!realInputDebugEnabled) return;");
     expect(gameSource).toContain('window.addEventListener("pointerdown", handler, true)');
     expect(gameSource).toContain("REAL INPUT TRACE");
     expect(gameSource).toContain("TOUCH TARGET:");

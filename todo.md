@@ -10,6 +10,35 @@
 - [ ] Test direct production and Manus preview routes separately with repeated 10%→90%→10% held drags plus a post-catch movement check; do not declare success before the user confirms real-device behavior.
 - [ ] Publish only the control fix and provide the exact direct public URL used for verification; then await real-device confirmation.
 
+## Final Level 1 mechanics acceptance and debug cleanup — no redesign or architecture replacement
+
+- [x] Preserve the current dedicated capture-layer input route and single authoritative world-X contract as the baseline; do not introduce a second touch system or coordinate model.
+- [x] Audit active Level 1 movement during falling items, catches, hazards, splash reactions, score/combo updates, and recovery state for any player/hitbox/render divergence or normal-play X overwrite.
+- [x] Perform and record real-mobile-compatible left→centre→right→centre→left movement checks during active Level 1 gameplay, including a movement check after a collision/reaction return.
+- [x] Confirm the Level 1 loop advances records and remains playable through falling objects, a registered catch, a registered hazard, reaction/splash return, and recovery behavior without changing gameplay design.
+- [ ] Preserve the required diagnostics as evidence until real-device mechanics acceptance is confirmed, then remove only temporary debug instrumentation without changing input behavior.
+- [ ] Validate, publish only an actual mechanics correction if required, and report the real-device acceptance status without claiming unconfirmed success.
+
+## Authoritative Level 1 mechanics acceptance, Crowd Pressure verification, and debug cleanup
+
+- [x] Lock the existing touch/pointer → normalized playfield X → world X → player/hitbox/rendered X route; do not replace it, add controls, refactor it, or alter game visuals.
+- [x] Verify real responsive gameplay movement across left, centre, and right while falling items, collisions, reactions, scoring, combo updates, and recovery state occur, with no sprite/hitbox divergence or post-pointer X reset.
+- [x] Verify one-time Level 1 dubplate collision removal, record/score/combo/streak updates, and no simultaneous miss against the shared gameplay world model.
+- [x] Verify one-time Level 1 hazard damage, continued post-damage movement, subsequent collection, and the normal/damaged/repaired mixer lifecycle with three-dubplate recovery.
+- [x] Verify a clean 15-dubplate streak, Crowd Pressure transition, protected-hand horizontal input, and collision handling for blocked crowd hazards versus DJ equipment hits.
+- [ ] Verify the Level 1 25-dubplate requirement remains independent of the Crowd Pressure bonus and preserve all Level 2/Level 3 hooks without building them.
+- [x] Hide REAL INPUT TRACE during normal play while preserving explicit debug activation and all existing diagnostic fields for future QA.
+- [ ] Validate direct public/mobile-compatible behavior, responsive outside-playfield scrolling, top-menu placement, and no unintended visual redesign; report every unverified item explicitly.
+- [x] Capture a single rendered Level 1 dubplate object ID before collision and prove its removal, one-time record/score/combo/streak update, and absence of a same-object miss after collision.
+- [x] Snapshot records, score, combo, and clean streak immediately before and after one specific caught dubplate ID, and publish those exact runtime values with the one-time collision evidence.
+- [x] Capture the rendered damaged → 0/3 → 1/3 → 2/3 → 3/3 → repaired mixer transition and prove normal movement/collection resumes after repair.
+
+## Approved website redesign sequence — Task 1 only until user confirmation
+
+- [ ] Audit all site font-family declarations and all remaining system, sans-serif, Inter, Roboto, Helvetica, and Arial references.
+- [ ] Implement the Task 1 global font system through scoped global CSS rules: Press Start 2P for headings, navigation, and buttons; Courier New for body text, descriptions, and captions; uppercase and tracked presentation across the site.
+- [ ] Verify the Task 1 font system at desktop and 650px mobile widths without starting Tasks 2–7, then capture a visual result for user review.
+
 ## Published mobile input hotfix — no art, collision, spawn, bonus, or level changes
 
 - [x] Complete and document the remaining overlay/HUD pointer-event audit, including temporary event overlays and active HUD controls above the playfield.

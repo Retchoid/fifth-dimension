@@ -16,7 +16,8 @@ await page.waitForFunction(() => !document.querySelector(".game-overlay"), null,
 
 const field = page.locator(".game-viewport");
 await field.scrollIntoViewIfNeeded();
-const fieldBox = await field.boundingBox();
+const captureSurface = page.locator(".input-capture-layer.is-active");
+const fieldBox = await captureSurface.boundingBox();
 if (!fieldBox) throw new Error("Public playfield was not found");
 const gestureY = fieldBox.y + fieldBox.height * .74;
 const toX = (ratio) => fieldBox.x + fieldBox.width * ratio;
@@ -29,7 +30,10 @@ const allObjects = () => page.locator(".falling-object").evaluateAll((nodes) => 
   const rect = node.getBoundingClientRect();
   return { className: String(node.className), x: rect.x, y: rect.y, width: rect.width, height: rect.height };
 }));
-const traceText = () => page.locator(".real-input-debug-panel").textContent().then((text) => text ?? "");
+const traceText = async () => {
+  const panel = page.locator(".real-input-debug-panel");
+  return (await panel.count()) > 0 ? (await panel.textContent()) ?? "" : "";
+};
 const cleanStreak = (text) => Number(/CLEAN STREAK:\s*(\d+)\/15/.exec(text)?.[1] ?? 0);
 
 const deadline = Date.now() + 125_000;

@@ -30,6 +30,20 @@ await page.mouse.down();
 const logText = async () => page.locator(".mechanics-debug-log").textContent().then((value) => value ?? "");
 const countEvent = (text, event) => (text.match(new RegExp(event, "g")) ?? []).length;
 const visibleRecords = async () => page.locator(".records-hud").textContent().then((text) => Number(/(\d+)\s*\//.exec(text ?? "")?.[1] ?? 0));
+const gameplaySnapshot = () => page.evaluate(() => {
+  const numberAfter = (source, pattern) => Number(pattern.exec(source)?.[1] ?? 0);
+  const hudBadges = [...document.querySelectorAll(".game-hud .hud-badge")].map((node) => node.textContent ?? "");
+  const recordsText = document.querySelector(".records-hud")?.textContent ?? "";
+  const comboText = document.querySelector(".combo-badge")?.textContent ?? "";
+  const scoreText = hudBadges.find((text) => text.includes("SCORE:")) ?? "";
+  const traceText = document.querySelector(".real-input-debug-panel")?.textContent ?? "";
+  return {
+    records: numberAfter(recordsText, /(\d+)\s*\//),
+    score: numberAfter(scoreText, /SCORE:\s*(\d+)/),
+    combo: numberAfter(comboText, /COMBO:\s*(\d+)x/),
+    cleanStreak: numberAfter(traceText, /CLEAN STREAK:\s*(\d+)\/15/),
+  };
+});
 const visibleObjects = async () => page.locator(".falling-object").evaluateAll((nodes) => nodes.map((node) => {
   const rect = node.getBoundingClientRect();
   return { id: node.getAttribute("data-game-object-id"), className: node.className, x: rect.x, y: rect.y, width: rect.width, height: rect.height };
@@ -56,11 +70,12 @@ async function chaseRenderedObject(label, matchingClasses, expectedLog, baseline
       return isRequested && centreY >= field.y + field.height * 0.55 && centreY <= field.y + field.height * 0.86;
     });
     if (candidate) {
+      const candidateStateBefore = await gameplaySnapshot();
       await page.mouse.move(candidate.x + candidate.width / 2, gestureY, { steps: 5 });
       await page.waitForTimeout(220);
       const eventAdvanced = countEvent(await logText(), expectedLog) > baselineCount;
       const recordAdvanced = baselineRecords === null || (await visibleRecords()) > baselineRecords;
-      if (eventAdvanced && recordAdvanced) return { label, candidate };
+      if (eventAdvanced && recordAdvanced) return { label, candidate, stateBefore: candidateStateBefore, stateAfter: await gameplaySnapshot() };
     }
     await page.waitForTimeout(70);
   }
@@ -68,6 +83,19 @@ async function chaseRenderedObject(label, matchingClasses, expectedLog, baseline
 }
 
 const catchResult = await chaseRenderedObject("dubplate", ["record"], "collision=catch");
+const caughtObjectId = catchResult.candidate.id;
+await page.waitForFunction((id) => !document.querySelector(`[data-game-object-id="${id}"]`), caughtObjectId, { timeout: 2000 }).catch(() => undefined);
+const caughtObjectRemoved = await page.locator(`[data-game-object-id="${caughtObjectId}"]`).count() === 0;
+const catchLogAfterResolution = await logText();
+const caughtObjectCatchCount = (catchLogAfterResolution.match(new RegExp(`id=${caughtObjectId}\\s.*collision=catch`, "g")) ?? []).length;
+const caughtObjectMissCount = (catchLogAfterResolution.match(new RegExp(`id=${caughtObjectId}\\s.*collision=miss`, "g")) ?? []).length;
+const caughtObjectStateDelta = {
+  records: catchResult.stateAfter.records - catchResult.stateBefore.records,
+  score: catchResult.stateAfter.score - catchResult.stateBefore.score,
+  combo: catchResult.stateAfter.combo - catchResult.stateBefore.combo,
+  cleanStreak: catchResult.stateAfter.cleanStreak - catchResult.stateBefore.cleanStreak,
+};
+const caughtObjectStateAdvancedOnce = caughtObjectStateDelta.records === 1 && caughtObjectStateDelta.combo === 1 && caughtObjectStateDelta.cleanStreak === 1 && caughtObjectStateDelta.score > 0;
 // Hold at the edge between outcomes while the same public game loop schedules
 // the next obstacle; no object or collision is manufactured by the test.
 await page.mouse.move(field.x + field.width * 0.08, gestureY, { steps: 3 });
@@ -75,13 +103,25 @@ const hazardResult = await chaseRenderedObject("hazard", ["cop", "pill", "phone"
 await page.waitForTimeout(620);
 const recoveryStatusSeen = await page.locator(".mixer-recovery-status").count() > 0;
 const recoveryCatchResults = [];
+const recoveryStages = [await page.locator(".mixer-recovery-status").textContent().then((value) => value ?? "")];
+const recoveryLogSnapshots = [];
 for (let index = 0; index < 3; index += 1) {
   await page.waitForTimeout(560);
   const priorCatches = countEvent(await logText(), "collision=catch");
   const priorRecords = await visibleRecords();
   recoveryCatchResults.push(await chaseRenderedObject(`recovery dubplate ${index + 1}`, ["record"], "collision=catch", priorCatches, priorRecords));
+  recoveryLogSnapshots.push(await logText());
+  recoveryStages.push(await page.locator(".mixer-recovery-status").textContent({ timeout: 800 }).catch(() => "REPAIRED"));
 }
 const livesAfterRecovery = await page.locator(".lives-badge").textContent().then((value) => value ?? "");
+const selectorClassesAfterRepair = await page.locator(".dj-catcher").getAttribute("class");
+const repairBurstVisible = /mixer-repaired/.test(selectorClassesAfterRepair ?? "");
+const mixerDamageCleared = await page.locator(".mixer-recovery-status").count() === 0;
+const recoveryLogMilestones = recoveryLogSnapshots.join(" ");
+const recoveryMilestonesObserved = ["mixer-recovery=1/3", "mixer-recovery=2/3", "mixer-recovery=3/3", "mixer-recovery=repaired"].every((milestone) => recoveryLogMilestones.includes(milestone));
+await page.mouse.move(field.x + field.width * .9, gestureY, { steps: 4 });
+await page.waitForTimeout(80);
+const playerLeftAfterRecovery = await page.locator(".dj-catcher").evaluate((node) => node.style.left);
 // Move to the far edge opposite the next approaching rendered hazard. Its
 // disappearance without another hazard log demonstrates avoidance after recovery.
 let avoidedHazard = false;
@@ -111,10 +151,22 @@ console.log(JSON.stringify({
   publicStartButton: "clicked through rendered browser pointer sequence",
   realPointerSurface: await playfield.evaluate((node) => ({ className: node.className, touchAction: getComputedStyle(node).touchAction })),
   catchResult,
+  caughtObjectId,
+  caughtObjectRemoved,
+  caughtObjectCatchCount,
+  caughtObjectMissCount,
+  caughtObjectStateDelta,
+  caughtObjectStateAdvancedOnce,
   hazardResult,
   recoveryStatusSeen,
   recoveryCatchResults,
+  recoveryStages,
+  recoveryLogMilestones,
+  recoveryMilestonesObserved,
   livesAfterRecovery,
+  repairBurstVisible,
+  mixerDamageCleared,
+  playerLeftAfterRecovery,
   avoidedHazard,
   visibleTrace: trace?.replace(/\s+/g, " ").trim(),
   collisionLog: log.replace(/\s+/g, " ").trim(),

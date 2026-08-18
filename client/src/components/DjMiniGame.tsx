@@ -322,6 +322,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const stageReactionVerification = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-stage-verify") as StageReaction | null : null;
   const hitboxDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hitboxes") === "true";
   const mechanicsDebugEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-mechanics-debug") === "true";
+  const realInputDebugEnabled = typeof window !== "undefined" && (() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("debugInput") === "1" || params.get("arcade-real-input-debug") === "true";
+  })();
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
     crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
@@ -488,7 +492,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (!mechanicsDebugEnabled) return;
     const entry = `${performance.now().toFixed(0)}ms ${message}`;
     console.info("[selectah-mechanics]", entry);
-    setMechanicsDebugLog((previous) => [entry, ...previous].slice(0, 5));
+    setMechanicsDebugLog((previous) => [entry, ...previous].slice(0, 20));
   };
 
   const setStageEnergy = (value: number) => stageControllerRef.current?.setEnergy(value);
@@ -2779,7 +2783,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           const pickupValue = item.type === "lion" ? 2 : item.type === "cdj" ? 5 : item.type === "mixer" ? 4 : item.type === "turntable" ? 3 : item.type === "adapter" ? 2 : 1;
           const pickupLabel = item.type === "lion" ? "LION +2" : item.type === "cdj" ? "CDJ +5" : item.type === "mixer" ? "MIX +4" : item.type === "turntable" ? "DECK +3" : item.type === "adapter" ? "45 +2" : "DUB +1";
           const pointsEarned = 100 * pickupValue * Math.min(4, nextCombo);
-          logMechanicsEvent(`entity=${item.type} collision=catch reaction=collect score=+${pointsEarned} damage=0 lives=${currentLives} combo=${nextCombo}`);
+          logMechanicsEvent(`id=${item.id} entity=${item.type} collision=catch reaction=collect score=+${pointsEarned} damage=0 lives=${currentLives} combo=${nextCombo}`);
           currentScore += pointsEarned;
           // Level 1 is specifically a 25-dubplate chapter. Supporting gear can
           // award score and combo value, but cannot silently advance its record
@@ -2856,6 +2860,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             const nextRecoveryProgress = Math.min(3, recoveryProgressRef.current + 1);
             recoveryProgressRef.current = nextRecoveryProgress;
             setRecoveryProgress(nextRecoveryProgress);
+            logMechanicsEvent(`id=${item.id} mixer-recovery=${nextRecoveryProgress}/3`);
             if (nextRecoveryProgress >= 3) {
               // 5D design: three recovered dubplates repair the seized mixer,
               // paying out a clear arcade bonus and one short repair flourish.
@@ -2866,6 +2871,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               setEquipmentState("repaired");
               setRecoveryProgress(0);
               setMixerRepairBurst(true);
+              logMechanicsEvent(`id=${item.id} mixer-recovery=repaired`);
               window.clearTimeout(mixerRepairTimerRef.current);
               mixerRepairTimerRef.current = window.setTimeout(() => setMixerRepairBurst(false), 1050);
             }
@@ -2968,7 +2974,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
           setLives(currentLives);
-          logMechanicsEvent(`entity=${item.type} collision=hazard reaction=damage score=0 damage=1 lives=${currentLives} combo=1`);
+          logMechanicsEvent(`id=${item.id} entity=${item.type} collision=hazard reaction=damage score=0 damage=1 lives=${currentLives} combo=1`);
           announceDamage(item.type === "cop" ? "BADGE HIT" : item.type === "pill" ? "PILL HIT" : item.type === "phone" ? "PHONE HIT" : item.type === "bottle" ? "BOTTLE HIT" : "APPLE CORE HIT", currentLives);
           if (currentLives === 0) {
             setGameplayStateOwner("GAME_OVER");
@@ -3032,7 +3038,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         // Extended 25/50-record sessions remain fair: a missed record breaks
         // the combo, while only a caught hazard removes a life.
           if (item.type === "record" || item.type === "lion" || item.type === "cdj" || item.type === "mixer" || item.type === "turntable" || item.type === "adapter") {
-          logMechanicsEvent(`entity=${item.type} collision=miss reaction=reset score=0 damage=0 lives=${currentLives} combo=1`);
+          logMechanicsEvent(`id=${item.id} entity=${item.type} collision=miss reaction=reset score=0 damage=0 lives=${currentLives} combo=1`);
           stageControllerRef.current?.onMiss();
           clearStageEventAfter(520);
           setStageEnergy(0);
@@ -3183,6 +3189,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const inspectRealPointerEvent = (phase: RealPointerDiagnostics["phase"], e: React.PointerEvent<HTMLDivElement>) => {
+    if (!realInputDebugEnabled) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const worldX = clientXToWorldX(e.clientX, rect.left, rect.width);
     const normalizedX = rect.width > 0 ? (e.clientX - rect.left) / rect.width : 0;
@@ -3255,6 +3262,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   useEffect(() => {
+    if (!realInputDebugEnabled) return;
     const handler = (event: PointerEvent) => {
       const target = event.target as Element | null;
       console.log("[capture-phase]", {
@@ -3270,7 +3278,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       window.removeEventListener("pointerdown", handler, true);
       window.removeEventListener("pointermove", handler, true);
     };
-  }, []);
+  }, [realInputDebugEnabled]);
 
   useEffect(() => {
     stageControllerRef.current?.setLevel(level);
@@ -4096,7 +4104,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             ))}
         </div>
         {mechanicsDebugEnabled && <aside className="mechanics-debug-log" aria-live="polite"><strong>WORLD DEBUG</strong><span>PLAYER {playerWorldRef.current.x.toFixed(1)},{playerWorldRef.current.y} {playerWorldRef.current.width}×{playerWorldRef.current.height}</span>{mechanicsDebugLog.map((entry) => <small key={entry}>{entry}</small>)}</aside>}
-        {isPlaying && (
+        {realInputDebugEnabled && (isPlaying || gameMode === "BONUS_CROWD_PRESSURE") && (
           <aside className="real-input-debug-panel" aria-live="polite">
             <strong>REAL INPUT TRACE</strong>
             <span>TOUCH ACTIVE: {realPointerDiagnostics.touchActive ? "YES" : "NO"}</span>
