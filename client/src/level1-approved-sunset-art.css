@@ -336,3 +336,276 @@
 .arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .game-impact-hazard {
   background: linear-gradient(45deg, transparent 0 37%, #ff2d95 38% 48%, transparent 49% 100%), linear-gradient(-45deg, transparent 0 37%, #ff2d95 38% 48%, transparent 49% 100%) !important;
 }
+
+
+/* ============================================================
+   LEVEL 1 CORRECTIVE VISUAL SYSTEM
+   These layers are render-only. They never write to the game world,
+   alter collision, change spawn timing, or intercept pointer input.
+   The approved 16:9 alley remains the sole base artwork.
+   ============================================================ */
+
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-building-wash,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-window-grid,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-neon-left,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-neon-right,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-doorway-left,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-doorway-right,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-pavement-reflection,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-police-reflection,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-time-haze,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-catch-burst,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-hazard-pulse,
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .level-one-repair-spark {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms steps(2, end);
+}
+
+/* These are localized color/reflective passes over the existing painting. They
+   do not apply a global filter or replace the alley image. */
+.arcade-cabinet-bezel .level-one-time-sky {
+  inset: 0 0 48%;
+  background: linear-gradient(180deg, rgba(34, 9, 57, .36), rgba(255, 98, 75, .14) 54%, transparent 100%);
+  mix-blend-mode: color;
+  z-index: 1;
+}
+
+.arcade-cabinet-bezel .level-one-time-building-wash {
+  inset: 10% 0 35%;
+  background: linear-gradient(90deg, rgba(12, 13, 31, .42) 0 19%, transparent 32% 68%, rgba(12, 13, 31, .46) 81% 100%);
+  z-index: 1;
+}
+
+.arcade-cabinet-bezel .level-one-time-window-grid {
+  top: 12%;
+  left: 2%;
+  width: 22%;
+  height: 26%;
+  background: repeating-linear-gradient(90deg, transparent 0 11px, rgba(255, 194, 74, .34) 12px 14px, transparent 15px 22px), repeating-linear-gradient(0deg, transparent 0 9px, rgba(255, 194, 74, .28) 10px 12px, transparent 13px 19px);
+  mix-blend-mode: screen;
+  z-index: 2;
+}
+
+.arcade-cabinet-bezel .level-one-time-neon-left {
+  top: 22%;
+  left: 3%;
+  width: 25%;
+  height: 11%;
+  background: repeating-linear-gradient(0deg, rgba(255, 45, 149, .55) 0 2px, transparent 2px 6px);
+  box-shadow: 0 0 15px rgba(255, 45, 149, .4);
+  mix-blend-mode: screen;
+  z-index: 3;
+}
+
+.arcade-cabinet-bezel .level-one-time-neon-right {
+  top: 23%;
+  right: 2%;
+  width: 24%;
+  height: 13%;
+  background: repeating-linear-gradient(0deg, rgba(0, 212, 255, .42) 0 2px, transparent 2px 7px);
+  box-shadow: 0 0 15px rgba(0, 212, 255, .34);
+  mix-blend-mode: screen;
+  z-index: 3;
+}
+
+.arcade-cabinet-bezel .level-one-time-doorway-left {
+  left: 0;
+  top: 41%;
+  width: 19%;
+  height: 39%;
+  background: linear-gradient(90deg, rgba(255, 194, 74, .48), rgba(255, 45, 149, .2) 54%, transparent 100%);
+  box-shadow: 12px 0 18px rgba(255, 194, 74, .18);
+  mix-blend-mode: screen;
+  z-index: 2;
+}
+
+.arcade-cabinet-bezel .level-one-time-doorway-right {
+  right: 0;
+  top: 38%;
+  width: 20%;
+  height: 43%;
+  background: linear-gradient(270deg, rgba(0, 212, 255, .42), rgba(255, 45, 149, .2) 53%, transparent 100%);
+  box-shadow: -12px 0 18px rgba(0, 212, 255, .16);
+  mix-blend-mode: screen;
+  z-index: 2;
+}
+
+.arcade-cabinet-bezel .level-one-time-pavement-reflection {
+  left: 15%;
+  right: 15%;
+  bottom: 3%;
+  height: 34%;
+  background: linear-gradient(174deg, transparent 0 31%, rgba(255, 45, 149, .2) 32% 35%, transparent 36% 45%, rgba(0, 212, 255, .2) 46% 49%, transparent 50% 62%, rgba(255, 194, 74, .22) 63% 66%, transparent 67%);
+  mix-blend-mode: screen;
+  transform: perspective(280px) rotateX(55deg);
+  z-index: 2;
+}
+
+.arcade-cabinet-bezel .level-one-time-police-reflection {
+  left: 28%;
+  right: 28%;
+  bottom: 18%;
+  height: 17%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, .35) 38% 48%, rgba(255, 45, 149, .35) 52% 62%, transparent);
+  mix-blend-mode: screen;
+  transform: skewX(-18deg);
+  z-index: 2;
+}
+
+.arcade-cabinet-bezel .level-one-time-haze {
+  left: 22%;
+  right: 22%;
+  top: 35%;
+  height: 30%;
+  background: radial-gradient(ellipse at center, rgba(255, 194, 74, .16), rgba(255, 45, 149, .07) 42%, transparent 72%);
+  mix-blend-mode: screen;
+  z-index: 2;
+}
+
+/* Forward-only record progression. The final rules are intentionally on new
+   layers so combo selectors cannot overwrite the time-of-night signal. */
+.arcade-cabinet-bezel .game-viewport.level-one-time-0 .level-one-time-sky { opacity: 0; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-time-sky { opacity: .16; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-time-sky { opacity: .26; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-sky { opacity: .38; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-sky { opacity: .5; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-sky { opacity: .62; }
+
+.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-time-building-wash,
+.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-time-window-grid { opacity: .16; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-time-building-wash,
+.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-time-window-grid,
+.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-time-neon-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-time-neon-right { opacity: .28; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-building-wash,
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-window-grid,
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-neon-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-neon-right,
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-doorway-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-doorway-right { opacity: .4; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-building-wash,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-window-grid,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-neon-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-neon-right,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-doorway-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-doorway-right,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-pavement-reflection,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-haze { opacity: .58; }
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-building-wash,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-window-grid,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-neon-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-neon-right,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-doorway-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-doorway-right,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-pavement-reflection,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-police-reflection,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-haze { opacity: .78; }
+
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-window-grid,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-neon-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-neon-right,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-neon-left,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-neon-right { animation: level-one-sign-flicker .62s steps(2, end) infinite alternate; }
+
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-pavement-reflection,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-pavement-reflection { animation: level-one-reflection-tick .56s steps(2, end) infinite alternate; }
+
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-police-reflection { animation: level-one-police-reflection .92s steps(3, end) infinite alternate; }
+
+@keyframes level-one-sign-flicker { 50% { filter: brightness(1.7); opacity: .64; } }
+@keyframes level-one-reflection-tick { 50% { transform: perspective(280px) rotateX(55deg) translateX(3%); opacity: .64; } }
+@keyframes level-one-police-reflection { 50% { transform: skewX(-18deg) translateX(12%); opacity: .68; } }
+
+/* Localized event reactions: a catch kicks the entrance/pavement, a hazard
+   flashes only the street-side warning pass, and a repair sparks at the DJ
+   hardware. No event uses a full-scene banner or movement lock. */
+.arcade-cabinet-bezel .level-one-catch-burst {
+  left: 32%;
+  top: 38%;
+  width: 36%;
+  height: 31%;
+  background: radial-gradient(ellipse at center, rgba(255, 194, 74, .36), rgba(255, 45, 149, .18) 24%, transparent 66%);
+  z-index: 6;
+}
+.arcade-cabinet-bezel .level-one-hazard-pulse {
+  right: 4%;
+  bottom: 19%;
+  width: 30%;
+  height: 28%;
+  border-left: 3px solid rgba(255, 45, 149, .72);
+  border-right: 3px solid rgba(0, 212, 255, .54);
+  background: linear-gradient(90deg, rgba(255, 45, 149, .16), transparent 40% 60%, rgba(0, 212, 255, .16));
+  z-index: 6;
+}
+.arcade-cabinet-bezel .level-one-repair-spark {
+  left: 43%;
+  bottom: 10%;
+  width: 14%;
+  height: 16%;
+  background: radial-gradient(circle at 50% 52%, #ffe600 0 3%, transparent 4% 18%, rgba(0, 212, 255, .55) 19% 22%, transparent 23% 40%, rgba(255, 45, 149, .44) 41% 44%, transparent 45%);
+  z-index: 7;
+}
+.arcade-cabinet-bezel .game-viewport.stage-event-catch .level-one-catch-burst { opacity: .9; animation: level-one-catch-kick .32s steps(2, end) 2; }
+.arcade-cabinet-bezel .game-viewport.stage-event-hazard .level-one-hazard-pulse,
+.arcade-cabinet-bezel .game-viewport.stage-event-damage .level-one-hazard-pulse { opacity: .92; animation: level-one-hazard-kick .28s steps(2, end) 2; }
+.arcade-cabinet-bezel .game-viewport.mixer-repair-event .level-one-repair-spark { opacity: .96; animation: level-one-repair-kick .42s steps(3, end) 2; }
+@keyframes level-one-catch-kick { 50% { transform: scale(1.12); opacity: .42; } }
+@keyframes level-one-hazard-kick { 50% { transform: translateX(-3%) skewX(-8deg); opacity: .35; } }
+@keyframes level-one-repair-kick { 50% { transform: scale(1.26) rotate(18deg); opacity: .28; } }
+
+/* Peripheral population is denser at the walls/doorways but never occupies the
+   central catch corridor. Individual timing offsets prevent a synchronized bob. */
+.arcade-cabinet-bezel .population-arrival-left { left: 8%; }
+.arcade-cabinet-bezel .population-arrival-right { right: 8%; }
+.arcade-cabinet-bezel .population-queue-left { left: 18%; }
+.arcade-cabinet-bezel .population-queue-right { right: 17%; }
+.arcade-cabinet-bezel .population-door-left { left: 27%; }
+.arcade-cabinet-bezel .population-door-right { left: auto; right: 27%; }
+.arcade-cabinet-bezel .population-wall-right { right: 5%; }
+.arcade-cabinet-bezel .game-viewport.level-one-population-1 .population-arrival-left { animation-delay: -.4s; }
+.arcade-cabinet-bezel .game-viewport.level-one-population-1 .population-arrival-right { animation-delay: -1.2s; }
+.arcade-cabinet-bezel .game-viewport.level-one-population-2 .population-queue-left { animation-delay: -.8s; }
+.arcade-cabinet-bezel .game-viewport.level-one-population-2 .population-queue-right { animation-delay: -1.7s; }
+.arcade-cabinet-bezel .game-viewport.level-one-population-3 .population-door-left { animation-delay: -1.1s; }
+.arcade-cabinet-bezel .game-viewport.level-one-population-3 .population-door-right { animation-delay: -2.2s; }
+.arcade-cabinet-bezel .game-viewport.level-one-population-4 .population-wall-right { animation-delay: -1.5s; }
+.arcade-cabinet-bezel .game-viewport.level-one-population-5 .level-one-population-figure { filter: saturate(1.25) contrast(1.08); }
+
+/* The development probe is an explicit proof label, not normal game UI. */
+.arcade-cabinet-bezel .level-one-world-probe {
+  left: 50%;
+  top: 5.5%;
+  z-index: 35;
+  transform: translateX(-50%);
+  padding: 3px 6px;
+  border: 1px solid rgba(0, 212, 255, .64);
+  background: rgba(10, 10, 18, .78);
+  color: #00d4ff;
+  font: 700 clamp(.28rem, .75vw, .4rem)/1.2 "Press Start 2P", monospace;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+.arcade-cabinet-bezel .recovery-hud-badge strong { color: #00d4ff !important; }
+
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel .level-one-world-probe { top: 8.5%; max-width: 68%; white-space: normal; text-align: center; }
+  .arcade-cabinet-bezel .level-one-time-window-grid { left: 0; width: 27%; }
+  .arcade-cabinet-bezel .level-one-time-neon-left { width: 29%; }
+  .arcade-cabinet-bezel .level-one-time-neon-right { width: 28%; }
+  .arcade-cabinet-bezel .level-one-time-pavement-reflection { left: 10%; right: 10%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-cabinet-bezel .level-one-time-window-grid,
+  .arcade-cabinet-bezel .level-one-time-neon-left,
+  .arcade-cabinet-bezel .level-one-time-neon-right,
+  .arcade-cabinet-bezel .level-one-time-pavement-reflection,
+  .arcade-cabinet-bezel .level-one-time-police-reflection,
+  .arcade-cabinet-bezel .level-one-catch-burst,
+  .arcade-cabinet-bezel .level-one-hazard-pulse,
+  .arcade-cabinet-bezel .level-one-repair-spark { animation: none !important; }
+}

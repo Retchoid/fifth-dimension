@@ -49,5 +49,44 @@ describe("Level 1 independent world progression contracts", () => {
     expect(game).toContain("const worldProbeEnabled = (import.meta.env.DEV || sandboxArcadeVerifier)");
     expect(game).toContain("worldRecordsParam");
     expect(game).toContain("worldComboParam");
+    expect(game).toContain("WORLD PROBE · {forcedWorldRecords} RECORDS · 1X COMBO");
+  });
+
+  it("proves all six chronological record states without coupling to combo energy", () => {
+    for (const records of [0, 5, 10, 15, 20, 25]) {
+      expect(levelOneCss).toContain(`.game-viewport.level-one-time-${records === 0 ? 0 : Math.min(5, Math.floor(records / 5))}`);
+    }
+    expect(levelOneCss).toContain("level-one-time-sky");
+    expect(levelOneCss).toContain("level-one-time-building-wash");
+    expect(levelOneCss).toContain("level-one-time-window-grid");
+    expect(levelOneCss).toContain("level-one-time-pavement-reflection");
+    expect(levelOneCss).toContain("level-one-time-police-reflection");
+    expect(levelOneCss).toContain("Forward-only record progression");
+  });
+
+  it("keeps event reactions localized and passive", () => {
+    expect(game).toContain('className="level-one-catch-burst"');
+    expect(game).toContain('className="level-one-hazard-pulse"');
+    expect(game).toContain('className="level-one-repair-spark"');
+    expect(game).toContain('mixerRepairBurst ? " mixer-repair-event"');
+    expect(levelOneCss).toContain("stage-event-catch .level-one-catch-burst");
+    expect(levelOneCss).toContain("stage-event-hazard .level-one-hazard-pulse");
+    expect(levelOneCss).toContain("mixer-repair-event .level-one-repair-spark");
+    expect(levelOneCss).toContain("pointer-events: none");
+  });
+
+  it("audits every configured Level 1 physical object against an approved asset", () => {
+    for (const type of ["record", "cop", "pill", "phone", "cdj", "mixer", "turntable", "adapter", "bottle", "apple", "lion"]) {
+      expect(game).toContain(`${type}: "/embedded-assets/`);
+    }
+    expect(game).toContain("selectah-mixer-urban");
+    expect(game).toContain("selectah-lion-urban");
+    expect(game).toContain("selectah-turntable-urban");
+  });
+
+  it("does not ship an empty-layer NO ITEMS marker in normal play", () => {
+    const renderFix = readFileSync(resolve(root, "falling-items-render-fix.css"), "utf8");
+    expect(renderFix).toContain("content: none !important");
+    expect(renderFix).not.toContain("⚠️ NO ITEMS");
   });
 });

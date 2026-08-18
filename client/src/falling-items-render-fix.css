@@ -59,19 +59,11 @@
   filter: blur(2px) !important;
 }
 
-/* Debug helper — shows items if they exist */
+/* Empty pre-start layers stay visually clean. Item diagnostics are exposed only
+   through the explicit mechanics-debug query mode in the game component. */
 .falling-items-layer:empty::after {
-  content: "⚠️ NO ITEMS";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ff2d95;
-  font-family: "Press Start 2P", monospace;
-  font-size: 0.6rem;
-  opacity: 0.5;
-  z-index: 0;
-  pointer-events: none;
+  content: none !important;
+  display: none !important;
 }
 
 /* Preserve the approved pixel-safe DJ sprite treatment. */

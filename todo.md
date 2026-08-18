@@ -1457,3 +1457,15 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Keep `1000001036.png` as implementation-board guidance only; do not import the board, interior club frame, or Pit Run strip into the Level 1 runtime.
 - [x] Revalidate the Level 1 three-system separation, asset integrity, clear gameplay lane, and unchanged later-level/site boundaries against the corrected references.
 - [x] Save and deliver a corrected Level 1 review checkpoint only after all checks pass.
+
+## Level 1 Corrective Visual-System Pass
+
+- [x] Freeze the working Level 1 movement, catch/collision, spawn, trajectory, score, combo, recovery, damage, and progression mechanics.
+- [x] Add development-only forced visual states for records 0, 5, 10, 15, 20, and 25 at combo 1X with a stable camera/player position.
+- [x] Make the six forced states visibly chronological through separate localized sky, building, window, neon-sign, doorway, pavement-reflection, police-reflection, steam/haze, and population layers without replacing or globally filtering the approved alley.
+- [x] Make Level 1 population and event reactions visibly demonstrable but peripheral, non-interactive, unsynchronized, and clear of the catch lane.
+- [x] Audit every Level 1 falling object for a cohesive pixel-painted/illustrated physical treatment, controlled glow, plausible scale, recovery-device readability, and no unexplained `NO ITEMS` or debug rectangles in normal play.
+- [x] Add regression coverage and capture proof for all six forced states plus normal catch, hazard, recovery, mobile readability, and unchanged later-level/site boundaries.
+- [x] Save and deliver the corrective Level 1 review checkpoint; keep all later-level and site changes blocked pending user approval.
+
+- [x] Update the stale selector release-gate fragment for the smaller shared Level 1 record to match the current normalized `visualSize` rule, then rerun the gate and approved-art verifier.

@@ -71,9 +71,9 @@ const URBAN_PROP_ASSETS: Partial<Record<FallingItemType, string>> = {
   mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
   turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
   adapter: "/embedded-assets/selectah-adapter-urban_ab9d38ca.png",
+  lion: "/embedded-assets/selectah-lion-urban_9431e50b.png",
   bottle: "/embedded-assets/selectah-bottle-urban_fc7e712f.png",
   apple: "/embedded-assets/selectah-apple-core-urban_66dacfaa.png",
-  lion: "/embedded-assets/selectah-lion-urban_9431e50b.png",
 };
 
 const URBAN_RUNNER_ASSETS: Record<BonusRunnerType, string> = {
@@ -3385,7 +3385,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       playerTargetX: Number(djXRef.current.toFixed(2)),
       playerHitboxX: Number(hitboxCenterX.toFixed(2)),
       playerSpriteX: Number(spriteCenterX.toFixed(2)),
-      lastAssignment: `${playerPositionWriteRef.current.source}:${playerPositionWriteRef.current.previousX.toFixed(2)}→${playerPositionWriteRef.current.nextX.toFixed(2)}@${playerPositionWriteRef.current.timestamp?.toFixed(1) ?? "—"}`,
+      lastAssignment: `${playerPositionWriteRef.current.source}:${playerPositionWriteRef.current.previousX.toFixed(2)}->${playerPositionWriteRef.current.nextX.toFixed(2)}@${playerPositionWriteRef.current.timestamp?.toFixed(1) ?? "—"}`,
       lastWriteSource: playerPositionWriteRef.current.source,
       lastWritePreviousX: Number(playerPositionWriteRef.current.previousX.toFixed(2)),
       lastWriteNextX: Number(playerPositionWriteRef.current.nextX.toFixed(2)),
@@ -3534,7 +3534,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div
           ref={containerRef}
           data-gameplay-state={gameplayState}
-          className={`game-viewport${level === 2 ? " is-level-two" : ""}${level === 1 ? ` level-one-combo-${Math.min(15, renderedCombo)} level-one-time-${levelOneTimeStage} level-one-population-${levelOnePopulationStage}` : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}${level === 1 ? ` level-one-combo-${Math.min(15, renderedCombo)} level-one-time-${levelOneTimeStage} level-one-population-${levelOnePopulationStage}` : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}${mixerRepairBurst ? " mixer-repair-event" : ""}`}
           onPointerMove={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
             if (!usesAlternatePointerRoute) return;
@@ -3624,6 +3624,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div className="stage-reactive" aria-hidden="true">
           {level === 1 ? (
             <div className="level-one-alley-reactive">
+              <span className="level-one-time-sky" />
+              <span className="level-one-time-building-wash" />
+              <span className="level-one-time-window-grid" />
+              <span className="level-one-time-neon-left" />
+              <span className="level-one-time-neon-right" />
+              <span className="level-one-time-doorway-left" />
+              <span className="level-one-time-doorway-right" />
+              <span className="level-one-time-pavement-reflection" />
+              <span className="level-one-time-police-reflection" />
+              <span className="level-one-time-haze" />
+              <span className="level-one-catch-burst" />
+              <span className="level-one-hazard-pulse" />
+              <span className="level-one-repair-spark" />
               <span className="level-one-neon-flicker" />
               <span className="level-one-speaker-bloom" />
               <span className="level-one-window-wash" />
@@ -3641,6 +3654,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <span className="level-one-population-figure population-door-right" />
                 <span className="level-one-population-figure population-wall-right" />
               </div>
+              {worldProbeEnabled && forcedWorldRecords !== null && (
+                <span className="level-one-world-probe" aria-hidden="true">WORLD PROBE · {forcedWorldRecords} RECORDS · 1X COMBO</span>
+              )}
             </div>
           ) : (
             <>
@@ -3674,6 +3690,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             {pickupFlash && <span key={pickupFlash.key}>{pickupFlash.label}</span>}
           </div>
           <div className="hud-badge lives-badge">LIVES: <strong>{"❤️".repeat(lives)}</strong></div>
+          {mixerDamaged && <div className="hud-badge recovery-hud-badge" aria-label={`Mixer recovery progress: ${recoveryProgress} of 3`}>MIXER: <strong>{recoveryProgress}/3</strong></div>}
           <button
             type="button"
             className="hud-badge audio-toggle"
@@ -4391,12 +4408,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {/* DJ selector with turntable at bottom */}
         {mechanicsDebugEnabled && <div ref={mechanicsDebugPlayerHitboxRef} className="mechanics-debug-player-hitbox" style={{ left: `${playerWorldRef.current.x}%` }} aria-hidden="true" />}
-        {mixerDamaged && (
-          <div className="mixer-recovery-status" role="status" aria-live="polite">
-            <strong>MIXER</strong>
-            <span>{recoveryProgress}/3</span>
-          </div>
-        )}
         <div ref={djCatcherRef} className={`dj-catcher equipment-${equipmentCondition}${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ "--player-world-x": `${djXRef.current}%` } as React.CSSProperties}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
