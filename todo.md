@@ -1,5 +1,17 @@
 # Project TODO
 
+## Approved-art Level 3 Pit Run integration — preserve Level 1/2 mechanics
+
+- [ ] Audit the locked movement, pointer/touch input, collision, scoring, combo, lives, splash, and Level 1/2 progression paths before extending Level 3.
+- [ ] Prepare the user-supplied approved art as optimized external assets and map it to Club Exit, Deep Pit Run, and distinct dawn Afterparty Arrival frames without generating or substituting artwork.
+- [ ] Implement Level 3 as an additional Pit Run progression state entered from Level 2 completion through an AFTERPARTY? / GRAB THE GEAR. bridge, leaving existing Level 1/2 rules intact.
+- [ ] Preserve direct horizontal pointer/touch control with no virtual buttons and render a forward-running illusion through layered environment speed, parallax, and approaching-object scale.
+- [ ] Implement readable physical gear collectibles, funny street-culture hazards, matching visible/collision planes, compact impact feedback, and the existing score/combo/life consequences.
+- [ ] Build three visibly distinct Pit Run frames: Club Exit, Deep Pit Run, and a warm sunrise loft/warehouse Afterparty Arrival with destination visibility.
+- [ ] Add lightweight environment reactions for combo, hazards, police activity, moving flyers/trash, and progressive dawn/afterparty illumination without full-screen gameplay obstruction.
+- [ ] Add deterministic coverage and browser verifiers for Level 2 → Pit Run, three-frame progression, gear/hazard resolution, splash return, and locked Level 1/2 regression behavior.
+- [ ] Validate the entire required matrix at 320, 360, 375, 390, 412, and 430 px widths plus desktop, then record the remaining real-device mobile confirmation required from the user.
+
 ## Final real-touch input fix — publish control changes only
 
 - [x] Create a transparent dedicated `.input-capture-layer` covering only the active playable field and route all normal Level 1/2 Pointer Events through it.
