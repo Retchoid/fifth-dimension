@@ -35,6 +35,18 @@
 - [x] Snapshot records, score, combo, and clean streak immediately before and after one specific caught dubplate ID, and publish those exact runtime values with the one-time collision evidence.
 - [x] Capture the rendered damaged → 0/3 → 1/3 → 2/3 → 3/3 → repaired mixer transition and prove normal movement/collection resumes after repair.
 
+## Authoritative input-surface independence repair — no visual, collision, bonus, or level changes
+
+- [x] Audit and document the current owner of every normal-play Pointer Event handler, every coordinate rectangle used for movement, and every mount dependency on the cabinet frame or diagnostic panel.
+- [x] Keep one permanent transparent playfield-owned `.input-surface` mounted independently of the cabinet frame, debug visibility, splash visibility, artwork, and normal Level 1/2 state changes.
+- [x] Move all normal Level 1/2 Pointer Events to the one permanent input surface only, with the playfield rect as the sole coordinate source and no duplicate production handler.
+- [x] Make REAL INPUT TRACE observation-only and ensure disabling it changes diagnostics visibility only, never pointer capture, bounds, listeners, or game-loop ownership.
+- [x] Measure and report actual player-sprite screen X via `getBoundingClientRect()` separately from authoritative player/hitbox state at 10%, 50%, and 90% input.
+- [x] Add explicit test modes for debug on/off and visual cabinet-frame shown/hidden, and prove identical pointer movement with the permanent input surface still mounted.
+- [x] Run the post-splash regression with debug off: move, catch, trigger/dismiss a splash, move again, and catch again.
+- [x] Assert that a debug-off splash mounts and clears while the permanent input surface remains mounted, then record a post-dismiss left/right movement and another rendered catch.
+- [ ] Publish only the interaction-architecture repair and report the eight requested root-cause findings; stop without visual or gameplay changes.
+
 ## Approved website redesign sequence — Task 1 only until user confirmation
 
 - [ ] Audit all site font-family declarations and all remaining system, sans-serif, Inter, Roboto, Helvetica, and Arial references.

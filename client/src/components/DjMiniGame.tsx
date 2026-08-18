@@ -39,7 +39,8 @@ type RealPointerDiagnostics = {
   normalizedX: number | null;
   worldX: number | null;
   playerTargetX: number;
-  playerActualX: number;
+  playerHitboxX: number;
+  playerSpriteX: number;
   lastAssignment: string;
   lastWriteSource: string;
   lastWritePreviousX: number;
@@ -298,7 +299,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [cleanDubplateStreak, setCleanDubplateStreak] = useState(0);
   const cleanDubplateStreakRef = useRef(0);
   const [hazardSinceStreakStart, setHazardSinceStreakStart] = useState(false);
-  const [realPointerDiagnostics, setRealPointerDiagnostics] = useState<RealPointerDiagnostics>({ phase: "idle", touchActive: false, pointerId: null, pointerX: null, rectLeft: null, rectWidth: null, localX: null, normalizedX: null, worldX: null, playerTargetX: 50, playerActualX: 50, lastAssignment: "none", lastWriteSource: "none", lastWritePreviousX: 50, lastWriteNextX: 50, lastWriteTimestamp: null, captured: false, domTarget: "not yet sampled", eventTarget: "not yet sampled", captureElement: "not yet sampled" });
+  const [realPointerDiagnostics, setRealPointerDiagnostics] = useState<RealPointerDiagnostics>({ phase: "idle", touchActive: false, pointerId: null, pointerX: null, rectLeft: null, rectWidth: null, localX: null, normalizedX: null, worldX: null, playerTargetX: 50, playerHitboxX: 50, playerSpriteX: 50, lastAssignment: "none", lastWriteSource: "none", lastWritePreviousX: 50, lastWriteNextX: 50, lastWriteTimestamp: null, captured: false, domTarget: "not yet sampled", eventTarget: "not yet sampled", captureElement: "not yet sampled" });
   const arcadeUtils = trpc.useUtils();
   const sharedLeaderboardQuery = trpc.arcade.leaderboard.useQuery(undefined, { staleTime: 15_000, refetchOnWindowFocus: true });
   const submitSharedScore = trpc.arcade.submitScore.useMutation({
@@ -326,6 +327,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const params = new URLSearchParams(window.location.search);
     return params.get("debugInput") === "1" || params.get("arcade-real-input-debug") === "true";
   })();
+  const visualCabinetFrameHidden = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("frameOff") === "1";
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
     crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
@@ -535,7 +537,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       nextX: clampedCenterX,
       timestamp: performance.now(),
     };
-    if (djCatcherRef.current) djCatcherRef.current.style.left = `${clampedCenterX}%`;
+    if (djCatcherRef.current) djCatcherRef.current.style.setProperty("--player-world-x", `${clampedCenterX}%`);
     if (mechanicsDebugPlayerHitboxRef.current) mechanicsDebugPlayerHitboxRef.current.style.left = `${nextPlayer.x}%`;
   };
 
@@ -3181,8 +3183,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     };
   }, []);
 
-  const updateDjPositionFromClientX = (clientX: number, playfield: HTMLDivElement | null) => {
+  const updateDjPositionFromClientX = (clientX: number) => {
     if (gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN") return;
+    const playfield = containerRef.current;
     if (!isPlayingRef.current || !playfield) return;
     const rect = playfield.getBoundingClientRect();
     setPlayerWorldX(clientXToWorldX(clientX, rect.left, rect.width), "playing", "pointer");
@@ -3190,7 +3193,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const inspectRealPointerEvent = (phase: RealPointerDiagnostics["phase"], e: React.PointerEvent<HTMLDivElement>) => {
     if (!realInputDebugEnabled) return;
-    const rect = e.currentTarget.getBoundingClientRect();
+    const playfield = containerRef.current;
+    if (!playfield) return;
+    const rect = playfield.getBoundingClientRect();
     const worldX = clientXToWorldX(e.clientX, rect.left, rect.width);
     const normalizedX = rect.width > 0 ? (e.clientX - rect.left) / rect.width : 0;
     const elementAtPointer = document.elementFromPoint(e.clientX, e.clientY);
@@ -3200,7 +3205,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const describeElement = (element: EventTarget | null) => element instanceof Element
       ? `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ""}${element.className ? `.${String(element.className).trim().replace(/\s+/g, ".")}` : ""}`
       : "none";
-    const actualLeft = Number.parseFloat(djCatcherRef.current?.style.left ?? `${djXRef.current}`);
+    const playerElementRect = djCatcherRef.current?.getBoundingClientRect();
+    const spriteCenterX = playerElementRect && rect.width > 0
+      ? ((playerElementRect.left + playerElementRect.width / 2 - rect.left) / rect.width) * 100
+      : djXRef.current;
+    const hitboxCenterX = playerWorldRef.current.x + playerWorldRef.current.width / 2;
     setRealPointerDiagnostics({
       phase,
       touchActive: phase === "down" || phase === "move" || playfieldPointerRef.current === e.pointerId,
@@ -3212,7 +3221,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       normalizedX: Number(normalizedX.toFixed(4)),
       worldX: Number(worldX.toFixed(2)),
       playerTargetX: Number(djXRef.current.toFixed(2)),
-      playerActualX: Number(actualLeft.toFixed(2)),
+      playerHitboxX: Number(hitboxCenterX.toFixed(2)),
+      playerSpriteX: Number(spriteCenterX.toFixed(2)),
       lastAssignment: `${playerPositionWriteRef.current.source}:${playerPositionWriteRef.current.previousX.toFixed(2)}→${playerPositionWriteRef.current.nextX.toFixed(2)}@${playerPositionWriteRef.current.timestamp?.toFixed(1) ?? "—"}`,
       lastWriteSource: playerPositionWriteRef.current.source,
       lastWritePreviousX: Number(playerPositionWriteRef.current.previousX.toFixed(2)),
@@ -3228,7 +3238,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN") return;
     if (e.pointerType === "touch") e.preventDefault();
-    updateDjPositionFromClientX(e.clientX, e.currentTarget);
+    updateDjPositionFromClientX(e.clientX);
   };
 
   const normalPlayfieldPointerEnabled = isPlaying && (gameMode === "LEVEL_1" || gameMode === "LEVEL_2");
@@ -3239,7 +3249,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     e.stopPropagation();
     playfieldPointerRef.current = e.pointerId;
     e.currentTarget.setPointerCapture(e.pointerId);
-    updateDjPositionFromClientX(e.clientX, e.currentTarget);
+    updateDjPositionFromClientX(e.clientX);
     inspectRealPointerEvent("down", e);
   };
 
@@ -3247,7 +3257,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     if (playfieldPointerRef.current !== e.pointerId) return;
     e.preventDefault();
     e.stopPropagation();
-    updateDjPositionFromClientX(e.clientX, e.currentTarget);
+    updateDjPositionFromClientX(e.clientX);
     inspectRealPointerEvent("move", e);
   };
 
@@ -3328,7 +3338,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         playsInline
         aria-label="Fast 16-bit after-party runner soundtrack"
       />
-      <div className={`arcade-cabinet-bezel${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}${isRespectShaking ? " is-respect-shaking" : ""}${damageFeedback ? " is-damage-shaking" : ""}${isCatchImpulsing ? " is-catch-impulsing" : ""}`}>
+      <div className={`arcade-cabinet-bezel game-shell${visualCabinetFrameHidden ? " cabinet-frame-hidden" : ""}${isCabinetVibrating ? " is-impact-vibrating" : ""}${isGunFingerShaking ? " is-gun-finger-shaking" : ""}${isRespectShaking ? " is-respect-shaking" : ""}${damageFeedback ? " is-damage-shaking" : ""}${isCatchImpulsing ? " is-catch-impulsing" : ""}`}>
         <div className="cabinet-corner-bolts" aria-hidden="true"><i /><i /><i /><i /></div>
         <div className="arcade-marquee">
           <span className="marquee-light" />
@@ -3387,7 +3397,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         >
         <div
           ref={inputCaptureRef}
-          className={`input-capture-layer${normalPlayfieldPointerEnabled ? " is-active" : ""}`}
+          className={`input-surface input-capture-layer${normalPlayfieldPointerEnabled ? " is-active" : ""}`}
           aria-label="Level playfield touch control"
           onPointerDown={handleInputCapturePointerDown}
           onPointerMove={handleInputCapturePointerMove}
@@ -4114,7 +4124,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <span>TOUCH TARGET: {realPointerDiagnostics.domTarget}</span>
             <span>CLIENT X: {realPointerDiagnostics.pointerX ?? "—"} / RECT LEFT: {realPointerDiagnostics.rectLeft ?? "—"} / RECT WIDTH: {realPointerDiagnostics.rectWidth ?? "—"}</span>
             <span>LOCAL X: {realPointerDiagnostics.localX ?? "—"} / NORMALIZED X: {realPointerDiagnostics.normalizedX ?? "—"} / WORLD X: {realPointerDiagnostics.worldX ?? "—"}</span>
-            <span>PLAYER X: {realPointerDiagnostics.playerTargetX.toFixed(2)} / RENDERED X: {realPointerDiagnostics.playerActualX.toFixed(2)}</span>
+            <span>PLAYER STATE X: {realPointerDiagnostics.playerTargetX.toFixed(2)} / PLAYER HITBOX X: {realPointerDiagnostics.playerHitboxX.toFixed(2)} / ACTUAL SPRITE X: {realPointerDiagnostics.playerSpriteX.toFixed(2)}</span>
             <span>LAST PLAYER WRITE: {realPointerDiagnostics.lastAssignment}</span>
             <span>WRITE SOURCE: {realPointerDiagnostics.lastWriteSource} / PREVIOUS X: {realPointerDiagnostics.lastWritePreviousX.toFixed(2)} / NEXT X: {realPointerDiagnostics.lastWriteNextX.toFixed(2)} / TIME: {realPointerDiagnostics.lastWriteTimestamp?.toFixed(1) ?? "—"}</span>
             <span>PLAYER HITBOX: {playerWorldRef.current.x.toFixed(2)},{playerWorldRef.current.y} {playerWorldRef.current.width}×{playerWorldRef.current.height}</span>
@@ -4188,7 +4198,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <span>RECOVER: {recoveryProgress}/3 DUBPLATES</span>
           </div>
         )}
-        <div ref={djCatcherRef} className={`dj-catcher equipment-${equipmentCondition}${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ left: `${djXRef.current}%` }}>
+        <div ref={djCatcherRef} className={`dj-catcher equipment-${equipmentCondition}${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ "--player-world-x": `${djXRef.current}%` } as React.CSSProperties}>
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
               className="dj-sprite"

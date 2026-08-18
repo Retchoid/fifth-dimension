@@ -3,13 +3,15 @@ import { chromium } from "playwright";
 const origin = process.env.MECHANICS_ORIGIN ?? "http://127.0.0.1:3000";
 const crowdBonusMode = process.env.CROWD_BONUS_MODE ?? "block";
 const verifyLevelOneCompletion = process.env.VERIFY_LEVEL_ONE_COMPLETION === "1";
+const showInputDebug = process.env.INPUT_DEBUG !== "0";
+const verifySplashRegression = process.env.VERIFY_SPLASH_REGRESSION === "1";
 const browser = await chromium.launch({ headless: true, executablePath: "/usr/bin/chromium", args: ["--no-sandbox"] });
 const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 const page = await context.newPage();
 
-// This is intentionally the ordinary public page. The one diagnostic query
-// renders visible values only; it does not expose or call game internals.
-await page.goto(`${origin}/?arcade-real-input-debug=true`, { waitUntil: "domcontentloaded" });
+// This is intentionally the ordinary public page. Diagnostics are optional,
+// observational UI only; the same runner must function with no query string.
+await page.goto(`${origin}/${showInputDebug ? "?debugInput=1" : ""}`, { waitUntil: "domcontentloaded" });
 const start = page.locator(".tape-play-button");
 await start.scrollIntoViewIfNeeded();
 await start.click();
@@ -103,7 +105,9 @@ for (let index = 0; index < 3; index += 1) recoveryCatches.push(await catchRecor
 
 const cleanDeadline = Date.now() + 170_000;
 let highestCleanStreak = streak(await trace());
+let crowdSplashMounted = false;
 while (Date.now() < cleanDeadline) {
+  crowdSplashMounted ||= await page.locator(".crowd-pressure-splash-overlay").count() > 0;
   const currentTrace = await trace();
   highestCleanStreak = Math.max(highestCleanStreak, streak(currentTrace));
   if (await bonusTriggered(currentTrace)) break;
@@ -197,6 +201,7 @@ if (completed) {
   }
 }
 const levelOneCompletionEvidence = { requested: verifyLevelOneCompletion, returnedToLevelOne: false, highestRecords: await hud().then((value) => value.records), reachedTarget: false };
+const splashRegressionEvidence = { requested: verifySplashRegression, splashMounted: crowdSplashMounted, splashCleared: false, permanentSurfaceAfterClear: false, leftAfterClear: null, rightAfterClear: null, postDismissCatch: null };
 if (verifyLevelOneCompletion && completed) {
   const returnSurface = page.locator(".input-capture-layer.is-active");
   await returnSurface.waitFor({ state: "visible", timeout: 12_000 }).catch(() => undefined);
@@ -207,6 +212,18 @@ if (verifyLevelOneCompletion && completed) {
     const returnX = (ratio) => returnBounds.x + returnBounds.width * Math.max(.08, Math.min(.92, ratio));
     await page.mouse.move(returnX(.5), returnY);
     await page.mouse.down();
+    if (verifySplashRegression) {
+      splashRegressionEvidence.splashMounted ||= crowdPressureEvidence.stageVisible;
+      splashRegressionEvidence.splashCleared = await page.locator(".crowd-pressure-splash-overlay").count() === 0;
+      splashRegressionEvidence.permanentSurfaceAfterClear = await returnSurface.count() > 0;
+      await page.mouse.move(returnX(.1), returnY, { steps: 4 });
+      await page.waitForTimeout(70);
+      splashRegressionEvidence.leftAfterClear = Number.parseFloat(await page.locator(".dj-catcher").evaluate((player) => player.style.getPropertyValue("--player-world-x")));
+      await page.mouse.move(returnX(.9), returnY, { steps: 4 });
+      await page.waitForTimeout(70);
+      splashRegressionEvidence.rightAfterClear = Number.parseFloat(await page.locator(".dj-catcher").evaluate((player) => player.style.getPropertyValue("--player-world-x")));
+      splashRegressionEvidence.postDismissCatch = await catchRecord({ avoidHazards: true });
+    }
     const completionDeadline = Date.now() + 90_000;
     while (Date.now() < completionDeadline && !levelOneCompletionEvidence.reachedTarget) {
       const currentHud = await hud();
@@ -232,7 +249,8 @@ if (verifyLevelOneCompletion && completed) {
 }
 await field.screenshot({ path: "/home/ubuntu/webdev-static-assets/selectah-normal-public-e2e-390.png" });
 console.log(JSON.stringify({
-  route: "/?arcade-real-input-debug=true",
+  route: showInputDebug ? "/?debugInput=1" : "/",
+  inputDebugEnabled: showInputDebug,
   viewport: "390x844",
   start: "normal public Start Session button",
   initialCatch,
@@ -245,9 +263,11 @@ console.log(JSON.stringify({
   crowdBonusMode,
   crowdPressureEvidence,
   levelOneCompletionEvidence,
+  splashRegressionEvidence,
 }, null, 2));
 
 const requiredCrowdOutcome = crowdBonusMode === "damage" ? crowdPressureEvidence.equipmentHitObserved : crowdPressureEvidence.blockObserved;
-if (!completed || !crowdPressureEvidence.stageVisible || crowdPressureEvidence.handPositions.length !== 4 || !requiredCrowdOutcome || !visibleRecovery?.includes("MIXER DAMAGED") || (verifyLevelOneCompletion && !levelOneCompletionEvidence.reachedTarget)) process.exitCode = 1;
+const splashRegressionPass = !verifySplashRegression || (splashRegressionEvidence.splashMounted && splashRegressionEvidence.splashCleared && splashRegressionEvidence.permanentSurfaceAfterClear && splashRegressionEvidence.leftAfterClear <= 12 && splashRegressionEvidence.rightAfterClear >= 85 && splashRegressionEvidence.postDismissCatch);
+if (!completed || !crowdPressureEvidence.stageVisible || crowdPressureEvidence.handPositions.length !== 4 || !requiredCrowdOutcome || !visibleRecovery?.includes("MIXER DAMAGED") || (verifyLevelOneCompletion && !levelOneCompletionEvidence.reachedTarget) || !splashRegressionPass) process.exitCode = 1;
 await context.close();
 await browser.close();

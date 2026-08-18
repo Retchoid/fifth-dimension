@@ -17,11 +17,12 @@
 
 /* Transparent normal-play Pointer Events plane: above all scenery and selector
    visuals, below interactive HUD controls and modal state overlays. */
+.arcade-cabinet-bezel .input-surface,
 .arcade-cabinet-bezel .input-capture-layer {
   position: absolute;
   inset: 0;
   z-index: 40;
-  display: none;
+  display: block;
   background: transparent;
   pointer-events: none;
   touch-action: none;
@@ -29,9 +30,24 @@
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
+.arcade-cabinet-bezel .input-surface.is-active,
 .arcade-cabinet-bezel .input-capture-layer.is-active {
-  display: block;
   pointer-events: auto;
+}
+
+/* Query-only frame test: cabinet chrome is presentation. The game viewport and
+   its permanent input surface remain mounted and retain their own geometry. */
+.arcade-cabinet-bezel.cabinet-frame-hidden {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.arcade-cabinet-bezel.cabinet-frame-hidden::before,
+.arcade-cabinet-bezel.cabinet-frame-hidden::after,
+.arcade-cabinet-bezel.cabinet-frame-hidden > .cabinet-corner-bolts,
+.arcade-cabinet-bezel.cabinet-frame-hidden > .arcade-marquee,
+.arcade-cabinet-bezel.cabinet-frame-hidden > .arcade-control-panel {
+  visibility: hidden !important;
 }
 
 /* The viewport is the only normal-play input receiver. These layers are visual
@@ -81,6 +97,15 @@
 }
 .arcade-cabinet-bezel .game-hud { z-index: 41 !important; }
 .arcade-cabinet-bezel .dj-catcher { transition: none !important; }
+
+/* Interaction contract: the active player element renders from the same world
+   X that drives the collision rectangle. This beats retired cabinet-centering
+   declarations without changing the sprite scale, artwork, or hitbox. */
+.arcade-cabinet-bezel .game-viewport .dj-catcher {
+  position: absolute !important;
+  left: var(--player-world-x, 50%) !important;
+  transform: translateX(-50%) !important;
+}
 
 /* LAYER 1 — one full original environment for each level. */
 .arcade-cabinet-bezel .game-grid-bg {

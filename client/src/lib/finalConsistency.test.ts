@@ -213,7 +213,9 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain('window.addEventListener("pointerdown", handler, true)');
     expect(gameSource).toContain("REAL INPUT TRACE");
     expect(gameSource).toContain("TOUCH TARGET:");
-    expect(gameSource).toContain("RENDERED X:");
+    expect(gameSource).toContain("PLAYER STATE X:");
+    expect(gameSource).toContain("PLAYER HITBOX X:");
+    expect(gameSource).toContain("ACTUAL SPRITE X:");
     expect(gameSource).toContain("CAPTURE ELEMENT:");
     expect(gameSource).toContain("mixer-recovery-status");
     expect(arcadePlayfieldArchitecture).toContain(".real-input-debug-panel");
@@ -258,16 +260,23 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain('transitionChapter("LEVEL_2", "start-pit")');
   });
 
-  it("keeps published mobile pointer input bound to one dedicated capture surface", () => {
+  it("keeps published mobile pointer input bound to one permanent playfield-owned input surface", () => {
     const gameSource = read("components/DjMiniGame.tsx");
     expect(gameSource).toContain("const inputCaptureRef = useRef<HTMLDivElement>(null);");
-    expect(gameSource).toContain('className={`input-capture-layer${normalPlayfieldPointerEnabled ? " is-active" : ""}`}');
+    expect(gameSource).toContain('className={`input-surface input-capture-layer${normalPlayfieldPointerEnabled ? " is-active" : ""}`}');
     expect(gameSource).toContain("onPointerDown={handleInputCapturePointerDown}");
     expect(gameSource).toContain("e.currentTarget.setPointerCapture(e.pointerId)");
-    expect(gameSource).toContain("updateDjPositionFromClientX(e.clientX, e.currentTarget)");
+    expect(gameSource).toContain("const playfield = containerRef.current;");
+    expect(gameSource).toContain("updateDjPositionFromClientX(e.clientX);");
     expect(gameSource).toContain("e.currentTarget.hasPointerCapture(e.pointerId)");
+    expect(gameSource).toContain("visualCabinetFrameHidden");
+    expect(gameSource).toContain("cabinet-frame-hidden");
     expect(gameSource).toContain("TOUCH ACTIVE:");
     expect(gameSource).toContain("CAPTURE ELEMENT:");
+    expect(gameSource).toContain("PLAYER STATE X:");
+    expect(gameSource).toContain("PLAYER HITBOX X:");
+    expect(gameSource).toContain("ACTUAL SPRITE X:");
+    expect(gameSource).toContain("djCatcherRef.current?.getBoundingClientRect()");
     expect(gameSource).toContain("lastWritePreviousX");
     expect(gameSource).toContain("lastWriteNextX");
     expect(gameSource).toContain("lastWriteTimestamp");
@@ -278,7 +287,9 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("LAST PLAYER WRITE:");
     expect(arcadePlayfieldArchitecture).toContain("touch-action: none !important");
     expect(arcadePlayfieldArchitecture).toContain("pointer-events: auto !important");
+    expect(arcadePlayfieldArchitecture).toContain(".input-surface,");
     expect(arcadePlayfieldArchitecture).toContain(".input-capture-layer");
+    expect(arcadePlayfieldArchitecture).toContain(".cabinet-frame-hidden");
     expect(arcadePlayfieldArchitecture).toContain(".game-grid-bg,");
     expect(arcadePlayfieldArchitecture).toContain(".falling-items-layer *,");
     expect(arcadePlayfieldArchitecture).toContain(".dj-catcher *,");
