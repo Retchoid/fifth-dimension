@@ -1469,3 +1469,18 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Save and deliver the corrective Level 1 review checkpoint; keep all later-level and site changes blocked pending user approval.
 
 - [x] Update the stale selector release-gate fragment for the smaller shared Level 1 record to match the current normalized `visualSize` rule, then rerun the gate and approved-art verifier.
+
+## Level 1 Environment Progression Correction
+
+- [x] Fix the premature `THE RAVE LEFT YOU OUTSIDE` terminal overlay at its state/rendering cause; do not hide it with CSS and do not alter terminal-game rules.
+- [x] Freeze movement, input, collision, spawn, trajectory, score, combo, recovery, damage, progression, cabinet, Level 2, website sections, and HUD structure.
+- [x] Make the same locked 1000001097-derived alley visibly progress at 0/5/10/15/20/25 records through independent sky tint, horizon warmth, window lights, Club 5D spill, Underground spill, doorway light, pavement reflection, police reflection, haze, and restrained NPC population.
+- [x] Keep speakers at the edges/background with reduced visual dominance; remove the large green falling-record halo; move recovery status into the compact HUD; preserve existing artwork and mark any unavailable recovery art as `ART ASSET REQUIRED` rather than inventing a replacement.
+- [x] Add one restrained record-catch player/contact reaction and localized pavement pulse without changing event timing or gameplay outcomes.
+- [x] Validate six rendered states, normal gameplay, mobile readability, no unexplained debug/terminal overlays during play, and unchanged later-level/site boundaries.
+- [x] Save and deliver the revised Level 1 review checkpoint; later-level and broader site work remain blocked pending approval.
+
+- [x] Add restrained Level 1 background NPC population using only the existing approved non-player dancer artwork, with record-driven counts at 15/20/25 and no player/control/collision interaction; keep all other systems frozen.
+- [x] Validate the NPC layer at the six forced record states and mobile/desktop playfield anchors without reintroducing foreground clutter or terminal overlays.
+
+- [x] Save and deliver the current Level 1 environment-population correction checkpoint; keep later-level and broader site work blocked pending approval.

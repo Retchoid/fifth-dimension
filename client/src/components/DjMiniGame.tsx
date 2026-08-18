@@ -2009,6 +2009,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         setLevel(1);
         setLives(0);
         setScore(800);
+        setGameplayStateOwner("GAME_OVER");
         setIsPlaying(false);
         setLevelTwoComplete(false);
         setGameOver(true);
@@ -2709,6 +2710,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setLevel(1);
     setLives(0);
     setScore(800);
+    setGameplayStateOwner("GAME_OVER");
     setIsPlaying(false);
     setLevelTwoComplete(false);
     setGameOver(true);
@@ -3485,12 +3487,22 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const renderedCombo = forcedWorldCombo ?? combo;
   const levelOneTimeStage = level === 1 ? Math.min(5, Math.floor(renderedRecordsCaught / 5)) : 0;
   const levelOnePopulationStage = levelOneTimeStage;
+  const levelOneBackgroundPopulationCount = level === 1
+    ? renderedRecordsCaught >= 25
+      ? 10
+      : renderedRecordsCaught >= 20
+        ? 7
+        : renderedRecordsCaught >= 15
+          ? 4
+          : 0
+    : 0;
   const pitRunFrame = pitRunProgress < 34 ? "club-exit" : pitRunProgress < 73 ? "deep-pit" : "afterparty-arrival";
   const pitRunFrameCopy = pitRunFrame === "club-exit"
     ? "CLUB EXIT · AFTERPARTY AWAITS"
     : pitRunFrame === "deep-pit"
       ? "DEEP PIT RUN · GRAB THE GEAR"
       : "SUNRISE ARRIVAL · LOFT IN SIGHT";
+  const terminalGameStateReached = gameplayState === "GAME_OVER" && !isPlaying && gameOver && !levelTwoComplete;
 
   return (
     <section id="minigame" className="minigame-section" aria-labelledby="minigame-title">
@@ -3654,6 +3666,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 <span className="level-one-population-figure population-door-right" />
                 <span className="level-one-population-figure population-wall-right" />
               </div>
+              {levelOneBackgroundPopulationCount > 0 && (
+                <div className="level-one-approved-population" aria-hidden="true">
+                  {Array.from({ length: levelOneBackgroundPopulationCount }, (_, index) => {
+                    const dancer = CELEBRATION_DANCERS[index % CELEBRATION_DANCERS.length];
+                    return <img key={`level-one-background-npc-${index}`} className={`level-one-background-npc npc-${index + 1} ${dancer.className}`} src={dancer.src} alt="" />;
+                  })}
+                </div>
+              )}
               {worldProbeEnabled && forcedWorldRecords !== null && (
                 <span className="level-one-world-probe" aria-hidden="true">WORLD PROBE · {forcedWorldRecords} RECORDS · 1X COMBO</span>
               )}
@@ -4178,7 +4198,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             ))}
           </div>
         )}
-        {(heldLossPreview || (isLossComedownVisible && gameOver)) && !levelTwoComplete && (
+        {terminalGameStateReached && (heldLossPreview || isLossComedownVisible) && (
           <div className={`game-overlay loss-curb-overlay${heldLossPreview ? " viewport-verify-hold" : ""}`} role="status" aria-live="assertive">
             <div className="loss-curb-night" aria-hidden="true"><span className="loss-moon" /><span className="loss-venue-sign">RAVE</span><span className="loss-venue-door" /><span className="loss-neon-spill" /></div>
             <div className="loss-curb-ground" aria-hidden="true"><i /><i /><i /></div>
@@ -4187,7 +4207,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {gameOver && !finale && !isLossComedownVisible && (
+        {terminalGameStateReached && !finale && !isLossComedownVisible && (
           <div className="game-overlay game-over-overlay">
             <div className="overlay-box game-over-box-wide">
               {isNewRecord && (

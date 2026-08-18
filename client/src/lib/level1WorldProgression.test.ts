@@ -84,6 +84,35 @@ describe("Level 1 independent world progression contracts", () => {
     expect(game).toContain("selectah-turntable-urban");
   });
 
+  it("requires the authoritative terminal state before showing the loss or game-over overlay", () => {
+    expect(game).toContain('const terminalGameStateReached = gameplayState === "GAME_OVER" && !isPlaying && gameOver && !levelTwoComplete;');
+    expect(game).toContain("{terminalGameStateReached && (heldLossPreview || isLossComedownVisible) && (");
+    expect(game).toContain("{terminalGameStateReached && !finale && !isLossComedownVisible && (");
+    expect(game).toContain('setGameplayStateOwner("GAME_OVER");');
+  });
+
+  it("keeps the corrected Level 1 base free from the old global visual masks and record halo", () => {
+    expect(levelOneCss).toContain(".game-grid-bg.stage-background::before");
+    expect(levelOneCss).toContain("content: none !important");
+    expect(levelOneCss).toContain(".falling-object.record .urban-prop-asset");
+    expect(levelOneCss).toContain("drop-shadow(0 0 2px rgba(255, 230, 0, .24))");
+    expect(levelOneCss).toContain("No approved Level 1 crowd-character art was supplied");
+    expect(levelOneCss).toContain("level-one-catch-burst");
+  });
+
+  it("uses only approved non-player dancers for restrained Level 1 background population", () => {
+    expect(game).toContain("const levelOneBackgroundPopulationCount = level === 1");
+    expect(game).toContain("renderedRecordsCaught >= 25");
+    expect(game).toContain("renderedRecordsCaught >= 20");
+    expect(game).toContain("renderedRecordsCaught >= 15");
+    expect(game).toContain("level-one-approved-population");
+    expect(game).toContain("CELEBRATION_DANCERS[index % CELEBRATION_DANCERS.length]");
+    expect(levelOneCss).toContain(".level-one-background-npc");
+    expect(levelOneCss).toContain("pointer-events: none !important");
+    expect(levelOneCss).toContain("level-one-npc-breathe");
+    expect(levelOneCss).toContain("max-height: 31% !important");
+  });
+
   it("does not ship an empty-layer NO ITEMS marker in normal play", () => {
     const renderFix = readFileSync(resolve(root, "falling-items-render-fix.css"), "utf8");
     expect(renderFix).toContain("content: none !important");
