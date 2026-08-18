@@ -368,13 +368,14 @@
   display: block !important;
   width: 100% !important;
   height: 100% !important;
+  background-image: var(--urban-prop-url) !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   image-rendering: pixelated !important;
   image-rendering: crisp-edges !important;
   filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.6)) !important;
-  transform: rotate(var(--fall-tilt, 0deg)) !important;
+  transform: rotate(var(--fall-tilt, 0deg)) scale(var(--item-visual-scale, 1)) !important;
 }
 
 /* Ensure each object type has distinct visual identity */
@@ -478,12 +479,14 @@
   display: block !important;
   width: 100% !important;
   height: 100% !important;
+  background-image: var(--urban-prop-url) !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   image-rendering: pixelated !important;
   image-rendering: crisp-edges !important;
   filter: drop-shadow(2px 3px 0 rgba(5, 4, 7, 0.7)) !important;
+  transform: scale(var(--item-visual-scale, 1)) !important;
 }
 
 .arcade-cabinet-bezel .falling-object.record .urban-prop-asset {
