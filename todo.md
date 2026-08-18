@@ -1430,3 +1430,15 @@
 - [x] Add a development-only query parameter (`?worldProgression=1|5|10|15|20|25`) to test each world progression state.
 - [x] Reduce the visual footprint of persistent status cards (mixer damaged / recovery) so they do not obstruct the active catch lane.
 - [x] Validate mobile readability and object clarity at 390x844.
+
+## Level 1 Living World Population Extension
+
+- [x] Add record-progress-driven environmental population stages from a quiet arrival through a fully active 5D takeover, using lightweight non-gameplay overlays only.
+- [x] Keep the population system independent from time-of-night and combo-driven rave pressure, with edge/doorway/background clustering that never blocks the play lane.
+- [x] Use only deliberate illustrated/pixel-painted environmental treatment; do not introduce emoji, generic SVG people, stock icons, or gameplay sprites as crowd replacements.
+- [x] Add development-only population/progression verification and validate the combined Level 1 states at 390x844 without changing Level 2, bonus, Pit Run, controls, collisions, scoring, or the locked alley source.
+- [x] Save and deliver a checkpoint for the combined Level 1 visual pass after tests and build validation.
+
+### Combined Level 1 pass notes
+
+The appended brief extends the preceding Level 1 surgical pass. Record progress drives time-of-night and world population; combo/streak remains temporary rave pressure. The approved alley remains the unchanged base image, and all added figures or environmental activity must remain lightweight, peripheral, and non-interactive.

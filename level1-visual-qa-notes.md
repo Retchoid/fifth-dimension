@@ -1,0 +1,5 @@
+# Level 1 Visual QA Notes
+
+The combined Level 1 pass was opened at the dev preview with `worldRecords=20` and `worldCombo=1` using the `#minigame` anchor. The browser's extracted page content confirmed the game playfield is present, the locked alley asset is still the active background, the HUD starts at `RECORDS: 0/25` before a session begins, and no placeholder text or debug collision labels are part of the normal page content. The browser screenshots include annotated element-index markers from the inspection environment; those colored markers are not application artwork.
+
+The saved preview view showed the existing game scene and the locked alley artwork intact. Runtime console review found only pre-existing audio autoplay/source warnings and no new Level 1 JavaScript exceptions, uncaught errors, or failed gameplay requests. The screenshot route did not provide a clean mobile game-only crop, so final acceptance still relies on the source contracts, 390px screenshot matrix, TypeScript, Vitest, production build, and the user's own real-device review.

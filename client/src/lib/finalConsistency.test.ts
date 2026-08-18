@@ -95,7 +95,9 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("level1-approved-locked-169-alley_8924f5b5.png");
     expect(gameSource).not.toContain("level1-approved-sunset-alley_4371e45d.png");
     expect(gameSource).toContain("levelOneVisualScale");
-    expect(gameSource).toContain("level-one-combo-${Math.min(15, combo)}");
+    expect(gameSource).toContain("level-one-combo-${Math.min(15, renderedCombo)}");
+    expect(gameSource).toContain("level-one-time-${levelOneTimeStage}");
+    expect(gameSource).toContain("level-one-population-${levelOnePopulationStage}");
     expect(gameSource).not.toContain("neon-backstreet-background");
     expect(gameSource).not.toContain("backstreet-brick-facade");
     expect(gameSource).not.toContain("backstreet-police-van");
@@ -269,7 +271,9 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("if (launchCrowdPressure)");
     expect(gameSource).toContain("startLevelOneNoRequestBonus();");
     expect(gameSource).toContain("if (recordsCaughtRef.current < REQUIRED_RECORDS)");
-    expect(gameSource).toContain("RECOVER: {recoveryProgress}/3 DUBPLATES");
+    expect(gameSource).toContain("<strong>MIXER</strong>");
+    expect(gameSource).toContain("<span>{recoveryProgress}/3</span>");
+    expect(gameSource).toContain("RECOVERY ${recoveryProgress}/3");
     expect(gameSource).toContain('const objectiveIncrement = levelRef.current === 1 ? (item.type === "record" ? 1 : 0) : pickupValue;');
     expect(gameSource).toContain('if (mixerDamagedRef.current && item.type === "record")');
   });

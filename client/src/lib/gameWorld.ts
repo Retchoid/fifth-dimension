@@ -24,6 +24,14 @@ export const PLAYFIELD_BOUNDS = {
   playerHeight: 20,
 } as const;
 
+export const LEVEL_ONE_CATCH_BOUNDS = {
+  playerY: 72,
+  playerWidth: 11,
+  playerHeight: 14,
+} as const;
+
+export type PlayerHitboxProfile = "default" | "level-one";
+
 export function clampPlayerX(value: number) {
   return Math.max(PLAYFIELD_BOUNDS.minX, Math.min(PLAYFIELD_BOUNDS.maxX, value));
 }
@@ -33,12 +41,17 @@ export function clientXToWorldX(clientX: number, left: number, width: number) {
   return clampPlayerX(((clientX - left) / width) * 100);
 }
 
-export function playerRectFromCenterX(x: number, state: PlayerWorld["state"] = "playing"): PlayerWorld {
+export function playerRectFromCenterX(
+  x: number,
+  state: PlayerWorld["state"] = "playing",
+  profile: PlayerHitboxProfile = "default",
+): PlayerWorld {
+  const bounds = profile === "level-one" ? LEVEL_ONE_CATCH_BOUNDS : PLAYFIELD_BOUNDS;
   return {
-    x: clampPlayerX(x) - PLAYFIELD_BOUNDS.playerWidth / 2,
-    y: PLAYFIELD_BOUNDS.playerY,
-    width: PLAYFIELD_BOUNDS.playerWidth,
-    height: PLAYFIELD_BOUNDS.playerHeight,
+    x: clampPlayerX(x) - bounds.playerWidth / 2,
+    y: bounds.playerY,
+    width: bounds.playerWidth,
+    height: bounds.playerHeight,
     state,
   };
 }

@@ -358,7 +358,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     return params.get("debugInput") === "1" || params.get("arcade-real-input-debug") === "true";
   })();
   const visualCabinetFrameHidden = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("frameOff") === "1";
-  const worldProgressionParam = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("worldProgression") : null;
+  const worldProbeEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined";
+  const worldProgressionParam = worldProbeEnabled ? new URLSearchParams(window.location.search).get("worldProgression") : null;
+  const worldRecordsParam = worldProbeEnabled ? new URLSearchParams(window.location.search).get("worldRecords") : null;
+  const worldComboParam = worldProbeEnabled ? new URLSearchParams(window.location.search).get("worldCombo") : null;
   const forcedEnergyLevel = worldProgressionParam === "25" ? 5
     : worldProgressionParam === "20" ? 4
     : worldProgressionParam === "15" ? 3
@@ -618,7 +621,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const setPlayerWorldX = (centerX: number, state: PlayerWorld["state"] = "playing", source = "runtime") => {
     const previousX = playerWorldRef.current.x + playerWorldRef.current.width / 2;
-    const nextPlayer = playerRectFromCenterX(centerX, state);
+    const nextPlayer = playerRectFromCenterX(centerX, state, levelRef.current === 1 ? "level-one" : "default");
     playerWorldRef.current = nextPlayer;
     const clampedCenterX = nextPlayer.x + nextPlayer.width / 2;
     djXRef.current = clampedCenterX;
@@ -3470,6 +3473,18 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const renderedStageSnapshot = stageReactionVerification && stageReactionVerification in stageReactions
     ? { ...stageSnapshot, energy: 1, reaction: stageReactionVerification }
     : stageSnapshot;
+  const forcedWorldRecords = worldRecordsParam !== null && /^(0|5|10|15|20|25)$/.test(worldRecordsParam)
+    ? Number(worldRecordsParam)
+    : forcedEnergyLevel !== null
+      ? [0, 5, 10, 15, 20, 25][forcedEnergyLevel]
+      : null;
+  const forcedWorldCombo = worldComboParam !== null && /^(1|2|5|10)$/.test(worldComboParam)
+    ? Number(worldComboParam)
+    : null;
+  const renderedRecordsCaught = forcedWorldRecords ?? recordsCaught;
+  const renderedCombo = forcedWorldCombo ?? combo;
+  const levelOneTimeStage = level === 1 ? Math.min(5, Math.floor(renderedRecordsCaught / 5)) : 0;
+  const levelOnePopulationStage = levelOneTimeStage;
   const pitRunFrame = pitRunProgress < 34 ? "club-exit" : pitRunProgress < 73 ? "deep-pit" : "afterparty-arrival";
   const pitRunFrameCopy = pitRunFrame === "club-exit"
     ? "CLUB EXIT · AFTERPARTY AWAITS"
@@ -3519,7 +3534,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div
           ref={containerRef}
           data-gameplay-state={gameplayState}
-          className={`game-viewport${level === 2 ? " is-level-two" : ""}${level === 1 ? ` level-one-combo-${Math.min(15, combo)}` : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${forcedEnergyLevel !== null ? forcedEnergyLevel : Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}${level === 1 ? ` level-one-combo-${Math.min(15, renderedCombo)} level-one-time-${levelOneTimeStage} level-one-population-${levelOnePopulationStage}` : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
           onPointerMove={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
             if (!usesAlternatePointerRoute) return;
@@ -3617,6 +3632,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="level-one-steam-wisp level-one-steam-right" />
               <span className="level-one-police-sweep" />
               <i className="level-one-flyer level-one-flyer-one" /><i className="level-one-flyer level-one-flyer-two" />
+              <div className="level-one-population" aria-hidden="true">
+                <span className="level-one-population-figure population-arrival-left" />
+                <span className="level-one-population-figure population-arrival-right" />
+                <span className="level-one-population-figure population-queue-left" />
+                <span className="level-one-population-figure population-queue-right" />
+                <span className="level-one-population-figure population-door-left" />
+                <span className="level-one-population-figure population-door-right" />
+                <span className="level-one-population-figure population-wall-right" />
+              </div>
             </div>
           ) : (
             <>
@@ -4369,8 +4393,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {mechanicsDebugEnabled && <div ref={mechanicsDebugPlayerHitboxRef} className="mechanics-debug-player-hitbox" style={{ left: `${playerWorldRef.current.x}%` }} aria-hidden="true" />}
         {mixerDamaged && (
           <div className="mixer-recovery-status" role="status" aria-live="polite">
-            <strong>MIXER DAMAGED</strong>
-            <span>RECOVER: {recoveryProgress}/3 DUBPLATES</span>
+            <strong>MIXER</strong>
+            <span>{recoveryProgress}/3</span>
           </div>
         )}
         <div ref={djCatcherRef} className={`dj-catcher equipment-${equipmentCondition}${downloadUnlocked ? " booth-lowered" : ""}${level === 2 ? " level-two-catcher" : ""}${mixerDamaged ? " mixer-damaged" : ""}${mixerRepairBurst ? " mixer-repaired" : ""}${greenCamoUnlocked && !bonusCamoUnlocked ? " green-camo-unlocked" : ""}${bonusCamoUnlocked ? " bonus-camo-unlocked" : ""}${playerImpact ? ` player-impact-${playerImpact}` : ""}`} style={{ "--player-world-x": `${djXRef.current}%` } as React.CSSProperties}>
