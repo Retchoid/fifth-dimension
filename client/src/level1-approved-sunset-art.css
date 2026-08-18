@@ -16,7 +16,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 54%;
+  object-position: 50% 50%;
   image-rendering: auto;
 }
 
@@ -40,16 +40,26 @@
 /* Level 1 loss remains the same event and copy, now framed as a panel from the
    approved alley rather than a visually disconnected scene. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .loss-curb-overlay {
-  background-image: linear-gradient(120deg, rgba(17, 5, 24, .18), rgba(11, 4, 18, .83)), url("/manus-storage/level1-approved-blank-alley_45d3af4b.png") !important;
+  background-image: linear-gradient(120deg, rgba(17, 5, 24, .18), rgba(11, 4, 18, .83)), url("/manus-storage/level1-approved-locked-169-alley_8924f5b5.png") !important;
   background-position: center !important;
   background-size: cover !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .loss-curb-night {
-  background-image: linear-gradient(to top, rgba(10, 4, 15, .82), transparent 66%), url("/manus-storage/level1-approved-blank-alley_45d3af4b.png") !important;
+  background-image: linear-gradient(to top, rgba(10, 4, 15, .82), transparent 66%), url("/manus-storage/level1-approved-locked-169-alley_8924f5b5.png") !important;
   background-position: center bottom !important;
   background-size: cover !important;
-  filter: saturate(.9) brightness(.8) !important;
+  filter: none !important;
+}
+
+/* `arcade-scoped-overhaul.css` used a legacy inline-style test that cannot see
+   the CSS custom property holding our prop URL. It therefore painted a large
+   magenta fallback rectangle behind live Level 1 assets. Keep the invisible
+   hitbox/wrapper, but suppress only that visual pseudo-layer for this Level 1
+   environment. */
+.arcade-cabinet-bezel .game-viewport:has(.level-one-sunset-alley) .falling-object .urban-prop-asset::after {
+  content: none !important;
+  display: none !important;
 }
 
 /* Retain the existing HUD content/structure while allowing the illustrated
@@ -193,7 +203,7 @@
 @keyframes level-one-hazard-flicker { 50% { opacity: .46; } }
 
 @media (max-width: 650px) {
-  .arcade-cabinet-bezel .level-one-sunset-alley-art { object-position: 50% 51%; }
+  .arcade-cabinet-bezel .level-one-sunset-alley-art { object-position: 50% 50%; }
   .arcade-cabinet-bezel .level-one-speaker-bloom { right: 0; width: 24%; }
   .arcade-cabinet-bezel .level-one-club-entrance-glow { left: 36%; width: 28%; }
 }

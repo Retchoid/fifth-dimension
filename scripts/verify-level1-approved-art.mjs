@@ -1,8 +1,17 @@
 import { chromium } from "playwright";
 
 const origin = process.env.MECHANICS_ORIGIN ?? "http://127.0.0.1:3000";
-const correctedAsset = "/manus-storage/level1-approved-blank-alley_45d3af4b.png";
-const viewports = [[360, 800], [375, 812], [390, 844], [412, 915], [430, 932]];
+const correctedAsset = "/manus-storage/level1-approved-locked-169-alley_8924f5b5.png";
+const viewports = [
+  { width: 320, height: 800, isMobile: true, hasTouch: true },
+  { width: 360, height: 800, isMobile: true, hasTouch: true },
+  { width: 375, height: 812, isMobile: true, hasTouch: true },
+  { width: 390, height: 844, isMobile: true, hasTouch: true },
+  { width: 412, height: 915, isMobile: true, hasTouch: true },
+  { width: 430, height: 932, isMobile: true, hasTouch: true },
+  { width: 768, height: 1024, isMobile: false, hasTouch: false },
+  { width: 1280, height: 720, isMobile: false, hasTouch: false },
+];
 const retiredFlatSelectors = [
   ".neon-backstreet-background",
   ".backstreet-brick-facade",
@@ -15,8 +24,8 @@ const retiredFlatSelectors = [
 const browser = await chromium.launch({ headless: true, executablePath: "/usr/bin/chromium", args: ["--no-sandbox"] });
 const results = [];
 
-for (const [width, height] of viewports) {
-  const context = await browser.newContext({ viewport: { width, height }, isMobile: true, hasTouch: true });
+for (const { width, height, isMobile, hasTouch } of viewports) {
+  const context = await browser.newContext({ viewport: { width, height }, isMobile, hasTouch });
   const page = await context.newPage();
   const focusedSceneUrl = `${origin}/?arcade-scene-verify=items-level-one&arcade-focus=true`;
   let artworkLoaded = false;

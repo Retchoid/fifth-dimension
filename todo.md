@@ -2,6 +2,13 @@
 
 ## Approved Level 1 visual replacement pass — do not touch Level 2 or Level 3 pending sign-off
 
+- [x] Replace the prior Level 1 blank-alley runtime asset with the newly supplied locked 16:9 alley `1000001097.png`, preserving its artwork unchanged and keeping all later levels untouched.
+- [x] Fit the new locked alley naturally in the existing Level 1 responsive playfield with a visible skyline, central pavement lane, grounded player, and preserved landmarks from 320px through desktop.
+- [x] Remove only Level 1 visible translucent magenta object backing rectangles while retaining invisible collision/hitbox behavior.
+- [x] Normalize only the visible Level 1 falling-object presentation so all objects read cleanly without altering item type, spawn timing, collision logic, scoring, controls, HUD architecture, or player animation.
+- [x] Verify the new Level 1-only composition and locked mechanics, then publish a review checkpoint and await approval before Level 2, bonuses, or Pit Run work.
+- [ ] Publish a new Level 1-only review checkpoint containing the locked `1000001097.png` alley swap and visible-backing cleanup.
+- [ ] Hold all Level 2, bonus-round, and Pit Run work until the user explicitly approves the new Level 1-only review checkpoint.
 - [x] Replace the prior unapproved Level 1 background source with the corrected blank alley `1000001096.png`, using `1000001035.png` only as the supplied layer/parallax reference board.
 - [x] Audit only the Level 1 visual environment, duplicate decorative Selectah art, object visual scale, splash visual treatment, HUD emphasis, and available approved sunset-alley sources; preserve all listed mechanics unchanged.
 - [x] Prepare and map approved clean Level 1 sunset-alley environment art to separate background, midground, play plane, and foreground visual layers without using a completed-game screenshot as the background.

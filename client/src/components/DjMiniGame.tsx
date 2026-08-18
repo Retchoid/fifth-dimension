@@ -93,17 +93,17 @@ const FALLING_ITEM_RULES: Record<FallingItemType, { width: number; height: numbe
   // `visualSize` is normalized against the unchanged selector art: regular
   // pickups are 15–28% player height, bonus gear 30–40%, hazards 18–32%.
   // `width` and `height` remain the sole collision values.
-  record: { width: 5, height: 5, visualSize: 14, visualScale: 1.9, levelOneVisualScale: 2.75, tilt: -7 },
-  cop: { width: 6, height: 6, visualSize: 18, visualScale: 1.9, levelOneVisualScale: 2.65, tilt: 0 },
+  record: { width: 5, height: 5, visualSize: 14, visualScale: 1.9, levelOneVisualScale: 1.9, tilt: -7 },
+  cop: { width: 6, height: 6, visualSize: 18, visualScale: 1.9, levelOneVisualScale: 1.9, tilt: 0 },
   bottle: { width: 5, height: 5, visualSize: 15, visualScale: 1.76, tilt: 13 },
   apple: { width: 5, height: 5, visualSize: 15, visualScale: 1.76, tilt: -12 },
   lion: { width: 8, height: 8, visualSize: 22, visualScale: 1.62, tilt: 0 },
-  cdj: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, levelOneVisualScale: 2.12, tilt: -5 },
-  mixer: { width: 7, height: 7, visualSize: 20, visualScale: 1.9, levelOneVisualScale: 2.65, tilt: 4 },
-  turntable: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, levelOneVisualScale: 2.6, tilt: -4 },
-  adapter: { width: 4, height: 4, visualSize: 12, visualScale: 2.12, levelOneVisualScale: 2.65, tilt: 8 },
-  pill: { width: 5, height: 5, visualSize: 14, visualScale: 1.96, levelOneVisualScale: 2.75, tilt: -14 },
-  phone: { width: 5, height: 6, visualSize: 16, visualScale: 1.9, levelOneVisualScale: 2.6, tilt: 16 },
+  cdj: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, levelOneVisualScale: 1.86, tilt: -5 },
+  mixer: { width: 7, height: 7, visualSize: 20, visualScale: 1.9, levelOneVisualScale: 1.9, tilt: 4 },
+  turntable: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, levelOneVisualScale: 1.86, tilt: -4 },
+  adapter: { width: 4, height: 4, visualSize: 12, visualScale: 2.12, levelOneVisualScale: 2.12, tilt: 8 },
+  pill: { width: 5, height: 5, visualSize: 14, visualScale: 1.96, levelOneVisualScale: 1.96, tilt: -14 },
+  phone: { width: 5, height: 6, visualSize: 16, visualScale: 1.9, levelOneVisualScale: 1.9, tilt: 16 },
 };
 
 // Enlarged visible art enters below the compact HUD band. This adjusts only the
@@ -3579,7 +3579,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div className={`game-grid-bg stage-background${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true">
           {level === 1 && (
             <div className="level-one-sunset-alley">
-              <img className="level-one-sunset-alley-art" src="/manus-storage/level1-approved-blank-alley_45d3af4b.png" alt="" />
+              <img className="level-one-sunset-alley-art" src="/manus-storage/level1-approved-locked-169-alley_8924f5b5.png" alt="" />
               <span className="level-one-sunset-vignette" />
             </div>
           )}
