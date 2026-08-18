@@ -1,5 +1,17 @@
 # Project TODO
 
+## Approved Level 1 visual replacement pass — do not touch Level 2 or Level 3 pending sign-off
+
+- [x] Replace the prior unapproved Level 1 background source with the corrected blank alley `1000001096.png`, using `1000001035.png` only as the supplied layer/parallax reference board.
+- [x] Audit only the Level 1 visual environment, duplicate decorative Selectah art, object visual scale, splash visual treatment, HUD emphasis, and available approved sunset-alley sources; preserve all listed mechanics unchanged.
+- [x] Prepare and map approved clean Level 1 sunset-alley environment art to separate background, midground, play plane, and foreground visual layers without using a completed-game screenshot as the background.
+- [x] Replace only the current flat Level 1 environment with the coherent illustrated sunset alley, including physically embedded architecture, graffiti, speakers, signage, clutter, and perspective; remove the duplicate decorative Selectah.
+- [x] Increase only visual object scale by type while retaining the current collision calculation and visually align object bounds with their hit bounds.
+- [x] Add Level 1-only visual combo reactions from 2 through 15 without changing combo mechanics, trigger logic, timing, input, collision, spawning, scoring, or progression.
+- [x] Restyle only the Level 1 “THE RAVE LEFT YOU OUTSIDE” visual panel and reduce HUD visual dominance without changing triggers, copy, timing, cabinet structure, or event logic.
+- [x] Validate Level 1 at 360, 375, 390, 412, and 430px for one gameplay Selectah, readable player/objects, no flat/empty environment, visible depth, input/collision/progression preservation, and no Level 2 or Level 3 change.
+- [ ] Publish a Level 1-only review checkpoint and await explicit user approval before making or proceeding to any Level 2 or Level 3 work.
+
 ## Approved-art Level 3 Pit Run integration — preserve Level 1/2 mechanics
 
 - [x] Audit the locked movement, pointer/touch input, collision, scoring, combo, lives, splash, and Level 1/2 progression paths before extending Level 3.

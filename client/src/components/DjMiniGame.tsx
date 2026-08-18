@@ -21,6 +21,7 @@ import "@/arcade-scoped-overhaul.css";
 import "@/visual-recovery-arcade.css";
 import "@/arcade-playfield-architecture.css";
 import "@/pit-run-approved-art.css";
+import "@/level1-approved-sunset-art.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
@@ -88,21 +89,21 @@ const URBAN_RUNNER_ASSETS: Record<BonusRunnerType, string> = {
   rat: "/embedded-assets/selectah-runner-rat-urban_42c505b7.png",
 };
 
-const FALLING_ITEM_RULES: Record<FallingItemType, { width: number; height: number; visualSize: number; visualScale: number; tilt: number }> = {
+const FALLING_ITEM_RULES: Record<FallingItemType, { width: number; height: number; visualSize: number; visualScale: number; levelOneVisualScale?: number; tilt: number }> = {
   // `visualSize` is normalized against the unchanged selector art: regular
   // pickups are 15–28% player height, bonus gear 30–40%, hazards 18–32%.
   // `width` and `height` remain the sole collision values.
-  record: { width: 5, height: 5, visualSize: 14, visualScale: 1.9, tilt: -7 },
-  cop: { width: 6, height: 6, visualSize: 18, visualScale: 1.9, tilt: 0 },
+  record: { width: 5, height: 5, visualSize: 14, visualScale: 1.9, levelOneVisualScale: 2.75, tilt: -7 },
+  cop: { width: 6, height: 6, visualSize: 18, visualScale: 1.9, levelOneVisualScale: 2.65, tilt: 0 },
   bottle: { width: 5, height: 5, visualSize: 15, visualScale: 1.76, tilt: 13 },
   apple: { width: 5, height: 5, visualSize: 15, visualScale: 1.76, tilt: -12 },
   lion: { width: 8, height: 8, visualSize: 22, visualScale: 1.62, tilt: 0 },
-  cdj: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, tilt: -5 },
-  mixer: { width: 7, height: 7, visualSize: 20, visualScale: 1.9, tilt: 4 },
-  turntable: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, tilt: -4 },
-  adapter: { width: 4, height: 4, visualSize: 12, visualScale: 2.12, tilt: 8 },
-  pill: { width: 5, height: 5, visualSize: 14, visualScale: 1.96, tilt: -14 },
-  phone: { width: 5, height: 6, visualSize: 16, visualScale: 1.9, tilt: 16 },
+  cdj: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, levelOneVisualScale: 2.12, tilt: -5 },
+  mixer: { width: 7, height: 7, visualSize: 20, visualScale: 1.9, levelOneVisualScale: 2.65, tilt: 4 },
+  turntable: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, levelOneVisualScale: 2.6, tilt: -4 },
+  adapter: { width: 4, height: 4, visualSize: 12, visualScale: 2.12, levelOneVisualScale: 2.65, tilt: 8 },
+  pill: { width: 5, height: 5, visualSize: 14, visualScale: 1.96, levelOneVisualScale: 2.75, tilt: -14 },
+  phone: { width: 5, height: 6, visualSize: 16, visualScale: 1.9, levelOneVisualScale: 2.6, tilt: 16 },
 };
 
 // Enlarged visible art enters below the compact HUD band. This adjusts only the
@@ -1914,7 +1915,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           : (["record", "bottle", "apple", "cop", "pill", "phone", "lion", "cdj", "mixer", "turntable", "adapter"] as FallingItemType[]);
         const previewItems = types.map((type, index) => {
           const rule = FALLING_ITEM_RULES[type];
-          return { id: -900 - index, x: 6 + (index % 4) * 23, y: 12 + Math.floor(index / 4) * 30, type, velocity: 0, state: "active" as const, ...rule, tilt: rule.tilt };
+          const previewSafeLaneInset = previewLevel === 1 ? 17 : 6;
+          const previewLaneStep = previewLevel === 1 ? 22 : 23;
+          const previewSafeSpawnY = previewLevel === 1 ? 18 : 12;
+          return {
+            id: -900 - index,
+            x: previewSafeLaneInset + (index % 4) * previewLaneStep,
+            y: previewSafeSpawnY + Math.floor(index / 4) * 30,
+            type,
+            velocity: 0,
+            state: "active" as const,
+            ...rule,
+            visualScale: previewLevel === 1 ? (rule.levelOneVisualScale ?? rule.visualScale) : rule.visualScale,
+            tilt: rule.tilt,
+          };
         });
         levelRef.current = previewLevel;
         itemsRef.current = previewItems;
@@ -2849,20 +2863,28 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       // Level 1 remains free of bottles and apple cores; only Level 2 crowd throws them.
       const spawnedType = scheduledNamedHazard ?? pickFallingItemType(activeFallingLevel, roll);
       const itemRule = FALLING_ITEM_RULES[spawnedType];
+      // Level 1's larger approved-art presentation needs extra edge clearance
+      // on narrow phones. This changes only the visual entry lane—not timing,
+      // item dimensions, motion, hitbox ownership, or collision resolution.
+      const visualSafeLaneInset = levelRef.current === 1 ? 14 : FALLING_ITEM_SAFE_LANE_INSET;
+      const visualSafeSpawnY = levelRef.current === 1 ? 16 : HUD_SAFE_FALLING_SPAWN_Y;
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 50 : 36;
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
       itemsRef.current.push({
         id: nextIdRef.current++,
-        x: Math.floor(Math.random() * (100 - FALLING_ITEM_SAFE_LANE_INSET * 2 - itemRule.width)) + FALLING_ITEM_SAFE_LANE_INSET,
-        y: HUD_SAFE_FALLING_SPAWN_Y,
+        x: Math.floor(Math.random() * (100 - visualSafeLaneInset * 2 - itemRule.width)) + visualSafeLaneInset,
+        y: visualSafeSpawnY,
         type: spawnedType,
         velocity: Math.floor(Math.random() * (levelRef.current === 2 ? 12 : 10)) + baseSpeed + speedRamp,
         state: "active",
         width: itemRule.width,
         height: itemRule.height,
         visualSize: itemRule.visualSize,
-        visualScale: itemRule.visualScale,
+        // Level 1’s approved illustrated background calls for a larger visual
+        // read. The hitbox width/height, spawn timing, path, and collision loop
+        // remain exactly the values above.
+        visualScale: levelRef.current === 1 ? (itemRule.levelOneVisualScale ?? itemRule.visualScale) : itemRule.visualScale,
         tilt: itemRule.tilt * (Math.random() > 0.5 ? 1 : -1),
       });
       structureChanged = true;
@@ -3489,7 +3511,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div
           ref={containerRef}
           data-gameplay-state={gameplayState}
-          className={`game-viewport${level === 2 ? " is-level-two" : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}${level === 1 ? ` level-one-combo-${Math.min(15, combo)}` : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
           onPointerMove={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
             if (!usesAlternatePointerRoute) return;
@@ -3556,11 +3578,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
         <div className={`game-grid-bg stage-background${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true">
           {level === 1 && (
-            <div className="neon-backstreet-background">
-              <i className="backstreet-rooftop rooftop-left" /><i className="backstreet-rooftop rooftop-centre" /><i className="backstreet-rooftop rooftop-right" />
-              <i className="backstreet-distant-building distant-one" /><i className="backstreet-distant-building distant-two" /><i className="backstreet-distant-building distant-three" />
-              <i className="backstreet-antenna antenna-one" /><i className="backstreet-antenna antenna-two" />
-              <span className="backstreet-moon" />
+            <div className="level-one-sunset-alley">
+              <img className="level-one-sunset-alley-art" src="/manus-storage/level1-approved-blank-alley_45d3af4b.png" alt="" />
+              <span className="level-one-sunset-vignette" />
             </div>
           )}
           {level === 2 && (
@@ -3575,33 +3595,31 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           )}
         </div>
         <div className="stage-midground" aria-hidden="true">
-          {level === 1 && (
+        </div>
+        <div className="stage-game-plane" aria-hidden="true">
+        </div>
+        <div className="stage-reactive" aria-hidden="true">
+          {level === 1 ? (
+            <div className="level-one-alley-reactive">
+              <span className="level-one-neon-flicker" />
+              <span className="level-one-speaker-bloom" />
+              <span className="level-one-window-wash" />
+              <span className="level-one-club-entrance-glow" />
+              <span className="level-one-steam-wisp level-one-steam-left" />
+              <span className="level-one-steam-wisp level-one-steam-right" />
+              <span className="level-one-police-sweep" />
+              <i className="level-one-flyer level-one-flyer-one" /><i className="level-one-flyer level-one-flyer-two" />
+            </div>
+          ) : (
             <>
-              <div className="backstreet-brick-facade facade-left"><i className="backstreet-window window-a" /><i className="backstreet-window window-b" /><span className="backstreet-graffiti">5D</span></div>
-              <div className="backstreet-rear-archway"><i /><span>ALLEY</span><b /></div>
-              <div className="backstreet-club-front"><span className="club-neon-sign">CLUB<br />5D</span><i className="club-door club-door-left" /><i className="club-door club-door-right" /><b className="club-awning" /></div>
-              <div className="backstreet-record-shop"><span>RECORDS</span><i /><i /></div>
-              <div className="backstreet-fire-escape"><i /><i /><i /><b /><b /></div>
-              <div className="backstreet-pipe pipe-left" /><div className="backstreet-pipe pipe-right" />
-              <div className="backstreet-dumpster dumpster-left"><i /></div><div className="backstreet-dumpster dumpster-right"><i /></div>
-              <div className="backstreet-police-van"><b>POLICE</b><i /><i /></div>
-              <div className="backstreet-security"><i /><b /></div><div className="backstreet-smoker"><i /><b /></div><div className="backstreet-shop-worker"><i /><b /></div><div className="backstreet-raver"><i /><b /></div>
-              <span className="backstreet-poster poster-transmission">BASS<br />TRANS</span><span className="backstreet-poster poster-showdown">SHOW<br />DOWN</span><span className="backstreet-sticker sticker-five">5</span><span className="backstreet-sticker sticker-tape">TAPE</span>
+              <span className="stage-sign stage-sign-left" /><span className="stage-sign stage-sign-right" />
+              <img className="stage-edge-speaker" src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" />
+              <img className="stage-npc-reaction" src={CELEBRATION_DANCERS[1].src} alt="" />
+              <i className="stage-flyer stage-flyer-one" /><i className="stage-flyer stage-flyer-two" /><i className="stage-flyer stage-flyer-three" />
             </>
           )}
         </div>
-        <div className="stage-game-plane" aria-hidden="true">
-          {level === 1 && <><i className="alley-puddle puddle-left" /><i className="alley-puddle puddle-right" /><b className="alley-drain" /><span className="alley-flyer flyer-a">DUB</span><span className="alley-flyer flyer-b">5D</span><span className="alley-debris debris-a" /><span className="alley-debris debris-b" /></>}
-        </div>
-        <div className="stage-reactive" aria-hidden="true">
-          <span className="stage-sign stage-sign-left" /><span className="stage-sign stage-sign-right" />
-          {level === 1 && <><span className="backstreet-hanging-sign">NO<br />REQUESTS</span><span className="backstreet-steam steam-left" /><span className="backstreet-steam steam-right" /><span className="backstreet-searchlight" /><span className="backstreet-npc npc-left" /><span className="backstreet-npc npc-right" /></>}
-          <img className="stage-edge-speaker" src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" />
-          <img className="stage-npc-reaction" src={CELEBRATION_DANCERS[1].src} alt="" />
-          <i className="stage-flyer stage-flyer-one" /><i className="stage-flyer stage-flyer-two" /><i className="stage-flyer stage-flyer-three" />
-        </div>
         <div className="stage-foreground" aria-hidden="true">
-          {level === 1 && <><i className="foreground-railing" /><i className="foreground-cable cable-a" /><i className="foreground-cable cable-b" /><span className="foreground-speaker-edge" /><span className="foreground-bin" /><span className="foreground-tag">5D</span></>}
         </div>
         {impactFx && (
           <div
@@ -3611,7 +3629,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             aria-hidden="true"
           />
         )}
-        <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : ""}`} aria-hidden="true">
+        <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : level === 1 ? " level-one-rave-world" : ""}`} aria-hidden="true">
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>
         <div className="game-hud game-hud-clear">

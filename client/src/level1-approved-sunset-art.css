@@ -1,0 +1,203 @@
+/* LEVEL 1 ONLY — user-approved illustrated sunset alley. The environment stays
+   behind the unchanged input, collision, player, and falling-object layers. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .game-grid-bg.stage-background {
+  background: #1d0e24 !important;
+}
+
+.arcade-cabinet-bezel .level-one-sunset-alley {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #1d0e24;
+}
+
+.arcade-cabinet-bezel .level-one-sunset-alley-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 54%;
+  image-rendering: auto;
+}
+
+.arcade-cabinet-bezel .level-one-sunset-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(18, 6, 25, .1) 0 11%, transparent 28% 76%, rgba(13, 5, 20, .17) 100%);
+  box-shadow: inset 0 0 0 2px rgba(255, 45, 149, .13);
+}
+
+/* The old geometry-defined floor must not remain above the illustrated street. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .stage-game-plane::before {
+  content: none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-rave-world {
+  display: none !important;
+}
+
+/* Level 1 loss remains the same event and copy, now framed as a panel from the
+   approved alley rather than a visually disconnected scene. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .loss-curb-overlay {
+  background-image: linear-gradient(120deg, rgba(17, 5, 24, .18), rgba(11, 4, 18, .83)), url("/manus-storage/level1-approved-blank-alley_45d3af4b.png") !important;
+  background-position: center !important;
+  background-size: cover !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .loss-curb-night {
+  background-image: linear-gradient(to top, rgba(10, 4, 15, .82), transparent 66%), url("/manus-storage/level1-approved-blank-alley_45d3af4b.png") !important;
+  background-position: center bottom !important;
+  background-size: cover !important;
+  filter: saturate(.9) brightness(.8) !important;
+}
+
+/* Retain the existing HUD content/structure while allowing the illustrated
+   world to carry more of the visual weight. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .game-hud {
+  background: rgba(8, 4, 14, .68) !important;
+  border-bottom-color: rgba(255, 45, 149, .32) !important;
+  box-shadow: 0 2px 0 rgba(10, 10, 18, .58) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .hud-badge {
+  background: rgba(8, 4, 14, .42) !important;
+  border-color: rgba(240, 234, 214, .14) !important;
+}
+
+.arcade-cabinet-bezel .level-one-alley-reactive {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.arcade-cabinet-bezel .level-one-alley-reactive > * {
+  position: absolute;
+  pointer-events: none;
+}
+
+.arcade-cabinet-bezel .level-one-neon-flicker {
+  top: 22%;
+  left: 17%;
+  width: 21%;
+  height: 10%;
+  opacity: .03;
+  background: #ff2d95;
+  box-shadow: 0 0 14px 7px rgba(255, 45, 149, .52);
+}
+
+.arcade-cabinet-bezel .level-one-speaker-bloom {
+  top: 22%;
+  right: 4%;
+  width: 19%;
+  height: 43%;
+  opacity: .02;
+  background: radial-gradient(circle at 50% 34%, rgba(255, 194, 74, .48) 0 4%, transparent 5% 14%, rgba(255, 45, 149, .32) 15% 18%, transparent 19% 28%, rgba(0, 212, 255, .25) 29% 32%, transparent 33%);
+}
+
+.arcade-cabinet-bezel .level-one-window-wash {
+  top: 7%;
+  left: 37%;
+  width: 30%;
+  height: 38%;
+  opacity: .02;
+  background: radial-gradient(ellipse at 50% 50%, rgba(255, 226, 123, .5), transparent 68%);
+}
+
+.arcade-cabinet-bezel .level-one-club-entrance-glow {
+  top: 29%;
+  left: 40%;
+  width: 19%;
+  height: 34%;
+  opacity: .02;
+  background: linear-gradient(180deg, rgba(255, 45, 149, .4), rgba(0, 212, 255, .25) 62%, transparent);
+}
+
+.arcade-cabinet-bezel .level-one-steam-wisp {
+  bottom: 17%;
+  width: 11%;
+  height: 26%;
+  border-left: 2px solid rgba(240, 234, 214, .42);
+  border-right: 1px solid rgba(255, 194, 74, .24);
+  opacity: 0;
+}
+
+.arcade-cabinet-bezel .level-one-steam-left { left: 18%; }
+.arcade-cabinet-bezel .level-one-steam-right { right: 24%; }
+
+.arcade-cabinet-bezel .level-one-police-sweep {
+  inset: -12% auto -12% -30%;
+  width: 23%;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, .2), rgba(255, 45, 149, .21), transparent);
+  transform: skewX(-18deg);
+}
+
+.arcade-cabinet-bezel .level-one-flyer {
+  top: 33%;
+  width: 6px;
+  height: 8px;
+  opacity: 0;
+  background: #ffe600;
+  box-shadow: 1px 1px 0 #0a0a12;
+  transform: rotate(18deg);
+}
+
+.arcade-cabinet-bezel .level-one-flyer-one { left: 31%; }
+.arcade-cabinet-bezel .level-one-flyer-two { left: 65%; background: #00d4ff; }
+
+/* Existing energy and reaction classes are visual signals only. */
+.arcade-cabinet-bezel .stage-energy-1 .level-one-neon-flicker { opacity: .28; animation: level-one-neon-tick 1.6s steps(2, end) infinite; }
+.arcade-cabinet-bezel .stage-energy-1 .level-one-speaker-bloom { opacity: .18; }
+.arcade-cabinet-bezel .stage-energy-2 .level-one-speaker-bloom { opacity: .52; animation: level-one-speaker-pulse .42s steps(2, end) infinite; }
+.arcade-cabinet-bezel .stage-energy-2 .level-one-window-wash { opacity: .34; }
+.arcade-cabinet-bezel .stage-energy-3 .level-one-window-wash { opacity: .56; animation: level-one-window-warmth .82s steps(2, end) infinite alternate; }
+.arcade-cabinet-bezel .stage-energy-3 .level-one-club-entrance-glow { opacity: .56; animation: level-one-entrance-glow .68s steps(2, end) infinite alternate; }
+.arcade-cabinet-bezel .stage-energy-3 .level-one-steam-wisp { opacity: .43; animation: level-one-steam-rise 1.8s steps(3, end) infinite; }
+.arcade-cabinet-bezel .stage-energy-3 .level-one-flyer { opacity: .72; animation: level-one-flyer-drift 1.1s steps(3, end) infinite; }
+.arcade-cabinet-bezel .stage-energy-3 .level-one-police-sweep { opacity: .72; animation: level-one-police-sweep 2.2s steps(4, end) infinite; }
+
+.arcade-cabinet-bezel .stage-reaction-combo_5 .level-one-speaker-bloom { opacity: .72; animation: level-one-speaker-pulse .2s steps(2, end) 3; }
+.arcade-cabinet-bezel .stage-reaction-combo_10 .level-one-flyer { opacity: .9; animation: level-one-flyer-drift .58s steps(3, end) 3; }
+.arcade-cabinet-bezel .stage-reaction-combo_15 .level-one-police-sweep { opacity: .9; animation: level-one-police-sweep .7s steps(3, end) 2; }
+.arcade-cabinet-bezel .stage-event-catch .level-one-neon-flicker { opacity: .82; animation: level-one-neon-tick .18s steps(2, end) 2; }
+.arcade-cabinet-bezel .stage-event-hazard .level-one-window-wash { opacity: .1; animation: level-one-hazard-flicker .22s steps(2, end) 2; }
+.arcade-cabinet-bezel .stage-event-hazard .level-one-sunset-vignette { background: linear-gradient(180deg, rgba(8, 3, 14, .42), transparent 32% 70%, rgba(8, 3, 14, .48)); animation: level-one-hazard-flicker .22s steps(2, end) 2; }
+
+/* Exact Level 1 combo milestones use a render-only class derived from the
+   existing combo value. They do not write to, delay, or otherwise affect it. */
+.arcade-cabinet-bezel .game-viewport:is(.level-one-combo-2,.level-one-combo-3,.level-one-combo-4,.level-one-combo-5,.level-one-combo-6,.level-one-combo-7,.level-one-combo-8,.level-one-combo-9,.level-one-combo-10,.level-one-combo-11,.level-one-combo-12,.level-one-combo-13,.level-one-combo-14,.level-one-combo-15) .level-one-neon-flicker { opacity: .38; animation: level-one-neon-tick 1.25s steps(2, end) infinite; }
+.arcade-cabinet-bezel .game-viewport:is(.level-one-combo-4,.level-one-combo-5,.level-one-combo-6,.level-one-combo-7,.level-one-combo-8,.level-one-combo-9,.level-one-combo-10,.level-one-combo-11,.level-one-combo-12,.level-one-combo-13,.level-one-combo-14,.level-one-combo-15) .level-one-speaker-bloom { opacity: .58; animation: level-one-speaker-pulse .46s steps(2, end) infinite; }
+.arcade-cabinet-bezel .game-viewport:is(.level-one-combo-6,.level-one-combo-7,.level-one-combo-8,.level-one-combo-9,.level-one-combo-10,.level-one-combo-11,.level-one-combo-12,.level-one-combo-13,.level-one-combo-14,.level-one-combo-15) .level-one-window-wash { opacity: .48; animation: level-one-window-warmth .9s steps(2, end) infinite alternate; }
+.arcade-cabinet-bezel .game-viewport:is(.level-one-combo-8,.level-one-combo-9,.level-one-combo-10,.level-one-combo-11,.level-one-combo-12,.level-one-combo-13,.level-one-combo-14,.level-one-combo-15) .level-one-club-entrance-glow { opacity: .66; animation: level-one-entrance-glow .65s steps(2, end) infinite alternate; }
+.arcade-cabinet-bezel .game-viewport:is(.level-one-combo-10,.level-one-combo-11,.level-one-combo-12,.level-one-combo-13,.level-one-combo-14,.level-one-combo-15) .level-one-steam-wisp { opacity: .48; animation: level-one-steam-rise 1.7s steps(3, end) infinite; }
+.arcade-cabinet-bezel .game-viewport:is(.level-one-combo-10,.level-one-combo-11,.level-one-combo-12,.level-one-combo-13,.level-one-combo-14,.level-one-combo-15) .level-one-flyer { opacity: .78; animation: level-one-flyer-drift 1.05s steps(3, end) infinite; }
+.arcade-cabinet-bezel .game-viewport:is(.level-one-combo-12,.level-one-combo-13,.level-one-combo-14,.level-one-combo-15) .level-one-police-sweep { opacity: .74; animation: level-one-police-sweep 2.15s steps(4, end) infinite; }
+.arcade-cabinet-bezel .game-viewport.level-one-combo-15 .level-one-club-entrance-glow { opacity: .88; box-shadow: 0 0 24px 8px rgba(255, 45, 149, .22); }
+
+/* Combo 1 is the normal grounded street: do not let the generalized energy
+   signal introduce the 2x reaction before the player has earned it. */
+.arcade-cabinet-bezel .game-viewport.level-one-combo-1 .level-one-alley-reactive > * {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+@keyframes level-one-neon-tick { 50% { opacity: .72; } }
+@keyframes level-one-speaker-pulse { 50% { transform: scale(1.045); opacity: .82; } }
+@keyframes level-one-window-warmth { to { opacity: .72; } }
+@keyframes level-one-entrance-glow { to { opacity: .8; transform: translateY(-1px); } }
+@keyframes level-one-steam-rise { from { transform: translateY(8px); } to { transform: translateY(-14px); opacity: .08; } }
+@keyframes level-one-flyer-drift { to { transform: translate(14px, 35px) rotate(198deg); opacity: 0; } }
+@keyframes level-one-police-sweep { from { transform: translateX(-10%) skewX(-18deg); } to { transform: translateX(500%) skewX(-18deg); } }
+@keyframes level-one-hazard-flicker { 50% { opacity: .46; } }
+
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel .level-one-sunset-alley-art { object-position: 50% 51%; }
+  .arcade-cabinet-bezel .level-one-speaker-bloom { right: 0; width: 24%; }
+  .arcade-cabinet-bezel .level-one-club-entrance-glow { left: 36%; width: 28%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-cabinet-bezel .level-one-alley-reactive > * { animation: none !important; }
+}

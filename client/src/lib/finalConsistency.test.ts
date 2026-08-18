@@ -14,6 +14,7 @@ const fallingItemsRenderFix = read("falling-items-render-fix.css");
 const mobileSiteRepair = read("mobile-site-repair.css");
 const scopedArcadeOverhaul = read("arcade-scoped-overhaul.css");
 const arcadePlayfieldArchitecture = read("arcade-playfield-architecture.css");
+const levelOneApprovedArt = read("level1-approved-sunset-art.css");
 const mainSource = read("main.tsx");
 
 const publicSources = [
@@ -89,11 +90,25 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("playfieldPointerRef");
     expect(gameSource).not.toContain("mobile-playfield-control-hint");
     expect(gameSource).not.toContain("nudgeMobileDj");
-    expect(gameSource).toContain("neon-backstreet-background");
+    expect(gameSource).toContain("level-one-sunset-alley");
+    expect(gameSource).toContain("level1-approved-sunset-art.css");
+    expect(gameSource).toContain("level1-approved-blank-alley_45d3af4b.png");
+    expect(gameSource).not.toContain("level1-approved-sunset-alley_4371e45d.png");
+    expect(gameSource).toContain("levelOneVisualScale");
+    expect(gameSource).toContain("level-one-combo-${Math.min(15, combo)}");
+    expect(gameSource).not.toContain("neon-backstreet-background");
+    expect(gameSource).not.toContain("backstreet-brick-facade");
+    expect(gameSource).not.toContain("backstreet-police-van");
+    expect(gameSource).not.toContain("backstreet-npc npc-left");
     expect(gameSource).toContain("stage-game-plane");
     expect(gameSource).toContain("stage-foreground");
-    expect(arcadePlayfieldArchitecture).toContain("LEVEL 1 — NEON BACKSTREET / AUTHORED PLAYFIELD");
-    expect(arcadePlayfieldArchitecture).not.toContain("selectah-level-one-urban-stage-reference_43ddc07a.png");
+    expect(levelOneApprovedArt).toContain("LEVEL 1 ONLY — user-approved illustrated sunset alley");
+    expect(levelOneApprovedArt).toContain("level-one-sunset-alley-art");
+    expect(levelOneApprovedArt).toContain("content: none !important");
+    expect(levelOneApprovedArt).toContain("stage-reaction-combo_15");
+    expect(levelOneApprovedArt).toContain("level-one-combo-12");
+    expect(levelOneApprovedArt).toContain(".loss-curb-overlay");
+    expect(levelOneApprovedArt).toContain("game-hud");
     expect(arcadePlayfieldArchitecture).not.toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
     expect(arcadePlayfieldArchitecture).not.toContain("selectah-splash-art-direction_4d1c250f.png");
     expect(arcadePlayfieldArchitecture).not.toContain("5d-selector-rave-stage_e4fdff4b.png");
