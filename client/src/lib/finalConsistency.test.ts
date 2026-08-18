@@ -273,6 +273,29 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain('transitionChapter("LEVEL_2", "start-pit")');
   });
 
+  it("keeps Level 3 Pit Run as an approved-art three-frame run with compact feedback", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    const pitRunArt = read("pit-run-approved-art.css");
+    expect(gameSource).toContain('setIsPitRunBridgeVisible(true)');
+    expect(gameSource).toContain('AFTERPARTY?');
+    expect(gameSource).toContain('GRAB THE GEAR.');
+    expect(gameSource).toContain('pit-run-frame-${pitRunFrame}');
+    expect(pitRunArt).toContain('pit-run-frame-club-exit');
+    expect(pitRunArt).toContain('pit-run-frame-deep-pit');
+    expect(pitRunArt).toContain('pit-run-frame-afterparty-arrival');
+    expect(gameSource).toContain('/manus-storage/approved-pit-run-afterparty-board_b135c77c.png');
+    expect(gameSource).toContain('pit-run-entity-art');
+    expect(gameSource).toContain('PIT_RUN_ENTITY_ASSETS');
+    expect(gameSource).toContain('PIT_RUN_ENTITY_LABELS');
+    expect(pitRunArt).toContain('.pit-run-world-art');
+    expect(pitRunArt).toContain('.pit-run-entity-layer{z-index:15}');
+    expect(pitRunArt).toContain('.pit-runner{z-index:13');
+    expect(pitRunArt).toContain('pit-run-dawn');
+    expect(pitRunArt).toContain('pit-run-hit');
+    expect(pitRunArt).toContain('pit-run-trash-shift');
+    expect(pitRunArt).toContain('pit-run-police-light');
+  });
+
   it("keeps published mobile pointer input bound to one permanent playfield-owned input surface", () => {
     const gameSource = read("components/DjMiniGame.tsx");
     expect(gameSource).toContain("const inputCaptureRef = useRef<HTMLDivElement>(null);");

@@ -20,6 +20,7 @@ import "@/hazard-master-style.css";
 import "@/arcade-scoped-overhaul.css";
 import "@/visual-recovery-arcade.css";
 import "@/arcade-playfield-architecture.css";
+import "@/pit-run-approved-art.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
@@ -162,10 +163,28 @@ const BONUS_GEAR_TYPES: BonusGearType[] = ["headphones", "turntable", "mic", "sp
 const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 const PIT_REQUIRED_GEAR: PitGearType[] = ["crate", "mic", "mixer", "cdj", "turntable", "headphones"];
 const PIT_HAZARD_TYPES: PitHazardType[] = ["bin", "rat", "bottle", "cart", "barrier", "pothole"];
+const PIT_RUN_ENTITY_ASSETS: Record<PitEntityType, string> = {
+  crate: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
+  mic: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
+  mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
+  cdj: "/embedded-assets/selectah-cdj-urban_79c0b46c.png",
+  turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
+  headphones: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
+  bin: "/embedded-assets/selectah-runner-can-urban_b243de6f.png",
+  rat: "/embedded-assets/selectah-runner-rat-urban_42c505b7.png",
+  bottle: "/embedded-assets/selectah-bottle-urban_fc7e712f.png",
+  cart: "/embedded-assets/selectah-runner-cart-urban_9a222f37.png",
+  barrier: "/embedded-assets/selectah-runner-cart-urban_9a222f37.png",
+  pothole: "/embedded-assets/selectah-runner-rock-urban_3cfc2fac.png",
+};
+const PIT_RUN_ENTITY_LABELS: Record<PitEntityType, string> = {
+  crate: "LAST CRATE!", mic: "MIC FOUND", mixer: "MIXER", cdj: "CDJ", turntable: "DECK", headphones: "HEADPHONES",
+  bin: "BIN JUICE", rat: "RAT PACK", bottle: "TWO-STEP", cart: "WATCH TRAINERS", barrier: "WRONG TURN", pothole: "NOT THE CRATE!",
+};
 type ComboReaction = "big-up" | "subwoofer" | "gun-fingers" | "ground-decks" | null;
 type ComboReactionKind = Exclude<ComboReaction, null>;
 type ArcadeSequence = "rewind" | "wheel" | "police" | "crowd" | "pill" | "crate" | "headphones" | "boh" | "riddim";
-type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; showComboReaction: (kind: ComboReactionKind) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; exerciseWorldEvent: (kind: "catch" | "hazard" | "miss" | "level-complete") => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; startCrowdPressureActive: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void; startPitRun: () => void; recoverPitGear: (gear: PitGearType) => void; hitPitHazard: () => void } };
+type ArcadeDebugWindow = Window & { __selectahDebug?: { triggerSequence: (sequence: ArcadeSequence | "thrown") => void; showComboReaction: (kind: ComboReactionKind) => void; triggerRecordTransition: () => void; showLevelOneSpeakers: () => void; showItemPreview: (level: GameLevel) => void; exerciseWorldEvent: (kind: "catch" | "hazard" | "miss" | "level-complete") => void; showLossComedown: () => void; showGameOver: () => void; showUnlock: () => void; startLevelTwo: () => void; startFirstBonus: () => void; startCrowdPressureActive: () => void; clearFirstBonus: () => void; failFirstBonus: () => void; startAfterpartyBonus: () => void; clearAfterpartyBonus: () => void; failAfterpartyBonus: () => void; startPitRun: () => void; completeLevelTwoPitRunHandoff: () => void; showPitRunFrame: (frame: "club-exit" | "deep-pit" | "afterparty-arrival") => void; recoverPitGear: (gear: PitGearType) => void; hitPitHazard: () => void } };
 interface PickupFlash {
   key: number;
   label: string;
@@ -295,6 +314,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [bonusCamoUnlocked, setBonusCamoUnlocked] = useState(false);
   const [bonusObstacles, setBonusObstacles] = useState<BonusRunnerEntity[]>([]);
   const [isPitRunActive, setIsPitRunActive] = useState(false);
+  const [isPitRunBridgeVisible, setIsPitRunBridgeVisible] = useState(false);
   const [isAfterpartyUnlocked, setIsAfterpartyUnlocked] = useState(false);
   const [pitRunProgress, setPitRunProgress] = useState(0);
   const [pitRunLane, setPitRunLane] = useState(1);
@@ -1648,6 +1668,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     pitRunHitsRef.current = 0;
     setIsPlaying(false);
     setIsPitRunActive(true);
+    setIsPitRunBridgeVisible(true);
     setIsAfterpartyUnlocked(false);
     setPitRunProgress(0);
     setPitRunLane(1);
@@ -1661,12 +1682,29 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     playRecordScratch();
     pitRunLastTimeRef.current = performance.now();
     pitRunRequestRef.current = requestAnimationFrame(updatePitRun);
+    window.setTimeout(() => setIsPitRunBridgeVisible(false), 950);
+  };
+
+  const completeLevelTwoPitRunHandoff = (completedScore = scoreRef.current) => {
+    isPlayingRef.current = false;
+    stageControllerRef.current?.onLevelComplete();
+    clearStageEventAfter(900);
+    if (bgMusicRef.current) bgMusicRef.current.pause();
+    setIsPlaying(false);
+    setLevelTwoComplete(true);
+    setGameOver(false);
+    setIsUnlockPaused(false);
+    setIsNewRecord(completedScore > highScoreRef.current);
+    finaleRef.current = false;
+    setFinale(false);
+    startPitRun();
   };
 
   const finishPitRun = (afterpartyUnlocked: boolean) => {
     if (pitRunRequestRef.current) cancelAnimationFrame(pitRunRequestRef.current);
     pitRunActiveRef.current = false;
     setIsPitRunActive(false);
+    setIsPitRunBridgeVisible(false);
     if (afterpartyUnlocked) {
       setChapterMode(transitionChapter("LEVEL_3_PIT_RUN", "afterparty"));
       setIsAfterpartyUnlocked(true);
@@ -2022,6 +2060,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         finishNoRequestBonus(false);
       },
       startPitRun,
+      completeLevelTwoPitRunHandoff: () => completeLevelTwoPitRunHandoff(),
+      showPitRunFrame: (frame) => {
+        startPitRun();
+        const progress = frame === "club-exit" ? 12 : frame === "deep-pit" ? 52 : 84;
+        const inventory = frame === "afterparty-arrival" ? [...PIT_REQUIRED_GEAR] : frame === "deep-pit" ? PIT_REQUIRED_GEAR.slice(0, 3) : [];
+        if (pitRunRequestRef.current) cancelAnimationFrame(pitRunRequestRef.current);
+        pitRunActiveRef.current = false;
+        pitRunProgressRef.current = progress;
+        pitRunInventoryRef.current = inventory;
+        setPitRunProgress(progress);
+        setPitRunInventory(inventory);
+        setIsPitRunBridgeVisible(false);
+      },
       recoverPitGear: (gear) => {
         if (!pitRunActiveRef.current || pitRunInventoryRef.current.includes(gear)) return;
         const nextInventory = [...pitRunInventoryRef.current, gear];
@@ -2072,6 +2123,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       }
       if (sceneVerificationMode === "pit-run") {
         debug.startPitRun();
+        return;
+      }
+      if (sceneVerificationMode === "pit-run-deep") {
+        debug.showPitRunFrame("deep-pit");
+        return;
+      }
+      if (sceneVerificationMode === "pit-run-arrival") {
+        debug.showPitRunFrame("afterparty-arrival");
         return;
       }
       if (sceneVerificationMode === "afterparty-bonus") {
@@ -2309,6 +2368,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             comboRef.current = nextPitState.combo;
             setCombo(nextPitState.combo);
             stageControllerRef.current?.onGearRecovered(gear);
+            if (reactionForCombo(nextPitState.combo)) stageControllerRef.current?.onCombo(nextPitState.combo);
             clearStageEventAfter(380);
             announceInWorldReward(`${gear.toUpperCase()} SECURED`, "PIT RUN RECOVERY", "crate");
           }
@@ -3172,18 +3232,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       return;
     }
     if (completeLevelTwo) {
-      isPlayingRef.current = false;
-      stageControllerRef.current?.onLevelComplete();
-      clearStageEventAfter(900);
-      if (bgMusicRef.current) bgMusicRef.current.pause();
-      setIsPlaying(false);
-      setLevelTwoComplete(true);
-      setGameOver(false);
-      setIsUnlockPaused(false);
-      setIsNewRecord(currentScore > highScoreRef.current);
-      finaleRef.current = false;
-      setFinale(false);
-      startPitRun();
+      completeLevelTwoPitRunHandoff(currentScore);
       return;
     }
     if (advanceToLevelTwo) {
@@ -3391,6 +3440,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const renderedStageSnapshot = stageReactionVerification && stageReactionVerification in stageReactions
     ? { ...stageSnapshot, energy: 1, reaction: stageReactionVerification }
     : stageSnapshot;
+  const pitRunFrame = pitRunProgress < 34 ? "club-exit" : pitRunProgress < 73 ? "deep-pit" : "afterparty-arrival";
+  const pitRunFrameCopy = pitRunFrame === "club-exit"
+    ? "CLUB EXIT · AFTERPARTY AWAITS"
+    : pitRunFrame === "deep-pit"
+      ? "DEEP PIT RUN · GRAB THE GEAR"
+      : "SUNRISE ARRIVAL · LOFT IN SIGHT";
 
   return (
     <section id="minigame" className="minigame-section" aria-labelledby="minigame-title">
@@ -3634,7 +3689,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           </div>
         )}
 
-        {!supporterGateRequired && !isPlaying && !gameOver && !activeArcadeSequence && !isRecordTransitioning && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isPillOverloadPaused && !isCrateBonusPaused && !isHeadphonesBonusPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
+        {!supporterGateRequired && !isPlaying && !isPitRunActive && !gameOver && !activeArcadeSequence && !isRecordTransitioning && !isUnlockPaused && !isRewindPaused && !isWheelItUpPaused && !isPoliceSeizurePaused && !isCrowdAngerPaused && !isPillOverloadPaused && !isCrateBonusPaused && !isHeadphonesBonusPaused && !isBonusSplashVisible && !isBonusLevelActive && !isBonusRewinding && !preLevelTwoHighScore && (
           <div className="game-overlay">
             <div className="overlay-box">
               <h3>5D TURNTABLE CHALLENGE</h3>
@@ -3723,26 +3778,33 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
 
         {isPitRunActive && (
-          <div className="pit-run-stage" role="application" aria-label="Level 3 Pit Run. Move left or right, recover all six critical sound-system items, and avoid the approaching street hazards.">
-            <div className="pit-run-skyline" aria-hidden="true"><i /><i /><i /><i /><i /></div>
-            <div className="pit-run-zone-sign" aria-hidden="true"><span>{pitRunProgress < 22 ? "SERVICE ALLEY" : pitRunProgress < 44 ? "GRIMY STREET" : pitRunProgress < 66 ? "UNDERPASS" : pitRunProgress < 83 ? "WAREHOUSE DISTRICT" : "AFTERPARTY APPROACH"}</span></div>
-            <div className="pit-run-road" aria-hidden="true"><i /><i /><i /><b /><b /></div>
-            <div className="pit-run-foreground" aria-hidden="true"><i /><i /><i /></div>
-            <div className="pit-run-hud"><strong>LEVEL 3 · PIT RUN</strong><span>DISTANCE {Math.round(pitRunProgress)}%</span><em>HITS {pitRunHits} · A / D OR DRAG</em></div>
+          <div className={`pit-run-stage pit-run-frame-${pitRunFrame} pit-run-hit-${pitRunHits}`} role="application" aria-label="Level 3 Pit Run. Touch or point horizontally to guide the Selectah through the approaching street, recover all six critical sound-system items, and avoid the street hazards.">
+            <div className="pit-run-approved-world" aria-hidden="true">
+              <img className="pit-run-world-art pit-run-world-deep" src="/manus-storage/approved-pit-run-afterparty-board_b135c77c.png" alt="" />
+              <img className="pit-run-world-art pit-run-world-arrival" src="/manus-storage/approved-pit-run-afterparty-board_b135c77c.png" alt="" />
+              <i className="pit-run-dawn-wash" />
+              <i className="pit-run-street-light" />
+              <i className="pit-run-police-light" />
+              <i className="pit-run-trash-shift" />
+              <i className="pit-run-flyer-drift" />
+            </div>
+            <div className="pit-run-zone-sign" aria-hidden="true"><span>{pitRunFrameCopy}</span></div>
+            {isPitRunBridgeVisible && <div className="pit-run-bridge-card" role="status"><span>AFTERPARTY?</span><strong>GRAB THE GEAR.</strong></div>}
+            <div className="pit-run-hud"><strong>LEVEL 3 · PIT RUN</strong><span>DISTANCE {Math.round(pitRunProgress)}%</span><em>HITS {pitRunHits} · TOUCH / POINTER</em></div>
             <div className="pit-run-inventory" aria-label="Critical gear recovery inventory">
               {PIT_REQUIRED_GEAR.map((gear) => <span key={gear} className={pitRunInventory.includes(gear) ? "secured" : "missing"}>{gear === "turntable" ? "TT" : gear === "headphones" ? "HP" : gear === "crate" ? "CRT" : gear.toUpperCase()}</span>)}
             </div>
             <div className={`pit-runner lane-${pitRunLane}`}><img src="/embedded-assets/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ moving through the pit run" /></div>
             <div className="pit-run-entity-layer" aria-hidden="true">
-              {pitRunEntities.map((entity) => <span key={entity.id} className={`pit-run-entity ${entity.type} lane-${entity.lane}`} style={{ "--pit-depth": `${entity.depth}%` } as React.CSSProperties}><i /><b>{(PIT_REQUIRED_GEAR as readonly string[]).includes(entity.type) ? entity.type === "crate" ? "CRT" : entity.type === "turntable" ? "TT" : entity.type === "headphones" ? "HP" : entity.type.toUpperCase() : "!"}</b></span>)}
+              {pitRunEntities.map((entity) => <span key={entity.id} className={`pit-run-entity ${entity.type} lane-${entity.lane}${(PIT_REQUIRED_GEAR as readonly string[]).includes(entity.type) ? " is-gear" : " is-hazard"}`} style={{ "--pit-depth": `${entity.depth}%` } as React.CSSProperties}><i className="pit-run-entity-art" style={{ "--pit-run-entity-url": `url(${PIT_RUN_ENTITY_ASSETS[entity.type]})` } as React.CSSProperties} /><b>{PIT_RUN_ENTITY_LABELS[entity.type]}</b></span>)}
             </div>
           </div>
         )}
 
         {isAfterpartyUnlocked && !isPitRunActive && (
-          <div className="afterparty-placeholder-stage" role="status" aria-live="polite">
-            <div className="afterparty-placeholder-door" aria-hidden="true"><i /><b>AFTER<br />PARTY</b></div>
-            <div className="afterparty-placeholder-copy"><span>SOUND SYSTEM DELIVERED</span><strong>ROCK THE JAM</strong><em>{pitRunInventory.map((gear) => gear === "turntable" ? "TT" : gear === "headphones" ? "HP" : gear === "crate" ? "CRT" : gear.toUpperCase()).join(" · ")}</em></div>
+          <div className="afterparty-arrival-stage" role="status" aria-live="polite">
+            <img className="afterparty-arrival-art" src="/manus-storage/approved-pit-run-afterparty-board_b135c77c.png" alt="Sunrise over the illustrated afterparty destination" />
+            <div className="afterparty-arrival-copy"><span>YOU MADE IT.</span><strong>RUN THE AFTERS.</strong><em>{pitRunInventory.map((gear) => gear === "turntable" ? "TT" : gear === "headphones" ? "HP" : gear === "crate" ? "CRT" : gear.toUpperCase()).join(" · ")}</em></div>
           </div>
         )}
 

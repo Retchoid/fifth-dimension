@@ -33,9 +33,12 @@ async function runPitRun() {
   await stage.waitFor({ state: "visible", timeout: 7000 });
   const runner = page.locator(".pit-runner");
   const before = await runner.getAttribute("class");
-  await page.keyboard.down("d");
-  await page.waitForTimeout(240);
-  await page.keyboard.up("d");
+  const box = await stage.boundingBox();
+  if (!box) throw new Error("Pit Run stage missing bounds");
+  await page.mouse.move(box.x + box.width * .5, box.y + box.height * .72);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * .84, box.y + box.height * .72, { steps: 8 });
+  await page.mouse.up();
   await page.waitForTimeout(1200);
   const after = await runner.getAttribute("class");
   const entities = await page.locator(".pit-run-entity-layer > *").count();
