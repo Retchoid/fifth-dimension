@@ -19,8 +19,11 @@ describe("Level 1 independent world progression contracts", () => {
     expect(levelOneCss).toContain("must not erase the persistent");
   });
 
-  it("keeps the locked alley passive and adds only peripheral non-interactive population layers", () => {
-    expect(game).toContain("level1-approved-locked-169-alley_8924f5b5.png");
+  it("keeps the corrected 1000001097-derived alley as the sole Level 1 base", () => {
+    expect(game).toContain('src="/manus-storage/level1-approved-locked-169-alley_8924f5b5.png"');
+    expect(game).not.toContain("1000001036.png");
+    expect(game).not.toContain("1000001095.png");
+    expect(game).not.toContain("level-two-club-backwall");
     expect(game).toContain('className="level-one-population" aria-hidden="true"');
     expect(levelOneCss).toContain(".level-one-population");
     expect(levelOneCss).toContain("pointer-events: none");

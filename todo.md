@@ -1442,3 +1442,18 @@
 ### Combined Level 1 pass notes
 
 The appended brief extends the preceding Level 1 surgical pass. Record progress drives time-of-night and world population; combo/streak remains temporary rave pressure. The approved alley remains the unchanged base image, and all added figures or environmental activity must remain lightweight, peripheral, and non-interactive.
+
+## Level 1 Finalization Pass — New Visual References
+
+- [x] Reconcile the new Level 1 finalization brief with the already-locked alley and current implementation; explicitly preserve Level 2, bonus, Pit Run, main website, gallery, music player, and cabinet design.
+- [x] Ensure Level 1 time-of-night, world population, and combo rave pressure remain three separate systems with forward-only record progression.
+- [x] Refine Level 1 environmental population and reactive overlays toward the supplied underground club visual references without replacing/cropping/redrawing the approved alley or introducing gameplay sprites as crowd art.
+- [x] Validate Level 1 object asset integrity, collision alignment, no unexplained rectangles, responsive 390px readability, and no regression to controls/scoring/progression.
+- [x] Save and deliver the Level 1 finalization checkpoint for user review; do not proceed to later levels without explicit approval.
+
+## Corrected Level 1 Visual Source Reconciliation
+
+- [x] Replace any incorrect Level 1 visual-source reference with the corrected locked 16:9 sunset alley `1000001097.png` managed asset, without cropping or altering the artwork.
+- [x] Keep `1000001036.png` as implementation-board guidance only; do not import the board, interior club frame, or Pit Run strip into the Level 1 runtime.
+- [x] Revalidate the Level 1 three-system separation, asset integrity, clear gameplay lane, and unchanged later-level/site boundaries against the corrected references.
+- [x] Save and deliver a corrected Level 1 review checkpoint only after all checks pass.
