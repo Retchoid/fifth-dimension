@@ -62,6 +62,13 @@ describe("Task 7 final consistency contract", () => {
     expect(journey).toContain("ROOM 06 / OPEN CHANNEL");
   });
 
+  it("keeps the hero wordmark inside its responsive content column", () => {
+    const baseStyles = read("index.css");
+    expect(baseStyles).toContain('.hero h1{max-width:100%;font-size:clamp(3.75rem,4.75vw,4.5rem)');
+    expect(baseStyles).toContain('.hero h1 span,.hero h1 em{display:block;max-width:100%;white-space:nowrap}');
+    expect(baseStyles).toContain('@media(min-width:651px) and (max-width:980px){.hero h1{font-size:clamp(4rem,7.5vw,4.75rem)}}');
+  });
+
   it("keeps the development scene verifier matrix complete", () => {
     const gameSource = read("components/DjMiniGame.tsx");
     for (const scene of ["level-two-arrival", "first-bonus", "afterparty-bonus", "unlock", "thrown", "loss", "game-over"]) {

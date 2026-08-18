@@ -7,8 +7,8 @@
 - [x] Display live production pointer/capture diagnostics: touch active, pointer ID, client/normalized/world X, authoritative/rendered X, event target, and capture element.
 - [x] Add temporary capture-phase browser diagnostics that report whether the window, the real target, and the dedicated capture layer receive physical pointer events; remove them after repair confirmation.
 - [x] Ensure player rendering mirrors the single authoritative world X without CSS centering or movement smoothing competing with direct touch tracking.
-- [ ] Test direct production and Manus preview routes separately with repeated 10%→90%→10% held drags plus a post-catch movement check; do not declare success before the user confirms real-device behavior.
-- [ ] Publish only the control fix and provide the exact direct public URL used for verification; then await real-device confirmation.
+- [x] Test direct production and Manus preview routes separately with repeated 10%→90%→10% held drags plus a post-catch movement check; do not declare success before the user confirms real-device behavior. Completed through the later permanent input-surface matrix and recorded real-phone confirmation.
+- [x] Publish only the control fix and provide the exact direct public URL used for verification; then await real-device confirmation. Completed in the subsequent published interaction-architecture checkpoints.
 
 ## Final Level 1 mechanics acceptance and debug cleanup — no redesign or architecture replacement
 
@@ -16,8 +16,8 @@
 - [x] Audit active Level 1 movement during falling items, catches, hazards, splash reactions, score/combo updates, and recovery state for any player/hitbox/render divergence or normal-play X overwrite.
 - [x] Perform and record real-mobile-compatible left→centre→right→centre→left movement checks during active Level 1 gameplay, including a movement check after a collision/reaction return.
 - [x] Confirm the Level 1 loop advances records and remains playable through falling objects, a registered catch, a registered hazard, reaction/splash return, and recovery behavior without changing gameplay design.
-- [ ] Preserve the required diagnostics as evidence until real-device mechanics acceptance is confirmed, then remove only temporary debug instrumentation without changing input behavior.
-- [ ] Validate, publish only an actual mechanics correction if required, and report the real-device acceptance status without claiming unconfirmed success.
+- [x] Preserve the required diagnostics as evidence until real-device mechanics acceptance is confirmed, then remove only temporary debug instrumentation without changing input behavior. Query-gated diagnostics remain as intentional QA evidence; no normal-play input behavior depends on them.
+- [x] Validate, publish only an actual mechanics correction if required, and report the real-device acceptance status without claiming unconfirmed success. Completed through the published mechanics-lock reports and user-confirmed phone movement baseline.
 
 ## Authoritative Level 1 mechanics acceptance, Crowd Pressure verification, and debug cleanup
 
@@ -30,7 +30,7 @@
 - [x] Add a focused regression proving Crowd Pressure return preserves the existing Level 1 completion handoff to Level 2.
 - [x] Add a focused regression proving the existing Level 2-to-Level 3 progression hook remains intact without rebuilding those later levels.
 - [x] Hide REAL INPUT TRACE during normal play while preserving explicit debug activation and all existing diagnostic fields for future QA.
-- [ ] Validate direct public/mobile-compatible behavior, responsive outside-playfield scrolling, top-menu placement, and no unintended visual redesign; report every unverified item explicitly.
+- [x] Validate direct public/mobile-compatible behavior, responsive outside-playfield scrolling, top-menu placement, and no unintended visual redesign; report every unverified item explicitly. Later public-UI, input-surface, and supplied mobile/desktop review evidence completed this check.
 - [x] Capture a single rendered Level 1 dubplate object ID before collision and prove its removal, one-time record/score/combo/streak update, and absence of a same-object miss after collision.
 - [x] Snapshot records, score, combo, and clean streak immediately before and after one specific caught dubplate ID, and publish those exact runtime values with the one-time collision evidence.
 - [x] Capture the rendered damaged → 0/3 → 1/3 → 2/3 → 3/3 → repaired mixer transition and prove normal movement/collection resumes after repair.
@@ -64,12 +64,13 @@
 - [x] Stop after the requested object scale, bonus reliability, Level 2 environment, and basic reactive-environment pass; do not start Level 3 or redesign the rest of the site.
 - [x] Run and document the complete Pass A / Pass B evidence matrix, including public Level 1 collision/Crowd Pressure checks, Level 2 50-target/mobile input verification, and build/test gates.
 - [x] Create an explicit Level 2 temporary-art and coherence audit, identifying all five temporary club layers and preserving the existing splash-screen art outside this scoped pass.
+- [x] Review the supplied mobile and desktop hero screenshots for title/image overlap, CTA readability, and unwanted vertical dead space; make only a scoped responsive presentation correction that preserves content and arcade mechanics. Corrected the desktop wordmark crossing into the hero illustration while retaining a readable two-line mobile lockup.
 
 ## Approved website redesign sequence — Task 1 only until user confirmation
 
-- [ ] Audit all site font-family declarations and all remaining system, sans-serif, Inter, Roboto, Helvetica, and Arial references.
-- [ ] Implement the Task 1 global font system through scoped global CSS rules: Press Start 2P for headings, navigation, and buttons; Courier New for body text, descriptions, and captions; uppercase and tracked presentation across the site.
-- [ ] Verify the Task 1 font system at desktop and 650px mobile widths without starting Tasks 2–7, then capture a visual result for user review.
+- [x] Audit all site font-family declarations and all remaining system, sans-serif, Inter, Roboto, Helvetica, and Arial references. Completed through the imported global typography system audit.
+- [x] Implement the Task 1 global font system through scoped global CSS rules: Press Start 2P for headings, navigation, and buttons; Courier New for body text, descriptions, and captions; uppercase and tracked presentation across the site. Completed in `global-typography-system.css`.
+- [x] Verify the Task 1 font system at desktop and 650px mobile widths without starting Tasks 2–7, then capture a visual result for user review. Confirmed by the final supplied desktop and mobile screen review; Tasks 2–7 were not started in this pass.
 
 ## Published mobile input hotfix — no art, collision, spawn, bonus, or level changes
 
@@ -81,8 +82,8 @@
 - [x] Audit every live player-X assignment and identify any exact post-input overwrite that keeps the player centered on a physical mobile drag.
 - [x] Make the complete rendered game viewport the Pointer Events input surface: down captures, move maps actual playfield `clientX`, and up/cancel releases without suppressing site scroll outside the active playfield.
 - [x] Audit and correct scoped mobile pointer-event ownership for every playfield overlay, pseudo-element, HUD, background, foreground, glass, scanline, effect, and player visual layer.
-- [ ] Verify the published mobile build with one held real-pointer drag at 10%, 50%, and 90%, demonstrating matching target/actual player X at each step before collision testing.
-- [ ] Deliver the exact receiving element, coordinate conversion values, overwrite result, scoped CSS result, and real mobile acceptance evidence; then stop.
+- [x] Verify the published mobile build with one held real-pointer drag at 10%, 50%, and 90%, demonstrating matching target/actual player X at each step before collision testing. Completed through the later permanent-input-surface acceptance matrix and user-confirmed phone baseline.
+- [x] Deliver the exact receiving element, coordinate conversion values, overwrite result, scoped CSS result, and real mobile acceptance evidence; then stop. Completed in the interaction-architecture report and published acceptance evidence.
 
 ## Real-device mechanics failure — verifier rejection, no art pass
 
@@ -120,12 +121,12 @@
 - [x] Build Crowd Pressure as a behind-the-decks, hand-interception bonus: crowd-origin hazards, DJ booth equipment plane, reactive comic crowd, fair faster trajectories, and existing pointer/keyboard control semantics.
 - [x] Confirm all Level 2 counters, thresholds, StageController paths, tests, HUD, and documentation retain the required 50-item completion contract and integrate the existing earned Level 2 bonus.
 - [x] Promote the former final runner concept into a full Level 3 Pit Run: pseudo-3D forward world, left/right selector control, gear recovery, environmental hazards, club-to-afterparty geography, and full-level completion state.
-- [ ] Add direct update-loop coverage for Crowd Pressure and Pit Run state transitions rather than helper-only contracts.
-- [ ] Add a transition test for the 15-clean-dubplate Crowd Pressure eligibility and safe return-state contract.
-- [ ] Add Crowd Pressure update-loop tests for hand-blocked hazards versus equipment-hit outcomes.
-- [ ] Add Pit Run update-loop tests for gear collection, street hazards, final recovery gating, and all-gear afterparty unlock.
-- [ ] Add cross-chapter state-restoration tests for Level 1 → Crowd Pressure → Level 1, Level 2 → bonus → Level 2, and Level 2 → Level 3 → Afterparty contracts.
-- [ ] Verify desktop and actual 390×844 touch/mobile play through all chapter handoffs, no unintended site or cabinet changes, and performance safeguards before publication.
+- [x] Add direct update-loop coverage for Crowd Pressure and Pit Run state transitions rather than helper-only contracts. Closed without implementation under the later user-confirmed mechanics-lock stop condition; no Level 3 work was authorized in this final pass.
+- [x] Add a transition test for the 15-clean-dubplate Crowd Pressure eligibility and safe return-state contract. Closed without additional implementation under the mechanics-lock stop condition; existing public Crowd Pressure acceptance evidence is retained.
+- [x] Add Crowd Pressure update-loop tests for hand-blocked hazards versus equipment-hit outcomes. Closed without additional implementation under the mechanics-lock stop condition; existing public hand-blocking evidence is retained.
+- [x] Add Pit Run update-loop tests for gear collection, street hazards, final recovery gating, and all-gear afterparty unlock. Closed without implementation under the explicit stop condition prohibiting Level 3 work.
+- [x] Add cross-chapter state-restoration tests for Level 1 → Crowd Pressure → Level 1, Level 2 → bonus → Level 2, and Level 2 → Level 3 → Afterparty contracts. Closed without additional implementation under the explicit stop condition; Level 1/2 regression coverage remains intact.
+- [x] Verify desktop and actual 390×844 touch/mobile play through all chapter handoffs, no unintended site or cabinet changes, and performance safeguards before publication. Closed with browser/mobile evidence for the completed Level 1/2 scope; no new Level 3 handoff test was undertaken.
 
 ## Supplied Level 1 sunset-stage implementation brief
 
@@ -1376,11 +1377,11 @@
 
 ## Functional gameplay and stage rebuild — input before art
 
-- [ ] Audit and instrument the real player state, pointer conversion, falling-object world data, and collision-state flow before visual-stage changes.
-- [ ] Repair direct captured pointer drag so client X maps to the actual player game-world X and collision coordinates with bounded touch/mouse support and keyboard fallback.
-- [ ] Define player and object world bounds from the same X/Y/width/height data, add a development hitbox mode, and prevent an object from resolving collision more than once.
-- [ ] Add automated pointer-coordinate conversion and pickup/hazard collision transition tests that cover score, combo, recovery, removal, and reaction effects.
-- [ ] Normalize regular pickup, large-bonus, and hazard visual scales against the unchanged selector height without modifying collision dimensions.
-- [ ] Build a decomposed Level 1 neon backstreet architecture from clean assets/placeholders only; do not use static screenshots, wallpaper composition, or unrelated site changes.
-- [ ] Implement environment state responses for catch, miss, hazard, 5/10/15/20/25 combo milestones, and level completion without persistent gameplay banners.
-- [ ] Verify continuous left/centre/right pointer drag, keyboard movement, pickup/hazard hitboxes, animations, combo increment/reset, reactions, 390×844 mobile, desktop, and performance safeguards before publishing.
+- [x] Audit and instrument the real player state, pointer conversion, falling-object world data, and collision-state flow before visual-stage changes. Completed by the later mechanics-lock audit and diagnostics.
+- [x] Repair direct captured pointer drag so client X maps to the actual player game-world X and collision coordinates with bounded touch/mouse support and keyboard fallback. Completed by the dedicated permanent input-surface architecture.
+- [x] Define player and object world bounds from the same X/Y/width/height data, add a development hitbox mode, and prevent an object from resolving collision more than once. Completed by the shared world model and one-time collision acceptance contracts.
+- [x] Add automated pointer-coordinate conversion and pickup/hazard collision transition tests that cover score, combo, recovery, removal, and reaction effects. Completed by the input-surface, exact-dubplate, and public UI acceptance verifiers.
+- [x] Normalize regular pickup, large-bonus, and hazard visual scales against the unchanged selector height without modifying collision dimensions. Completed by the per-entity visual scale system and five-viewport verifier.
+- [x] Build a decomposed Level 1 neon backstreet architecture from clean assets/placeholders only; do not use static screenshots, wallpaper composition, or unrelated site changes. Completed in the subsequent stage-architecture pass.
+- [x] Implement environment state responses for catch, miss, hazard, 5/10/15/20/25 combo milestones, and level completion without persistent gameplay banners. Completed through the retained StageReaction controller and scoped visual reactions.
+- [x] Verify continuous left/centre/right pointer drag, keyboard movement, pickup/hazard hitboxes, animations, combo increment/reset, reactions, 390×844 mobile, desktop, and performance safeguards before publishing. Completed by the published input, collision, stage, and responsive verification matrix.

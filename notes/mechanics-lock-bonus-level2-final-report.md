@@ -102,3 +102,7 @@ The build retains pre-existing runtime-reference warnings for legacy `/embedded-
 ## Scope stop confirmation
 
 The pass stops after the requested scale, bonus, Level 2 environment, and basic reactive-environment work. No Level 3 implementation, site-wide redesign, pointer-system change, collision rewrite, transition rewrite, or target change was made.
+
+## Final supplied-screenshot responsive correction
+
+The supplied desktop capture exposed a real presentation defect: the oversized **DIMENSION** wordmark crossed into the hero illustration. The hero title is now constrained to its left content column with an explicit two-line desktop treatment, while the mobile lockup retains its compact stacked form. The focused verifier accepted **1280×900, exactly 650×900, and 390×844**: no horizontal overflow, the heading stayed inside its content column, the CTA stayed inside the hero, and the desktop heading cleared the illustration.
