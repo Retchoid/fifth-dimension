@@ -7,7 +7,7 @@
 - [x] Remove only Level 1 visible translucent magenta object backing rectangles while retaining invisible collision/hitbox behavior.
 - [x] Normalize only the visible Level 1 falling-object presentation so all objects read cleanly without altering item type, spawn timing, collision logic, scoring, controls, HUD architecture, or player animation.
 - [x] Verify the new Level 1-only composition and locked mechanics, then publish a review checkpoint and await approval before Level 2, bonuses, or Pit Run work.
-- [ ] Publish a new Level 1-only review checkpoint containing the locked `1000001097.png` alley swap and visible-backing cleanup.
+- [x] Publish a new Level 1-only review checkpoint containing the locked `1000001097.png` alley swap and visible-backing cleanup.
 - [ ] Hold all Level 2, bonus-round, and Pit Run work until the user explicitly approves the new Level 1-only review checkpoint.
 - [x] Replace the prior unapproved Level 1 background source with the corrected blank alley `1000001096.png`, using `1000001035.png` only as the supplied layer/parallax reference board.
 - [x] Audit only the Level 1 visual environment, duplicate decorative Selectah art, object visual scale, splash visual treatment, HUD emphasis, and available approved sunset-alley sources; preserve all listed mechanics unchanged.
