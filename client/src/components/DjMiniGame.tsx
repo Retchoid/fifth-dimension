@@ -358,6 +358,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     return params.get("debugInput") === "1" || params.get("arcade-real-input-debug") === "true";
   })();
   const visualCabinetFrameHidden = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("frameOff") === "1";
+  const worldProgressionParam = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("worldProgression") : null;
+  const forcedEnergyLevel = worldProgressionParam === "25" ? 5
+    : worldProgressionParam === "20" ? 4
+    : worldProgressionParam === "15" ? 3
+    : worldProgressionParam === "10" ? 2
+    : worldProgressionParam === "5" ? 1
+    : worldProgressionParam === "1" ? 0
+    : null;
   const lossVerificationHold = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-loss-verify") === "hold";
   const heldRewardPreview: InWorldReward | null = import.meta.env.DEV && holdSequenceDebugEnabled ? ({
     crate: { label: "RECORD CRATE FOUND", quip: "THREE MIXERS / SELECTAH LUCK", kind: "crate" },
@@ -3511,7 +3519,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div
           ref={containerRef}
           data-gameplay-state={gameplayState}
-          className={`game-viewport${level === 2 ? " is-level-two" : ""}${level === 1 ? ` level-one-combo-${Math.min(15, combo)}` : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
+          className={`game-viewport${level === 2 ? " is-level-two" : ""}${level === 1 ? ` level-one-combo-${Math.min(15, combo)}` : ""}${isBonusSplashVisible || isBonusLevelActive || isBonusRewinding || isNoRequestBonusSplashVisible || isNoRequestBonusActive ? " is-bonus-scene" : ""}${hitboxDebugEnabled || mechanicsDebugEnabled ? " show-world-hitboxes" : ""}${mechanicsDebugEnabled ? " mechanics-debug-mode" : ""} stage-catch-variant-${catchReactionVariant}${renderedStageSnapshot.eventType ? ` stage-event-type-${renderedStageSnapshot.eventType}` : ""} stage-energy-${forcedEnergyLevel !== null ? forcedEnergyLevel : Math.max(0, Math.min(5, Math.ceil(renderedStageSnapshot.energy * 5)))}${renderedStageSnapshot.reaction ? ` stage-reaction-${renderedStageSnapshot.reaction.toLowerCase()}` : ""}${renderedStageSnapshot.event ? ` stage-event-${renderedStageSnapshot.event}` : ""}`}
           onPointerMove={(e) => {
             const usesAlternatePointerRoute = gameModeRef.current === "BONUS_CROWD_PRESSURE" || gameModeRef.current === "BONUS_LEVEL_2" || gameModeRef.current === "LEVEL_3_PIT_RUN";
             if (!usesAlternatePointerRoute) return;

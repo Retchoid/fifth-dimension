@@ -1419,3 +1419,14 @@
 - [x] Build a decomposed Level 1 neon backstreet architecture from clean assets/placeholders only; do not use static screenshots, wallpaper composition, or unrelated site changes. Completed in the subsequent stage-architecture pass.
 - [x] Implement environment state responses for catch, miss, hazard, 5/10/15/20/25 combo milestones, and level completion without persistent gameplay banners. Completed through the retained StageReaction controller and scoped visual reactions.
 - [x] Verify continuous left/centre/right pointer drag, keyboard movement, pickup/hazard hitboxes, animations, combo increment/reset, reactions, 390×844 mobile, desktop, and performance safeguards before publishing. Completed by the published input, collision, stage, and responsive verification matrix.
+
+## Level 1 Final Gameplay + Reactive World Pass
+
+- [x] Audit and ensure all 11 spawnable Level 1 object types render with correct sprite/art assets (no placeholder squares, colored rectangles, or debug boxes in production).
+- [x] Verify every configured Level 1 spawn type spawns, falls, collides, triggers events, and despawns correctly during normal play.
+- [x] Refine player catch zone and object hitboxes to match visible sprite graphics (torso/upper-body catch zone, precise hazard contact).
+- [x] Maintain one authoritative game-space coordinate system separated from visual environment scaling/crops.
+- [x] Implement non-destructive Level 1 time progression across 1x (sunset), 5x (dusk), 10x (blue hour), 15x (night), 20x (rave pressure), and 25x (5D takeover) using localized layered effects without global dark filters or hue rotation.
+- [x] Add a development-only query parameter (`?worldProgression=1|5|10|15|20|25`) to test each world progression state.
+- [x] Reduce the visual footprint of persistent status cards (mixer damaged / recovery) so they do not obstruct the active catch lane.
+- [x] Validate mobile readability and object clarity at 390x844.
