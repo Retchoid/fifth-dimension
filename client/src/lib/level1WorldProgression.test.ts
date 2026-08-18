@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 const root = resolve(process.cwd(), "client/src");
 const game = readFileSync(resolve(root, "components/DjMiniGame.tsx"), "utf8");
 const levelOneCss = readFileSync(resolve(root, "level1-approved-sunset-art.css"), "utf8");
+const levelOneAcceptanceCss = readFileSync(resolve(root, "level1-visual-acceptance.css"), "utf8");
 const world = readFileSync(resolve(root, "lib/gameWorld.ts"), "utf8");
 
 describe("Level 1 independent world progression contracts", () => {
@@ -94,8 +95,10 @@ describe("Level 1 independent world progression contracts", () => {
   it("keeps the corrected Level 1 base free from the old global visual masks and record halo", () => {
     expect(levelOneCss).toContain(".game-grid-bg.stage-background::before");
     expect(levelOneCss).toContain("content: none !important");
+    expect(levelOneCss).toContain(".stage-game-plane");
+    expect(levelOneCss).toContain("filter: none !important");
     expect(levelOneCss).toContain(".falling-object.record .urban-prop-asset");
-    expect(levelOneCss).toContain("drop-shadow(0 0 2px rgba(255, 230, 0, .24))");
+    expect(levelOneCss).toContain("box-shadow: none !important");
     expect(levelOneCss).toContain("No approved Level 1 crowd-character art was supplied");
     expect(levelOneCss).toContain("level-one-catch-burst");
   });
@@ -113,9 +116,35 @@ describe("Level 1 independent world progression contracts", () => {
     expect(levelOneCss).toContain("max-height: 31% !important");
   });
 
+  it("keeps HUD-hidden comparison mode development-only and preserves normal HUD markup", () => {
+    expect(game).toContain('const visualHudHidden = worldProbeEnabled && new URLSearchParams(window.location.search).get("hideHud") === "1";');
+    expect(game).toContain('const visualFreezeProbe = worldProbeEnabled && new URLSearchParams(window.location.search).get("visualFreeze") === "1";');
+    expect(game).toContain("if (visualFreezeProbe && worldRecordsParam !== null) return;");
+    expect(game).toContain("{!visualHudHidden && (");
+    expect(game).toContain('className="game-hud game-hud-clear"');
+    expect(game).toContain("recordsCaught}/{level === 2 ? LEVEL_TWO_REQUIRED_RECORDS : REQUIRED_RECORDS");
+  });
+
   it("does not ship an empty-layer NO ITEMS marker in normal play", () => {
     const renderFix = readFileSync(resolve(root, "falling-items-render-fix.css"), "utf8");
     expect(renderFix).toContain("content: none !important");
     expect(renderFix).not.toContain("⚠️ NO ITEMS");
+  });
+
+  it("enforces the Level 1 visual acceptance corrections in a final scoped layer", () => {
+    expect(game).toContain('import "@/level1-visual-acceptance.css";');
+    expect(game).toContain("const blockingOverlayActive = Boolean(");
+    expect(game).toContain("damageFeedback && !blockingOverlayActive");
+    expect(game).toContain("rewardToRender && !blockingOverlayActive");
+    expect(game).not.toContain('className="equipment-condition-callout"');
+    expect(levelOneAcceptanceCss).toContain("background-image: none !important");
+    expect(levelOneAcceptanceCss).toContain("level-one-sunset-vignette::before");
+    expect(levelOneAcceptanceCss).toContain("level-one-time-3 .level-one-sunset-alley-art");
+    expect(levelOneAcceptanceCss).toContain("level-one-time-5 .level-one-sunset-alley-art");
+    expect(levelOneAcceptanceCss).toContain(".level-one-population { display: none !important; }");
+    expect(levelOneAcceptanceCss).toContain("equipment-condition-callout, .mixer-recovery-status");
+    expect(levelOneAcceptanceCss).toContain("crowd-anger-copy > :is(span, strong, em)");
+    expect(levelOneAcceptanceCss).toContain("white-space: normal !important");
+    expect(levelOneAcceptanceCss).toContain("level-one-heart-loss");
   });
 });

@@ -1484,3 +1484,38 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Validate the NPC layer at the six forced record states and mobile/desktop playfield anchors without reintroducing foreground clutter or terminal overlays.
 
 - [x] Save and deliver the current Level 1 environment-population correction checkpoint; keep later-level and broader site work blocked pending approval.
+
+- [ ] Add a development-only HUD-hidden comparison mode for the six Level 1 record probes so visual ordering can be judged by sky, lighting, people, windows, neon, and atmosphere rather than counters.
+- [ ] Capture and preserve visual evidence for 0/5/10/15/20/25 records, 0-vs-25, and a record-catch reaction before the revised checkpoint.
+
+- [ ] Calibrate the Level 1 progression primitives so the six states read as localized sky/window/neon/doorway/pavement/police/haze changes rather than broad grid or ring overlays.
+- [ ] Hide the development world-probe label whenever the HUD-hidden comparison mode is active, while preserving it in ordinary diagnostics.
+
+- [ ] Correct development-only cabinet-focus selectors to target the actual `arcade-flow-shell` game wrapper in the published preview, then recapture visual evidence from the cabinet rather than the page shell.
+
+- [ ] Override the legacy focus rule for the nested `.minigame-section` inside `.arcade-cabinet-bezel` so the published proof cabinet has real dimensions instead of a zero-height hidden game viewport.
+
+- [ ] Add a development-only `visualFreeze=1` mode for forced Level 1 visual proof so screenshots remain at a stable player/camera frame without mutating normal gameplay.
+
+- [ ] Disable the legacy Level 1 reactive overlay layers that still produce the broad magenta bar and speaker ring; retain only the newer localized record-driven layers and passive event responses.
+
+- [ ] Make the existing `DUBPLATE_CATCH` visual verifier populate the authoritative catch event fields for its proof frame, without changing normal runtime reactions.
+
+# Level 1 Visual Acceptance Review Remediation (Per Attached Rejection)
+- [ ] 1. Remove rectangular lighting overlays; replace with organic surface-mapped illumination (Club 5D/Underground signs, windows, doorways, police car).
+- [ ] 2. Transform the sky from sunset (0) through blue hour (10) to deep active rave night (25) without transparent blue rectangle bands.
+- [ ] 3. Audit all lighting layers to ensure zero debug-like geometric edges or UI borders.
+- [ ] 4. Remove world-space RECOVERY text labels entirely; keep recovery data strictly in the HUD.
+- [ ] 5. Redesign the recovery object from a generic UI icon into a scratched, perspective-correct 90s DJ hardware flight case with physical depth and edge wear.
+- [ ] 6. Integrate the player into the alley floor with a contact shadow, pavement reflection tint, and ambient rim light without a glow bubble.
+- [ ] 7. Audit and rework every Level 1 falling object asset so it matches the background alley's pixel density and painterly texture.
+- [ ] 8. Streamline heart-loss reaction into a fast 100–350ms recoil flash and HUD heart reduction, removing the large overlapping information panel.
+- [ ] 9. Fix WRONG TUNE P0 responsive overflow across 320, 360, 375, 390, 412, and 430px mobile viewports.
+- [ ] 10. Enforce strict mutual exclusivity and compatibility across all modal states and transient effects.
+- [ ] 11. Refine background NPC crowd progression so 3–5 (at 15), 6–8 (at 20), and 8–12 (at 25) dancers occupy alley doorways, queue edges, and wall ledges away from the central catch corridor.
+- [ ] 12. Enforce the master alley artwork as the sole art style reference for all world entities.
+- [ ] 13. Suppress any additional or oversized speaker towers; rely on time, light, and people for progression.
+- [ ] 14. Generate and present the required A (six frozen screenshots 0–25), B (contact sheet), C (three close-ups), D (transient state proof), and E (mobile WRONG TUNE viewports).
+- [ ] 15. Verify all 17 acceptance checkboxes.
+- [ ] 16. Run regression, TypeScript, and build gates.
+- [ ] 17. Keep Level 2 and Level 3 locked pending visual acceptance.

@@ -22,6 +22,7 @@ import "@/visual-recovery-arcade.css";
 import "@/arcade-playfield-architecture.css";
 import "@/pit-run-approved-art.css";
 import "@/level1-approved-sunset-art.css";
+import "@/level1-visual-acceptance.css";
 
 const HIGH_SCORE_STORAGE_KEY = "5d-selector-showdown-high-score";
 const FACEBOOK_RESPECT_STORAGE_KEY = "5d-selector-showdown-facebook-respect-v1";
@@ -359,6 +360,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   })();
   const visualCabinetFrameHidden = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("frameOff") === "1";
   const worldProbeEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined";
+  const visualHudHidden = worldProbeEnabled && new URLSearchParams(window.location.search).get("hideHud") === "1";
+  const visualFreezeProbe = worldProbeEnabled && new URLSearchParams(window.location.search).get("visualFreeze") === "1";
   const worldProgressionParam = worldProbeEnabled ? new URLSearchParams(window.location.search).get("worldProgression") : null;
   const worldRecordsParam = worldProbeEnabled ? new URLSearchParams(window.location.search).get("worldRecords") : null;
   const worldComboParam = worldProbeEnabled ? new URLSearchParams(window.location.search).get("worldCombo") : null;
@@ -1781,6 +1784,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const queueGameFrame = () => {
+    if (visualFreezeProbe && worldRecordsParam !== null) return;
     const runId = gameRunIdRef.current;
     requestRef.current = requestAnimationFrame((time) => {
       if (!isPlayingRef.current || runId !== gameRunIdRef.current) return;
@@ -2849,6 +2853,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const updateGame = (time: number) => {
+    if (visualFreezeProbe && worldRecordsParam !== null) return;
     const elapsed = Math.max(0, time - lastTimeRef.current);
     const dt = Math.min(0.032, elapsed / 1000);
     lastTimeRef.current = time;
@@ -3473,7 +3478,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const bonusGearReady = bonusGear.length === BONUS_GEAR_TYPES.length;
   const afterPartyFloor = Math.max(0, Math.min(5, Math.floor(bonusProgress / 17)));
   const renderedStageSnapshot = stageReactionVerification && stageReactionVerification in stageReactions
-    ? { ...stageSnapshot, energy: 1, reaction: stageReactionVerification }
+    ? {
+      ...stageSnapshot,
+      energy: 1,
+      reaction: stageReactionVerification,
+      ...(stageReactionVerification === "DUBPLATE_CATCH" ? { event: "catch" as const, eventType: "record" } : {}),
+    }
     : stageSnapshot;
   const forcedWorldRecords = worldRecordsParam !== null && /^(0|5|10|15|20|25)$/.test(worldRecordsParam)
     ? Number(worldRecordsParam)
@@ -3503,6 +3513,28 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       ? "DEEP PIT RUN · GRAB THE GEAR"
       : "SUNRISE ARRIVAL · LOFT IN SIGHT";
   const terminalGameStateReached = gameplayState === "GAME_OVER" && !isPlaying && gameOver && !levelTwoComplete;
+  const blockingOverlayActive = Boolean(
+    supporterGateRequired ||
+    gameOver ||
+    activeArcadeSequence ||
+    isRecordTransitioning ||
+    isUnlockPaused ||
+    isRewindPaused ||
+    isWheelItUpPaused ||
+    isPoliceSeizurePaused ||
+    isCrowdAngerPaused ||
+    isPillOverloadPaused ||
+    isCrateBonusPaused ||
+    isHeadphonesBonusPaused ||
+    isBonusSplashVisible ||
+    isBonusLevelActive ||
+    isBonusRewinding ||
+    isLevelTwoTransitioning ||
+    isLevelTwoMarqueeVisible ||
+    isRespectSplashVisible ||
+    isPitRunActive ||
+    isAfterpartyUnlocked
+  );
 
   return (
     <section id="minigame" className="minigame-section" aria-labelledby="minigame-title">
@@ -3599,14 +3631,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             if (playfieldPointerRef.current === e.pointerId) playfieldPointerRef.current = null;
           }}
         />
-        {damageFeedback && !gameOver && (
+        {damageFeedback && !blockingOverlayActive && (
           <div className="damage-feedback" role="status" aria-live="assertive">
             <span>{damageFeedback.bonus ? "BONUS DAMAGE" : "HEART LOST"}</span>
             <strong>{damageFeedback.label}</strong>
             <em>{"♥".repeat(damageFeedback.lives)}{"♡".repeat(Math.max(0, damageFeedback.bonus ? 3 - damageFeedback.lives : 4 - damageFeedback.lives))}</em>
           </div>
         )}
-        {rewardToRender && !gameOver && (
+        {rewardToRender && !blockingOverlayActive && (
           <div className={`in-world-reward${rewardToRender.kind ? ` in-world-reward-${rewardToRender.kind}` : ""}`} role="status" aria-live="polite">
             <strong>{rewardToRender.label}</strong>
           </div>
@@ -3674,7 +3706,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   })}
                 </div>
               )}
-              {worldProbeEnabled && forcedWorldRecords !== null && (
+              {worldProbeEnabled && forcedWorldRecords !== null && !visualHudHidden && (
                 <span className="level-one-world-probe" aria-hidden="true">WORLD PROBE · {forcedWorldRecords} RECORDS · 1X COMBO</span>
               )}
             </div>
@@ -3700,28 +3732,30 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         <div className={`rave-world-dressing${level === 2 ? " level-two-rave-world" : level === 1 ? " level-one-rave-world" : ""}`} aria-hidden="true">
           <span className="rave-glowstick rave-glowstick-one" /><span className="rave-glowstick rave-glowstick-two" /><span className="rave-glowstick rave-glowstick-three" />
         </div>
-        <div className="game-hud game-hud-clear">
-          <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
-          <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>
-          <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{level === 2 ? LEVEL_TWO_REQUIRED_RECORDS : REQUIRED_RECORDS}</strong></div>
-          <div className="hud-badge combo-badge" aria-label={`Combo multiplier: ${combo}x`}>COMBO: <strong>{combo}x</strong></div>
-          <div className="hud-badge high-score-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
-          <div className="pickup-flash-slot" aria-live="polite" aria-atomic="true">
-            {pickupFlash && <span key={pickupFlash.key}>{pickupFlash.label}</span>}
+        {!visualHudHidden && (
+          <div className="game-hud game-hud-clear">
+            <div className="hud-badge"><Disc size={15} /> SCORE: <strong>{score}</strong></div>
+            <div className="hud-badge level-hud"><span aria-hidden="true">LVL</span> <strong>{level}</strong></div>
+            <div className="hud-badge records-hud"><Disc size={15} /> RECORDS: <strong>{recordsCaught}/{level === 2 ? LEVEL_TWO_REQUIRED_RECORDS : REQUIRED_RECORDS}</strong></div>
+            <div className="hud-badge combo-badge" aria-label={`Combo multiplier: ${combo}x`}>COMBO: <strong>{combo}x</strong></div>
+            <div className="hud-badge high-score-badge"><Trophy size={15} /> HIGH: <strong>{highScore}</strong></div>
+            <div className="pickup-flash-slot" aria-live="polite" aria-atomic="true">
+              {pickupFlash && <span key={pickupFlash.key}>{pickupFlash.label}</span>}
+            </div>
+            <div className="hud-badge lives-badge">LIVES: <strong>{"❤️".repeat(lives)}</strong></div>
+            {mixerDamaged && <div className="hud-badge recovery-hud-badge" aria-label={`Mixer recovery progress: ${recoveryProgress} of 3`}>MIXER: <strong>{recoveryProgress}/3</strong></div>}
+            <button
+              type="button"
+              className="hud-badge audio-toggle"
+              aria-pressed={soundEnabled}
+              aria-label={soundEnabled ? "Mute game sounds" : "Enable game sounds"}
+              onClick={toggleSound}
+            >
+              {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+              {soundEnabled ? (musicStatus === "playing" ? "MUSIC ON" : "PLAY MUSIC") : "MUTED"}
+            </button>
           </div>
-          <div className="hud-badge lives-badge">LIVES: <strong>{"❤️".repeat(lives)}</strong></div>
-          {mixerDamaged && <div className="hud-badge recovery-hud-badge" aria-label={`Mixer recovery progress: ${recoveryProgress} of 3`}>MIXER: <strong>{recoveryProgress}/3</strong></div>}
-          <button
-            type="button"
-            className="hud-badge audio-toggle"
-            aria-pressed={soundEnabled}
-            aria-label={soundEnabled ? "Mute game sounds" : "Enable game sounds"}
-            onClick={toggleSound}
-          >
-            {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
-            {soundEnabled ? (musicStatus === "playing" ? "MUSIC ON" : "PLAY MUSIC") : "MUTED"}
-          </button>
-        </div>
+        )}
 
         {isLevelTwoTransitioning && level === 2 && !gameOver && (
           <div className="game-overlay level-two-arrival-overlay" role="status" aria-live="assertive">
@@ -4443,7 +4477,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="equipment-condition-rig" aria-label={`Mixer condition: ${equipmentCondition}`}>
               <i className="equipment-deck-screen" /><i className="equipment-fader" /><i className="equipment-knob equipment-knob-one" /><i className="equipment-knob equipment-knob-two" /><i className="equipment-warning-led" /><i className="equipment-cable" /><i className="equipment-spill" /><i className="equipment-spark" /><i className="equipment-smoke" />
             </div>
-            {(mixerDamaged || mixerRepairBurst) && <span className="equipment-condition-callout" aria-live="polite">{mixerRepairBurst ? "REPAIRED!" : `RECOVERY ${recoveryProgress}/3`}</span>}
             <div className="dj-sprite-fallback" aria-hidden="true">
               <span className="dj-selector-head">5D</span>
               <span className="dj-selector-body" />

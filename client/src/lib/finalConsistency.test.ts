@@ -273,7 +273,8 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain("if (recordsCaughtRef.current < REQUIRED_RECORDS)");
     expect(gameSource).toContain("MIXER: <strong>{recoveryProgress}/3</strong>");
     expect(gameSource).not.toContain('className="mixer-recovery-status"');
-    expect(gameSource).toContain("RECOVERY ${recoveryProgress}/3");
+    expect(gameSource).not.toContain('className="equipment-condition-callout"');
+    expect(gameSource).toContain('aria-label={`Mixer recovery progress: ${recoveryProgress} of 3`}');
     expect(gameSource).toContain('const objectiveIncrement = levelRef.current === 1 ? (item.type === "record" ? 1 : 0) : pickupValue;');
     expect(gameSource).toContain('if (mixerDamagedRef.current && item.type === "record")');
   });
