@@ -90,9 +90,15 @@ describe("Task 7 final consistency contract", () => {
     expect(arcadePlayfieldArchitecture).not.toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
     expect(arcadePlayfieldArchitecture).not.toContain("selectah-splash-art-direction_4d1c250f.png");
     expect(arcadePlayfieldArchitecture).not.toContain("5d-selector-rave-stage_e4fdff4b.png");
-    expect(gameSource).toContain("crowd-pressure-background");
-    expect(gameSource).toContain("club-reverse-entrance");
-    expect(arcadePlayfieldArchitecture).toContain("LEVEL 2 — CROWD PRESSURE / INSIDE THE SAME 5D CLUB");
+    expect(gameSource).toContain("level-two-club-layers");
+    expect(gameSource).toContain("level2-club-backwall_0fefe2b1.png");
+    expect(gameSource).toContain("level2-club-architecture_b59eb6c5.png");
+    expect(gameSource).toContain("level2-club-speaker-edges_2cd0f111.png");
+    expect(gameSource).toContain("level2-club-crowd-bands_f8a90d30.png");
+    expect(gameSource).toContain("level2-club-reactive-fx_59e2c1c8.png");
+    expect(gameSource).not.toContain("crowd-pressure-background");
+    expect(gameSource).not.toContain("club-reverse-entrance");
+    expect(arcadePlayfieldArchitecture).toContain("independently replaceable club layers");
     expect(arcadePlayfieldArchitecture).toContain("stage-reaction-combo_25");
     expect(arcadePlayfieldArchitecture).toContain("transform: scale(.96) !important");
     expect(arcadePlayfieldArchitecture).toContain(".game-grid-bg::before");

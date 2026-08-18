@@ -119,12 +119,12 @@
 /* Pickup silhouettes grow visually only. The wrapper dimensions and collision
    calculations remain exactly as rendered by DjMiniGame.tsx. */
 .arcade-cabinet-bezel .falling-object :is(.urban-prop-asset, .falling-item-image) {
-  transform: rotate(var(--fall-tilt, 0deg)) scale(1.12) !important;
+  transform: rotate(var(--fall-tilt, 0deg)) scale(var(--item-visual-scale, 1)) !important;
   transform-origin: center !important;
 }
 
 .arcade-cabinet-bezel .falling-object.record :is(.urban-prop-asset, .falling-item-image) {
-  transform: rotate(var(--fall-tilt, 0deg)) scale(1.25) !important;
+  transform: rotate(var(--fall-tilt, 0deg)) scale(var(--item-visual-scale, 1)) !important;
   filter: drop-shadow(3px 4px 0 rgba(10,10,18,.9)) drop-shadow(0 0 7px rgba(255,230,0,.56)) !important;
 }
 

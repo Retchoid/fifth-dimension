@@ -1,0 +1,26 @@
+import { chromium } from "playwright";
+
+const origin = process.env.MECHANICS_ORIGIN ?? "http://127.0.0.1:3000";
+const browser = await chromium.launch({ headless: true, executablePath: "/usr/bin/chromium", args: ["--no-sandbox"] });
+const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+const page = await context.newPage();
+await page.goto(`${origin}/?arcade-scene-verify=items-level-two`, { waitUntil: "domcontentloaded" });
+const capture = page.locator(".game-viewport.is-level-two .input-capture-layer.is-active");
+await capture.waitFor({ state: "visible" });
+await capture.scrollIntoViewIfNeeded();
+const bounds = await capture.boundingBox();
+if (!bounds) throw new Error("Level 2 input surface is not visible");
+const position = async () => page.locator(".game-viewport.is-level-two .dj-catcher").evaluate((node) => node.getBoundingClientRect().left + node.getBoundingClientRect().width / 2);
+const hud = (await page.locator(".game-viewport.is-level-two .records-hud").textContent()) ?? "";
+await page.mouse.move(bounds.x + bounds.width * .1, bounds.y + bounds.height * .74);
+await page.mouse.down();
+await page.mouse.move(bounds.x + bounds.width * .9, bounds.y + bounds.height * .74, { steps: 12 });
+const right = await position();
+await page.mouse.move(bounds.x + bounds.width * .1, bounds.y + bounds.height * .74, { steps: 12 });
+const left = await position();
+await page.mouse.up();
+const accepted = /RECORDS:\s*0\/50/.test(hud) && right - left > bounds.width * .55;
+console.log(JSON.stringify({ viewport: "390x844", hud, pointerOwner: await capture.evaluate((node) => node.className), left, right, travel: right - left, accepted }, null, 2));
+if (!accepted) process.exitCode = 1;
+await context.close();
+await browser.close();

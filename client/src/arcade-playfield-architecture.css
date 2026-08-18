@@ -197,6 +197,56 @@
 .arcade-cabinet-bezel .real-input-debug-panel strong { color:#ffe600; font-size:inherit; }
 .arcade-cabinet-bezel .real-input-debug-panel span { overflow-wrap:anywhere; }
 
+.arcade-cabinet-bezel .bonus-debug-panel { position:absolute; z-index:58; top:12%; right:1%; width:min(46%,250px); max-height:70%; overflow:auto; padding:.38rem; border:2px solid #00d4ff; background:rgba(10,10,18,.95); box-shadow:3px 3px 0 #080910; color:#f0ead6; font:700 .31rem/1.35 "Courier New",monospace; pointer-events:none; }
+.arcade-cabinet-bezel .bonus-debug-panel > strong { display:block; margin-bottom:.3rem; color:#ffe600; font:900 .36rem/1 "Press Start 2P",monospace; }
+.arcade-cabinet-bezel .bonus-debug-panel div { display:flex; flex-direction:column; gap:1px; padding:.22rem 0; border-top:1px solid rgba(0,212,255,.28); }
+.arcade-cabinet-bezel .bonus-debug-panel b { color:#00d4ff; font:900 .31rem/1 "Press Start 2P",monospace; }
+.arcade-cabinet-bezel .bonus-debug-panel .is-eligible b { color:#9de64b; }
+.arcade-cabinet-bezel .bonus-debug-panel .is-blocked b { color:#ff8cbf; }
+
+/* Level 2 uses independently replaceable club layers rather than one flattened
+   vector scene. The base stays intentionally subdued beneath the clear action
+   corridor, while all imagery remains outside collision and input ownership. */
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg { background:#1a1116 !important; background-image:none !important; filter:none !important; }
+.arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg::before { display:none !important; }
+.arcade-cabinet-bezel .level-two-club-layers { position:absolute; inset:0; z-index:2; overflow:hidden; pointer-events:none; background:linear-gradient(180deg,#2a1d1f 0%,#1a1116 46%,#120e15 100%); }
+.arcade-cabinet-bezel .level-two-club-layer { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; image-rendering:pixelated; image-rendering:crisp-edges; pointer-events:none; }
+.arcade-cabinet-bezel .level-two-club-layer.layer-backwall { z-index:1; opacity:.94; }
+.arcade-cabinet-bezel .level-two-club-layer.layer-architecture { z-index:2; opacity:.98; }
+.arcade-cabinet-bezel .level-two-club-layer.layer-crowd { z-index:3; opacity:.9; }
+.arcade-cabinet-bezel .level-two-club-layer.layer-speakers { z-index:5; opacity:.96; }
+.arcade-cabinet-bezel .level-two-club-layer.layer-fx { z-index:7; opacity:.36; }
+.arcade-cabinet-bezel .level-two-action-corridor { position:absolute; z-index:4; top:14%; right:23%; bottom:18%; left:23%; border-left:2px solid rgba(0,212,255,.22); border-right:2px solid rgba(255,45,149,.22); background:linear-gradient(90deg,rgba(10,10,18,.26),rgba(10,10,18,.04) 24%,rgba(10,10,18,.04) 76%,rgba(10,10,18,.26)); }
+.arcade-cabinet-bezel .game-viewport.is-level-two .stage-midground :is(.club-pillar,.club-speaker-wall,.club-poster-wall,.club-crowd-mid,.club-mc,.club-security-inside),
+.arcade-cabinet-bezel .game-viewport.is-level-two .stage-game-plane :is(.club-booth-floor,.club-booth-cable,.club-record-crate,.club-monitor,.club-cup),
+.arcade-cabinet-bezel .game-viewport.is-level-two .stage-reactive :is(.club-light-rig,.club-laser,.club-smoke,.club-banner,.club-equipment-leds),
+.arcade-cabinet-bezel .game-viewport.is-level-two .stage-foreground :is(.club-booth-edge,.club-foreground-deck,.club-foreground-mixer,.club-foreground-fader,.club-crowd-hands),
+.arcade-cabinet-bezel .game-viewport.is-level-two .level-two-booth { display:none !important; }
+.arcade-cabinet-bezel .game-viewport.is-level-two .rave-world-dressing.level-two-rave-world::before,
+.arcade-cabinet-bezel .game-viewport.is-level-two .rave-world-dressing.level-two-rave-world::after { display:none !important; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-event-catch .level-two-club-layer.layer-speakers { animation:level-two-club-speaker-drive 180ms steps(2,end) 3; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-event-catch .level-two-club-layer.layer-fx { animation:level-two-club-light-kick 180ms steps(2,end) 3; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-event-hazard .level-two-club-layer.layer-backwall { animation:level-two-club-hazard-dip 240ms steps(2,end) 2; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-event-hazard .level-two-club-layer.layer-crowd { animation:level-two-club-crowd-recoil 220ms steps(2,end) 2; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-event-hazard .level-two-club-layer.layer-fx { animation:level-two-club-hazard-flicker 120ms steps(2,end) 4 !important; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-event-combo .level-two-club-layer.layer-crowd,
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-event-level-complete .level-two-club-layer.layer-crowd { animation:level-two-club-crowd-pulse 210ms steps(2,end) 4; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-energy-4 .level-two-club-layer.layer-speakers { animation:level-two-club-speaker-drive 360ms steps(2,end) infinite; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-energy-4 .level-two-club-layer.layer-fx { opacity:.56; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-energy-5 .level-two-club-layer.layer-speakers { animation:level-two-club-speaker-drive 220ms steps(2,end) infinite; }
+.arcade-cabinet-bezel .game-viewport.is-level-two.stage-energy-5 .level-two-club-layer.layer-fx { opacity:.78; animation:level-two-club-light-kick 180ms steps(2,end) infinite; }
+@keyframes level-two-club-light-kick { 50% { opacity:.92; transform:translateX(2px); } }
+@keyframes level-two-club-hazard-dip { 50% { filter:brightness(.56) saturate(1.8); transform:translateX(-2px); } }
+@keyframes level-two-club-crowd-pulse { 50% { opacity:1; transform:translateY(-3px); } }
+@keyframes level-two-club-crowd-recoil { 50% { opacity:.58; transform:translateY(4px); } }
+@keyframes level-two-club-hazard-flicker { 50% { opacity:.08; transform:translateX(-2px); } }
+@keyframes level-two-club-speaker-drive { 50% { transform:translateY(2px) scale(1.012); } }
+@media (max-width:650px) {
+  .arcade-cabinet-bezel .level-two-action-corridor { top:15%; right:18%; bottom:19%; left:18%; }
+  .arcade-cabinet-bezel .level-two-club-layer.layer-crowd { opacity:.78; }
+  .arcade-cabinet-bezel .level-two-club-layer.layer-fx { opacity:.28; }
+}
+
 .arcade-cabinet-bezel .falling-object .urban-prop-asset {
   transform: rotate(var(--fall-tilt, 0deg)) scale(1.22) !important;
   transform-origin: center !important;
@@ -204,7 +254,7 @@
 }
 
 .arcade-cabinet-bezel .falling-object.record .urban-prop-asset {
-  transform: rotate(var(--fall-tilt, 0deg)) scale(1.34) !important;
+  transform: rotate(var(--fall-tilt, 0deg)) scale(var(--item-visual-scale, 1)) !important;
   filter: drop-shadow(3px 4px 0 rgba(10,10,18,.96)) drop-shadow(0 0 5px rgba(255,230,0,.48)) !important;
 }
 
@@ -493,10 +543,11 @@
 .arcade-cabinet-bezel .backstreet-searchlight { position:absolute; top:-8%; right:1%; width:18%; height:75%; background:#00d4ff; opacity:.11; transform:rotate(25deg); clip-path:polygon(39% 0,61% 0,100% 100%,0 100%); animation:backstreet-sweep 2.6s steps(4,end) infinite; }
 .arcade-cabinet-bezel .backstreet-npc { position:absolute; bottom:26%; width:7%; height:18%; border:2px solid #080910; background:#1d1828; opacity:.87; }.arcade-cabinet-bezel .backstreet-npc::before { content:""; position:absolute; left:24%; top:-20%; width:48%; aspect-ratio:1; border-radius:50%; background:#754c39; border:2px solid #080910; }.arcade-cabinet-bezel .backstreet-npc::after { content:""; position:absolute; left:-35%; top:35%; width:170%; height:3px; background:#ff2d95; transform:rotate(18deg); }.arcade-cabinet-bezel .npc-left{left:32%;}.arcade-cabinet-bezel .npc-right{right:16%;transform:scale(.78);}
 
-/* Normalized visuals occupy their world box; collision uses the same x/y/width/height model. */
+/* Mobile readability pass: every wrapper retains its world-space collision box.
+   Only the child art expands from its centre through the per-entity scale sent
+   by DjMiniGame, keeping collision, scoring, and movement unchanged. */
 .arcade-cabinet-bezel .falling-object { z-index:20 !important; overflow:visible !important; }
-.arcade-cabinet-bezel .falling-object .urban-prop-asset { transform:rotate(var(--fall-tilt,0deg)) scale(1) !important; }
-.arcade-cabinet-bezel .falling-object.record .urban-prop-asset { transform:rotate(var(--fall-tilt,0deg)) scale(1.04) !important; }
+.arcade-cabinet-bezel .falling-object .urban-prop-asset { transform:rotate(var(--fall-tilt,0deg)) scale(var(--item-visual-scale,1)) !important; transform-origin:center !important; }
 .arcade-cabinet-bezel .game-impact-fx { position:absolute; z-index:24; width:4.5%; aspect-ratio:1; pointer-events:none; transform:translate(-50%,-50%); border:2px solid #f0ead6; background:#ffe600; box-shadow:3px 3px 0 #080910,0 0 14px #ffe600; animation:game-impact-pop 130ms steps(3,end) both; }.arcade-cabinet-bezel .game-impact-hazard{background:#ff2d95;box-shadow:3px 3px 0 #080910,0 0 16px #ff2d95;animation-duration:220ms;}.arcade-cabinet-bezel .dj-catcher.player-impact-catch .dj-catcher-art{animation:selector-catch 180ms steps(3,end) both;}.arcade-cabinet-bezel .dj-catcher.player-impact-hit .dj-catcher-art{animation:selector-hit 460ms steps(3,end) both;}.arcade-cabinet-bezel.is-catch-impulsing{animation:catch-impulse 130ms steps(2,end) both;}
 
 .arcade-cabinet-bezel .stage-foreground { position:absolute; inset:0; z-index:26; overflow:hidden; pointer-events:none; }.arcade-cabinet-bezel .foreground-railing { position:absolute; left:-4%; right:-4%; bottom:0; height:14%; border-top:4px solid #080910; background:repeating-linear-gradient(90deg,transparent 0 13px,#080910 13px 17px); opacity:.86; }.arcade-cabinet-bezel .foreground-cable { position:absolute; bottom:-5%; width:35%; height:30%; border:3px solid #080910; border-left:0; border-bottom:0; border-radius:0 90% 0 0; }.arcade-cabinet-bezel .cable-a{left:-11%;transform:rotate(-13deg);}.arcade-cabinet-bezel .cable-b{right:-16%;transform:rotate(17deg);}.arcade-cabinet-bezel .foreground-speaker-edge { position:absolute; left:-5%; bottom:-4%; width:16%; height:36%; border:4px solid #080910; background:#252637; box-shadow:inset 0 0 0 5px #3f4054; }.arcade-cabinet-bezel .foreground-bin{position:absolute;right:2%;bottom:-4%;width:12%;height:17%;border:3px solid #080910;background:#465b4c;transform:rotate(-8deg);}.arcade-cabinet-bezel .foreground-tag{position:absolute;right:5%;bottom:14%;color:#ff2d95;font:900 clamp(.65rem,2vw,1.1rem)/1 "Press Start 2P",monospace;text-shadow:2px 2px 0 #080910;transform:rotate(-11deg);}

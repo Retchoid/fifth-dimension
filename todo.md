@@ -45,7 +45,25 @@
 - [x] Add explicit test modes for debug on/off and visual cabinet-frame shown/hidden, and prove identical pointer movement with the permanent input surface still mounted.
 - [x] Run the post-splash regression with debug off: move, catch, trigger/dismiss a splash, move again, and catch again.
 - [x] Assert that a debug-off splash mounts and clears while the permanent input surface remains mounted, then record a post-dismiss left/right movement and another rendered catch.
-- [ ] Publish only the interaction-architecture repair and report the eight requested root-cause findings; stop without visual or gameplay changes.
+- [x] Publish only the interaction-architecture repair and report the eight requested root-cause findings; stop without visual or gameplay changes.
+- [x] Deliver the explicit eight-point root-cause report: previous and new pointer owners and coordinate rects, debug/frame dependency cause, debug-off and frame-off mount evidence, and state/hitbox/actual-sprite alignment at 10%/50%/90%.
+
+## Mechanics lock / bonus reliability / object scale / Level 2 art-direction pass
+
+- [x] Preserve the locked pointer input, player movement, world coordinate conversion, collision architecture, player hitbox ownership, Level 1/2 transition logic, and top-menu placement unless a demonstrated defect requires a change.
+- [x] Audit active Level 1 and Level 2 visual object scales, collision dimensions, spawn bounds, intended bonus/reaction triggers, and current Level 2 layer/art sources before implementation.
+- [x] Increase mobile visual object scale by entity type while preserving world coordinates and collision dimensions, then validate safe lanes and visible overlap at 360×800, 375×812, 390×844, 412×915, and 430×932.
+- [x] Create a centralized intended-bonus event registry with eligibility, trigger, recurrence, priority, cooldown, gameplay state, pause/resume, streak/combo, and visual-asset contracts.
+- [x] Add a hidden developer-only bonus diagnostics panel reporting eligibility, blocked state/reason, trigger count, last trigger time, and current game state for every intended Level 1/2 bonus event.
+- [x] Add deterministic coverage for mixer damaged/repaired, Wrong Tune, Police Seized Mixer, Too High to Play, download unlock, and Crowd Pressure; report any event not present in the current source of truth.
+- [x] Preserve Level 2 as a 50-item complete playable level, with existing movement and core collision behavior unchanged.
+- [x] Replace the rejected Level 2 flat vector scenery with independently replaceable layered inside-the-same-club environment art, preserving gameplay coordinates and a clear central action corridor.
+- [x] Add lightweight gameplay-safe Level 2 environmental reactivity for catches, hazards, and high combos without turning it into a fighting game.
+- [x] Maintain coherent comic/pixel rendering across Level 2 player, objects, crowd, environment, and existing splash screens; identify any art that remains explicitly temporary.
+- [x] Run the requested Pass A/Pass B acceptance checks and report object-size deltas, audited events, failures/fixes, Level 2 layers/reactivity, frozen input confirmation, 50-item target, test/build status, and temporary art.
+- [x] Stop after the requested object scale, bonus reliability, Level 2 environment, and basic reactive-environment pass; do not start Level 3 or redesign the rest of the site.
+- [x] Run and document the complete Pass A / Pass B evidence matrix, including public Level 1 collision/Crowd Pressure checks, Level 2 50-target/mobile input verification, and build/test gates.
+- [x] Create an explicit Level 2 temporary-art and coherence audit, identifying all five temporary club layers and preserving the existing splash-screen art outside this scoped pass.
 
 ## Approved website redesign sequence — Task 1 only until user confirmation
 

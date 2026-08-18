@@ -50,9 +50,10 @@ while (Date.now() < deadline && !proof) {
   await page.waitForTimeout(240);
   const after = await snapshot();
   const stillPresent = await page.locator(`[data-game-object-id="${record.id}"]`).count() > 0;
-  const log = (await page.locator(".mechanics-debug-log").textContent()) ?? "";
-  const catchCount = (log.match(new RegExp(`id=${record.id}\\s.*collision=catch`, "g")) ?? []).length;
-  const missCount = (log.match(new RegExp(`id=${record.id}\\s.*collision=miss`, "g")) ?? []).length;
+  const logEntries = await page.locator(".mechanics-debug-log small").allTextContents();
+  const sameObjectEntries = logEntries.filter((entry) => entry.includes(`id=${record.id} `));
+  const catchCount = sameObjectEntries.filter((entry) => entry.includes("collision=catch")).length;
+  const missCount = sameObjectEntries.filter((entry) => entry.includes("collision=miss")).length;
   if (!stillPresent && catchCount === 1) proof = { id: record.id, before, after, removed: !stillPresent, catchCount, missCount };
 }
 

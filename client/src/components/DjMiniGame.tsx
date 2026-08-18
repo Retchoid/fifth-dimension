@@ -10,6 +10,7 @@ import { reactionForCombo, stageReactions, StageReactionController, type StageRe
 import { clientXToWorldX, playerRectFromCenterX, resolveWorldCollision, type ObjectWorld, type PlayerWorld } from "@/lib/gameWorld";
 import { equipmentIsDamaged, worsenEquipmentCondition, type EquipmentCondition } from "@/lib/equipmentCondition";
 import { applyCrowdPressureOutcome, applyPitRunHazard, canUnlockCrowdPressure, pitRunCompletes, pitRunProgressLimit, recoverPitGear, resolveCrowdPressureOutcome, transitionChapter } from "@/lib/chapterProgression";
+import { BONUS_EVENTS, createBonusEventDiagnostics, type BonusEventDiagnostic, type BonusEventDiagnostics, type BonusEventId } from "@/lib/bonusEvents";
 import { trpc } from "@/lib/trpc";
 import "@/gameplay-clarity.css";
 import "@/miami-arcade-stage.css";
@@ -86,22 +87,27 @@ const URBAN_RUNNER_ASSETS: Record<BonusRunnerType, string> = {
   rat: "/embedded-assets/selectah-runner-rat-urban_42c505b7.png",
 };
 
-const FALLING_ITEM_RULES: Record<FallingItemType, { width: number; height: number; visualSize: number; tilt: number }> = {
+const FALLING_ITEM_RULES: Record<FallingItemType, { width: number; height: number; visualSize: number; visualScale: number; tilt: number }> = {
   // `visualSize` is normalized against the unchanged selector art: regular
   // pickups are 15–28% player height, bonus gear 30–40%, hazards 18–32%.
   // `width` and `height` remain the sole collision values.
-  record: { width: 5, height: 5, visualSize: 14, tilt: -7 },
-  cop: { width: 6, height: 6, visualSize: 18, tilt: 0 },
-  bottle: { width: 5, height: 5, visualSize: 15, tilt: 13 },
-  apple: { width: 5, height: 5, visualSize: 15, tilt: -12 },
-  lion: { width: 8, height: 8, visualSize: 22, tilt: 0 },
-  cdj: { width: 7, height: 7, visualSize: 20, tilt: -5 },
-  mixer: { width: 7, height: 7, visualSize: 20, tilt: 4 },
-  turntable: { width: 7, height: 7, visualSize: 20, tilt: -4 },
-  adapter: { width: 4, height: 4, visualSize: 12, tilt: 8 },
-  pill: { width: 5, height: 5, visualSize: 14, tilt: -14 },
-  phone: { width: 5, height: 6, visualSize: 16, tilt: 16 },
+  record: { width: 5, height: 5, visualSize: 14, visualScale: 1.9, tilt: -7 },
+  cop: { width: 6, height: 6, visualSize: 18, visualScale: 1.9, tilt: 0 },
+  bottle: { width: 5, height: 5, visualSize: 15, visualScale: 1.76, tilt: 13 },
+  apple: { width: 5, height: 5, visualSize: 15, visualScale: 1.76, tilt: -12 },
+  lion: { width: 8, height: 8, visualSize: 22, visualScale: 1.62, tilt: 0 },
+  cdj: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, tilt: -5 },
+  mixer: { width: 7, height: 7, visualSize: 20, visualScale: 1.9, tilt: 4 },
+  turntable: { width: 7, height: 7, visualSize: 20, visualScale: 1.86, tilt: -4 },
+  adapter: { width: 4, height: 4, visualSize: 12, visualScale: 2.12, tilt: 8 },
+  pill: { width: 5, height: 5, visualSize: 14, visualScale: 1.96, tilt: -14 },
+  phone: { width: 5, height: 6, visualSize: 16, visualScale: 1.9, tilt: 16 },
 };
+
+// Enlarged visible art enters below the compact HUD band. This adjusts only the
+// spawn lane; width, height, motion, and collision resolution remain unchanged.
+const HUD_SAFE_FALLING_SPAWN_Y = 10;
+const FALLING_ITEM_SAFE_LANE_INSET = 8;
 
 const SPAWN_WEIGHTS: Record<GameLevel, Array<readonly [FallingItemType, number]>> = {
   // Dubplates are less frequent in every level; Level 1 keeps its established no-bottle/no-core contract.
@@ -175,6 +181,7 @@ interface FallingItem extends ObjectWorld {
   id: number;
   type: FallingItemType;
   visualSize: number;
+  visualScale: number;
   tilt: number;
 }
 
@@ -296,6 +303,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [pitRunHits, setPitRunHits] = useState(0);
   const [visibleItems, setVisibleItems] = useState<FallingItem[]>([]);
   const [mechanicsDebugLog, setMechanicsDebugLog] = useState<string[]>([]);
+  const [bonusEventDiagnostics, setBonusEventDiagnostics] = useState<BonusEventDiagnostics>(() => createBonusEventDiagnostics());
   const [cleanDubplateStreak, setCleanDubplateStreak] = useState(0);
   const cleanDubplateStreakRef = useRef(0);
   const [hazardSinceStreakStart, setHazardSinceStreakStart] = useState(false);
@@ -323,6 +331,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const stageReactionVerification = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-stage-verify") as StageReaction | null : null;
   const hitboxDebugEnabled = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-hitboxes") === "true";
   const mechanicsDebugEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-mechanics-debug") === "true";
+  const bonusDebugEnabled = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-bonus-debug") === "true";
   const realInputDebugEnabled = typeof window !== "undefined" && (() => {
     const params = new URLSearchParams(window.location.search);
     return params.get("debugInput") === "1" || params.get("arcade-real-input-debug") === "true";
@@ -445,6 +454,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const mixerPickupCountRef = useRef(0);
   const turntablePickupCountRef = useRef(0);
   const pendingArcadeSequenceRef = useRef<ArcadeSequence[]>([]);
+  const bonusEventDiagnosticsRef = useRef<BonusEventDiagnostics>(createBonusEventDiagnostics());
   const comboBurstTimerRef = useRef<number>(0);
   const gunFingerShakeTimerRef = useRef<number>(0);
   const pickupFlashTimerRef = useRef<number>(0);
@@ -496,6 +506,58 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     console.info("[selectah-mechanics]", entry);
     setMechanicsDebugLog((previous) => [entry, ...previous].slice(0, 20));
   };
+
+  const updateBonusEventDiagnostic = (event: BonusEventId, update: Partial<BonusEventDiagnostic>) => {
+    const previous = bonusEventDiagnosticsRef.current[event];
+    const next = {
+      ...previous,
+      ...update,
+      currentGameState: update.currentGameState ?? gameplayStateRef.current,
+    };
+    const nextDiagnostics = { ...bonusEventDiagnosticsRef.current, [event]: next };
+    bonusEventDiagnosticsRef.current = nextDiagnostics;
+    if (bonusDebugEnabled) setBonusEventDiagnostics(nextDiagnostics);
+  };
+
+  const dispatchBonusEvent = (event: BonusEventId, eligible: boolean, blockReason: string, onTrigger: () => void) => {
+    if (!eligible) {
+      updateBonusEventDiagnostic(event, { eligible: false, blocked: true, blockReason });
+      return false;
+    }
+    const previous = bonusEventDiagnosticsRef.current[event];
+    updateBonusEventDiagnostic(event, {
+      eligible: true,
+      blocked: false,
+      blockReason: "triggered",
+      triggerCount: previous.triggerCount + 1,
+      lastTriggerTime: Date.now(),
+    });
+    onTrigger();
+    return true;
+  };
+
+  useEffect(() => {
+    if (!bonusDebugEnabled) return;
+    const applyEligibility = (event: BonusEventId, eligible: boolean, blockReason: string) => {
+      const previous = bonusEventDiagnosticsRef.current[event];
+      const next = { ...previous, eligible, blocked: !eligible, blockReason, currentGameState: gameplayStateRef.current };
+      bonusEventDiagnosticsRef.current = { ...bonusEventDiagnosticsRef.current, [event]: next };
+    };
+    applyEligibility("crowdPressure", level === 1 && cleanDubplateStreak >= 15 && !hazardSinceStreakStart, level !== 1 ? "Level 1 only" : `clean streak ${cleanDubplateStreak}/15`);
+    applyEligibility("wrongTune", phoneHitsRef.current >= 2, `phone hits ${phoneHitsRef.current}/2`);
+    applyEligibility("policeSeizure", policeBadgeHitsRef.current >= 2, `cop hits ${policeBadgeHitsRef.current}/2`);
+    applyEligibility("tooHighToPlay", pillHitsRef.current >= 2, `pill hits ${pillHitsRef.current}/2`);
+    applyEligibility("mixerDamage", true, "awaiting active hazard collision");
+    applyEligibility("mixerRepair", mixerDamaged && recoveryProgress >= 3, mixerDamaged ? `recovery ${recoveryProgress}/3` : "mixer healthy");
+    applyEligibility("recordCrate", mixerPickupCountRef.current >= 3, `mixer pickups ${mixerPickupCountRef.current}/3`);
+    applyEligibility("headphonesReady", turntablePickupCountRef.current >= 3, `turntable pickups ${turntablePickupCountRef.current}/3`);
+    applyEligibility("boh", level === 1 && recordsCaught >= 5, level === 1 ? `records ${recordsCaught}/5` : "Level 1 only");
+    applyEligibility("wheelItUp", combo >= 30, `combo ${combo}/30`);
+    applyEligibility("rewind", combo >= 18, `combo ${combo}/18`);
+    applyEligibility("runRiddim", level === 2 && recordsCaught >= 15, level === 2 ? `items ${recordsCaught}/15` : "Level 2 only");
+    applyEligibility("downloadUnlock", level === 1 && recordsCaught >= REQUIRED_RECORDS && !downloadUnlocked, level === 1 ? `records ${recordsCaught}/${REQUIRED_RECORDS}` : "Level 1 only");
+    setBonusEventDiagnostics({ ...bonusEventDiagnosticsRef.current });
+  }, [bonusDebugEnabled, cleanDubplateStreak, combo, downloadUnlocked, hazardSinceStreakStart, level, mixerDamaged, recordsCaught, recoveryProgress]);
 
   const setStageEnergy = (value: number) => stageControllerRef.current?.setEnergy(value);
 
@@ -1450,6 +1512,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   const startLevelOneNoRequestBonus = () => {
     if (levelRef.current !== 1 || !bonusEligibleRef.current) return;
+    dispatchBonusEvent("crowdPressure", true, "", () => undefined);
     gameRunIdRef.current += 1;
     if (requestRef.current) cancelAnimationFrame(requestRef.current);
     setChapterMode("BONUS_CROWD_PRESSURE");
@@ -1683,6 +1746,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   };
 
   const startArcadeSequence = (sequence: ArcadeSequence) => {
+    const sequenceEvent: Partial<Record<ArcadeSequence, BonusEventId>> = {
+      rewind: "rewind",
+      wheel: "wheelItUp",
+      police: "policeSeizure",
+      crowd: "wrongTune",
+      pill: "tooHighToPlay",
+      crate: "recordCrate",
+      headphones: "headphonesReady",
+      boh: "boh",
+      riddim: "runRiddim",
+    };
+    const registryEvent = sequenceEvent[sequence];
+    if (registryEvent) dispatchBonusEvent(registryEvent, true, "", () => undefined);
     if (sequence === "boh" || sequence === "riddim" || sequence === "wheel" || sequence === "crate" || sequence === "headphones") {
       const rewardCopy: Record<"boh" | "riddim" | "wheel" | "crate" | "headphones", InWorldReward> = {
         boh: { label: "BOH! BOH!", quip: "FIVE DUBPLATES / +250" },
@@ -2718,14 +2794,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
       itemsRef.current.push({
         id: nextIdRef.current++,
-        x: Math.floor(Math.random() * (88 - itemRule.width)) + 4,
-        y: -itemRule.height,
+        x: Math.floor(Math.random() * (100 - FALLING_ITEM_SAFE_LANE_INSET * 2 - itemRule.width)) + FALLING_ITEM_SAFE_LANE_INSET,
+        y: HUD_SAFE_FALLING_SPAWN_Y,
         type: spawnedType,
         velocity: Math.floor(Math.random() * (levelRef.current === 2 ? 12 : 10)) + baseSpeed + speedRamp,
         state: "active",
         width: itemRule.width,
         height: itemRule.height,
         visualSize: itemRule.visualSize,
+        visualScale: itemRule.visualScale,
         tilt: itemRule.tilt * (Math.random() > 0.5 ? 1 : -1),
       });
       structureChanged = true;
@@ -2873,6 +2950,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               setEquipmentState("repaired");
               setRecoveryProgress(0);
               setMixerRepairBurst(true);
+              dispatchBonusEvent("mixerRepair", true, "", () => undefined);
               logMechanicsEvent(`id=${item.id} mixer-recovery=repaired`);
               window.clearTimeout(mixerRepairTimerRef.current);
               mixerRepairTimerRef.current = window.setTimeout(() => setMixerRepairBurst(false), 1050);
@@ -2931,6 +3009,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             setIsBonusEligible(firstBonusEligible);
             if (!downloadUnlockedRef.current && !unlockJinglePlayedRef.current) {
               unlockJinglePlayedRef.current = true;
+              dispatchBonusEvent("downloadUnlock", true, "", () => undefined);
               playUnlockJingle();
               pauseAfterUnlock = true;
             } else {
@@ -2953,6 +3032,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           setStageEnergy(0);
           const nextEquipmentCondition = worsenEquipmentCondition(equipmentConditionRef.current);
           setEquipmentState(nextEquipmentCondition);
+          dispatchBonusEvent("mixerDamage", true, "", () => undefined);
           mixerDamagedRef.current = equipmentIsDamaged(nextEquipmentCondition);
           setMixerDamaged(mixerDamagedRef.current);
           if (levelRef.current === 1) {
@@ -3429,10 +3509,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             </div>
           )}
           {level === 2 && (
-            <div className="crowd-pressure-background">
-              <span className="club-ceiling-beam beam-one" /><span className="club-ceiling-beam beam-two" /><span className="club-ceiling-beam beam-three" />
-              <span className="club-rear-wall" /><span className="club-distant-bar"><i /><i /><i /></span>
-              <span className="club-reverse-entrance"><i /><b>5D</b><em>ALLEY</em></span>
+            <div className="level-two-club-layers" aria-hidden="true">
+              <img className="level-two-club-layer layer-backwall" src="/manus-storage/level2-club-backwall_0fefe2b1.png" alt="" />
+              <img className="level-two-club-layer layer-architecture" src="/manus-storage/level2-club-architecture_b59eb6c5.png" alt="" />
+              <img className="level-two-club-layer layer-crowd" src="/manus-storage/level2-club-crowd-bands_f8a90d30.png" alt="" />
+              <img className="level-two-club-layer layer-speakers" src="/manus-storage/level2-club-speaker-edges_2cd0f111.png" alt="" />
+              <img className="level-two-club-layer layer-fx" src="/manus-storage/level2-club-reactive-fx_59e2c1c8.png" alt="" />
+              <span className="level-two-action-corridor" />
             </div>
           )}
         </div>
@@ -3451,31 +3534,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="backstreet-poster poster-transmission">BASS<br />TRANS</span><span className="backstreet-poster poster-showdown">SHOW<br />DOWN</span><span className="backstreet-sticker sticker-five">5</span><span className="backstreet-sticker sticker-tape">TAPE</span>
             </>
           )}
-          {level === 2 && (
-            <>
-              <div className="club-pillar club-pillar-left"><i /><b /></div><div className="club-pillar club-pillar-right"><i /><b /></div>
-              <div className="club-speaker-wall"><i /><i /><i /><i /></div>
-              <div className="club-poster-wall"><span>BASS<br />IN THE<br />CHEST</span><span>5D<br />DUBS</span><span>RAVE<br />LIFE</span></div>
-              <div className="club-crowd-mid crowd-left"><i /><i /><i /><i /></div><div className="club-crowd-mid crowd-right"><i /><i /><i /><i /></div>
-              <div className="club-mc"><i /><b /></div><div className="club-security-inside"><i /><b /></div>
-            </>
-          )}
         </div>
         <div className="stage-game-plane" aria-hidden="true">
           {level === 1 && <><i className="alley-puddle puddle-left" /><i className="alley-puddle puddle-right" /><b className="alley-drain" /><span className="alley-flyer flyer-a">DUB</span><span className="alley-flyer flyer-b">5D</span><span className="alley-debris debris-a" /><span className="alley-debris debris-b" /></>}
-          {level === 2 && <><i className="club-booth-floor" /><i className="club-booth-cable cable-left" /><i className="club-booth-cable cable-right" /><span className="club-record-crate">5D<br />DUBS</span><span className="club-monitor monitor-left" /><span className="club-monitor monitor-right" /><span className="club-cup cup-left" /><span className="club-cup cup-right" /></>}
         </div>
         <div className="stage-reactive" aria-hidden="true">
           <span className="stage-sign stage-sign-left" /><span className="stage-sign stage-sign-right" />
           {level === 1 && <><span className="backstreet-hanging-sign">NO<br />REQUESTS</span><span className="backstreet-steam steam-left" /><span className="backstreet-steam steam-right" /><span className="backstreet-searchlight" /><span className="backstreet-npc npc-left" /><span className="backstreet-npc npc-right" /></>}
-          {level === 2 && <><span className="club-light-rig"><i /><i /><i /></span><span className="club-laser laser-left" /><span className="club-laser laser-right" /><span className="club-smoke smoke-left" /><span className="club-smoke smoke-right" /><span className="club-banner">5D<br />CLUB</span><span className="club-equipment-leds"><i /><i /><i /><i /></span></>}
           <img className="stage-edge-speaker" src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" />
           <img className="stage-npc-reaction" src={CELEBRATION_DANCERS[1].src} alt="" />
           <i className="stage-flyer stage-flyer-one" /><i className="stage-flyer stage-flyer-two" /><i className="stage-flyer stage-flyer-three" />
         </div>
         <div className="stage-foreground" aria-hidden="true">
           {level === 1 && <><i className="foreground-railing" /><i className="foreground-cable cable-a" /><i className="foreground-cable cable-b" /><span className="foreground-speaker-edge" /><span className="foreground-bin" /><span className="foreground-tag">5D</span></>}
-          {level === 2 && <><i className="club-booth-edge" /><i className="club-foreground-deck deck-left" /><i className="club-foreground-deck deck-right" /><span className="club-foreground-mixer"><i /><i /><i /></span><span className="club-foreground-fader" /><span className="club-crowd-hands hands-left" /><span className="club-crowd-hands hands-right" /></>}
         </div>
         {impactFx && (
           <div
@@ -4070,7 +4141,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   top: `${item.y}%`,
                   width: `${item.width}%`,
                   height: `${item.height}%`,
-                  "--item-visual-size": `${item.visualSize}px`,
+                   "--item-visual-size": `${item.visualSize}px`,
+                   "--item-visual-scale": item.visualScale,
                   "--fall-tilt": `${item.tilt}deg`,
                 } as React.CSSProperties}
               >
@@ -4130,6 +4202,21 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <span>PLAYER HITBOX: {playerWorldRef.current.x.toFixed(2)},{playerWorldRef.current.y} {playerWorldRef.current.width}×{playerWorldRef.current.height}</span>
             <span>CLEAN STREAK: {cleanDubplateStreak}/15 / HAZARD SINCE START: {hazardSinceStreakStart ? "YES" : "NO"}</span>
             <span>BONUS ELIGIBLE: {isBonusEligible ? "YES" : "NO"} / TRIGGERED: {gameMode === "BONUS_CROWD_PRESSURE" ? "YES" : "NO"}</span>
+          </aside>
+        )}
+        {bonusDebugEnabled && (
+          <aside className="bonus-debug-panel" aria-live="polite">
+            <strong>BONUS EVENT DEBUG</strong>
+            {Object.entries(BONUS_EVENTS).map(([event, contract]) => {
+              const status = bonusEventDiagnostics[event as BonusEventId];
+              return <div key={event} className={status.blocked ? "is-blocked" : "is-eligible"}>
+                <b>{contract.label}</b>
+                <span>ELIGIBLE: {status.eligible ? "YES" : "NO"} / BLOCKED: {status.blocked ? "YES" : "NO"}</span>
+                <span>REASON: {status.blockReason}</span>
+                <span>TRIGGERS: {status.triggerCount} / LAST: {status.lastTriggerTime ? new Date(status.lastTriggerTime).toLocaleTimeString() : "—"}</span>
+                <span>STATE: {status.currentGameState}</span>
+              </div>;
+            })}
           </aside>
         )}
         {level === 2 && (
