@@ -2,6 +2,7 @@ import { chromium } from "playwright";
 
 const origin = process.env.MECHANICS_ORIGIN ?? "http://127.0.0.1:3000";
 const crowdBonusMode = process.env.CROWD_BONUS_MODE ?? "block";
+const verifyLevelOneCompletion = process.env.VERIFY_LEVEL_ONE_COMPLETION === "1";
 const browser = await chromium.launch({ headless: true, executablePath: "/usr/bin/chromium", args: ["--no-sandbox"] });
 const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 const page = await context.newPage();
@@ -195,6 +196,40 @@ if (completed) {
     }
   }
 }
+const levelOneCompletionEvidence = { requested: verifyLevelOneCompletion, returnedToLevelOne: false, highestRecords: await hud().then((value) => value.records), reachedTarget: false };
+if (verifyLevelOneCompletion && completed) {
+  const returnSurface = page.locator(".input-capture-layer.is-active");
+  await returnSurface.waitFor({ state: "visible", timeout: 12_000 }).catch(() => undefined);
+  levelOneCompletionEvidence.returnedToLevelOne = await returnSurface.count() > 0;
+  const returnBounds = await returnSurface.boundingBox();
+  if (returnBounds) {
+    const returnY = returnBounds.y + returnBounds.height * .74;
+    const returnX = (ratio) => returnBounds.x + returnBounds.width * Math.max(.08, Math.min(.92, ratio));
+    await page.mouse.move(returnX(.5), returnY);
+    await page.mouse.down();
+    const completionDeadline = Date.now() + 90_000;
+    while (Date.now() < completionDeadline && !levelOneCompletionEvidence.reachedTarget) {
+      const currentHud = await hud();
+      levelOneCompletionEvidence.highestRecords = Math.max(levelOneCompletionEvidence.highestRecords, currentHud.records);
+      if (currentHud.records >= 25) {
+        levelOneCompletionEvidence.reachedTarget = true;
+        break;
+      }
+      const currentObjects = await objects();
+      const hazard = currentObjects.find((item) => isHazard(item.className) && inBand(item));
+      const record = currentObjects.find((item) => isRecord(item.className) && inBand(item));
+      if (hazard) {
+        const ratio = (hazard.x + hazard.width / 2 - returnBounds.x) / returnBounds.width;
+        await page.mouse.move(returnX(ratio < .5 ? .92 : .08), returnY, { steps: 3 });
+      } else if (record) {
+        const ratio = (record.x + record.width / 2 - returnBounds.x) / returnBounds.width;
+        await page.mouse.move(returnX(ratio), returnY, { steps: 4 });
+      }
+      await page.waitForTimeout(55);
+    }
+    await page.mouse.up();
+  }
+}
 await field.screenshot({ path: "/home/ubuntu/webdev-static-assets/selectah-normal-public-e2e-390.png" });
 console.log(JSON.stringify({
   route: "/?arcade-real-input-debug=true",
@@ -209,9 +244,10 @@ console.log(JSON.stringify({
   crowdPressureTriggered: completed,
   crowdBonusMode,
   crowdPressureEvidence,
+  levelOneCompletionEvidence,
 }, null, 2));
 
 const requiredCrowdOutcome = crowdBonusMode === "damage" ? crowdPressureEvidence.equipmentHitObserved : crowdPressureEvidence.blockObserved;
-if (!completed || !crowdPressureEvidence.stageVisible || crowdPressureEvidence.handPositions.length !== 4 || !requiredCrowdOutcome || !visibleRecovery?.includes("MIXER DAMAGED")) process.exitCode = 1;
+if (!completed || !crowdPressureEvidence.stageVisible || crowdPressureEvidence.handPositions.length !== 4 || !requiredCrowdOutcome || !visibleRecovery?.includes("MIXER DAMAGED") || (verifyLevelOneCompletion && !levelOneCompletionEvidence.reachedTarget)) process.exitCode = 1;
 await context.close();
 await browser.close();

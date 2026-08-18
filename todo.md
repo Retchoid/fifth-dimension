@@ -26,7 +26,9 @@
 - [x] Verify one-time Level 1 dubplate collision removal, record/score/combo/streak updates, and no simultaneous miss against the shared gameplay world model.
 - [x] Verify one-time Level 1 hazard damage, continued post-damage movement, subsequent collection, and the normal/damaged/repaired mixer lifecycle with three-dubplate recovery.
 - [x] Verify a clean 15-dubplate streak, Crowd Pressure transition, protected-hand horizontal input, and collision handling for blocked crowd hazards versus DJ equipment hits.
-- [ ] Verify the Level 1 25-dubplate requirement remains independent of the Crowd Pressure bonus and preserve all Level 2/Level 3 hooks without building them.
+- [x] Verify the Level 1 25-dubplate requirement remains independent of the Crowd Pressure bonus and preserve all Level 2/Level 3 hooks without building them.
+- [x] Add a focused regression proving Crowd Pressure return preserves the existing Level 1 completion handoff to Level 2.
+- [x] Add a focused regression proving the existing Level 2-to-Level 3 progression hook remains intact without rebuilding those later levels.
 - [x] Hide REAL INPUT TRACE during normal play while preserving explicit debug activation and all existing diagnostic fields for future QA.
 - [ ] Validate direct public/mobile-compatible behavior, responsive outside-playfield scrolling, top-menu placement, and no unintended visual redesign; report every unverified item explicitly.
 - [x] Capture a single rendered Level 1 dubplate object ID before collision and prove its removal, one-time record/score/combo/streak update, and absence of a same-object miss after collision.

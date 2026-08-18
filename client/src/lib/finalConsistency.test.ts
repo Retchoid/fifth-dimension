@@ -243,6 +243,21 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).toContain('if (mixerDamagedRef.current && item.type === "record")');
   });
 
+  it("preserves the post-Crowd-Pressure Level 1 completion handoff to Level 2", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).toContain("if (recordsCaughtRef.current < REQUIRED_RECORDS)");
+    expect(gameSource).toContain("setGameplayStateOwner(\"PLAYING\")");
+    expect(gameSource).toContain("if (advanceToLevelTwo) {");
+    expect(gameSource).toContain("startLevelTwo();");
+  });
+
+  it("preserves the existing Level 2 completion handoff to Level 3 Pit Run", () => {
+    const gameSource = read("components/DjMiniGame.tsx");
+    expect(gameSource).toContain("if (completeLevelTwo) {");
+    expect(gameSource).toContain("startPitRun();");
+    expect(gameSource).toContain('transitionChapter("LEVEL_2", "start-pit")');
+  });
+
   it("keeps published mobile pointer input bound to one dedicated capture surface", () => {
     const gameSource = read("components/DjMiniGame.tsx");
     expect(gameSource).toContain("const inputCaptureRef = useRef<HTMLDivElement>(null);");
