@@ -3704,73 +3704,68 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               data-level-one-records={renderedRecordsCaught}
             >
               {(() => {
-                const targetMaster = levelOneMasterState;
-                // Trigger two-layer crossfade when master state changes
-                if (targetMaster !== currentEnvMaster && !isEnvTransitioning) {
-                  setPreviousEnvMaster(currentEnvMaster);
-                  setCurrentEnvMaster(targetMaster);
-                  setIsEnvTransitioning(true);
-                  if (envTransitionTimerRef.current) window.clearTimeout(envTransitionTimerRef.current);
-                  envTransitionTimerRef.current = window.setTimeout(() => {
-                    setPreviousEnvMaster(null);
-                    setIsEnvTransitioning(false);
-                  }, 650);
-                }
+                const r = Math.max(0, Math.min(25, renderedRecordsCaught));
+                
+                const getGoldenOpacity = (rec: number) => {
+                  if (rec <= 3) return 1.0;
+                  if (rec >= 7) return 0.0;
+                  return 1.0 - (rec - 3) / (7 - 3);
+                };
+
+                const getWakingOpacity = (rec: number) => {
+                  if (rec <= 3) return 0.0;
+                  if (rec <= 7) return (rec - 3) / (7 - 3);
+                  if (rec <= 9) return 1.0;
+                  if (rec >= 14) return 0.0;
+                  return 1.0 - (rec - 9) / (14 - 9);
+                };
+
+                const getDuskOpacity = (rec: number) => {
+                  if (rec <= 9) return 0.0;
+                  if (rec <= 14) return (rec - 9) / (14 - 9);
+                  if (rec <= 16) return 1.0;
+                  if (rec >= 21) return 0.0;
+                  return 1.0 - (rec - 16) / (21 - 16);
+                };
+
+                const getNightOpacity = (rec: number) => {
+                  if (rec <= 16) return 0.0;
+                  if (rec >= 21) return 1.0;
+                  return (rec - 16) / (21 - 16);
+                };
+
+                const opGolden = getGoldenOpacity(r);
+                const opWaking = getWakingOpacity(r);
+                const opDusk = getDuskOpacity(r);
+                const opNight = getNightOpacity(r);
                 const assetMap = LEVEL_ONE_MASTER_ASSETS;
-                const activeMaster = currentEnvMaster || "golden";
+
                 return (
                   <>
-                    {/* Absolute invariant fallback base: always present at zIndex 0 behind gameplay */}
                     <div 
-                      className="environment-layer base-master"
-                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1, pointerEvents: 'none' }}
+                      className="environment-layer master-golden"
+                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: opGolden, pointerEvents: 'none', transition: 'opacity 300ms linear' }}
                     >
-                      <img src={assetMap[activeMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={assetMap.golden} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
-
-                    {previousEnvMaster && previousEnvMaster !== activeMaster && (
-                      <div 
-                        key={`outgoing-${previousEnvMaster}`}
-                        className="environment-layer outgoing" 
-                        style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1, pointerEvents: 'none' }}
-                      >
-                        <img src={assetMap[previousEnvMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </div>
-                    )}
-
-                    {(() => {
-                      const [incomingOpacity, setIncomingOpacity] = useState(isEnvTransitioning && previousEnvMaster ? 0 : 1);
-                      useEffect(() => {
-                        if (isEnvTransitioning && previousEnvMaster) {
-                          setIncomingOpacity(0);
-                          const rafId = requestAnimationFrame(() => {
-                            requestAnimationFrame(() => {
-                              setIncomingOpacity(1);
-                            });
-                          });
-                          return () => cancelAnimationFrame(rafId);
-                        } else {
-                          setIncomingOpacity(1);
-                        }
-                      }, [currentEnvMaster, isEnvTransitioning, previousEnvMaster]);
-
-                      return (
-                        <div 
-                          key={`incoming-${activeMaster}`}
-                          className="environment-layer incoming"
-                          style={{ 
-                            position: 'absolute', 
-                            inset: 0, 
-                            zIndex: 0, 
-                            opacity: incomingOpacity,
-                            transition: 'opacity 600ms ease-in-out',
-                            pointerEvents: 'none' 
-                          }}
-                        >
-                          <img src={assetMap[activeMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        </div>
-                      );
-                    })()}
+                    <div 
+                      className="environment-layer master-waking"
+                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: opWaking, pointerEvents: 'none', transition: 'opacity 300ms linear' }}
+                    >
+                      <img src={assetMap.waking} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div 
+                      className="environment-layer master-dusk"
+                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: opDusk, pointerEvents: 'none', transition: 'opacity 300ms linear' }}
+                    >
+                      <img src={assetMap.dusk} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div 
+                      className="environment-layer master-night"
+                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: opNight, pointerEvents: 'none', transition: 'opacity 300ms linear' }}
+                    >
+                      <img src={assetMap.night} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
                   </>
                 );
               })()}
