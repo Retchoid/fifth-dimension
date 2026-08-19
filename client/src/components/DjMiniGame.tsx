@@ -3720,10 +3720,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 const activeMaster = currentEnvMaster || "golden";
                 return (
                   <>
-                    {/* Absolute invariant fallback base: always present at opacity 1 */}
+                    {/* Absolute invariant fallback base: always present at zIndex 0 behind gameplay */}
                     <div 
                       className="environment-layer base-master"
-                      style={{ position: 'absolute', inset: 0, zIndex: 1, opacity: 1, pointerEvents: 'none' }}
+                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1, pointerEvents: 'none' }}
                     >
                       <img src={assetMap[activeMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
@@ -3732,7 +3732,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       <div 
                         key={`outgoing-${previousEnvMaster}`}
                         className="environment-layer outgoing" 
-                        style={{ position: 'absolute', inset: 0, zIndex: 2, opacity: 1, pointerEvents: 'none' }}
+                        style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1, pointerEvents: 'none' }}
                       >
                         <img src={assetMap[previousEnvMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
@@ -3761,7 +3761,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                           style={{ 
                             position: 'absolute', 
                             inset: 0, 
-                            zIndex: 3, 
+                            zIndex: 0, 
                             opacity: incomingOpacity,
                             transition: 'opacity 600ms ease-in-out',
                             pointerEvents: 'none' 
