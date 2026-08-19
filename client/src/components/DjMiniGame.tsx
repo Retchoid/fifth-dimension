@@ -3761,6 +3761,59 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 const opNight = getNightOpacity(r);
                 const assetMap = LEVEL_ONE_MASTER_ASSETS;
 
+                // Dynamic record-driven time-of-day atmospheric color grading & lighting overlay
+                // 0-5: Warm golden sunset
+                // 6-9: Late sunset (burnt orange / coral tint, slight magenta)
+                // 10-12: Dusk transition (magenta to purple tint)
+                // 13-16: Purple/blue evening
+                // 17-20: Night arrival (deep blue/purple)
+                // 21-25: Full night (rich navy/violet with cyan/magenta neon contrast)
+                const getAtmosphereGrading = (rec: number) => {
+                  if (rec <= 5) {
+                    return {
+                      background: 'linear-gradient(180deg, rgba(255,140,0,0.08) 0%, rgba(255,180,50,0.02) 40%, transparent 100%)',
+                      mixBlendMode: 'color-burn',
+                      filter: 'saturate(1.1) brightness(1.02)'
+                    };
+                  } else if (rec <= 9) {
+                    const t = (rec - 5) / (9 - 5);
+                    return {
+                      background: `linear-gradient(180deg, rgba(220,80,90,${0.08 + t * 0.08}) 0%, rgba(120,40,120,${t * 0.1}) 60%, rgba(10,10,25,${t * 0.15}) 100%)`,
+                      mixBlendMode: 'multiply',
+                      filter: `saturate(${1.1 - t * 0.15}) brightness(${1.02 - t * 0.08})`
+                    };
+                  } else if (rec <= 12) {
+                    const t = (rec - 9) / (12 - 9);
+                    return {
+                      background: `linear-gradient(180deg, rgba(160,50,140,${0.16 + t * 0.1}) 0%, rgba(70,30,130,${0.1 + t * 0.15}) 50%, rgba(10,15,35,${0.25 + t * 0.15}) 100%)`,
+                      mixBlendMode: 'multiply',
+                      filter: `saturate(${0.95 - t * 0.15}) brightness(${0.94 - t * 0.1}) contrast(1.05)`
+                    };
+                  } else if (rec <= 16) {
+                    const t = (rec - 12) / (16 - 12);
+                    return {
+                      background: `linear-gradient(180deg, rgba(90,40,160,${0.26 - t * 0.05}) 0%, rgba(30,30,90,${0.25 + t * 0.05}) 50%, rgba(10,12,30,${0.4 + t * 0.1}) 100%)`,
+                      mixBlendMode: 'multiply',
+                      filter: `saturate(${0.8 + t * 0.05}) brightness(${0.84 - t * 0.05}) contrast(1.08)`
+                    };
+                  } else if (rec <= 20) {
+                    const t = (rec - 16) / (20 - 16);
+                    return {
+                      background: `linear-gradient(180deg, rgba(40,30,120,${0.21 + t * 0.05}) 0%, rgba(15,20,60,${0.3 + t * 0.1}) 50%, rgba(5,8,22,${0.5 + t * 0.1}) 100%)`,
+                      mixBlendMode: 'multiply',
+                      filter: `saturate(0.85) brightness(${0.79 - t * 0.05}) contrast(1.1)`
+                    };
+                  } else {
+                    return {
+                      background: 'linear-gradient(180deg, rgba(20,25,80,0.28) 0%, rgba(8,12,40,0.42) 50%, rgba(2,4,15,0.65) 100%)',
+                      mixBlendMode: 'multiply',
+                      filter: 'saturate(0.9) brightness(0.74) contrast(1.12)'
+                    };
+                  }
+                };
+
+                const atmos = getAtmosphereGrading(r);
+
                 return (
                   <>
                     <div 
@@ -3787,6 +3840,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                     >
                       <img src={assetMap.night} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
+                    {/* Atmospheric color grading & lighting layer */}
+                    <div 
+                      className="environment-atmosphere-grading"
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        zIndex: 1,
+                        pointerEvents: 'none',
+                        background: atmos.background,
+                        mixBlendMode: atmos.mixBlendMode as any,
+                        filter: atmos.filter,
+                        transition: 'background 600ms ease, filter 600ms ease'
+                      }}
+                    />
                   </>
                 );
               })()}
