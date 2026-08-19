@@ -3714,7 +3714,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   envTransitionTimerRef.current = window.setTimeout(() => {
                     setPreviousEnvMaster(null);
                     setIsEnvTransitioning(false);
-                  }, 1500);
+                  }, 1800);
                 }
                 const assetMap = LEVEL_ONE_MASTER_ASSETS;
                 return (
