@@ -3714,7 +3714,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   envTransitionTimerRef.current = window.setTimeout(() => {
                     setPreviousEnvMaster(null);
                     setIsEnvTransitioning(false);
-                  }, 1800);
+                  }, 650);
                 }
                 const assetMap = LEVEL_ONE_MASTER_ASSETS;
                 return (
@@ -3729,37 +3729,31 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       </div>
                     )}
                     {(() => {
-                      const [maskProgress, setMaskProgress] = useState(isEnvTransitioning && previousEnvMaster ? 0 : 100);
+                      const [incomingOpacity, setIncomingOpacity] = useState(isEnvTransitioning && previousEnvMaster ? 0 : 1);
                       useEffect(() => {
                         if (isEnvTransitioning && previousEnvMaster) {
-                          setMaskProgress(0);
+                          setIncomingOpacity(0);
                           const rafId = requestAnimationFrame(() => {
                             requestAnimationFrame(() => {
-                              setMaskProgress(140);
+                              setIncomingOpacity(1);
                             });
                           });
                           return () => cancelAnimationFrame(rafId);
                         } else {
-                          setMaskProgress(100);
+                          setIncomingOpacity(1);
                         }
                       }, [currentEnvMaster, isEnvTransitioning, previousEnvMaster]);
-
-                      const maskStyle = isEnvTransitioning && previousEnvMaster ? {
-                        WebkitMaskImage: `linear-gradient(to bottom, black ${Math.max(0, maskProgress - 25)}%, transparent ${maskProgress}%)`,
-                        maskImage: `linear-gradient(to bottom, black ${Math.max(0, maskProgress - 25)}%, transparent ${maskProgress}%)`,
-                        transition: 'mask-image 2200ms cubic-bezier(0.25, 1, 0.5, 1), -webkit-mask-image 2200ms cubic-bezier(0.25, 1, 0.5, 1)',
-                      } : {};
 
                       return (
                         <div 
                           key={`incoming-${currentEnvMaster}`}
-                          className="environment-layer incoming"
+                          className={`environment-layer incoming${isEnvTransitioning ? ' is-atmospheric-pulse' : ''}`}
                           style={{ 
                             position: 'absolute', 
                             inset: 0, 
                             zIndex: 2, 
-                            opacity: 1,
-                            ...maskStyle,
+                            opacity: incomingOpacity,
+                            transition: 'opacity 600ms ease-in-out',
                             pointerEvents: 'none' 
                           }}
                         >
