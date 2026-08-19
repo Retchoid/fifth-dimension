@@ -3706,32 +3706,52 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               {(() => {
                 const r = Math.max(0, Math.min(25, renderedRecordsCaught));
                 
+                // Helper for asymmetric smoothstep / power easing curve:
+                // Spends less time near 50/50: outgoing stays higher longer, incoming rises faster in second half
+                const easeTransition = (t: number) => {
+                  const clamped = Math.max(0, Math.min(1, t));
+                  // Cubic smoothstep with bias towards outgoing dominance initially
+                  return clamped < 0.5 
+                    ? 2 * Math.pow(clamped, 1.8) 
+                    : 1 - 2 * Math.pow(1 - clamped, 1.8);
+                };
+
                 const getGoldenOpacity = (rec: number) => {
                   if (rec <= 3) return 1.0;
                   if (rec >= 7) return 0.0;
-                  return 1.0 - (rec - 3) / (7 - 3);
+                  const t = (rec - 3) / (7 - 3);
+                  return 1.0 - easeTransition(t);
                 };
 
                 const getWakingOpacity = (rec: number) => {
                   if (rec <= 3) return 0.0;
-                  if (rec <= 7) return (rec - 3) / (7 - 3);
+                  if (rec < 7) {
+                    const t = (rec - 3) / (7 - 3);
+                    return easeTransition(t);
+                  }
                   if (rec <= 9) return 1.0;
                   if (rec >= 14) return 0.0;
-                  return 1.0 - (rec - 9) / (14 - 9);
+                  const t = (rec - 9) / (14 - 9);
+                  return 1.0 - easeTransition(t);
                 };
 
                 const getDuskOpacity = (rec: number) => {
                   if (rec <= 9) return 0.0;
-                  if (rec <= 14) return (rec - 9) / (14 - 9);
+                  if (rec < 14) {
+                    const t = (rec - 9) / (14 - 9);
+                    return easeTransition(t);
+                  }
                   if (rec <= 16) return 1.0;
                   if (rec >= 21) return 0.0;
-                  return 1.0 - (rec - 16) / (21 - 16);
+                  const t = (rec - 16) / (21 - 16);
+                  return 1.0 - easeTransition(t);
                 };
 
                 const getNightOpacity = (rec: number) => {
                   if (rec <= 16) return 0.0;
                   if (rec >= 21) return 1.0;
-                  return (rec - 16) / (21 - 16);
+                  const t = (rec - 16) / (21 - 16);
+                  return easeTransition(t);
                 };
 
                 const opGolden = getGoldenOpacity(r);
