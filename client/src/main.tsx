@@ -23,7 +23,6 @@ import "./booking-frequency-terminal.css";
 import "./site-journey-flow.css";
 import "./falling-items-render-fix.css";
 import "./mobile-site-repair.css";
-import "./task1-global-font-system.css";
 import "./regression-visual-integration.css";
 import "./task2-visuals-archive-collage.css";
 import "./task3-selector-profile-zine.css";

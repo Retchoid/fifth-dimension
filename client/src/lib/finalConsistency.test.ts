@@ -32,8 +32,10 @@ describe("Task 7 final consistency contract", () => {
     expect(publicSources).toContain("Press Start 2P");
     expect(publicSources).toContain("Courier New");
     expect(publicSources).not.toMatch(/sans-serif|Arial|Helvetica|system-ui/i);
-    expect(typography).toContain("--font-display: \"Press Start 2P\"");
+    expect(typography).toContain("--font-headline: \"Press Start 2P\"");
     expect(typography).toContain("--font-body: \"Courier New\"");
+    expect(mainSource.match(/global-typography-system\.css/g)?.length).toBe(1);
+    expect(mainSource).not.toContain('import "./task1-global-font-system.css";');
   });
 
   it("preserves the sprite and overlay contracts", () => {

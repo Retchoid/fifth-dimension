@@ -1519,3 +1519,7 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] 15. Verify all 17 acceptance checkboxes.
 - [ ] 16. Run regression, TypeScript, and build gates.
 - [ ] 17. Keep Level 2 and Level 3 locked pending visual acceptance.
+
+## Current website sequence — Task 1 revalidation
+
+- [x] Consolidate Task 1 typography into one authoritative global stylesheet, remove the duplicate import, and revalidate desktop/mobile font hierarchy before requesting user confirmation.

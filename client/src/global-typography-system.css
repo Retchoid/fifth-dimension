@@ -1,36 +1,29 @@
 /* ============================================================
    5TH DIMENSION — GLOBAL TYPOGRAPHY SYSTEM
-   Task 1: one approved display/body hierarchy for every section.
+   Task 1: one authoritative display/body hierarchy for every section.
    ============================================================ */
 
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
 :root {
-  --font-display: "Press Start 2P", "Courier New";
-  --font-body: "Courier New";
-  --type-track: .07em;
+  --font-headline: "Press Start 2P", monospace;
+  --font-body: "Courier New", monospace;
+  --type-track: 0.07em;
 }
 
+/* One site-wide baseline. The explicit display selectors below provide the
+   only intentional typography split; no component needs an inline font rule. */
 html,
 body,
-#root {
+#root,
+body * {
   font-family: var(--font-body) !important;
-  letter-spacing: var(--type-track);
+  text-transform: uppercase !important;
+  letter-spacing: var(--type-track) !important;
 }
 
-body,
-body p,
-body li,
-body label,
-body figcaption,
-body small,
-body textarea,
-body input,
-body select,
-body option {
-  font-family: var(--font-body) !important;
-  text-transform: uppercase;
-  letter-spacing: var(--type-track);
-}
-
+/* Display hierarchy: arcade menu headings, section labels, navigation, and
+   controls use the pixel headline face. */
 h1,
 h2,
 h3,
@@ -38,52 +31,26 @@ h4,
 h5,
 h6,
 button,
-a,
-nav,
+nav a,
+.nav-link,
 [role="button"],
-[aria-label],
 .section-heading,
 .section-heading-dark,
 .section-kicker,
 .eyebrow,
+.hero-title,
+.archive-cta,
+.booking-submit-btn,
+.arcade-start-btn,
+.arcade-btn,
+.dubplate-btn,
+.terminal-btn,
 .score,
 .hud,
 .marquee,
 .badge,
 .project-id,
 .project-status,
-.game-viewport,
-.game-viewport button,
-.game-viewport input,
-.game-viewport label {
-  font-family: var(--font-display) !important;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-body p,
-body li,
-body label,
-body figcaption,
-body small,
-body input,
-body textarea,
-body select,
-body option,
-.archive-description,
-.mix-description,
-.booking-copy,
-.booking-form input,
-.booking-form textarea,
-.game-viewport em,
-.game-viewport span,
-.game-viewport p {
-  font-family: var(--font-body) !important;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-
-/* Keep the approved game hierarchy explicit after the site-wide rule. */
 .game-viewport h1,
 .game-viewport h2,
 .game-viewport h3,
@@ -93,18 +60,39 @@ body option,
 .game-viewport strong,
 .game-viewport button,
 .game-viewport [role="button"] {
-  font-family: var(--font-display) !important;
-  text-transform: uppercase;
-  letter-spacing: .08em;
+  font-family: var(--font-headline) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
 }
 
+/* Body hierarchy remains Courier New, including descriptions, captions,
+   terminal copy, form fields, quips, and ordinary links. */
+p,
+span,
+li,
+a,
+blockquote,
+label,
+small,
+figcaption,
+input,
+textarea,
+select,
+option,
+.archive-description,
+.mix-description,
+.booking-copy,
+.booking-form input,
+.booking-form textarea,
 .game-viewport em,
 .game-viewport .hazard-quip,
 .game-viewport .hazard-splash em,
-.game-viewport .police-recovery-prompt span {
+.game-viewport .police-recovery-prompt span,
+.game-viewport span,
+.game-viewport p {
   font-family: var(--font-body) !important;
-  text-transform: uppercase;
-  letter-spacing: .06em;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
