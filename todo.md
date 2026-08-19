@@ -1550,3 +1550,7 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 ## GitHub Public Visibility Change
 - [x] Change Retchoid/fifth-dimension visibility to public via GitHub CLI
 - [x] Verify public access URL
+
+## Repository Read/Write Permissions
+- [x] Inspect current repo permissions and authenticated account
+- [x] Configure collaborator or token permissions for read/write access
