@@ -1531,3 +1531,18 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Implement the four-state fixed coordinate progression system, mapping records 0, 5, 10, 15, 20, and 25 directly to the canonical masters with smooth crossfades and zero architectural jump.
 - [ ] Add lightweight, asymmetric, non-synchronous edge overlays for pipe steam, neon flicker, window light variations, and State 4 bouncer/queue integration without obscuring the central gameplay lane.
 - [ ] Validate gameplay mechanics, collision, score, records, and responsive behavior across desktop and mobile viewports, then publish the review checkpoint and report results.
+
+## QA Verification Screenshot Pass — Level 1 Canonical States
+- [ ] Establish fixed mobile capture session (390x844 viewport, exact game selector targeting)
+- [ ] Capture 0 records (Golden Hour)
+- [ ] Capture 5 records (Golden-to-Waking crossfade)
+- [ ] Capture 10 records (Waking Late Sunset)
+- [ ] Capture 15 records (Waking-to-Dusk crossfade)
+- [ ] Capture 20 records (Dusk Opening Imminent)
+- [ ] Capture 25 records (Full Night Club 5D Alive)
+
+## GitHub Non-Audio Repository Sync (Retchoid/fifth-dimension)
+- [ ] Audit repository state and configure `.gitignore` / git attributes to exclude all `.mp3`, `.wav`, `.ogg`, `.flac`, and sound assets
+- [ ] Stage all website code, game logic, styles, documentation, and visual assets (images/sprites)
+- [ ] Verify that zero audio files are staged or tracked in git
+- [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
