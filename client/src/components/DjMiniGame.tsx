@@ -333,6 +333,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isHeadphonesBonusPaused, setIsHeadphonesBonusPaused] = useState(false);
   const [isRecordTransitioning, setIsRecordTransitioning] = useState(false);
   const [isLevelTwoMarqueeVisible, setIsLevelTwoMarqueeVisible] = useState(false);
+  const [currentEnvMaster, setCurrentEnvMaster] = useState<LevelOneMasterState>("golden");
+  const [previousEnvMaster, setPreviousEnvMaster] = useState<LevelOneMasterState | null>(null);
+  const [isEnvTransitioning, setIsEnvTransitioning] = useState(false);
+  const envTransitionTimerRef = useRef<number>(0);
   const [activeArcadeSequence, setActiveArcadeSequence] = useState<ArcadeSequence | null>(null);
   const [isLevelTwoTransitioning, setIsLevelTwoTransitioning] = useState(false);
   const [mixerDamaged, setMixerDamaged] = useState(false);
@@ -3699,10 +3703,65 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               data-level-one-phase={levelOneEnvironmentPhase}
               data-level-one-records={renderedRecordsCaught}
             >
-              <img className={`level-one-master-art level-one-master-art-golden${levelOneEnvironmentPhase === "golden" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.golden} alt="" style={{ opacity: levelOneEnvironmentPhase === "golden" ? 1 : levelOneEnvironmentPhase === "golden-waking" ? Math.max(0, 1 - (renderedRecordsCaught - 3) / 2) : 0 }} />
-              <img className={`level-one-master-art level-one-master-art-waking${levelOneEnvironmentPhase === "waking" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.waking} alt="" style={{ opacity: levelOneEnvironmentPhase === "waking" ? 1 : levelOneEnvironmentPhase === "golden-waking" ? Math.min(1, (renderedRecordsCaught - 3) / 2) : levelOneEnvironmentPhase === "waking-dusk" ? Math.max(0, 1 - (renderedRecordsCaught - 10) / 2) : 0 }} />
-              <img className={`level-one-master-art level-one-master-art-dusk${levelOneEnvironmentPhase === "dusk" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.dusk} alt="" style={{ opacity: levelOneEnvironmentPhase === "dusk" ? 1 : levelOneEnvironmentPhase === "waking-dusk" ? Math.min(1, (renderedRecordsCaught - 10) / 2) : levelOneEnvironmentPhase === "night" && renderedRecordsCaught < 20 ? Math.max(0, 1 - (renderedRecordsCaught - 16) / 4) : 0 }} />
-              <img className={`level-one-master-art level-one-master-art-night${levelOneEnvironmentPhase === "night" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.night} alt="" style={{ opacity: renderedRecordsCaught >= 18 ? Math.min(1, (renderedRecordsCaught - 18) / 3) : 0 }} />
+              {(() => {
+                const targetMaster = levelOneMasterState;
+                // Trigger two-layer crossfade when master state changes
+                if (targetMaster !== currentEnvMaster && !isEnvTransitioning) {
+                  setPreviousEnvMaster(currentEnvMaster);
+                  setCurrentEnvMaster(targetMaster);
+                  setIsEnvTransitioning(true);
+                  if (envTransitionTimerRef.current) window.clearTimeout(envTransitionTimerRef.current);
+                  envTransitionTimerRef.current = window.setTimeout(() => {
+                    setPreviousEnvMaster(null);
+                    setIsEnvTransitioning(false);
+                  }, 1500);
+                }
+                const assetMap = LEVEL_ONE_MASTER_ASSETS;
+                return (
+                  <>
+                    {previousEnvMaster && (
+                      <div 
+                        key={`outgoing-${previousEnvMaster}`}
+                        className="environment-layer outgoing" 
+                        style={{ position: 'absolute', inset: 0, zIndex: 1, opacity: 0, transition: 'opacity 1500ms ease-in-out', pointerEvents: 'none' }}
+                      >
+                        <img src={assetMap[previousEnvMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                    )}
+                    {(() => {
+                      const [incomingOpacity, setIncomingOpacity] = useState(isEnvTransitioning && previousEnvMaster ? 0 : 1);
+                      useEffect(() => {
+                        if (isEnvTransitioning && previousEnvMaster) {
+                          const rafId = requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                              setIncomingOpacity(1);
+                            });
+                          });
+                          return () => cancelAnimationFrame(rafId);
+                        } else {
+                          setIncomingOpacity(1);
+                        }
+                      }, [currentEnvMaster, isEnvTransitioning, previousEnvMaster]);
+                      return (
+                        <div 
+                          key={`incoming-${currentEnvMaster}`}
+                          className="environment-layer incoming"
+                          style={{ 
+                            position: 'absolute', 
+                            inset: 0, 
+                            zIndex: 2, 
+                            opacity: incomingOpacity, 
+                            transition: 'opacity 1500ms ease-in-out', 
+                            pointerEvents: 'none' 
+                          }}
+                        >
+                          <img src={assetMap[currentEnvMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                      );
+                    })()}
+                  </>
+                );
+              })()}
               <span className="level-one-master-vignette" />
               <div className="level-one-canonical-ambience" aria-hidden="true">
                 <span className="canonical-steam canonical-steam-left" />
