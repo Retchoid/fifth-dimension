@@ -48,11 +48,11 @@ type LevelOneEnvironmentPhase =
   | "night";
 
 const levelOneEnvironmentPhaseForRecords = (records: number): LevelOneEnvironmentPhase => {
-  if (records < 5) return "golden";
-  if (records < 10) return "golden-waking";
-  if (records < 15) return "waking";
-  if (records < 20) return "waking-dusk";
-  if (records < 25) return "dusk";
+  if (records <= 5) return "golden";
+  if (records <= 10) return "golden-waking";
+  if (records <= 15) return "waking";
+  if (records <= 20) return "waking-dusk";
+  if (records <= 24) return "dusk";
   return "night";
 };
 
@@ -3542,7 +3542,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     ? "waking"
     : levelOneEnvironmentPhase === "waking-dusk"
       ? "dusk"
-      : levelOneEnvironmentPhase;
+      : levelOneEnvironmentPhase === "night"
+        ? "night"
+        : levelOneEnvironmentPhase;
   const pitRunFrame = pitRunProgress < 34 ? "club-exit" : pitRunProgress < 73 ? "deep-pit" : "afterparty-arrival";
   const pitRunFrameCopy = pitRunFrame === "club-exit"
     ? "CLUB EXIT · AFTERPARTY AWAITS"
@@ -4122,52 +4124,53 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               )}
             </div>
             <div className="overlay-box unlock-overlay-box">
-              <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
-              <h3>LEVEL CLEARED</h3>
               {!unlockRevealReady ? (
                 <div className="unlock-waiting-message" role="status" aria-live="polite">
                   <div className="unlock-waiting-spinner" />
-                  <span>LEVEL CLEARED</span>
+                  <h3>LEVEL CLEARED</h3>
                   <span className="transmitting-sub">TRANSMITTING DUBPLATE VIBES...</span>
+                </div>
+              ) : !chainBreakComplete ? (
+                <div className="unlock-download-drop jersh-reward-focal" role="status" aria-live="polite">
+                  <div className="achievement-chain-wrap" aria-hidden="true">
+                    <span className="chain-run chain-run-text">
+                      {Array.from({ length: 12 }, (_, index) => <i key={index} className="chain-link" />)}
+                    </span>
+                    <span className="chain-padlock" />
+                  </div>
+                  <span className="unlock-download-drop-label">JERSH REWARD SCENE</span>
+                  <strong>JERSH IN CASE</strong>
+                  <span>CHAIN BREAK IN PROGRESS...</span>
                 </div>
               ) : (
                 <>
+                  <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
+                  <h3>DOWNLOAD UNLOCKED</h3>
                   <div className="unlock-download-drop" role="status" aria-live="polite">
-                    <div className="achievement-chain-wrap" aria-hidden="true">
-                      {/* 5D style: an oversized silver arcade chain bars the full release title until the unlock Press Start 2P. */}
-                      <span className="chain-run chain-run-text">
-                        {Array.from({ length: 12 }, (_, index) => <i key={index} className="chain-link" />)}
-                      </span>
-                      <span className="chain-padlock" />
-                    </div>
                     <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
                     <strong>JERSH IN CASE</strong>
                     <span>THE SIGNAL IS YOURS — 25 DUBPLATES CAUGHT.</span>
                   </div>
                   {isBonusEligible && <div className="green-camo-award" role="status"><strong>NO REQUEST BONUS</strong><span>GREEN CAMO EQUIPPED FOR LEVEL 2</span></div>}
-                  {chainBreakComplete ? (
-                    <>
-                      <div className="unlock-decision-actions">
-                        <button type="button" className="tape-play-button" onClick={startGame}>
-                          <span className="tape-play-face" aria-hidden="true">
-                            <i className="tape-reel tape-reel-left" />
-                            <span className="tape-window"><RotateCcw size={15} /></span>
-                            <i className="tape-reel tape-reel-right" />
-                          </span>
-                          <span className="tape-play-copy">Reset Game</span>
-                        </button>
-                        <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
-                          <span className="tape-play-face" aria-hidden="true">
-                            <i className="tape-reel tape-reel-left" />
-                            <span className="tape-window"><Play size={15} fill="currentColor" /></span>
-                            <i className="tape-reel tape-reel-right" />
-                          </span>
-                          <span className="tape-play-copy">Keep Playing</span>
-                        </button>
-                      </div>
-                      <p>{isBonusEligible ? "Clean run detected: Keep Playing launches the No Request Bonus dawn-door rush before Level 2." : "You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score."}</p>
-                    </>
-                  ) : <span className="chain-break-visual-only" aria-label="Achievement chain is breaking" />}
+                  <div className="unlock-decision-actions">
+                    <button type="button" className="tape-play-button" onClick={startGame}>
+                      <span className="tape-play-face" aria-hidden="true">
+                        <i className="tape-reel tape-reel-left" />
+                        <span className="tape-window"><RotateCcw size={15} /></span>
+                        <i className="tape-reel tape-reel-right" />
+                      </span>
+                      <span className="tape-play-copy">Reset Game</span>
+                    </button>
+                    <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
+                      <span className="tape-play-face" aria-hidden="true">
+                        <i className="tape-reel tape-reel-left" />
+                        <span className="tape-window"><Play size={15} fill="currentColor" /></span>
+                        <i className="tape-reel tape-reel-right" />
+                      </span>
+                      <span className="tape-play-copy">Keep Playing</span>
+                    </button>
+                  </div>
+                  <p>{isBonusEligible ? "Clean run detected: Keep Playing launches the No Request Bonus dawn-door rush before Level 2." : "You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score."}</p>
                 </>
               )}
             </div>

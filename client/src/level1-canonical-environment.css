@@ -30,7 +30,7 @@
   image-rendering: auto !important;
   filter: none !important;
   opacity: 0 !important;
-  transition: opacity 220ms linear !important;
+  transition: opacity 650ms cubic-bezier(0.23, 1, 0.32, 1) !important;
   will-change: opacity !important;
 }
 
@@ -48,7 +48,7 @@
    architectural crossfade. The old master is hidden as the new master appears,
    avoiding a long doubled-building ghost. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art:not(.level-one-master-art-golden) {
-  transition-duration: 180ms !important;
+  transition-duration: 650ms !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
