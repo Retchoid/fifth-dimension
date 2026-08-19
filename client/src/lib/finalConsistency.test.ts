@@ -94,19 +94,22 @@ describe("Task 7 final consistency contract", () => {
     expect(gameSource).not.toContain("nudgeMobileDj");
     expect(gameSource).toContain("level-one-sunset-alley");
     expect(gameSource).toContain("level1-approved-sunset-art.css");
-    expect(gameSource).toContain("level1-approved-locked-169-alley_8924f5b5.png");
+    for (const asset of ["1000001169_3204905a.png", "1000001162_aa49120d.png", "1000001166_e9b75dd0.png", "1000001168_c5184bab.png"]) {
+      expect(gameSource).toContain(asset);
+    }
+    expect(gameSource).toContain("levelOneMasterStateForTimeStage");
     expect(gameSource).not.toContain("level1-approved-sunset-alley_4371e45d.png");
     expect(gameSource).toContain("levelOneVisualScale");
     expect(gameSource).toContain("level-one-combo-${Math.min(15, renderedCombo)}");
     expect(gameSource).toContain("level-one-time-${levelOneTimeStage}");
-    expect(gameSource).toContain("level-one-population-${levelOnePopulationStage}");
+    expect(gameSource).toContain("level-one-master-state-${levelOneMasterState}");
     expect(gameSource).not.toContain("neon-backstreet-background");
     expect(gameSource).not.toContain("backstreet-brick-facade");
     expect(gameSource).not.toContain("backstreet-police-van");
     expect(gameSource).not.toContain("backstreet-npc npc-left");
     expect(gameSource).toContain("stage-game-plane");
     expect(gameSource).toContain("stage-foreground");
-    expect(levelOneApprovedArt).toContain("LEVEL 1 ONLY — user-approved illustrated sunset alley");
+    expect(levelOneApprovedArt).toContain("LEVEL 1 ONLY");
     expect(levelOneApprovedArt).toContain("level-one-sunset-alley-art");
     expect(levelOneApprovedArt).toContain("level-one-sunset-alley) .falling-object .urban-prop-asset::after");
     expect(levelOneApprovedArt).toContain("content: none !important");

@@ -40,13 +40,13 @@
 /* Level 1 loss remains the same event and copy, now framed as a panel from the
    approved alley rather than a visually disconnected scene. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .loss-curb-overlay {
-  background-image: linear-gradient(120deg, rgba(17, 5, 24, .18), rgba(11, 4, 18, .83)), url("/manus-storage/level1-approved-locked-169-alley_8924f5b5.png") !important;
+  background-image: linear-gradient(120deg, rgba(17, 5, 24, .18), rgba(11, 4, 18, .83)), url("/manus-storage/1000001168_c5184bab.png") !important;
   background-position: center !important;
   background-size: cover !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .loss-curb-night {
-  background-image: linear-gradient(to top, rgba(10, 4, 15, .82), transparent 66%), url("/manus-storage/level1-approved-locked-169-alley_8924f5b5.png") !important;
+  background-image: linear-gradient(to top, rgba(10, 4, 15, .82), transparent 66%), url("/manus-storage/1000001168_c5184bab.png") !important;
   background-position: center bottom !important;
   background-size: cover !important;
   filter: none !important;

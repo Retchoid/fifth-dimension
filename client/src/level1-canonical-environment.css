@@ -1,0 +1,261 @@
+/* ============================================================
+   LEVEL 1 — CANONICAL FOUR-MASTER ENVIRONMENT
+   User-supplied production artwork only. This layer is render-only and does
+   not alter input, collision, spawn, score, combo, timing, or progression.
+   ============================================================ */
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .game-grid-bg.stage-background {
+  background: #08101b !important;
+  background-image: none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
+  position: absolute !important;
+  inset: 0 !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  background: #08101b !important;
+}
+
+/* All four images share one absolute frame, one object-position, and one
+   object-fit rule. Only opacity changes, so the camera never jumps. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: 50% 50% !important;
+  image-rendering: auto !important;
+  filter: none !important;
+  opacity: 0 !important;
+  transition: opacity 220ms linear !important;
+  will-change: opacity !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-golden .level-one-master-art-golden,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-waking .level-one-master-art-waking,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-dusk .level-one-master-art-dusk,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-night .level-one-master-art-night {
+  opacity: 1 !important;
+}
+
+/* At state boundaries, use a short controlled dissolve rather than a moving
+   architectural crossfade. The old master is hidden as the new master appears,
+   avoiding a long doubled-building ghost. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art:not(.level-one-master-art-golden) {
+  transition-duration: 180ms !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  background: linear-gradient(180deg, rgba(5, 8, 18, .08) 0 17%, transparent 31% 76%, rgba(5, 8, 18, .2) 100%) !important;
+  box-shadow: inset 0 0 0 2px rgba(10, 10, 18, .18) !important;
+}
+
+/* The canonical masters already contain their own crowd, queue, bouncers,
+   speakers, signage, windows, and police car. Do not duplicate them with the
+   retired procedural Level 1 population or generic stage dressing. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley-art,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-population,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-approved-population,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-rave-world {
+  display: none !important;
+}
+
+/* Retire the previous broad CSS scenery and keep only the event-native catch,
+   hazard, and repair reactions. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-building-wash,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-window-grid,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-neon-left,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-neon-right,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-doorway-left,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-doorway-right,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-pavement-reflection,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-police-reflection,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-haze,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-neon-flicker,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-speaker-bloom,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-window-wash,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-club-entrance-glow,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-steam-wisp,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-police-sweep,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-flyer {
+  display: none !important;
+}
+
+/* New ambience is deliberately small, peripheral, and asynchronous. It sits
+   behind gameplay and never occupies the central/lower catch corridor. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-canonical-ambience {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 3 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-canonical-ambience > * {
+  position: absolute !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+/* Broad, cel-like steam shapes anchored to the outer pipes. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-steam {
+  bottom: 20% !important;
+  width: 9% !important;
+  height: 18% !important;
+  border-left: 4px solid rgba(240, 234, 214, .34) !important;
+  border-right: 2px solid rgba(255, 194, 74, .18) !important;
+  border-radius: 46% 54% 28% 36% !important;
+  transform: skewX(-8deg) translateY(7px) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-steam-left { left: 13% !important; }
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-steam-right { right: 13% !important; transform: skewX(8deg) translateY(7px) !important; }
+
+/* Small cigarette curls live only near the supplied queue/bouncer edges. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-cigarette-smoke {
+  bottom: 31% !important;
+  width: 2.2% !important;
+  height: 8% !important;
+  border-left: 2px solid rgba(240, 234, 214, .32) !important;
+  border-radius: 50% !important;
+  transform: translateY(5px) rotate(-8deg) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-smoke-left { left: 27% !important; }
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-smoke-right { right: 29% !important; transform: translateY(5px) rotate(8deg) !important; }
+
+/* Localized analogue neon ticks, not full-width light bars. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-neon-flicker {
+  top: 29% !important;
+  width: 9% !important;
+  height: 4% !important;
+  border-radius: 35% !important;
+  transform: skewX(-8deg) !important;
+  mix-blend-mode: screen !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-neon-flicker-left {
+  left: 23% !important;
+  background: rgba(255, 45, 149, .24) !important;
+  box-shadow: 0 0 12px 3px rgba(255, 45, 149, .22) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-neon-flicker-right {
+  right: 23% !important;
+  background: rgba(255, 45, 149, .24) !important;
+  box-shadow: 0 0 12px 3px rgba(255, 45, 149, .22) !important;
+  transform: skewX(8deg) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-door-activity {
+  left: 42% !important;
+  top: 37% !important;
+  width: 16% !important;
+  height: 16% !important;
+  border-radius: 50% 50% 18% 18% !important;
+  background: rgba(255, 45, 149, .12) !important;
+  box-shadow: 0 0 14px 4px rgba(255, 45, 149, .12) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-loose-flyer {
+  left: 32% !important;
+  top: 51% !important;
+  width: 1.1% !important;
+  height: 2.2% !important;
+  background: #ffe600 !important;
+  box-shadow: 1px 1px 0 #0a0a12 !important;
+  transform: rotate(18deg) !important;
+}
+
+/* State-specific ambience: each loop has a different period and only a few
+   peripheral elements move at once. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .canonical-neon-flicker,
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .canonical-neon-flicker,
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-neon-flicker {
+  opacity: .58 !important;
+  animation: level-one-canonical-neon 3.7s steps(2, end) infinite !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .canonical-steam,
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-steam {
+  opacity: .34 !important;
+  animation: level-one-canonical-steam 5.8s ease-in-out infinite !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-steam {
+  opacity: .46 !important;
+  animation-duration: 4.6s !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .canonical-cigarette-smoke,
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-cigarette-smoke {
+  opacity: .32 !important;
+  animation: level-one-canonical-smoke 7.9s ease-in-out infinite !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-door-activity {
+  opacity: .42 !important;
+  animation: level-one-canonical-door 6.4s steps(3, end) infinite !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-loose-flyer {
+  opacity: .52 !important;
+  animation: level-one-canonical-flyer 9.2s ease-in-out infinite !important;
+}
+
+@keyframes level-one-canonical-neon { 0%, 71%, 100% { opacity: .56; } 74% { opacity: .2; } 77% { opacity: .68; } }
+@keyframes level-one-canonical-steam { 0%, 100% { transform: translateY(8px) translateX(0) skewX(-8deg); opacity: .1; } 38% { transform: translateY(-7px) translateX(4px) skewX(-3deg); opacity: .42; } 71% { transform: translateY(-14px) translateX(-3px) skewX(-11deg); opacity: .16; } }
+@keyframes level-one-canonical-smoke { 0%, 76%, 100% { transform: translateY(5px) rotate(-8deg); opacity: .04; } 82% { transform: translateY(-5px) translateX(3px) rotate(7deg); opacity: .32; } 89% { transform: translateY(-13px) translateX(-2px) rotate(-12deg); opacity: .08; } }
+@keyframes level-one-canonical-door { 0%, 84%, 100% { opacity: .26; transform: scaleY(.92); } 88% { opacity: .52; transform: scaleY(1); } }
+@keyframes level-one-canonical-flyer { 0%, 82%, 100% { transform: translate(0, 0) rotate(18deg); opacity: .22; } 89% { transform: translate(7px, -4px) rotate(34deg); opacity: .62; } 95% { transform: translate(11px, 4px) rotate(54deg); opacity: .08; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-cabinet-bezel .level-one-canonical-ambience > * {
+    animation: none !important;
+  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+    transition: none !important;
+  }
+}
+
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+    object-position: 50% 50% !important;
+  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-steam {
+    width: 13% !important;
+  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-cigarette-smoke {
+    width: 3.2% !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-loose-flyer,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .canonical-cigarette-smoke {
+    display: none !important;
+  }
+}
+
+/* The final Level 1 source also frames terminal comedown panels with the
+   supplied full-night master rather than the retired alley asset. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .loss-curb-overlay {
+  background-image: linear-gradient(120deg, rgba(17, 5, 24, .18), rgba(11, 4, 18, .83)), url("/manus-storage/1000001168_c5184bab.png") !important;
+  background-position: center !important;
+  background-size: cover !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .loss-curb-night {
+  background-image: linear-gradient(to top, rgba(10, 4, 15, .82), transparent 66%), url("/manus-storage/1000001168_c5184bab.png") !important;
+  background-position: center bottom !important;
+  background-size: cover !important;
+  filter: none !important;
+}

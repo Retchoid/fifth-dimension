@@ -14,22 +14,27 @@ describe("Level 1 independent world progression contracts", () => {
     expect(game).toContain("const renderedCombo = forcedWorldCombo ?? combo;");
     expect(game).toContain("const levelOneTimeStage = level === 1 ? Math.min(5, Math.floor(renderedRecordsCaught / 5)) : 0;");
     expect(game).toContain("level-one-time-${levelOneTimeStage}");
-    expect(game).toContain("level-one-population-${levelOnePopulationStage}");
+    expect(game).toContain("level-one-master-state-${levelOneMasterState}");
     expect(game).toContain("level-one-combo-${Math.min(15, renderedCombo)}");
     expect(levelOneCss).toContain("Record progress is the persistent time-of-night signal");
     expect(levelOneCss).toContain("must not erase the persistent");
   });
 
-  it("keeps the corrected 1000001097-derived alley as the sole Level 1 base", () => {
-    expect(game).toContain('src="/manus-storage/level1-approved-locked-169-alley_8924f5b5.png"');
+  it("uses the four supplied canonical masters as the sole Level 1 environment source", () => {
+    for (const asset of [
+      "1000001169_3204905a.png",
+      "1000001162_aa49120d.png",
+      "1000001166_e9b75dd0.png",
+      "1000001168_c5184bab.png",
+    ]) {
+      expect(game).toContain(`/manus-storage/${asset}`);
+    }
+    expect(game).toContain("LEVEL_ONE_MASTER_ASSETS");
+    expect(game).toContain("levelOneMasterStateForTimeStage");
+    expect(game).not.toContain("level1-approved-locked-169-alley_8924f5b5.png");
     expect(game).not.toContain("1000001036.png");
     expect(game).not.toContain("1000001095.png");
-    expect(game).not.toContain("level-two-club-backwall");
-    expect(game).toContain('className="level-one-population" aria-hidden="true"');
-    expect(levelOneCss).toContain(".level-one-population");
-    expect(levelOneCss).toContain("pointer-events: none");
-    expect(levelOneCss).toContain("population-queue-left");
-    expect(levelOneCss).toContain("population-door-right");
+    expect(game).not.toContain('className="level-one-population" aria-hidden="true"');
   });
 
   it("uses a compact Level 1 catch zone and preserves the default shared profile", () => {
@@ -103,17 +108,25 @@ describe("Level 1 independent world progression contracts", () => {
     expect(levelOneCss).toContain("level-one-catch-burst");
   });
 
-  it("uses only approved non-player dancers for restrained Level 1 background population", () => {
-    expect(game).toContain("const levelOneBackgroundPopulationCount = level === 1");
-    expect(game).toContain("renderedRecordsCaught >= 25");
-    expect(game).toContain("renderedRecordsCaught >= 20");
-    expect(game).toContain("renderedRecordsCaught >= 15");
-    expect(game).toContain("level-one-approved-population");
-    expect(game).toContain("CELEBRATION_DANCERS[index % CELEBRATION_DANCERS.length]");
-    expect(levelOneCss).toContain(".level-one-background-npc");
-    expect(levelOneCss).toContain("pointer-events: none !important");
-    expect(levelOneCss).toContain("level-one-npc-breathe");
-    expect(levelOneCss).toContain("max-height: 31% !important");
+  it("does not procedurally duplicate people already painted into the canonical masters", () => {
+    expect(game).not.toContain("levelOneBackgroundPopulationCount");
+    expect(game).not.toContain("level-one-approved-population");
+    expect(game).toContain("level-one-canonical-ambience");
+    expect(readFileSync(resolve(root, "level1-canonical-environment.css"), "utf8")).toContain("Do not duplicate them");
+  });
+
+  it("maps the six record probes onto four stable canonical environment milestones", () => {
+    expect(game).toContain('if (stage <= 1) return "golden";');
+    expect(game).toContain('if (stage <= 2) return "waking";');
+    expect(game).toContain('if (stage === 3) return "dusk";');
+    expect(game).toContain('return "night";');
+    const canonicalCss = readFileSync(resolve(root, "level1-canonical-environment.css"), "utf8");
+    expect(canonicalCss).toContain("level-one-master-art-golden");
+    expect(canonicalCss).toContain("level-one-master-art-waking");
+    expect(canonicalCss).toContain("level-one-master-art-dusk");
+    expect(canonicalCss).toContain("level-one-master-art-night");
+    expect(canonicalCss).toContain("object-fit: cover !important");
+    expect(canonicalCss).toContain("object-position: 50% 50% !important");
   });
 
   it("keeps HUD-hidden comparison mode development-only and preserves normal HUD markup", () => {

@@ -1523,3 +1523,11 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 ## Current website sequence — Task 1 revalidation
 
 - [x] Consolidate Task 1 typography into one authoritative global stylesheet, remove the duplicate import, and revalidate desktop/mobile font hierarchy before requesting user confirmation.
+
+## Canonical Level 1 Four-Master Background Implementation Pass
+
+- [ ] Audit current Level 1 background asset mapping, viewport scaling, and record-driven progression triggers.
+- [ ] Upload and stage the four supplied canonical Level 1 master backgrounds (Golden Hour / Dormant, Late Sunset / Waking, Dusk / Opening Imminent, Full Night / Club 5D Alive) as managed assets.
+- [ ] Implement the four-state fixed coordinate progression system, mapping records 0, 5, 10, 15, 20, and 25 directly to the canonical masters with smooth crossfades and zero architectural jump.
+- [ ] Add lightweight, asymmetric, non-synchronous edge overlays for pipe steam, neon flicker, window light variations, and State 4 bouncer/queue integration without obscuring the central gameplay lane.
+- [ ] Validate gameplay mechanics, collision, score, records, and responsive behavior across desktop and mobile viewports, then publish the review checkpoint and report results.
