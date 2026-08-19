@@ -34,6 +34,9 @@
   will-change: opacity !important;
 }
 
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+  opacity: 0 !important;
+}
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-golden .level-one-master-art-golden,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-waking .level-one-master-art-waking,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-dusk .level-one-master-art-dusk,

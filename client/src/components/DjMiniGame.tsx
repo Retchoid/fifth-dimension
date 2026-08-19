@@ -81,17 +81,17 @@ type PitEntityType = PitGearType | PitHazardType;
 type FallingItemType = "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
 
 const URBAN_PROP_ASSETS: Partial<Record<FallingItemType, string>> = {
-  record: "/embedded-assets/selectah-dubplate-urban_052862f6.png",
-  cop: "/embedded-assets/selectah-police-siren-urban_5fb879fa.png",
-  pill: "/embedded-assets/selectah-pill-urban_e2f4393e.png",
-  phone: "/embedded-assets/selectah-phone-urban_0aebd4d4.png",
-  cdj: "/embedded-assets/selectah-cdj-urban_79c0b46c.png",
-  mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
-  turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
-  adapter: "/embedded-assets/selectah-adapter-urban_ab9d38ca.png",
-  lion: "/embedded-assets/selectah-lion-urban_9431e50b.png",
-  bottle: "/embedded-assets/selectah-bottle-urban_fc7e712f.png",
-  apple: "/embedded-assets/selectah-apple-core-urban_66dacfaa.png",
+  record: "/manus-storage/selectah-dubplate-urban_052862f6.png",
+  cop: "/manus-storage/selectah-police-siren-urban_5fb879fa.png",
+  pill: "/manus-storage/selectah-pill-urban_e2f4393e.png",
+  phone: "/manus-storage/selectah-phone-urban_0aebd4d4.png",
+  cdj: "/manus-storage/selectah-cdj-urban_79c0b46c.png",
+  mixer: "/manus-storage/selectah-mixer-urban_aa64e423.png",
+  turntable: "/manus-storage/selectah-turntable-urban_de17fd21.png",
+  adapter: "/manus-storage/selectah-adapter-urban_ab9d38ca.png",
+  lion: "/manus-storage/selectah-lion-urban_9431e50b.png",
+  bottle: "/manus-storage/selectah-bottle-urban_fc7e712f.png",
+  apple: "/manus-storage/selectah-apple-core-urban_66dacfaa.png",
 };
 
 const URBAN_RUNNER_ASSETS: Record<BonusRunnerType, string> = {
@@ -4336,7 +4336,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : URBAN_PROP_ASSETS[item.type] ? (
                   <div
                     className={`urban-prop-asset ${item.type}`}
-                    style={{ "--urban-prop-url": `url(${URBAN_PROP_ASSETS[item.type]})` } as React.CSSProperties}
+                    style={{
+                      backgroundImage: `url(${URBAN_PROP_ASSETS[item.type]})`,
+                      "--urban-prop-url": `url(${URBAN_PROP_ASSETS[item.type]})`,
+                    } as React.CSSProperties}
                     aria-label={item.type === "record" ? "Dubplate pickup" : item.type === "cop" ? "Police siren hazard" : item.type === "pill" ? "Falling pill hazard" : item.type === "phone" ? "Falling mobile phone hazard" : "CDJ pickup worth 5 records"}
                   />
                 ) : item.type === "lion" ? (
