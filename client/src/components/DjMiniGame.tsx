@@ -39,6 +39,23 @@ const LEVEL_ONE_MASTER_ASSETS = {
 
 type LevelOneMasterState = keyof typeof LEVEL_ONE_MASTER_ASSETS;
 
+type LevelOneEnvironmentPhase =
+  | "golden"
+  | "golden-waking"
+  | "waking"
+  | "waking-dusk"
+  | "dusk"
+  | "night";
+
+const levelOneEnvironmentPhaseForRecords = (records: number): LevelOneEnvironmentPhase => {
+  if (records < 5) return "golden";
+  if (records < 10) return "golden-waking";
+  if (records < 15) return "waking";
+  if (records < 20) return "waking-dusk";
+  if (records < 25) return "dusk";
+  return "night";
+};
+
 const levelOneMasterStateForTimeStage = (stage: number): LevelOneMasterState => {
   if (stage <= 1) return "golden";
   if (stage <= 2) return "waking";
@@ -3519,8 +3536,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     : null;
   const renderedRecordsCaught = forcedWorldRecords ?? recordsCaught;
   const renderedCombo = forcedWorldCombo ?? combo;
+  const levelOneEnvironmentPhase = level === 1 ? levelOneEnvironmentPhaseForRecords(renderedRecordsCaught) : "golden";
   const levelOneTimeStage = level === 1 ? Math.min(5, Math.floor(renderedRecordsCaught / 5)) : 0;
-  const levelOneMasterState = levelOneMasterStateForTimeStage(levelOneTimeStage);
+  const levelOneMasterState = levelOneEnvironmentPhase === "golden-waking"
+    ? "waking"
+    : levelOneEnvironmentPhase === "waking-dusk"
+      ? "dusk"
+      : levelOneEnvironmentPhase;
   const pitRunFrame = pitRunProgress < 34 ? "club-exit" : pitRunProgress < 73 ? "deep-pit" : "afterparty-arrival";
   const pitRunFrameCopy = pitRunFrame === "club-exit"
     ? "CLUB EXIT · AFTERPARTY AWAITS"
@@ -3660,11 +3682,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
         <div className={`game-grid-bg stage-background${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true">
           {level === 1 && (
-            <div className={`level-one-sunset-alley level-one-master-${levelOneMasterState}`} data-level-one-master-state={levelOneMasterState}>
-              <img className="level-one-master-art level-one-master-art-golden" src={LEVEL_ONE_MASTER_ASSETS.golden} alt="" />
-              <img className="level-one-master-art level-one-master-art-waking" src={LEVEL_ONE_MASTER_ASSETS.waking} alt="" />
-              <img className="level-one-master-art level-one-master-art-dusk" src={LEVEL_ONE_MASTER_ASSETS.dusk} alt="" />
-              <img className="level-one-master-art level-one-master-art-night" src={LEVEL_ONE_MASTER_ASSETS.night} alt="" />
+            <div
+              className={`level-one-sunset-alley level-one-master-${levelOneMasterState} level-one-phase-${levelOneEnvironmentPhase}`}
+              data-level-one-master-state={levelOneMasterState}
+              data-level-one-phase={levelOneEnvironmentPhase}
+              data-level-one-records={renderedRecordsCaught}
+            >
+              <img className={`level-one-master-art level-one-master-art-golden${levelOneEnvironmentPhase === "golden" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.golden} alt="" style={{ opacity: levelOneEnvironmentPhase === "golden" ? 1 : levelOneEnvironmentPhase === "golden-waking" ? 0.45 : 0 }} />
+              <img className={`level-one-master-art level-one-master-art-waking${levelOneEnvironmentPhase === "waking" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.waking} alt="" style={{ opacity: levelOneEnvironmentPhase === "waking" ? 1 : levelOneEnvironmentPhase === "golden-waking" ? 0.55 : levelOneEnvironmentPhase === "waking-dusk" ? 0.45 : 0 }} />
+              <img className={`level-one-master-art level-one-master-art-dusk${levelOneEnvironmentPhase === "dusk" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.dusk} alt="" style={{ opacity: levelOneEnvironmentPhase === "dusk" ? 1 : levelOneEnvironmentPhase === "waking-dusk" ? 0.55 : 0 }} />
+              <img className={`level-one-master-art level-one-master-art-night${levelOneEnvironmentPhase === "night" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.night} alt="" style={{ opacity: levelOneEnvironmentPhase === "night" ? 1 : 0 }} />
               <span className="level-one-master-vignette" />
               <div className="level-one-canonical-ambience" aria-hidden="true">
                 <span className="canonical-steam canonical-steam-left" />
