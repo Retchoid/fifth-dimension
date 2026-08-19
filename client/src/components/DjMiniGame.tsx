@@ -2808,6 +2808,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setGameOver(false);
     setIsLossComedownVisible(false);
     setLevelTwoComplete(false);
+    setPreLevelTwoHighScore(false);
     setIsUnlockPaused(false);
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
