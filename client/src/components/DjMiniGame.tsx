@@ -2718,7 +2718,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(lossComedownTimerRef.current);
     setIsLossComedownVisible(true);
     if (lossVerificationHold) return;
-    lossComedownTimerRef.current = window.setTimeout(() => setIsLossComedownVisible(false), 2300);
+    lossComedownTimerRef.current = window.setTimeout(() => {
+      setIsLossComedownVisible(false);
+      setGameOver(true);
+      setGameplayStateOwner("GAME_OVER");
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+    }, 2300);
   };
 
   useEffect(() => {
