@@ -48,11 +48,20 @@ type LevelOneEnvironmentPhase =
   | "night";
 
 const levelOneEnvironmentPhaseForRecords = (records: number): LevelOneEnvironmentPhase => {
-  if (records <= 5) return "golden";
-  if (records <= 10) return "golden-waking";
-  if (records <= 15) return "waking";
-  if (records <= 20) return "waking-dusk";
-  if (records <= 24) return "dusk";
+  // Sliding blend windows (1-2 records ahead of thresholds):
+  // 0-3: golden
+  // 4-5: golden blending into waking
+  // 6-9: waking
+  // 10-11: waking blending into dusk
+  // 12-15: dusk
+  // 16-17: dusk blending into night
+  // 18-24: final night fully dominant and playable before 25 completion
+  if (records <= 3) return "golden";
+  if (records <= 5) return "golden-waking";
+  if (records <= 9) return "waking";
+  if (records <= 11) return "waking-dusk";
+  if (records <= 15) return "dusk";
+  if (records <= 17) return "waking-dusk"; // gentle transitional blend stage
   return "night";
 };
 
@@ -3690,10 +3699,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               data-level-one-phase={levelOneEnvironmentPhase}
               data-level-one-records={renderedRecordsCaught}
             >
-              <img className={`level-one-master-art level-one-master-art-golden${levelOneEnvironmentPhase === "golden" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.golden} alt="" style={{ opacity: levelOneEnvironmentPhase === "golden" ? 1 : levelOneEnvironmentPhase === "golden-waking" ? 0.45 : 0 }} />
-              <img className={`level-one-master-art level-one-master-art-waking${levelOneEnvironmentPhase === "waking" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.waking} alt="" style={{ opacity: levelOneEnvironmentPhase === "waking" ? 1 : levelOneEnvironmentPhase === "golden-waking" ? 0.55 : levelOneEnvironmentPhase === "waking-dusk" ? 0.45 : 0 }} />
-              <img className={`level-one-master-art level-one-master-art-dusk${levelOneEnvironmentPhase === "dusk" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.dusk} alt="" style={{ opacity: levelOneEnvironmentPhase === "dusk" ? 1 : levelOneEnvironmentPhase === "waking-dusk" ? 0.55 : 0 }} />
-              <img className={`level-one-master-art level-one-master-art-night${levelOneEnvironmentPhase === "night" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.night} alt="" style={{ opacity: levelOneEnvironmentPhase === "night" ? 1 : 0 }} />
+              <img className={`level-one-master-art level-one-master-art-golden${levelOneEnvironmentPhase === "golden" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.golden} alt="" style={{ opacity: levelOneEnvironmentPhase === "golden" ? 1 : levelOneEnvironmentPhase === "golden-waking" ? Math.max(0, 1 - (renderedRecordsCaught - 3) / 2) : 0 }} />
+              <img className={`level-one-master-art level-one-master-art-waking${levelOneEnvironmentPhase === "waking" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.waking} alt="" style={{ opacity: levelOneEnvironmentPhase === "waking" ? 1 : levelOneEnvironmentPhase === "golden-waking" ? Math.min(1, (renderedRecordsCaught - 3) / 2) : levelOneEnvironmentPhase === "waking-dusk" ? Math.max(0, 1 - (renderedRecordsCaught - 10) / 2) : 0 }} />
+              <img className={`level-one-master-art level-one-master-art-dusk${levelOneEnvironmentPhase === "dusk" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.dusk} alt="" style={{ opacity: levelOneEnvironmentPhase === "dusk" ? 1 : levelOneEnvironmentPhase === "waking-dusk" ? Math.min(1, (renderedRecordsCaught - 10) / 2) : levelOneEnvironmentPhase === "night" && renderedRecordsCaught < 20 ? Math.max(0, 1 - (renderedRecordsCaught - 16) / 4) : 0 }} />
+              <img className={`level-one-master-art level-one-master-art-night${levelOneEnvironmentPhase === "night" ? " active" : ""}`} src={LEVEL_ONE_MASTER_ASSETS.night} alt="" style={{ opacity: renderedRecordsCaught >= 18 ? Math.min(1, (renderedRecordsCaught - 18) / 3) : 0 }} />
               <span className="level-one-master-vignette" />
               <div className="level-one-canonical-ambience" aria-hidden="true">
                 <span className="canonical-steam canonical-steam-left" />
