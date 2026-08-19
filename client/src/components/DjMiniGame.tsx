@@ -3745,20 +3745,37 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       }, [currentEnvMaster, isEnvTransitioning, previousEnvMaster]);
 
                       return (
-                        <div 
-                          key={`incoming-${currentEnvMaster}`}
-                          className={`environment-layer incoming${isEnvTransitioning ? ' is-atmospheric-pulse' : ''}`}
-                          style={{ 
-                            position: 'absolute', 
-                            inset: 0, 
-                            zIndex: 2, 
-                            opacity: incomingOpacity,
-                            transition: 'opacity 600ms ease-in-out',
-                            pointerEvents: 'none' 
-                          }}
-                        >
-                          <img src={assetMap[currentEnvMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        </div>
+                        <>
+                          <div 
+                            key={`incoming-${currentEnvMaster}`}
+                            className="environment-layer incoming"
+                            style={{ 
+                              position: 'absolute', 
+                              inset: 0, 
+                              zIndex: 2, 
+                              opacity: incomingOpacity,
+                              transition: 'opacity 600ms ease-in-out',
+                              pointerEvents: 'none' 
+                            }}
+                          >
+                            <img src={assetMap[currentEnvMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          </div>
+                          {isEnvTransitioning && (
+                            <div 
+                              className="arcade-transition-flash"
+                              style={{
+                                position: 'absolute',
+                                inset: 0,
+                                zIndex: 4,
+                                background: 'radial-gradient(circle at 50% 30%, rgba(255, 45, 149, 0.35) 0%, rgba(0, 212, 255, 0.25) 50%, transparent 85%)',
+                                opacity: incomingOpacity < 0.5 ? incomingOpacity * 2 : (1 - incomingOpacity) * 2,
+                                transition: 'opacity 300ms ease-in-out',
+                                pointerEvents: 'none',
+                                mixBlendMode: 'screen',
+                              }}
+                            />
+                          )}
+                        </>
                       );
                     })()}
                   </>
