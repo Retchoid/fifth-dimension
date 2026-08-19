@@ -3706,52 +3706,53 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               {(() => {
                 const r = Math.max(0, Math.min(25, renderedRecordsCaught));
                 
-                // Helper for asymmetric smoothstep / power easing curve:
-                // Spends less time near 50/50: outgoing stays higher longer, incoming rises faster in second half
-                const easeTransition = (t: number) => {
-                  const clamped = Math.max(0, Math.min(1, t));
-                  // Cubic smoothstep with bias towards outgoing dominance initially
-                  return clamped < 0.5 
-                    ? 2 * Math.pow(clamped, 1.8) 
-                    : 1 - 2 * Math.pow(1 - clamped, 1.8);
+                // Sharp threshold handoff helper: keeps outgoing master fully dominant until very late,
+                // then snaps/crossfades decisively over a narrow window (e.g. record 11 to 12) so no prolonged double-exposure occurs.
+                const getSharpHandoffOpacity = (rec: number, startRec: number, endRec: number) => {
+                  if (rec <= startRec) return 0.0;
+                  if (rec >= endRec) return 1.0;
+                  // Narrow steep transition window (e.g., width of 1 record around startRec+1)
+                  const t = (rec - startRec) / (endRec - startRec);
+                  // Steep power curve: stays near 0 until t > 0.6, then rapidly ramps to 1
+                  const steepT = Math.max(0, Math.min(1, (t - 0.5) * 2.5 + 0.5));
+                  return steepT < 0.5 ? 2 * Math.pow(steepT, 3) : 1 - 2 * Math.pow(1 - steepT, 3);
                 };
 
                 const getGoldenOpacity = (rec: number) => {
                   if (rec <= 3) return 1.0;
-                  if (rec >= 7) return 0.0;
-                  const t = (rec - 3) / (7 - 3);
-                  return 1.0 - easeTransition(t);
+                  if (rec >= 6) return 0.0;
+                  const op = getSharpHandoffOpacity(rec, 3, 6);
+                  return 1.0 - op;
                 };
 
                 const getWakingOpacity = (rec: number) => {
-                  if (rec <= 3) return 0.0;
-                  if (rec < 7) {
-                    const t = (rec - 3) / (7 - 3);
-                    return easeTransition(t);
+                  if (rec < 3) return 0.0;
+                  if (rec <= 6) {
+                    return getSharpHandoffOpacity(rec, 3, 6);
                   }
-                  if (rec <= 9) return 1.0;
-                  if (rec >= 14) return 0.0;
-                  const t = (rec - 9) / (14 - 9);
-                  return 1.0 - easeTransition(t);
+                  if (rec <= 10) return 1.0; // Protected stable state at record 10
+                  if (rec >= 12) return 0.0;
+                  const op = getSharpHandoffOpacity(rec, 10, 12); // Sharp handoff across record 11 to 12
+                  return 1.0 - op;
                 };
 
                 const getDuskOpacity = (rec: number) => {
-                  if (rec <= 9) return 0.0;
-                  if (rec < 14) {
-                    const t = (rec - 9) / (14 - 9);
-                    return easeTransition(t);
+                  if (rec < 10) return 0.0;
+                  if (rec <= 12) {
+                    return getSharpHandoffOpacity(rec, 10, 12);
                   }
-                  if (rec <= 16) return 1.0;
-                  if (rec >= 21) return 0.0;
-                  const t = (rec - 16) / (21 - 16);
-                  return 1.0 - easeTransition(t);
+                  if (rec <= 16) return 1.0; // Protected approved states at records 13, 14, 16
+                  if (rec >= 20) return 0.0;
+                  const op = getSharpHandoffOpacity(rec, 16, 20); // Sharp handoff to night around 19-20
+                  return 1.0 - op;
                 };
 
                 const getNightOpacity = (rec: number) => {
-                  if (rec <= 16) return 0.0;
-                  if (rec >= 21) return 1.0;
-                  const t = (rec - 16) / (21 - 16);
-                  return easeTransition(t);
+                  if (rec < 16) return 0.0;
+                  if (rec <= 20) {
+                    return getSharpHandoffOpacity(rec, 16, 20);
+                  }
+                  return 1.0; // Fully active Full Night from record 21 through 24
                 };
 
                 const opGolden = getGoldenOpacity(r);
