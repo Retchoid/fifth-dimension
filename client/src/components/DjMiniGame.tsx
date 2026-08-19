@@ -2630,16 +2630,15 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   useEffect(() => {
     if (!isUnlockPaused || !unlockRevealReady) return;
-    // The download reaches its resting position after five seconds, then its
-    // silver chain gives a tight, realistic one-second break before handoff.
+    // Shortened delivery sequence: ~1.2s transmitting, ~1.5s Jersh chain reward animation.
     const chainImpactTimer = window.setTimeout(() => {
       if (chainBreakImpactPlayedRef.current) return;
       chainBreakImpactPlayedRef.current = true;
       setIsCabinetVibrating(true);
       playChainBreakImpact();
-    }, 5000);
-    const cabinetSettleTimer = window.setTimeout(() => setIsCabinetVibrating(false), 5360);
-    const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 6000);
+    }, 1200);
+    const cabinetSettleTimer = window.setTimeout(() => setIsCabinetVibrating(false), 1450);
+    const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 1650);
     return () => {
       window.clearTimeout(chainImpactTimer);
       window.clearTimeout(cabinetSettleTimer);
@@ -3307,9 +3306,10 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setUnlockRevealReady(false);
       setChainBreakComplete(false);
       window.clearTimeout(unlockRevealTimerRef.current);
+      // Sequence: LEVEL CLEARED (~1.0s) -> TRANSMITTING (~1.2s) -> JERSH CHAIN (~1.5s) -> DOWNLOAD UNLOCKED persistent
       unlockRevealTimerRef.current = window.setTimeout(() => {
         setUnlockRevealReady(true);
-      }, 3000);
+      }, 1100);
       return;
     }
     if (completeLevelTwo) {
@@ -4127,7 +4127,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               {!unlockRevealReady ? (
                 <div className="unlock-waiting-message" role="status" aria-live="polite">
                   <div className="unlock-waiting-spinner" />
-                  <span>TRANSMITTING DUBPLATE VIBES...</span>
+                  <span>LEVEL CLEARED</span>
+                  <span className="transmitting-sub">TRANSMITTING DUBPLATE VIBES...</span>
                 </div>
               ) : (
                 <>
