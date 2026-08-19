@@ -3729,19 +3729,27 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       </div>
                     )}
                     {(() => {
-                      const [incomingOpacity, setIncomingOpacity] = useState(isEnvTransitioning && previousEnvMaster ? 0 : 1);
+                      const [maskProgress, setMaskProgress] = useState(isEnvTransitioning && previousEnvMaster ? 0 : 100);
                       useEffect(() => {
                         if (isEnvTransitioning && previousEnvMaster) {
+                          setMaskProgress(0);
                           const rafId = requestAnimationFrame(() => {
                             requestAnimationFrame(() => {
-                              setIncomingOpacity(1);
+                              setMaskProgress(140);
                             });
                           });
                           return () => cancelAnimationFrame(rafId);
                         } else {
-                          setIncomingOpacity(1);
+                          setMaskProgress(100);
                         }
                       }, [currentEnvMaster, isEnvTransitioning, previousEnvMaster]);
+
+                      const maskStyle = isEnvTransitioning && previousEnvMaster ? {
+                        WebkitMaskImage: `linear-gradient(to bottom, black ${Math.max(0, maskProgress - 25)}%, transparent ${maskProgress}%)`,
+                        maskImage: `linear-gradient(to bottom, black ${Math.max(0, maskProgress - 25)}%, transparent ${maskProgress}%)`,
+                        transition: 'mask-image 2200ms cubic-bezier(0.25, 1, 0.5, 1), -webkit-mask-image 2200ms cubic-bezier(0.25, 1, 0.5, 1)',
+                      } : {};
+
                       return (
                         <div 
                           key={`incoming-${currentEnvMaster}`}
@@ -3750,8 +3758,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                             position: 'absolute', 
                             inset: 0, 
                             zIndex: 2, 
-                            opacity: incomingOpacity, 
-                            transition: 'opacity 1500ms ease-in-out', 
+                            opacity: 1,
+                            ...maskStyle,
                             pointerEvents: 'none' 
                           }}
                         >
