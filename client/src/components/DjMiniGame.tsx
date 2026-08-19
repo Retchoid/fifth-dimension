@@ -3717,17 +3717,27 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   }, 650);
                 }
                 const assetMap = LEVEL_ONE_MASTER_ASSETS;
+                const activeMaster = currentEnvMaster || "golden";
                 return (
                   <>
-                    {previousEnvMaster && (
+                    {/* Absolute invariant fallback base: always present at opacity 1 */}
+                    <div 
+                      className="environment-layer base-master"
+                      style={{ position: 'absolute', inset: 0, zIndex: 1, opacity: 1, pointerEvents: 'none' }}
+                    >
+                      <img src={assetMap[activeMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+
+                    {previousEnvMaster && previousEnvMaster !== activeMaster && (
                       <div 
                         key={`outgoing-${previousEnvMaster}`}
                         className="environment-layer outgoing" 
-                        style={{ position: 'absolute', inset: 0, zIndex: 1, opacity: 1, pointerEvents: 'none' }}
+                        style={{ position: 'absolute', inset: 0, zIndex: 2, opacity: 1, pointerEvents: 'none' }}
                       >
                         <img src={assetMap[previousEnvMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                     )}
+
                     {(() => {
                       const [incomingOpacity, setIncomingOpacity] = useState(isEnvTransitioning && previousEnvMaster ? 0 : 1);
                       useEffect(() => {
@@ -3745,37 +3755,20 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                       }, [currentEnvMaster, isEnvTransitioning, previousEnvMaster]);
 
                       return (
-                        <>
-                          <div 
-                            key={`incoming-${currentEnvMaster}`}
-                            className="environment-layer incoming"
-                            style={{ 
-                              position: 'absolute', 
-                              inset: 0, 
-                              zIndex: 2, 
-                              opacity: incomingOpacity,
-                              transition: 'opacity 600ms ease-in-out',
-                              pointerEvents: 'none' 
-                            }}
-                          >
-                            <img src={assetMap[currentEnvMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          </div>
-                          {isEnvTransitioning && (
-                            <div 
-                              className="arcade-transition-flash"
-                              style={{
-                                position: 'absolute',
-                                inset: 0,
-                                zIndex: 4,
-                                background: 'radial-gradient(circle at 50% 30%, rgba(255, 45, 149, 0.35) 0%, rgba(0, 212, 255, 0.25) 50%, transparent 85%)',
-                                opacity: incomingOpacity < 0.5 ? incomingOpacity * 2 : (1 - incomingOpacity) * 2,
-                                transition: 'opacity 300ms ease-in-out',
-                                pointerEvents: 'none',
-                                mixBlendMode: 'screen',
-                              }}
-                            />
-                          )}
-                        </>
+                        <div 
+                          key={`incoming-${activeMaster}`}
+                          className="environment-layer incoming"
+                          style={{ 
+                            position: 'absolute', 
+                            inset: 0, 
+                            zIndex: 3, 
+                            opacity: incomingOpacity,
+                            transition: 'opacity 600ms ease-in-out',
+                            pointerEvents: 'none' 
+                          }}
+                        >
+                          <img src={assetMap[activeMaster]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
                       );
                     })()}
                   </>
