@@ -1545,4 +1545,8 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Audit repository state and configure `.gitignore` / git attributes to exclude all `.mp3`, `.wav`, `.ogg`, `.flac`, and sound assets
 - [ ] Stage all website code, game logic, styles, documentation, and visual assets (images/sprites)
 - [ ] Verify that zero audio files are staged or tracked in git
-- [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
+- [x] Push updates to `Retchoid/fifth-dimension` and provide the repository link
+
+## GitHub Public Visibility Change
+- [x] Change Retchoid/fifth-dimension visibility to public via GitHub CLI
+- [x] Verify public access URL
