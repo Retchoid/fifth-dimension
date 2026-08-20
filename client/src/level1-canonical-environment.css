@@ -48,6 +48,22 @@
   transition-duration: 180ms !important;
 }
 
+/* Transition lock: preserve the already-successful waking -> dusk change while
+   giving the larger golden -> waking and dusk -> night visual jumps enough
+   time to read as intentional environmental dissolves. These selectors affect
+   opacity only; camera framing, gameplay, thresholds and artwork stay fixed. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-art {
+  transition: opacity 850ms cubic-bezier(.4, 0, .2, 1) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-art {
+  transition: opacity 180ms linear !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art {
+  transition: opacity 900ms cubic-bezier(.4, 0, .2, 1) !important;
+}
+
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
   position: absolute !important;
   inset: 0 !important;
