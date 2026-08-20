@@ -1547,4 +1547,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Verify that zero audio files are staged or tracked in git
 - [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
 
-- [x] Verify GitHub `main2` commit `86c76af5043d6a4b18ae88ff4cae6c68e3823492` and perform a fresh permanent production build and publication to `https://fifthdim-ahhcmq4d.manus.space/` without source-code modifications
+- [x] Restore and verify production on `main2` commit `89ebbeb8c30ff9b907be5830c6cedec299469176` (Disabling experimental Level 1 sky overlay in production)
