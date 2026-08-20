@@ -1,52 +1,39 @@
 /* Final Level 1 transition calibration.
    Scope: visual timing/lighting only. Gameplay, scoring, collision, and the approved 2 -> 3 handoff remain unchanged. */
 
-/* 1 -> 2: stage 1 begins at the BOH threshold, but DO NOT visually swap there.
-   Hold the golden frame until the existing BIG UP reaction is actually present
-   in the DOM. Once BIG UP appears, release the same waking master and keep it
-   there for the rest of time-stage 1. This keeps the gameplay thresholds intact
-   while making the artwork handoff land on the visible BIG UP event. */
-.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-golden {
-  opacity: 0 !important;
-  transition: opacity 980ms cubic-bezier(.22, .68, .24, 1) 999s !important;
-}
-
-.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-waking {
+/* 1 -> 2 is now keyed to the actual BIG UP event. BOH remains entirely on the
+   golden frame. The transition synchronizer adds level-one-big-up-reached when
+   BIG UP appears and keeps that state for the rest of the Level 1 run. */
+.arcade-cabinet-bezel .game-viewport.level-one-time-1:not(.level-one-big-up-reached) .level-one-master-art-golden {
   opacity: 1 !important;
-  transition: opacity 980ms cubic-bezier(.22, .68, .24, 1) 999s !important;
 }
 
-/* The BIG UP popup is the release trigger for the delayed handoff. The more
-   specific rule removes the artificial hold only while BIG UP is visible. Once
-   the popup clears, the target opacity values remain unchanged, so the waking
-   scene stays in place rather than snapping back to golden. */
-.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.combo-burst-overlay.combo-reaction-big-up) .level-one-master-art-golden,
-.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.in-world-reward-big-up) .level-one-master-art-golden {
+.arcade-cabinet-bezel .game-viewport.level-one-time-1:not(.level-one-big-up-reached) .level-one-master-art-waking {
   opacity: 0 !important;
-  transition: opacity 980ms cubic-bezier(.16, .74, .22, 1) 0ms !important;
 }
 
-.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.combo-burst-overlay.combo-reaction-big-up) .level-one-master-art-waking,
-.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.in-world-reward-big-up) .level-one-master-art-waking {
+.arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-master-art-golden {
+  opacity: 0 !important;
+  transition: opacity 1050ms cubic-bezier(.22, .68, .24, 1) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-master-art-waking {
   opacity: 1 !important;
-  transition: opacity 980ms cubic-bezier(.16, .74, .22, 1) 0ms !important;
+  transition: opacity 1050ms cubic-bezier(.22, .68, .24, 1) !important;
 }
 
-.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.combo-burst-overlay.combo-reaction-big-up) .level-one-sunset-alley::after,
-.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.in-world-reward-big-up) .level-one-sunset-alley::after {
+.arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-sunset-alley::after {
   background: linear-gradient(180deg, rgba(255, 132, 63, .04), rgba(255, 44, 149, .08) 54%, rgba(0, 224, 255, .02));
-  animation: level-one-big-up-handoff 1250ms ease-in-out 1 !important;
+  animation: level-one-big-up-handoff 1450ms ease-in-out 1 !important;
 }
 
 @keyframes level-one-big-up-handoff {
   0% { opacity: 0; }
-  34% { opacity: .24; }
-  72% { opacity: .10; }
+  42% { opacity: .24; }
+  76% { opacity: .10; }
   100% { opacity: 0; }
 }
 
-/* BIG UP is the environmental cue: the ground dressing rises with the callout
-   so the lighting change feels caused by the world coming alive. */
 .arcade-cabinet-bezel .game-viewport:has(.combo-reaction-big-up) .dj-booth-stage .speaker-tower,
 .arcade-cabinet-bezel .game-viewport:has(.in-world-reward-big-up) .dj-booth-stage .speaker-tower {
   animation: level-one-big-up-ground-rise 1150ms cubic-bezier(.16,.78,.2,1) 1 !important;
@@ -94,9 +81,7 @@
   100% { opacity: 0; }
 }
 
-/* Scene 4 is late-night, but it must remain fully playable and visually rich.
-   Lift the master aggressively, soften contrast, preserve colour, and strip the
-   dark veil back to almost nothing. */
+/* Scene 4 is late-night, but it must remain fully playable and visually rich. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art-night {
   filter: brightness(2.05) contrast(.82) saturate(1.16) !important;
 }
@@ -119,7 +104,6 @@
   opacity: .10 !important;
 }
 
-/* Keep dense night ambience subordinate to the brighter source artwork. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-steam {
   opacity: .12 !important;
 }
