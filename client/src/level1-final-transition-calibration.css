@@ -1,30 +1,54 @@
 /* Final Level 1 transition calibration.
    Scope: visual timing/lighting only. Gameplay, scoring, collision, and the approved 2 -> 3 handoff remain unchanged. */
 
-/* 1 -> 2 now lands on the existing BOH! BOH! reward at five dubplates.
-   The underlying progression state is untouched: at time-stage 1 we visually
-   reveal the waking master while the BOH callout is on screen, then keep that
-   same waking artwork through time-stage 2. */
+/* 1 -> 2: hold the golden frame through BOH! BOH!, then let the visual handoff
+   breathe toward BIG UP rather than snapping the instant five records are hit.
+   The state change is still CSS-only; the game progression contract is untouched. */
 .arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-golden {
   opacity: 0 !important;
-  transition: opacity 760ms cubic-bezier(.22, .68, .24, 1) !important;
+  transition: opacity 980ms cubic-bezier(.22, .68, .24, 1) 1150ms !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-waking {
   opacity: 1 !important;
-  transition: opacity 760ms cubic-bezier(.22, .68, .24, 1) !important;
+  transition: opacity 980ms cubic-bezier(.22, .68, .24, 1) 1150ms !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-sunset-alley::after {
-  background: linear-gradient(180deg, rgba(255, 111, 58, .05), rgba(255, 44, 149, .10) 52%, rgba(0, 224, 255, .025));
-  animation: level-one-boh-handoff 920ms ease-in-out 1 !important;
+  background: linear-gradient(180deg, rgba(255, 132, 63, .04), rgba(255, 44, 149, .08) 54%, rgba(0, 224, 255, .02));
+  animation: level-one-big-up-handoff 2100ms ease-in-out 1 !important;
 }
 
-@keyframes level-one-boh-handoff {
-  0% { opacity: 0; }
-  28% { opacity: .28; }
-  62% { opacity: .13; }
+@keyframes level-one-big-up-handoff {
+  0%, 18% { opacity: 0; }
+  46% { opacity: .24; }
+  72% { opacity: .10; }
   100% { opacity: 0; }
+}
+
+/* BIG UP is now the visible environmental cue: the ground dressing rises with
+   the callout so the lighting change feels caused by the world coming alive,
+   not by a hidden background swap. */
+.arcade-cabinet-bezel .game-viewport:has(.combo-reaction-big-up) .dj-booth-stage .speaker-tower,
+.arcade-cabinet-bezel .game-viewport:has(.in-world-reward-big-up) .dj-booth-stage .speaker-tower {
+  animation: level-one-big-up-ground-rise 1150ms cubic-bezier(.16,.78,.2,1) 1 !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:has(.combo-reaction-big-up) .level-one-time-pavement-reflection,
+.arcade-cabinet-bezel .game-viewport:has(.in-world-reward-big-up) .level-one-time-pavement-reflection {
+  animation: level-one-big-up-floor-bloom 1250ms ease-out 1 !important;
+}
+
+@keyframes level-one-big-up-ground-rise {
+  0% { transform: translateY(18px) scale(.97); filter: brightness(.86); }
+  48% { transform: translateY(-5px) scale(1.015); filter: brightness(1.18); }
+  100% { transform: translateY(0) scale(1); filter: brightness(1); }
+}
+
+@keyframes level-one-big-up-floor-bloom {
+  0% { opacity: .05; transform: scaleY(.72); }
+  45% { opacity: .42; transform: scaleY(1.08); }
+  100% { opacity: .14; transform: scaleY(1); }
 }
 
 /* Time-stage 2 is already the waking master; keep it stable so 2 -> 3 remains
@@ -35,50 +59,57 @@
 
 /* 2 -> 3 intentionally untouched. */
 
-/* 3 -> 4: preserve the better night treatment but let it arrive much more
-   deliberately. The source art is a large visual jump, so give the eye time
-   to follow the city lighting rather than reading it as a cut. */
+/* 3 -> 4: retain the slower arrival and keep the visual continuity in the city
+   lighting instead of reading as a hard cut. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art {
-  transition: opacity 1380ms cubic-bezier(.22, .68, .24, 1) !important;
+  transition: opacity 1520ms cubic-bezier(.22, .68, .24, 1) !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley::after {
-  animation: level-one-night-handoff-final 1500ms ease-in-out 1 !important;
+  animation: level-one-night-handoff-final 1680ms ease-in-out 1 !important;
 }
 
 @keyframes level-one-night-handoff-final {
   0% { opacity: 0; }
-  30% { opacity: .30; }
-  70% { opacity: .12; }
+  30% { opacity: .24; }
+  70% { opacity: .09; }
   100% { opacity: 0; }
 }
 
-/* Scene 4 should be a readable neon night, not a blackout. The supplied night
-   master is intrinsically dark, so lift it substantially while retaining its
-   blue-purple sky and late-rave colour identity. */
+/* Scene 4 is late-night, but it must remain fully playable and visually rich.
+   Lift the master aggressively, soften contrast, preserve colour, and strip the
+   dark veil back to almost nothing. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art-night {
-  filter: brightness(1.68) contrast(.88) saturate(1.10) !important;
+  filter: brightness(2.05) contrast(.82) saturate(1.16) !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette {
   background: linear-gradient(
     180deg,
-    rgba(3, 5, 18, .055) 0 22%,
-    rgba(3, 5, 18, .012) 40%,
-    transparent 58%,
-    rgba(5, 8, 18, .015) 100%
+    rgba(3, 5, 18, .018) 0 20%,
+    rgba(3, 5, 18, .004) 38%,
+    transparent 56%,
+    rgba(5, 8, 18, .006) 100%
   ) !important;
 }
 
-/* Keep dense night ambience subordinate to the now-brighter source artwork. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-time-building-wash {
+  opacity: .10 !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-time-haze {
+  opacity: .10 !important;
+}
+
+/* Keep dense night ambience subordinate to the brighter source artwork. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-steam {
-  opacity: .18 !important;
+  opacity: .12 !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-cigarette-smoke {
-  opacity: .14 !important;
+  opacity: .09 !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-door-activity {
-  opacity: .22 !important;
+  opacity: .18 !important;
 }
