@@ -1552,3 +1552,6 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Audit and restore foreground gameplay assets (player, falling records, bouncers, crowd, speakers, props) to render in front of the illustrated Level 1 environment without changing game logic or assets
 - [x] TASK A: Audit falling dubplate render path, asset resolution, and z-index layer (`falling-items-layer` z-index: 20)
 - [x] TASK B: Audit and restore transportation / environment progression elements (police car, bouncers, crowd, speakers, street props) in mid-scene layer
+- [x] Trace and restore the original Level 1 four-master scene progression (golden → waking → dusk → night) controlled by record-count thresholds.
+- [x] Audit and ensure consistent falling dubplate visibility across the z-index stack without altering spawn logic, fall speed, collisions, scoring, or controls.
+- [x] Verify complete test suite (all 87 unit tests), TypeScript compilation, Vite production build, and public production deployment at https://fifthdim-ahhcmq4d.manus.space/.
