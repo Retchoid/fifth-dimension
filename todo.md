@@ -1545,12 +1545,10 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Audit repository state and configure `.gitignore` / git attributes to exclude all `.mp3`, `.wav`, `.ogg`, `.flac`, and sound assets
 - [ ] Stage all website code, game logic, styles, documentation, and visual assets (images/sprites)
 - [ ] Verify that zero audio files are staged or tracked in git
-- [x] Push updates to `Retchoid/fifth-dimension` and provide the repository link
+- [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
 
-## GitHub Public Visibility Change
-- [x] Change Retchoid/fifth-dimension visibility to public via GitHub CLI
-- [x] Verify public access URL
-
-## Repository Read/Write Permissions
-- [x] Inspect current repo permissions and authenticated account
-- [x] Configure collaborator or token permissions for read/write access
+- [x] Establish protected rollback baseline (`checkpoint/level1-pre-sky`) and experimental sky branch (`exp/level1-continuous-sky-lighting-v2`)
+- [ ] Implement masked upper-sky gradient progression (golden -> pink/magenta -> purple dusk -> blue/violet night) without touching building geometry, bouncers, crowd, police car, speakers, or props
+- [ ] Implement BIG UP environmental lighting response (brief warm/magenta bloom with pavement/speaker reflection)
+- [ ] Run regression test suite (87 tests) and verify build
+- [ ] Save experiment checkpoint and provide live preview link

@@ -83,7 +83,7 @@ describe("Level 1 independent world progression contracts", () => {
 
   it("audits every configured Level 1 physical object against an approved asset", () => {
     for (const type of ["record", "cop", "pill", "phone", "cdj", "mixer", "turntable", "adapter", "bottle", "apple", "lion"]) {
-      expect(game).toContain(`${type}: "/manus-storage/`);
+      expect(game).toContain(`${type}: "/embedded-assets/`);
     }
     expect(game).toContain("selectah-mixer-urban");
     expect(game).toContain("selectah-lion-urban");

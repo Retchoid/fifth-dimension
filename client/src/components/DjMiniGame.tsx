@@ -39,32 +39,6 @@ const LEVEL_ONE_MASTER_ASSETS = {
 
 type LevelOneMasterState = keyof typeof LEVEL_ONE_MASTER_ASSETS;
 
-type LevelOneEnvironmentPhase =
-  | "golden"
-  | "golden-waking"
-  | "waking"
-  | "waking-dusk"
-  | "dusk"
-  | "night";
-
-const levelOneEnvironmentPhaseForRecords = (records: number): LevelOneEnvironmentPhase => {
-  // Sliding blend windows (1-2 records ahead of thresholds):
-  // 0-3: golden
-  // 4-5: golden blending into waking
-  // 6-9: waking
-  // 10-11: waking blending into dusk
-  // 12-15: dusk
-  // 16-17: dusk blending into night
-  // 18-24: final night fully dominant and playable before 25 completion
-  if (records <= 3) return "golden";
-  if (records <= 5) return "golden-waking";
-  if (records <= 9) return "waking";
-  if (records <= 11) return "waking-dusk";
-  if (records <= 15) return "dusk";
-  if (records <= 17) return "waking-dusk"; // gentle transitional blend stage
-  return "night";
-};
-
 const levelOneMasterStateForTimeStage = (stage: number): LevelOneMasterState => {
   if (stage <= 1) return "golden";
   if (stage <= 2) return "waking";
@@ -107,17 +81,17 @@ type PitEntityType = PitGearType | PitHazardType;
 type FallingItemType = "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
 
 const URBAN_PROP_ASSETS: Partial<Record<FallingItemType, string>> = {
-  record: "/manus-storage/selectah-dubplate-urban_052862f6.png",
-  cop: "/manus-storage/selectah-police-siren-urban_5fb879fa.png",
-  pill: "/manus-storage/selectah-pill-urban_e2f4393e.png",
-  phone: "/manus-storage/selectah-phone-urban_0aebd4d4.png",
-  cdj: "/manus-storage/selectah-cdj-urban_79c0b46c.png",
-  mixer: "/manus-storage/selectah-mixer-urban_aa64e423.png",
-  turntable: "/manus-storage/selectah-turntable-urban_de17fd21.png",
-  adapter: "/manus-storage/selectah-adapter-urban_ab9d38ca.png",
-  lion: "/manus-storage/selectah-lion-urban_9431e50b.png",
-  bottle: "/manus-storage/selectah-bottle-urban_fc7e712f.png",
-  apple: "/manus-storage/selectah-apple-core-urban_66dacfaa.png",
+  record: "/embedded-assets/selectah-dubplate-urban_052862f6.png",
+  cop: "/embedded-assets/selectah-police-siren-urban_5fb879fa.png",
+  pill: "/embedded-assets/selectah-pill-urban_e2f4393e.png",
+  phone: "/embedded-assets/selectah-phone-urban_0aebd4d4.png",
+  cdj: "/embedded-assets/selectah-cdj-urban_79c0b46c.png",
+  mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
+  turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
+  adapter: "/embedded-assets/selectah-adapter-urban_ab9d38ca.png",
+  lion: "/embedded-assets/selectah-lion-urban_9431e50b.png",
+  bottle: "/embedded-assets/selectah-bottle-urban_fc7e712f.png",
+  apple: "/embedded-assets/selectah-apple-core-urban_66dacfaa.png",
 };
 
 const URBAN_RUNNER_ASSETS: Record<BonusRunnerType, string> = {
@@ -333,10 +307,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const [isHeadphonesBonusPaused, setIsHeadphonesBonusPaused] = useState(false);
   const [isRecordTransitioning, setIsRecordTransitioning] = useState(false);
   const [isLevelTwoMarqueeVisible, setIsLevelTwoMarqueeVisible] = useState(false);
-  const [currentEnvMaster, setCurrentEnvMaster] = useState<LevelOneMasterState>("golden");
-  const [previousEnvMaster, setPreviousEnvMaster] = useState<LevelOneMasterState | null>(null);
-  const [isEnvTransitioning, setIsEnvTransitioning] = useState(false);
-  const envTransitionTimerRef = useRef<number>(0);
   const [activeArcadeSequence, setActiveArcadeSequence] = useState<ArcadeSequence | null>(null);
   const [isLevelTwoTransitioning, setIsLevelTwoTransitioning] = useState(false);
   const [mixerDamaged, setMixerDamaged] = useState(false);
@@ -2643,15 +2613,16 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
   useEffect(() => {
     if (!isUnlockPaused || !unlockRevealReady) return;
-    // Shortened delivery sequence: ~1.2s transmitting, ~1.5s Jersh chain reward animation.
+    // The download reaches its resting position after five seconds, then its
+    // silver chain gives a tight, realistic one-second break before handoff.
     const chainImpactTimer = window.setTimeout(() => {
       if (chainBreakImpactPlayedRef.current) return;
       chainBreakImpactPlayedRef.current = true;
       setIsCabinetVibrating(true);
       playChainBreakImpact();
-    }, 1200);
-    const cabinetSettleTimer = window.setTimeout(() => setIsCabinetVibrating(false), 1450);
-    const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 1650);
+    }, 5000);
+    const cabinetSettleTimer = window.setTimeout(() => setIsCabinetVibrating(false), 5360);
+    const breakTimer = window.setTimeout(() => setChainBreakComplete(true), 6000);
     return () => {
       window.clearTimeout(chainImpactTimer);
       window.clearTimeout(cabinetSettleTimer);
@@ -2747,13 +2718,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     window.clearTimeout(lossComedownTimerRef.current);
     setIsLossComedownVisible(true);
     if (lossVerificationHold) return;
-    lossComedownTimerRef.current = window.setTimeout(() => {
-      setIsLossComedownVisible(false);
-      setGameOver(true);
-      setGameplayStateOwner("GAME_OVER");
-      isPlayingRef.current = false;
-      setIsPlaying(false);
-    }, 2300);
+    lossComedownTimerRef.current = window.setTimeout(() => setIsLossComedownVisible(false), 2300);
   };
 
   useEffect(() => {
@@ -2837,7 +2802,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setGameOver(false);
     setIsLossComedownVisible(false);
     setLevelTwoComplete(false);
-    setPreLevelTwoHighScore(false);
     setIsUnlockPaused(false);
     setIsRewindPaused(false);
     setIsWheelItUpPaused(false);
@@ -3319,10 +3283,9 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       setUnlockRevealReady(false);
       setChainBreakComplete(false);
       window.clearTimeout(unlockRevealTimerRef.current);
-      // Sequence: LEVEL CLEARED (~1.0s) -> TRANSMITTING (~1.2s) -> JERSH CHAIN (~1.5s) -> DOWNLOAD UNLOCKED persistent
       unlockRevealTimerRef.current = window.setTimeout(() => {
         setUnlockRevealReady(true);
-      }, 1100);
+      }, 3000);
       return;
     }
     if (completeLevelTwo) {
@@ -3549,15 +3512,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     : null;
   const renderedRecordsCaught = forcedWorldRecords ?? recordsCaught;
   const renderedCombo = forcedWorldCombo ?? combo;
-  const levelOneEnvironmentPhase = level === 1 ? levelOneEnvironmentPhaseForRecords(renderedRecordsCaught) : "golden";
   const levelOneTimeStage = level === 1 ? Math.min(5, Math.floor(renderedRecordsCaught / 5)) : 0;
-  const levelOneMasterState = levelOneEnvironmentPhase === "golden-waking"
-    ? "waking"
-    : levelOneEnvironmentPhase === "waking-dusk"
-      ? "dusk"
-      : levelOneEnvironmentPhase === "night"
-        ? "night"
-        : levelOneEnvironmentPhase;
+  const levelOneMasterState = levelOneMasterStateForTimeStage(levelOneTimeStage);
   const pitRunFrame = pitRunProgress < 34 ? "club-exit" : pitRunProgress < 73 ? "deep-pit" : "afterparty-arrival";
   const pitRunFrameCopy = pitRunFrame === "club-exit"
     ? "CLUB EXIT · AFTERPARTY AWAITS"
@@ -3697,167 +3653,14 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         )}
         <div className={`game-grid-bg stage-background${level === 2 ? " level-two-grid-bg" : ""}`} aria-hidden="true">
           {level === 1 && (
-            <div
-              className={`level-one-sunset-alley level-one-master-${levelOneMasterState} level-one-phase-${levelOneEnvironmentPhase}`}
-              data-level-one-master-state={levelOneMasterState}
-              data-level-one-phase={levelOneEnvironmentPhase}
-              data-level-one-records={renderedRecordsCaught}
-            >
-              {(() => {
-                const r = Math.max(0, Math.min(25, renderedRecordsCaught));
-                
-                // Sharp threshold handoff helper: keeps outgoing master fully dominant until very late,
-                // then snaps/crossfades decisively over a narrow window (e.g. record 11 to 12) so no prolonged double-exposure occurs.
-                const getSharpHandoffOpacity = (rec: number, startRec: number, endRec: number) => {
-                  if (rec <= startRec) return 0.0;
-                  if (rec >= endRec) return 1.0;
-                  // Narrow steep transition window (e.g., width of 1 record around startRec+1)
-                  const t = (rec - startRec) / (endRec - startRec);
-                  // Steep power curve: stays near 0 until t > 0.6, then rapidly ramps to 1
-                  const steepT = Math.max(0, Math.min(1, (t - 0.5) * 2.5 + 0.5));
-                  return steepT < 0.5 ? 2 * Math.pow(steepT, 3) : 1 - 2 * Math.pow(1 - steepT, 3);
-                };
-
-                const getGoldenOpacity = (rec: number) => {
-                  if (rec <= 3) return 1.0;
-                  if (rec >= 6) return 0.0;
-                  const op = getSharpHandoffOpacity(rec, 3, 6);
-                  return 1.0 - op;
-                };
-
-                const getWakingOpacity = (rec: number) => {
-                  if (rec < 3) return 0.0;
-                  if (rec <= 6) {
-                    return getSharpHandoffOpacity(rec, 3, 6);
-                  }
-                  if (rec <= 10) return 1.0; // Protected stable state at record 10
-                  if (rec >= 12) return 0.0;
-                  const op = getSharpHandoffOpacity(rec, 10, 12); // Sharp handoff across record 11 to 12
-                  return 1.0 - op;
-                };
-
-                const getDuskOpacity = (rec: number) => {
-                  if (rec < 10) return 0.0;
-                  if (rec <= 12) {
-                    return getSharpHandoffOpacity(rec, 10, 12);
-                  }
-                  if (rec <= 16) return 1.0; // Protected approved states at records 13, 14, 16
-                  if (rec >= 20) return 0.0;
-                  const op = getSharpHandoffOpacity(rec, 16, 20); // Sharp handoff to night around 19-20
-                  return 1.0 - op;
-                };
-
-                const getNightOpacity = (rec: number) => {
-                  if (rec < 16) return 0.0;
-                  if (rec <= 20) {
-                    return getSharpHandoffOpacity(rec, 16, 20);
-                  }
-                  return 1.0; // Fully active Full Night from record 21 through 24
-                };
-
-                const opGolden = getGoldenOpacity(r);
-                const opWaking = getWakingOpacity(r);
-                const opDusk = getDuskOpacity(r);
-                const opNight = getNightOpacity(r);
-                const assetMap = LEVEL_ONE_MASTER_ASSETS;
-
-                // Dynamic record-driven time-of-day atmospheric color grading & lighting overlay
-                // 0-5: Warm golden sunset
-                // 6-9: Late sunset (burnt orange / coral tint, slight magenta)
-                // 10-12: Dusk transition (magenta to purple tint)
-                // 13-16: Purple/blue evening
-                // 17-20: Night arrival (deep blue/purple)
-                // 21-25: Full night (rich navy/violet with cyan/magenta neon contrast)
-                const getAtmosphereGrading = (rec: number) => {
-                  if (rec <= 5) {
-                    return {
-                      background: 'linear-gradient(180deg, rgba(255,140,0,0.08) 0%, rgba(255,180,50,0.02) 40%, transparent 100%)',
-                      mixBlendMode: 'color-burn',
-                      filter: 'saturate(1.1) brightness(1.02)'
-                    };
-                  } else if (rec <= 9) {
-                    const t = (rec - 5) / (9 - 5);
-                    return {
-                      background: `linear-gradient(180deg, rgba(220,80,90,${0.08 + t * 0.08}) 0%, rgba(120,40,120,${t * 0.1}) 60%, rgba(10,10,25,${t * 0.15}) 100%)`,
-                      mixBlendMode: 'multiply',
-                      filter: `saturate(${1.1 - t * 0.15}) brightness(${1.02 - t * 0.08})`
-                    };
-                  } else if (rec <= 12) {
-                    const t = (rec - 9) / (12 - 9);
-                    return {
-                      background: `linear-gradient(180deg, rgba(160,50,140,${0.16 + t * 0.1}) 0%, rgba(70,30,130,${0.1 + t * 0.15}) 50%, rgba(10,15,35,${0.25 + t * 0.15}) 100%)`,
-                      mixBlendMode: 'multiply',
-                      filter: `saturate(${0.95 - t * 0.15}) brightness(${0.94 - t * 0.1}) contrast(1.05)`
-                    };
-                  } else if (rec <= 16) {
-                    const t = (rec - 12) / (16 - 12);
-                    return {
-                      background: `linear-gradient(180deg, rgba(90,40,160,${0.26 - t * 0.05}) 0%, rgba(30,30,90,${0.25 + t * 0.05}) 50%, rgba(10,12,30,${0.4 + t * 0.1}) 100%)`,
-                      mixBlendMode: 'multiply',
-                      filter: `saturate(${0.8 + t * 0.05}) brightness(${0.84 - t * 0.05}) contrast(1.08)`
-                    };
-                  } else if (rec <= 20) {
-                    const t = (rec - 16) / (20 - 16);
-                    return {
-                      background: `linear-gradient(180deg, rgba(40,30,120,${0.21 + t * 0.05}) 0%, rgba(15,20,60,${0.3 + t * 0.1}) 50%, rgba(5,8,22,${0.5 + t * 0.1}) 100%)`,
-                      mixBlendMode: 'multiply',
-                      filter: `saturate(0.85) brightness(${0.79 - t * 0.05}) contrast(1.1)`
-                    };
-                  } else {
-                    return {
-                      background: 'linear-gradient(180deg, rgba(20,25,80,0.28) 0%, rgba(8,12,40,0.42) 50%, rgba(2,4,15,0.65) 100%)',
-                      mixBlendMode: 'multiply',
-                      filter: 'saturate(0.9) brightness(0.74) contrast(1.12)'
-                    };
-                  }
-                };
-
-                const atmos = getAtmosphereGrading(r);
-
-                return (
-                  <>
-                    <div 
-                      className="environment-layer master-golden"
-                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: opGolden, pointerEvents: 'none', transition: 'opacity 300ms linear' }}
-                    >
-                      <img src={assetMap.golden} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div 
-                      className="environment-layer master-waking"
-                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: opWaking, pointerEvents: 'none', transition: 'opacity 300ms linear' }}
-                    >
-                      <img src={assetMap.waking} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div 
-                      className="environment-layer master-dusk"
-                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: opDusk, pointerEvents: 'none', transition: 'opacity 300ms linear' }}
-                    >
-                      <img src={assetMap.dusk} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div 
-                      className="environment-layer master-night"
-                      style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: opNight, pointerEvents: 'none', transition: 'opacity 300ms linear' }}
-                    >
-                      <img src={assetMap.night} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                    {/* Atmospheric color grading & lighting layer */}
-                    <div 
-                      className="environment-atmosphere-grading"
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        zIndex: 1,
-                        pointerEvents: 'none',
-                        background: atmos.background,
-                        mixBlendMode: atmos.mixBlendMode as any,
-                        filter: atmos.filter,
-                        transition: 'background 600ms ease, filter 600ms ease'
-                      }}
-                    />
-                  </>
-                );
-              })()}
+            <div className={`level-one-sunset-alley level-one-master-${levelOneMasterState}`} data-level-one-master-state={levelOneMasterState}>
+              <img className="level-one-master-art level-one-master-art-golden" src={LEVEL_ONE_MASTER_ASSETS.golden} alt="" />
+              <img className="level-one-master-art level-one-master-art-waking" src={LEVEL_ONE_MASTER_ASSETS.waking} alt="" />
+              <img className="level-one-master-art level-one-master-art-dusk" src={LEVEL_ONE_MASTER_ASSETS.dusk} alt="" />
+              <img className="level-one-master-art level-one-master-art-night" src={LEVEL_ONE_MASTER_ASSETS.night} alt="" />
               <span className="level-one-master-vignette" />
+              <div className="level-one-masked-sky-wash" aria-hidden="true" />
+              <div className="level-one-big-up-lighting-event" aria-hidden="true" />
               <div className="level-one-canonical-ambience" aria-hidden="true">
                 <span className="canonical-steam canonical-steam-left" />
                 <span className="canonical-steam canonical-steam-right" />
@@ -4287,53 +4090,51 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               )}
             </div>
             <div className="overlay-box unlock-overlay-box">
+              <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
+              <h3>LEVEL CLEARED</h3>
               {!unlockRevealReady ? (
                 <div className="unlock-waiting-message" role="status" aria-live="polite">
                   <div className="unlock-waiting-spinner" />
-                  <h3>LEVEL CLEARED</h3>
-                  <span className="transmitting-sub">TRANSMITTING DUBPLATE VIBES...</span>
-                </div>
-              ) : !chainBreakComplete ? (
-                <div className="unlock-download-drop jersh-reward-focal" role="status" aria-live="polite">
-                  <div className="achievement-chain-wrap" aria-hidden="true">
-                    <span className="chain-run chain-run-text">
-                      {Array.from({ length: 12 }, (_, index) => <i key={index} className="chain-link" />)}
-                    </span>
-                    <span className="chain-padlock" />
-                  </div>
-                  <span className="unlock-download-drop-label">JERSH REWARD SCENE</span>
-                  <strong>JERSH IN CASE</strong>
-                  <span>CHAIN BREAK IN PROGRESS...</span>
+                  <span>TRANSMITTING DUBPLATE VIBES...</span>
                 </div>
               ) : (
                 <>
-                  <div className="unlock-overlay-kicker"><Disc size={16} /> DOWNLOAD UNLOCKED</div>
-                  <h3>DOWNLOAD UNLOCKED</h3>
                   <div className="unlock-download-drop" role="status" aria-live="polite">
+                    <div className="achievement-chain-wrap" aria-hidden="true">
+                      {/* 5D style: an oversized silver arcade chain bars the full release title until the unlock Press Start 2P. */}
+                      <span className="chain-run chain-run-text">
+                        {Array.from({ length: 12 }, (_, index) => <i key={index} className="chain-link" />)}
+                      </span>
+                      <span className="chain-padlock" />
+                    </div>
                     <span className="unlock-download-drop-label">FREE DOWNLOAD UNLOCKED</span>
                     <strong>JERSH IN CASE</strong>
                     <span>THE SIGNAL IS YOURS — 25 DUBPLATES CAUGHT.</span>
                   </div>
                   {isBonusEligible && <div className="green-camo-award" role="status"><strong>NO REQUEST BONUS</strong><span>GREEN CAMO EQUIPPED FOR LEVEL 2</span></div>}
-                  <div className="unlock-decision-actions">
-                    <button type="button" className="tape-play-button" onClick={startGame}>
-                      <span className="tape-play-face" aria-hidden="true">
-                        <i className="tape-reel tape-reel-left" />
-                        <span className="tape-window"><RotateCcw size={15} /></span>
-                        <i className="tape-reel tape-reel-right" />
-                      </span>
-                      <span className="tape-play-copy">Reset Game</span>
-                    </button>
-                    <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
-                      <span className="tape-play-face" aria-hidden="true">
-                        <i className="tape-reel tape-reel-left" />
-                        <span className="tape-window"><Play size={15} fill="currentColor" /></span>
-                        <i className="tape-reel tape-reel-right" />
-                      </span>
-                      <span className="tape-play-copy">Keep Playing</span>
-                    </button>
-                  </div>
-                  <p>{isBonusEligible ? "Clean run detected: Keep Playing launches the No Request Bonus dawn-door rush before Level 2." : "You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score."}</p>
+                  {chainBreakComplete ? (
+                    <>
+                      <div className="unlock-decision-actions">
+                        <button type="button" className="tape-play-button" onClick={startGame}>
+                          <span className="tape-play-face" aria-hidden="true">
+                            <i className="tape-reel tape-reel-left" />
+                            <span className="tape-window"><RotateCcw size={15} /></span>
+                            <i className="tape-reel tape-reel-right" />
+                          </span>
+                          <span className="tape-play-copy">Reset Game</span>
+                        </button>
+                        <button type="button" className="tape-play-button keep-playing-button" onClick={keepPlayingAfterUnlock}>
+                          <span className="tape-play-face" aria-hidden="true">
+                            <i className="tape-reel tape-reel-left" />
+                            <span className="tape-window"><Play size={15} fill="currentColor" /></span>
+                            <i className="tape-reel tape-reel-right" />
+                          </span>
+                          <span className="tape-play-copy">Keep Playing</span>
+                        </button>
+                      </div>
+                      <p>{isBonusEligible ? "Clean run detected: Keep Playing launches the No Request Bonus dawn-door rush before Level 2." : "You caught all 25 dubplates. The free “Jersh In Case” download is live. Choose whether to reset the session or keep scratching for a higher score."}</p>
+                    </>
+                  ) : <span className="chain-break-visual-only" aria-label="Achievement chain is breaking" />}
                 </>
               )}
             </div>
@@ -4534,27 +4335,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   "--fall-tilt": `${item.tilt}deg`,
                 } as React.CSSProperties}
               >
-                {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : item.type === "record" ? (
-                  <img
-                    className="urban-prop-asset record"
-                    src={URBAN_PROP_ASSETS.record}
-                    alt="Dubplate pickup"
-                    style={{
-                      display: "block",
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      imageRendering: "pixelated",
-                    }}
-                  />
-                ) : URBAN_PROP_ASSETS[item.type] ? (
+                {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : URBAN_PROP_ASSETS[item.type] ? (
                   <div
                     className={`urban-prop-asset ${item.type}`}
-                    style={{
-                      backgroundImage: `url(${URBAN_PROP_ASSETS[item.type]})`,
-                      "--urban-prop-url": `url(${URBAN_PROP_ASSETS[item.type]})`,
-                    } as React.CSSProperties}
-                    aria-label={item.type === "cop" ? "Police siren hazard" : item.type === "pill" ? "Falling pill hazard" : item.type === "phone" ? "Falling mobile phone hazard" : "CDJ pickup worth 5 records"}
+                    style={{ "--urban-prop-url": `url(${URBAN_PROP_ASSETS[item.type]})` } as React.CSSProperties}
+                    aria-label={item.type === "record" ? "Dubplate pickup" : item.type === "cop" ? "Police siren hazard" : item.type === "pill" ? "Falling pill hazard" : item.type === "phone" ? "Falling mobile phone hazard" : "CDJ pickup worth 5 records"}
                   />
                 ) : item.type === "lion" ? (
                   <div className="lion-head-pickup" aria-label="Lion of Judah pickup worth 2 records"><span className="lion-crown-rays" /><span className="lion-mane" /><span className="lion-face"><i /><i /><b /><em /></span><span className="lion-jah-crown"><i /><i /><i /></span><strong>+2</strong></div>
@@ -4564,6 +4349,12 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   <div className="turntable-pickup" aria-label="Turntable pickup worth 3 records"><span className="turntable-pickup-platter" /><i className="turntable-pickup-arm" /><b>+3</b></div>
                 ) : item.type === "adapter" ? (
                   <div className="adapter-pickup" aria-label="45 adapter pickup worth 2 records"><span /><b>+2</b></div>
+                ) : item.type === "record" ? (
+                  <div className="vinyl-record-sprite" aria-hidden="true">
+                    <span className="vinyl-grooves" />
+                    <span className="vinyl-label" />
+                    <span className="vinyl-spindle" />
+                  </div>
                 ) : item.type === "cop" ? (
                   <div className="police-badge-sprite" aria-hidden="true">
                     <span className="badge-shield">

@@ -33,6 +33,9 @@ import "./task7-final-consistency-polish.css";
 import "./final-regression-fix-pass.css";
 import "./strict-visual-repair.css";
 import "./visual-recovery-site.css";
+import "./level1-final-transition-calibration.css";
+import "./level1-continuous-sky-lighting.css";
+import "./level1-transition-sync";
 
 
 const queryClient = new QueryClient();
@@ -70,10 +73,6 @@ const trpcClient = trpc.createClient({
       url: "/api/trpc",
       transformer: superjson,
       headers() {
-        // Preview auto-login fallback: when the browser blocks iframe cookies
-        // (Safari ITP / private browsing / WebView), the runtime mirrors the
-        // session into sessionStorage so we can forward it as a Bearer token.
-        // The regular OAuth cookie flow keeps working and takes priority server-side.
         try {
           const raw = sessionStorage.getItem("manus-cookie");
           if (raw) {
@@ -85,7 +84,6 @@ const trpcClient = trpc.createClient({
             }
           }
         } catch {
-          // sessionStorage unavailable
         }
         return {};
       },
