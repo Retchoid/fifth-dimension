@@ -1548,3 +1548,5 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
 
 - [x] Perform fresh production build and permanent deployment of GitHub `main2` commit `31c12d9284b7f5c221782ee0f1314047f6825bca` to `https://fifthdim-ahhcmq4d.manus.space/`
+
+- [ ] Investigate user report that public site `https://fifthdim-ahhcmq4d.manus.space/` is not loading in user browser sessions despite returning HTTP 200 in sandbox curl checks
