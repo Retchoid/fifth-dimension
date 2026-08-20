@@ -1550,3 +1550,5 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Restore and verify production on `main2` commit `89ebbeb8c30ff9b907be5830c6cedec299469176` (Disabling experimental Level 1 sky overlay in production)
 
 - [x] Audit and restore foreground gameplay assets (player, falling records, bouncers, crowd, speakers, props) to render in front of the illustrated Level 1 environment without changing game logic or assets
+- [x] TASK A: Audit falling dubplate render path, asset resolution, and z-index layer (`falling-items-layer` z-index: 20)
+- [x] TASK B: Audit and restore transportation / environment progression elements (police car, bouncers, crowd, speakers, street props) in mid-scene layer
