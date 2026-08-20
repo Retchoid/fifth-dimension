@@ -1545,12 +1545,10 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Audit repository state and configure `.gitignore` / git attributes to exclude all `.mp3`, `.wav`, `.ogg`, `.flac`, and sound assets
 - [ ] Stage all website code, game logic, styles, documentation, and visual assets (images/sprites)
 - [ ] Verify that zero audio files are staged or tracked in git
-- [x] Push updates to `Retchoid/fifth-dimension` and provide the repository link
+- [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
 
-## GitHub Public Visibility Change
-- [x] Change Retchoid/fifth-dimension visibility to public via GitHub CLI
-- [x] Verify public access URL
-
-## Repository Read/Write Permissions
-- [x] Inspect current repo permissions and authenticated account
-- [x] Configure collaborator or token permissions for read/write access
+- [x] Reapply experimental branch `exp/level1-continuous-sky-lighting-v2` as requested in reapplication brief
+- [ ] Verify rollback baseline checkpoint `checkpoint/level1-pre-sky` (`de3bc318`) is preserved in git history
+- [ ] Verify masked upper-sky gradient progression and BIG UP lighting response without altering gameplay, bouncers, crowd, police car, speakers, props, or Levels 2–3
+- [ ] Run test suite (87 tests), type check (`pnpm run check`), and production build (`pnpm run build`)
+- [ ] Save experiment checkpoint and deliver report detailing changed files, active sky layer, preserved details, and rollback baseline

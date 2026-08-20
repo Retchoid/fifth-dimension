@@ -30,13 +30,10 @@
   image-rendering: auto !important;
   filter: none !important;
   opacity: 0 !important;
-  transition: opacity 1800ms cubic-bezier(0.25, 1, 0.5, 1) !important;
+  transition: opacity 220ms linear !important;
   will-change: opacity !important;
 }
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
-  opacity: 0 !important;
-}
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-golden .level-one-master-art-golden,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-waking .level-one-master-art-waking,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-dusk .level-one-master-art-dusk,
@@ -48,7 +45,62 @@
    architectural crossfade. The old master is hidden as the new master appears,
    avoiding a long doubled-building ghost. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art:not(.level-one-master-art-golden) {
-  transition-duration: 1800ms !important;
+  transition-duration: 180ms !important;
+}
+
+/* Scene handoff tuning: the good waking -> dusk cut stays untouched. The two
+   compositionally larger jumps are intentionally brief, then disguised with
+   a lighting pulse so they read as an environmental change rather than two
+   illustrations visibly dissolving through each other. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-art {
+  transition: opacity 360ms cubic-bezier(.2, .8, .2, 1) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-art {
+  transition: opacity 180ms linear !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art {
+  transition: opacity 420ms cubic-bezier(.2, .8, .2, 1) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-sunset-alley::after {
+  background: linear-gradient(180deg, rgba(255, 104, 46, .08), rgba(255, 44, 149, .16) 52%, rgba(0, 224, 255, .05));
+  animation: level-one-waking-handoff 430ms ease-out 1;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley::after {
+  background: linear-gradient(180deg, rgba(74, 64, 255, .08), rgba(255, 45, 149, .13) 48%, rgba(0, 221, 255, .07));
+  animation: level-one-night-handoff 500ms ease-out 1;
+}
+
+@keyframes level-one-waking-handoff {
+  0% { opacity: 0; }
+  24% { opacity: .72; }
+  100% { opacity: 0; }
+}
+
+@keyframes level-one-night-handoff {
+  0% { opacity: 0; }
+  28% { opacity: .62; }
+  100% { opacity: 0; }
+}
+
+/* Lift the final scene's midtones enough to keep the player, car, pavement,
+   crowd and architecture readable. A night-specific top vignette restores sky
+   depth so the scene gets clearer without turning into another dusk frame. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art-night {
+  filter: brightness(1.18) contrast(.94) saturate(1.06) !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
@@ -58,6 +110,10 @@
   pointer-events: none !important;
   background: linear-gradient(180deg, rgba(5, 8, 18, .08) 0 17%, transparent 31% 76%, rgba(5, 8, 18, .2) 100%) !important;
   box-shadow: inset 0 0 0 2px rgba(10, 10, 18, .18) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette {
+  background: linear-gradient(180deg, rgba(3, 5, 18, .23) 0 25%, rgba(3, 5, 18, .05) 43%, transparent 62%, rgba(5, 8, 18, .08) 100%) !important;
 }
 
 /* The canonical masters already contain their own crowd, queue, bouncers,
@@ -193,9 +249,11 @@
   animation: level-one-canonical-steam 5.8s ease-in-out infinite !important;
 }
 
+/* Night already contains dense crowd and architectural detail in the master.
+   Keep ambience subordinate so that detail stays readable on a phone. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-steam {
-  opacity: .46 !important;
-  animation-duration: 4.6s !important;
+  opacity: .28 !important;
+  animation-duration: 5.2s !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .canonical-cigarette-smoke,
@@ -204,13 +262,17 @@
   animation: level-one-canonical-smoke 7.9s ease-in-out infinite !important;
 }
 
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-cigarette-smoke {
+  opacity: .22 !important;
+}
+
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-door-activity {
-  opacity: .42 !important;
+  opacity: .30 !important;
   animation: level-one-canonical-door 6.4s steps(3, end) infinite !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-loose-flyer {
-  opacity: .52 !important;
+  opacity: .42 !important;
   animation: level-one-canonical-flyer 9.2s ease-in-out infinite !important;
 }
 
@@ -226,6 +288,10 @@
   }
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
     transition: none !important;
+  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::after {
+    animation: none !important;
+    opacity: 0 !important;
   }
 }
 
