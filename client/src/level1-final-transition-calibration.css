@@ -1,0 +1,52 @@
+/* Final Level 1 transition calibration.
+   Scope: visual timing/lighting only. Gameplay and the approved 2 -> 3 handoff remain unchanged. */
+
+/* 1 -> 2: preserve the existing handoff point, but let the lighting shift breathe. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-art {
+  transition: opacity 680ms cubic-bezier(.22, .68, .24, 1) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-sunset-alley::after {
+  animation: level-one-waking-handoff-final 720ms ease-out 1 !important;
+}
+
+@keyframes level-one-waking-handoff-final {
+  0% { opacity: 0; }
+  30% { opacity: .42; }
+  68% { opacity: .18; }
+  100% { opacity: 0; }
+}
+
+/* 2 -> 3 intentionally untouched. */
+
+/* 3 -> 4: keep the improved treatment, but slow the arrival of night. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art {
+  transition: opacity 820ms cubic-bezier(.22, .68, .24, 1) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley::after {
+  animation: level-one-night-handoff-final 860ms ease-out 1 !important;
+}
+
+@keyframes level-one-night-handoff-final {
+  0% { opacity: 0; }
+  30% { opacity: .40; }
+  70% { opacity: .16; }
+  100% { opacity: 0; }
+}
+
+/* Scene 4 should read as an active neon night, not a blackout. Lift midtones
+   and street detail while retaining a distinctly blue-purple night sky. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art-night {
+  filter: brightness(1.36) contrast(.92) saturate(1.08) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette {
+  background: linear-gradient(
+    180deg,
+    rgba(3, 5, 18, .13) 0 22%,
+    rgba(3, 5, 18, .025) 40%,
+    transparent 59%,
+    rgba(5, 8, 18, .035) 100%
+  ) !important;
+}
