@@ -1547,6 +1547,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Verify that zero audio files are staged or tracked in git
 - [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
 
-- [x] Perform fresh production build and permanent deployment of GitHub `main2` commit `31c12d9284b7f5c221782ee0f1314047f6825bca` to `https://fifthdim-ahhcmq4d.manus.space/`
-
-- [ ] Investigate user report that public site `https://fifthdim-ahhcmq4d.manus.space/` is not loading in user browser sessions despite returning HTTP 200 in sandbox curl checks
+- [x] Verify GitHub `main2` commit `86c76af5043d6a4b18ae88ff4cae6c68e3823492` and perform a fresh permanent production build and publication to `https://fifthdim-ahhcmq4d.manus.space/` without source-code modifications

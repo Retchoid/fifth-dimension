@@ -35,8 +35,6 @@ import "./strict-visual-repair.css";
 import "./visual-recovery-site.css";
 import "./level1-final-transition-calibration.css";
 import "./level1-continuous-sky-lighting.css";
-import "./level1-transition-sync";
-
 
 const queryClient = new QueryClient();
 
