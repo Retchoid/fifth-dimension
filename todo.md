@@ -1552,3 +1552,5 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Verify masked upper-sky gradient progression and BIG UP lighting response without altering gameplay, bouncers, crowd, police car, speakers, props, or Levels 2–3
 - [ ] Run test suite (87 tests), type check (`pnpm run check`), and production build (`pnpm run build`)
 - [ ] Save experiment checkpoint and deliver report detailing changed files, active sky layer, preserved details, and rollback baseline
+
+- [ ] Diagnose and resolve user report that preview is not loading (`https://3000-ii2ajrebt3duqjw537oe6-59829d5f.us4.manus.computer/`)
