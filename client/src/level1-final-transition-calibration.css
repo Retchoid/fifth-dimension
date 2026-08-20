@@ -1,52 +1,84 @@
 /* Final Level 1 transition calibration.
-   Scope: visual timing/lighting only. Gameplay and the approved 2 -> 3 handoff remain unchanged. */
+   Scope: visual timing/lighting only. Gameplay, scoring, collision, and the approved 2 -> 3 handoff remain unchanged. */
 
-/* 1 -> 2: preserve the existing handoff point, but let the lighting shift breathe. */
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-art {
-  transition: opacity 680ms cubic-bezier(.22, .68, .24, 1) !important;
+/* 1 -> 2 now lands on the existing BOH! BOH! reward at five dubplates.
+   The underlying progression state is untouched: at time-stage 1 we visually
+   reveal the waking master while the BOH callout is on screen, then keep that
+   same waking artwork through time-stage 2. */
+.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-golden {
+  opacity: 0 !important;
+  transition: opacity 760ms cubic-bezier(.22, .68, .24, 1) !important;
 }
 
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-sunset-alley::after {
-  animation: level-one-waking-handoff-final 720ms ease-out 1 !important;
+.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-waking {
+  opacity: 1 !important;
+  transition: opacity 760ms cubic-bezier(.22, .68, .24, 1) !important;
 }
 
-@keyframes level-one-waking-handoff-final {
+.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-sunset-alley::after {
+  background: linear-gradient(180deg, rgba(255, 111, 58, .05), rgba(255, 44, 149, .10) 52%, rgba(0, 224, 255, .025));
+  animation: level-one-boh-handoff 920ms ease-in-out 1 !important;
+}
+
+@keyframes level-one-boh-handoff {
   0% { opacity: 0; }
-  30% { opacity: .42; }
-  68% { opacity: .18; }
+  28% { opacity: .28; }
+  62% { opacity: .13; }
   100% { opacity: 0; }
+}
+
+/* Time-stage 2 is already the waking master; keep it stable so 2 -> 3 remains
+   the approved waking -> dusk transition and receives no extra visual pulse. */
+.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-master-art-waking {
+  opacity: 1 !important;
 }
 
 /* 2 -> 3 intentionally untouched. */
 
-/* 3 -> 4: keep the improved treatment, but slow the arrival of night. */
+/* 3 -> 4: preserve the better night treatment but let it arrive much more
+   deliberately. The source art is a large visual jump, so give the eye time
+   to follow the city lighting rather than reading it as a cut. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art {
-  transition: opacity 820ms cubic-bezier(.22, .68, .24, 1) !important;
+  transition: opacity 1380ms cubic-bezier(.22, .68, .24, 1) !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley::after {
-  animation: level-one-night-handoff-final 860ms ease-out 1 !important;
+  animation: level-one-night-handoff-final 1500ms ease-in-out 1 !important;
 }
 
 @keyframes level-one-night-handoff-final {
   0% { opacity: 0; }
-  30% { opacity: .40; }
-  70% { opacity: .16; }
+  30% { opacity: .30; }
+  70% { opacity: .12; }
   100% { opacity: 0; }
 }
 
-/* Scene 4 should read as an active neon night, not a blackout. Lift midtones
-   and street detail while retaining a distinctly blue-purple night sky. */
+/* Scene 4 should be a readable neon night, not a blackout. The supplied night
+   master is intrinsically dark, so lift it substantially while retaining its
+   blue-purple sky and late-rave colour identity. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art-night {
-  filter: brightness(1.36) contrast(.92) saturate(1.08) !important;
+  filter: brightness(1.68) contrast(.88) saturate(1.10) !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette {
   background: linear-gradient(
     180deg,
-    rgba(3, 5, 18, .13) 0 22%,
-    rgba(3, 5, 18, .025) 40%,
-    transparent 59%,
-    rgba(5, 8, 18, .035) 100%
+    rgba(3, 5, 18, .055) 0 22%,
+    rgba(3, 5, 18, .012) 40%,
+    transparent 58%,
+    rgba(5, 8, 18, .015) 100%
   ) !important;
+}
+
+/* Keep dense night ambience subordinate to the now-brighter source artwork. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-steam {
+  opacity: .18 !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-cigarette-smoke {
+  opacity: .14 !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .canonical-door-activity {
+  opacity: .22 !important;
 }
