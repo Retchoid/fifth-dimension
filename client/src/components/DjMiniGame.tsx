@@ -3163,13 +3163,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
           setCombo(1);
-          if (mixerDamagedRef.current) {
-            recoveryProgressRef.current = 0;
-            setRecoveryProgress(0);
-            window.setTimeout(() => setGameplayStateOwner("RECOVERY"), 460);
-          } else {
-            window.setTimeout(() => setGameplayStateOwner("PLAYING"), 460);
-          }
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
           setLives(currentLives);
@@ -3191,6 +3184,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             setPlayerName("");
             setSubmittedName("");
             return;
+          }
+          if (mixerDamagedRef.current) {
+            recoveryProgressRef.current = 0;
+            setRecoveryProgress(0);
+            window.setTimeout(() => {
+              if (gameplayStateRef.current === "GAME_OVER" || livesRef.current <= 0) return;
+              setGameplayStateOwner("RECOVERY");
+            }, 460);
+          } else {
+            window.setTimeout(() => {
+              if (gameplayStateRef.current === "GAME_OVER" || livesRef.current <= 0) return;
+              setGameplayStateOwner("PLAYING");
+            }, 460);
           }
           if (item.type === "cop" || item.type === "pill" || item.type === "phone") {
             const matchedHazard = consecutiveHazardRef.current === item.type;
