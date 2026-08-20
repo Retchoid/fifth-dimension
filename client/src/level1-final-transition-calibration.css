@@ -1,34 +1,52 @@
 /* Final Level 1 transition calibration.
    Scope: visual timing/lighting only. Gameplay, scoring, collision, and the approved 2 -> 3 handoff remain unchanged. */
 
-/* 1 -> 2: hold the golden frame through BOH! BOH!, then let the visual handoff
-   breathe toward BIG UP rather than snapping the instant five records are hit.
-   The state change is still CSS-only; the game progression contract is untouched. */
+/* 1 -> 2: stage 1 begins at the BOH threshold, but DO NOT visually swap there.
+   Hold the golden frame until the existing BIG UP reaction is actually present
+   in the DOM. Once BIG UP appears, release the same waking master and keep it
+   there for the rest of time-stage 1. This keeps the gameplay thresholds intact
+   while making the artwork handoff land on the visible BIG UP event. */
 .arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-golden {
   opacity: 0 !important;
-  transition: opacity 980ms cubic-bezier(.22, .68, .24, 1) 1150ms !important;
+  transition: opacity 980ms cubic-bezier(.22, .68, .24, 1) 999s !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-waking {
   opacity: 1 !important;
-  transition: opacity 980ms cubic-bezier(.22, .68, .24, 1) 1150ms !important;
+  transition: opacity 980ms cubic-bezier(.22, .68, .24, 1) 999s !important;
 }
 
-.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-sunset-alley::after {
+/* The BIG UP popup is the release trigger for the delayed handoff. The more
+   specific rule removes the artificial hold only while BIG UP is visible. Once
+   the popup clears, the target opacity values remain unchanged, so the waking
+   scene stays in place rather than snapping back to golden. */
+.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.combo-burst-overlay.combo-reaction-big-up) .level-one-master-art-golden,
+.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.in-world-reward-big-up) .level-one-master-art-golden {
+  opacity: 0 !important;
+  transition: opacity 980ms cubic-bezier(.16, .74, .22, 1) 0ms !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.combo-burst-overlay.combo-reaction-big-up) .level-one-master-art-waking,
+.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.in-world-reward-big-up) .level-one-master-art-waking {
+  opacity: 1 !important;
+  transition: opacity 980ms cubic-bezier(.16, .74, .22, 1) 0ms !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.combo-burst-overlay.combo-reaction-big-up) .level-one-sunset-alley::after,
+.arcade-cabinet-bezel .game-viewport.level-one-time-1:has(.in-world-reward-big-up) .level-one-sunset-alley::after {
   background: linear-gradient(180deg, rgba(255, 132, 63, .04), rgba(255, 44, 149, .08) 54%, rgba(0, 224, 255, .02));
-  animation: level-one-big-up-handoff 2100ms ease-in-out 1 !important;
+  animation: level-one-big-up-handoff 1250ms ease-in-out 1 !important;
 }
 
 @keyframes level-one-big-up-handoff {
-  0%, 18% { opacity: 0; }
-  46% { opacity: .24; }
+  0% { opacity: 0; }
+  34% { opacity: .24; }
   72% { opacity: .10; }
   100% { opacity: 0; }
 }
 
-/* BIG UP is now the visible environmental cue: the ground dressing rises with
-   the callout so the lighting change feels caused by the world coming alive,
-   not by a hidden background swap. */
+/* BIG UP is the environmental cue: the ground dressing rises with the callout
+   so the lighting change feels caused by the world coming alive. */
 .arcade-cabinet-bezel .game-viewport:has(.combo-reaction-big-up) .dj-booth-stage .speaker-tower,
 .arcade-cabinet-bezel .game-viewport:has(.in-world-reward-big-up) .dj-booth-stage .speaker-tower {
   animation: level-one-big-up-ground-rise 1150ms cubic-bezier(.16,.78,.2,1) 1 !important;
