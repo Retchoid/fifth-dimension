@@ -1,4 +1,7 @@
-/* Level 1 dubplate visibility repair. Visual-only: no collision/spawn/state changes. */
+/* ============================================================
+   FALLING ITEMS — RECORD VISUAL SWAP (APPROVED 5D VINYL)
+   ============================================================ */
+
 .arcade-cabinet-bezel .game-viewport .falling-items-layer {
   position: absolute !important;
   inset: 0 !important;
@@ -10,7 +13,7 @@
   pointer-events: none !important;
 }
 
-/* Keep the proven working record wrapper geometry and layer ownership. */
+/* Proven working record wrapper geometry and layer ownership (transparent background, no bullseye). */
 .arcade-cabinet-bezel .game-viewport .falling-object.record {
   position: absolute !important;
   display: block !important;
@@ -23,72 +26,12 @@
   visibility: visible !important;
   z-index: 31 !important;
   border-radius: 50% !important;
-  background:
-    repeating-radial-gradient(circle at 50% 50%,
-      rgba(255,255,255,.055) 0 1px,
-      rgba(4,4,8,.98) 2px 4px,
-      rgba(26,25,34,.98) 5px 6px,
-      rgba(5,5,9,.99) 7px 9px) !important;
-  box-shadow:
-    inset 3px 3px 7px rgba(255,255,255,.07),
-    inset -4px -5px 8px rgba(0,0,0,.65),
-    0 0 0 2px #050509,
-    0 8px 12px rgba(0,0,0,.66),
-    0 0 10px rgba(0,212,255,.2) !important;
+  background: transparent !important;
+  box-shadow: none !important;
   pointer-events: none !important;
 }
 
-/* Small paper centre label: readable but subdued, so the object reads as vinyl rather than a target. */
-.arcade-cabinet-bezel .game-viewport .falling-object.record::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  width: 27% !important;
-  height: 27% !important;
-  transform: translate(-50%, -50%) rotate(var(--fall-tilt, -7deg)) !important;
-  border-radius: 50% !important;
-  background:
-    radial-gradient(circle at 50% 50%,
-      #050509 0 8%,
-      #e8dfcc 9% 34%,
-      #c72b79 35% 57%,
-      #22131d 58% 100%) !important;
-  box-shadow:
-    0 0 0 1px rgba(232,223,204,.42),
-    inset 1px 1px 1px rgba(255,255,255,.18) !important;
-  pointer-events: none !important;
-}
-
-/* Moving specular slash adds depth/rotation feel without changing the wrapper transform or hitbox. */
-.arcade-cabinet-bezel .game-viewport .falling-object.record::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: 7% !important;
-  border-radius: 50% !important;
-  background: linear-gradient(112deg,
-    transparent 0 39%,
-    rgba(255,255,255,.13) 43%,
-    rgba(255,255,255,.035) 48%,
-    transparent 53% 100%) !important;
-  transform: rotate(var(--fall-tilt, -7deg)) !important;
-  transform-origin: center !important;
-  animation: dubplate-surface-roll 900ms linear infinite !important;
-  pointer-events: none !important;
-}
-
-@keyframes dubplate-surface-roll {
-  from { transform: rotate(var(--fall-tilt, -7deg)); }
-  to { transform: rotate(calc(var(--fall-tilt, -7deg) + 360deg)); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .arcade-cabinet-bezel .game-viewport .falling-object.record::after {
-    animation: none !important;
-  }
-}
-
-/* Enable the approved 5D vinyl raster PNG asset directly inside the falling record wrapper. */
+/* Render the approved 56x56 5D vinyl PNG cleanly at contain/center. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record {
   display: block !important;
   position: absolute !important;
