@@ -1,3 +1,6 @@
+// SELECTAH SHOWDOWN — direct record renderer v4.
+// This file intentionally exists as a real tracked module so production builds cannot
+// fall back to the old CSS/background/pseudo-element record paths.
 const RECORD_SELECTOR = ".falling-object.record";
 const RECORD_ASSET = "/embedded-assets/selectah-dubplate-5d-production-v2.png";
 
