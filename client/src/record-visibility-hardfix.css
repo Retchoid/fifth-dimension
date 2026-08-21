@@ -95,8 +95,8 @@
   inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  max-width: 80px !important;
-  max-height: 80px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
   margin: auto !important;
   background-image: var(--urban-prop-url) !important;
   background-size: contain !important;
