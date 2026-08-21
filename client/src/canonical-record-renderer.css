@@ -13,8 +13,6 @@
   mask: none !important;
 }
 
-/* The existing DOM node is the only record visual source. It is deliberately
-   larger than the 15–16px physics wrapper, matching the phone/mixer anchor model. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record > .urban-prop-asset.record {
   display: block !important;
   position: absolute !important;
@@ -44,12 +42,11 @@
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  filter: none !important;
+  filter: drop-shadow(0 0 1px #00e7ff) drop-shadow(0 0 2px #ff007a) !important;
   z-index: 5 !important;
   pointer-events: none !important;
 }
 
-/* Retire every competing record-only paint path. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record > .record-dubplate-sprite,
 .arcade-cabinet-bezel .game-viewport .falling-object.record::before,
 .arcade-cabinet-bezel .game-viewport .falling-object.record::after {
