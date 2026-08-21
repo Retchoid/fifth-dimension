@@ -63,20 +63,24 @@
 }
 
 /* Surgical record-dubplate-sprite image styling */
+.arcade-cabinet-bezel .game-viewport .falling-object.record {
+  overflow: visible !important;
+}
+
 .arcade-cabinet-bezel .game-viewport .falling-object.record .record-dubplate-sprite {
-  display: block !important;
+  width: 30px !important;
+  height: 30px !important;
+  max-width: none !important;
+  max-height: none !important;
   position: absolute !important;
-  width: 32px !important;
-  height: 32px !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  inset: 0 !important;
-  margin: auto !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
   object-fit: contain !important;
   object-position: center !important;
+  display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
   z-index: 5 !important;
   pointer-events: none !important;
-  transform: none !important;
 }
