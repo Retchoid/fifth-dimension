@@ -14,10 +14,7 @@
   pointer-events: none !important;
 }
 
-/* Final record visual source.
-   The production PNG route is now verified, so paint the complete 30px vinyl
-   directly on the existing gameplay/collision wrapper. This removes the nested
-   child from the clipping path without changing spawn/collision geometry. */
+/* Preserve the existing gameplay/collision wrapper only. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record {
   position: absolute !important;
   display: block !important;
@@ -26,11 +23,7 @@
   visibility: visible !important;
   z-index: 31 !important;
   border-radius: 0 !important;
-  background-color: transparent !important;
-  background-image: url("/embedded-assets/selectah-dubplate-5d-production-v2.png") !important;
-  background-size: 30px 30px !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
+  background: none !important;
   box-shadow: none !important;
   pointer-events: none !important;
   clip: auto !important;
@@ -38,16 +31,41 @@
   mask: none !important;
 }
 
-/* One visual source only. The outer gameplay wrapper now paints the vinyl;
-   suppress both historic child renderers so no inset/scale/overflow rule can
-   crop the record a second time. */
+/* Single visual source: render a 30px vinyl as an overflow-visible pseudo-element
+   centered over the small logical collision box. This mirrors the phone/mixer
+   visual-over-hitbox model without changing gameplay geometry. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  width: 30px !important;
+  height: 30px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  transform-origin: center !important;
+  background-image: url("/embedded-assets/selectah-dubplate-5d-production-v2.png") !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+  clip: auto !important;
+  clip-path: none !important;
+  mask: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+
+/* Suppress all alternate record visuals to prevent duplicate/cropped renderers. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record,
 .arcade-cabinet-bezel .game-viewport .falling-object.record .record-dubplate-sprite {
   display: none !important;
 }
 
-/* Legacy generated bullseye/pseudo-element artwork remains disabled. */
-.arcade-cabinet-bezel .game-viewport .falling-object.record::before,
 .arcade-cabinet-bezel .game-viewport .falling-object.record::after {
   content: none !important;
   display: none !important;
