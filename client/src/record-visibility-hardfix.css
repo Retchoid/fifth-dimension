@@ -14,7 +14,10 @@
   pointer-events: none !important;
 }
 
-/* Preserve the existing gameplay/collision wrapper. */
+/* Final record visual source.
+   The production PNG route is now verified, so paint the complete 30px vinyl
+   directly on the existing gameplay/collision wrapper. This removes the nested
+   child from the clipping path without changing spawn/collision geometry. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record {
   position: absolute !important;
   display: block !important;
@@ -23,82 +26,24 @@
   visibility: visible !important;
   z-index: 31 !important;
   border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  pointer-events: none !important;
-  clip: auto !important;
-  clip-path: none !important;
-  mask: none !important;
-}
-
-/* Final record visual contract: small, complete, centered vinyl.
-   Explicitly neutralize legacy urban-prop inset/scale/clip rules. */
-.arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record {
-  display: block !important;
-  position: absolute !important;
-  inset: auto !important;
-  left: 50% !important;
-  top: 50% !important;
-  right: auto !important;
-  bottom: auto !important;
-  width: 30px !important;
-  height: 30px !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  max-width: none !important;
-  max-height: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: visible !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+  background-color: transparent !important;
   background-image: url("/embedded-assets/selectah-dubplate-5d-production-v2.png") !important;
   background-size: 30px 30px !important;
-  background-position: center !important;
+  background-position: center center !important;
   background-repeat: no-repeat !important;
-  transform: translate(-50%, -50%) !important;
-  transform-origin: center !important;
-  scale: 1 !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
   clip: auto !important;
   clip-path: none !important;
   mask: none !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  z-index: 5 !important;
-  pointer-events: none !important;
 }
 
-/* If the dedicated IMG renderer is present in a Manus build, apply the same
-   visual contract so both source timelines converge on the same result. */
+/* One visual source only. The outer gameplay wrapper now paints the vinyl;
+   suppress both historic child renderers so no inset/scale/overflow rule can
+   crop the record a second time. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record,
 .arcade-cabinet-bezel .game-viewport .falling-object.record .record-dubplate-sprite {
-  display: block !important;
-  position: absolute !important;
-  inset: auto !important;
-  left: 50% !important;
-  top: 50% !important;
-  right: auto !important;
-  bottom: auto !important;
-  width: 30px !important;
-  height: 30px !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  max-width: none !important;
-  max-height: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  object-fit: contain !important;
-  object-position: center !important;
-  transform: translate(-50%, -50%) !important;
-  transform-origin: center !important;
-  scale: 1 !important;
-  clip: auto !important;
-  clip-path: none !important;
-  mask: none !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  z-index: 5 !important;
-  pointer-events: none !important;
+  display: none !important;
 }
 
 /* Legacy generated bullseye/pseudo-element artwork remains disabled. */
