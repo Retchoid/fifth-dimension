@@ -1,33 +1,52 @@
-/* Guaranteed visible Level 1 dubplate fallback. Visual-only: no collision/spawn/state changes. */
-.arcade-cabinet-bezel .game-viewport .falling-object.record {
+/* Level 1 dubplate visibility repair. Visual-only: no collision/spawn/state changes. */
+.arcade-cabinet-bezel .game-viewport .falling-items-layer {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
   overflow: visible !important;
   opacity: 1 !important;
   visibility: visible !important;
+  z-index: 30 !important;
+  pointer-events: none !important;
 }
 
-/* Draw the record on the OUTER falling-object wrapper itself so visibility no longer
-   depends on the nested asset element or its asset URL. */
-.arcade-cabinet-bezel .game-viewport .falling-object.record::before {
-  content: "" !important;
+/* Force the actual record wrapper itself to be a visible positioned entity.
+   This protects against any legacy record-specific display/position override. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record {
   position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  width: clamp(42px, 10vw, 64px) !important;
-  height: clamp(42px, 10vw, 64px) !important;
-  transform: translate(-50%, -50%) rotate(var(--fall-tilt, -7deg)) !important;
+  display: block !important;
+  width: clamp(44px, 10vw, 66px) !important;
+  height: clamp(44px, 10vw, 66px) !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 31 !important;
   border-radius: 50% !important;
   background:
     radial-gradient(circle at 50% 50%, #f2ead7 0 7%, #ff2f95 8% 17%, #0a0a10 18% 25%, transparent 26%),
     repeating-radial-gradient(circle at 50% 50%, #08080d 0 3px, #1c1b24 4px 5px, #06060a 6px 8px) !important;
   box-shadow: 0 0 0 2px #06060a, 0 7px 10px rgba(0,0,0,.6), 0 0 14px rgba(0,231,255,.32) !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: block !important;
-  z-index: 4 !important;
   pointer-events: none !important;
 }
 
-/* Keep the nested image from obscuring the deterministic vinyl diagnostic. */
+/* The wrapper now owns the deterministic visible vinyl. Suppress the nested art
+   only for records so it cannot mask or replace the repaired presentation. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record {
-  opacity: 0 !important;
+  display: none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .falling-object.record::after {
+  content: "5D" !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) rotate(var(--fall-tilt, -7deg)) !important;
+  color: #f2ead7 !important;
+  font: 700 8px/1 "Courier New", monospace !important;
+  letter-spacing: .02em !important;
+  text-shadow: 1px 1px 0 #06060a !important;
+  z-index: 32 !important;
+  pointer-events: none !important;
 }
