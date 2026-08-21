@@ -10,8 +10,7 @@
   pointer-events: none !important;
 }
 
-/* The record wrapper is now proven to spawn and move correctly. Keep that exact
-   wrapper geometry/layering and paint the approved dubplate art directly on it. */
+/* Keep the proven working record wrapper geometry and layer ownership. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record {
   position: absolute !important;
   display: block !important;
@@ -23,25 +22,46 @@
   opacity: 1 !important;
   visibility: visible !important;
   z-index: 31 !important;
-  border-radius: 8% !important;
-  background-image:
-    url("/embedded-assets/selectah-dubplate-urban_052862f6.png"),
-    radial-gradient(circle at 50% 50%, #f2ead7 0 7%, #ff2f95 8% 17%, #0a0a10 18% 25%, transparent 26%),
-    repeating-radial-gradient(circle at 50% 50%, #08080d 0 3px, #1c1b24 4px 5px, #06060a 6px 8px) !important;
-  background-size: contain, 100% 100%, 100% 100% !important;
-  background-position: center, center, center !important;
-  background-repeat: no-repeat, no-repeat, no-repeat !important;
-  box-shadow: 0 7px 10px rgba(0,0,0,.6), 0 0 14px rgba(0,231,255,.22) !important;
+  border-radius: 50% !important;
+  background:
+    radial-gradient(circle at 50% 50%,
+      #f4ead7 0 5%,
+      #ff2f95 6% 14%,
+      #0a0a10 15% 24%,
+      #1c1b24 25% 27%,
+      #07070b 28% 39%,
+      #24232c 40% 42%,
+      #08080d 43% 55%,
+      #1b1a23 56% 58%,
+      #06060a 59% 72%,
+      #17161e 73% 75%,
+      #050508 76% 100%) !important;
+  box-shadow:
+    0 0 0 2px #06060a,
+    0 7px 10px rgba(0,0,0,.62),
+    0 0 14px rgba(0,231,255,.28) !important;
   pointer-events: none !important;
 }
 
-/* Avoid double-painting: the wrapper now owns the approved dubplate art. */
-.arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record {
-  display: none !important;
+/* Add a small paper-label ring and spindle so the collectible reads as a dubplate,
+   while remaining fully deterministic and independent of the broken PNG asset. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 30% !important;
+  height: 30% !important;
+  transform: translate(-50%, -50%) rotate(var(--fall-tilt, -7deg)) !important;
+  border-radius: 50% !important;
+  background:
+    radial-gradient(circle at 50% 50%, #0a0a10 0 9%, #f4ead7 10% 31%, #ff2f95 32% 100%) !important;
+  box-shadow: 0 0 0 1px rgba(244,234,215,.45) !important;
+  pointer-events: none !important;
 }
 
-/* Diagnostic 5D label removed now that wrapper visibility is proven. */
-.arcade-cabinet-bezel .game-viewport .falling-object.record::after {
-  content: none !important;
+/* The repository PNG path currently fails visually on-device. Hide only that nested
+   record asset and keep the working wrapper-owned vinyl visible. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record {
   display: none !important;
 }
