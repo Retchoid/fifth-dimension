@@ -177,8 +177,8 @@ describe("Task 7 final consistency contract", () => {
     for (const selector of [".falling-items-layer", ".falling-object", ".game-grid-bg", ".game-hud", ".dj-catcher", ".game-overlay", ".hazard-splash", ".falling-items-layer:empty::after"]) {
       expect(fallingItemsRenderFix).toContain(selector);
     }
-    expect(fallingItemsRenderFix).toContain("z-index: 15 !important");
-    expect(fallingItemsRenderFix).toContain("z-index: 30 !important");
+    expect(fallingItemsRenderFix).toContain("z-index: 20 !important");
+    expect(fallingItemsRenderFix).toContain("z-index: 41 !important");
     expect(fallingItemsRenderFix).toContain("z-index: 50 !important");
     expect(fallingItemsRenderFix).toContain("z-index: 100 !important");
     expect(fallingItemsRenderFix).toContain("filter: blur(2px) !important");

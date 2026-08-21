@@ -3163,6 +3163,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           rewindAwardedRef.current = false;
           wheelItUpAwardedRef.current = false;
           setCombo(1);
+          if (mixerDamagedRef.current) {
+            recoveryProgressRef.current = 0;
+            setRecoveryProgress(0);
+            window.setTimeout(() => setGameplayStateOwner("RECOVERY"), 460);
+          } else {
+            window.setTimeout(() => setGameplayStateOwner("PLAYING"), 460);
+          }
           currentLives = Math.max(0, currentLives - 1);
           livesRef.current = currentLives;
           setLives(currentLives);
@@ -3184,19 +3191,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             setPlayerName("");
             setSubmittedName("");
             return;
-          }
-          if (mixerDamagedRef.current) {
-            recoveryProgressRef.current = 0;
-            setRecoveryProgress(0);
-            window.setTimeout(() => {
-              if (gameplayStateRef.current === "GAME_OVER" || livesRef.current <= 0) return;
-              setGameplayStateOwner("RECOVERY");
-            }, 460);
-          } else {
-            window.setTimeout(() => {
-              if (gameplayStateRef.current === "GAME_OVER" || livesRef.current <= 0) return;
-              setGameplayStateOwner("PLAYING");
-            }, 460);
           }
           if (item.type === "cop" || item.type === "pill" || item.type === "phone") {
             const matchedHazard = consecutiveHazardRef.current === item.type;
@@ -4342,13 +4336,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : URBAN_PROP_ASSETS[item.type] ? (
                   <div
                     className={`urban-prop-asset ${item.type}`}
-                    style={{
-                      "--urban-prop-url": `url(${URBAN_PROP_ASSETS[item.type]})`,
-                      backgroundImage: `url(${URBAN_PROP_ASSETS[item.type]})`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "center",
-                      backgroundSize: "contain",
-                    } as React.CSSProperties}
+                    style={{ "--urban-prop-url": `url(${URBAN_PROP_ASSETS[item.type]})` } as React.CSSProperties}
                     aria-label={item.type === "record" ? "Dubplate pickup" : item.type === "cop" ? "Police siren hazard" : item.type === "pill" ? "Falling pill hazard" : item.type === "phone" ? "Falling mobile phone hazard" : "CDJ pickup worth 5 records"}
                   />
                 ) : item.type === "lion" ? (

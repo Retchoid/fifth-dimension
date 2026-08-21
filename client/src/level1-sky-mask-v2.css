@@ -1,0 +1,11 @@
+/* Level 1 Sky Mask V2 — scaffold only.
+   Intentionally NOT imported by production main.tsx yet.
+   Goal: replace the rejected hand-drawn polygon sky overlay with an artwork-derived mask
+   positioned behind the canonical environment, while preserving all bouncers, crowd,
+   police car, props, speakers, characters and ambience.
+
+   This file remains inert until the real skyline mask asset is derived and verified. */
+
+:root {
+  --level1-sky-v2-enabled: 0;
+}

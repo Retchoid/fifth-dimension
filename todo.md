@@ -1546,18 +1546,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Stage all website code, game logic, styles, documentation, and visual assets (images/sprites)
 - [ ] Verify that zero audio files are staged or tracked in git
 - [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
-
-- [x] Restore and verify production on `main2` commit `89ebbeb8c30ff9b907be5830c6cedec299469176` (Disabling experimental Level 1 sky overlay in production)
-
-- [x] Audit and restore foreground gameplay assets (player, falling records, bouncers, crowd, speakers, props) to render in front of the illustrated Level 1 environment without changing game logic or assets
-- [x] TASK A: Audit falling dubplate render path, asset resolution, and z-index layer (`falling-items-layer` z-index: 20)
-- [x] TASK B: Audit and restore transportation / environment progression elements (police car, bouncers, crowd, speakers, street props) in mid-scene layer
-- [x] Trace and restore the original Level 1 four-master scene progression (golden → waking → dusk → night) controlled by record-count thresholds.
-- [x] Audit and ensure consistent falling dubplate visibility across the z-index stack without altering spawn logic, fall speed, collisions, scoring, or controls.
-- [x] Verify complete test suite (all 87 unit tests), TypeScript compilation, Vite production build, and public production deployment at https://fifthdim-ahhcmq4d.manus.space/.
-- [x] Apply surgical Game Over callback race fix in DjMiniGame.tsx: order life deduction before scheduling recovery/playing timeouts, and guard delayed callbacks with `gameplayStateRef.current === "GAME_OVER"` and `livesRef.current <= 0`.
-- [x] Investigate and fix falling dubplate visual visibility in DjMiniGame.tsx / CSS layers without altering collision, spawn, or environment transitions.
-- [x] Task 1: Unify site typography under 'Press Start 2P' (headlines, buttons, navigation) and 'Courier New' (body, captions, descriptions), all uppercase with letter-spacing.
-- [x] Add explicit inline background-image, background-repeat, background-position, and background-size properties to urban-prop-asset in DjMiniGame.tsx so falling records/props render visibly.
-- [x] Diagnose record asset path /embedded-assets/selectah-dubplate-urban_052862f6.png, verify its standalone render geometry and transparency, and ensure falling records render correctly in-game.
-- [x] Deploy and publish the latest verified commit on branch repair/level1-gameplay-2026-08-20 to production without modifying source code.
+- [x] Deploy commit 4f653125237341b9be132307830a680f26b96847 without code changes.
