@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { startLogin } from "./const";
+import { installDirectRecordRenderer } from "./record-direct-renderer";
 import "./index.css";
 import "./download-box-paint.css";
 import "./exclusive-third-strike.css";
@@ -34,7 +35,7 @@ import "./final-regression-fix-pass.css";
 import "./strict-visual-repair.css";
 import "./visual-recovery-site.css";
 import "./level1-final-transition-calibration.css";
-import "./canonical-record-renderer.css";
+import "./falling-item-effects.css";
 
 const queryClient = new QueryClient();
 
@@ -43,7 +44,6 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (typeof window === "undefined") return;
 
   const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
-
   if (!isUnauthorized) return;
 
   startLogin();
@@ -64,73 +64,6 @@ queryClient.getMutationCache().subscribe(event => {
     console.error("[API Mutation Error]", error);
   }
 });
-
-const installRecordPaintBridge = () => {
-  if (typeof document === "undefined" || typeof MutationObserver === "undefined") return;
-
-  const paintRecord = (recordWrapper: Element) => {
-    if (!(recordWrapper instanceof HTMLElement)) return;
-    const asset = recordWrapper.querySelector(":scope > .urban-prop-asset.record");
-    if (!(asset instanceof HTMLElement)) return;
-
-    recordWrapper.style.setProperty("overflow", "visible", "important");
-
-    const rules: Record<string, string> = {
-      display: "block",
-      position: "absolute",
-      inset: "auto",
-      left: "50%",
-      top: "50%",
-      right: "auto",
-      bottom: "auto",
-      width: "30px",
-      height: "30px",
-      minWidth: "30px",
-      minHeight: "30px",
-      maxWidth: "30px",
-      maxHeight: "30px",
-      margin: "0",
-      padding: "0",
-      overflow: "visible",
-      opacity: "1",
-      visibility: "visible",
-      backgroundImage: "url('/embedded-assets/selectah-dubplate-5d-production-v2.png')",
-      backgroundSize: "contain",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-      transform: "translate(-50%, -50%)",
-      transformOrigin: "center",
-      clip: "auto",
-      clipPath: "none",
-      border: "0",
-      borderRadius: "0",
-      zIndex: "5",
-      pointerEvents: "none",
-      filter: "drop-shadow(0 0 1px #00e7ff) drop-shadow(0 0 2px #ff007a)",
-    };
-
-    for (const [property, value] of Object.entries(rules)) {
-      asset.style.setProperty(property.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`), value, "important");
-    }
-  };
-
-  const scan = (root: ParentNode = document) => {
-    root.querySelectorAll?.(".falling-object.record").forEach(paintRecord);
-  };
-
-  scan();
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (!(node instanceof Element)) continue;
-        if (node.matches(".falling-object.record")) paintRecord(node);
-        scan(node);
-      }
-    }
-  });
-
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-};
 
 const trpcClient = trpc.createClient({
   links: [
@@ -170,4 +103,4 @@ createRoot(document.getElementById("root")!).render(
   </trpc.Provider>
 );
 
-installRecordPaintBridge();
+installDirectRecordRenderer();
