@@ -4,7 +4,8 @@
    Gameplay, spawn, collision, scoring, and state remain untouched.
    ============================================================ */
 
-.arcade-cabinet-bezel .game-viewport .falling-object.record {
+/* Keep the logical record wrapper untouched, but guarantee it cannot clip the visual. */
+.falling-object.record {
   overflow: visible !important;
   background: none !important;
   box-shadow: none !important;
@@ -13,7 +14,11 @@
   mask: none !important;
 }
 
-.arcade-cabinet-bezel .game-viewport .falling-object.record > .urban-prop-asset.record {
+/* IMPORTANT: this selector intentionally does NOT depend on cabinet/viewport ancestry.
+   Live production diagnostics showed the previous ancestry-scoped selector was not
+   reaching the actual record child, leaving it at 0x0 with no background paint. */
+.falling-object.record > .urban-prop-asset.record,
+.urban-prop-asset.record {
   display: block !important;
   position: absolute !important;
   inset: auto !important;
@@ -32,7 +37,11 @@
   overflow: visible !important;
   opacity: 1 !important;
   visibility: visible !important;
-  background: transparent url('/embedded-assets/selectah-dubplate-5d-production-v2.png') center / contain no-repeat !important;
+  background-color: transparent !important;
+  background-image: var(--urban-prop-url, url('/embedded-assets/selectah-dubplate-5d-production-v2.png')) !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
   transform: translate(-50%, -50%) !important;
   transform-origin: center !important;
   scale: 1 !important;
@@ -43,13 +52,14 @@
   border-radius: 0 !important;
   box-shadow: none !important;
   filter: drop-shadow(0 0 1px #00e7ff) drop-shadow(0 0 2px #ff007a) !important;
-  z-index: 5 !important;
+  z-index: 50 !important;
   pointer-events: none !important;
 }
 
-.arcade-cabinet-bezel .game-viewport .falling-object.record > .record-dubplate-sprite,
-.arcade-cabinet-bezel .game-viewport .falling-object.record::before,
-.arcade-cabinet-bezel .game-viewport .falling-object.record::after {
+/* Retire competing record-only paint paths. */
+.falling-object.record > .record-dubplate-sprite,
+.falling-object.record::before,
+.falling-object.record::after {
   display: none !important;
   content: none !important;
   background: none !important;
