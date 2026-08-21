@@ -1550,3 +1550,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Perform read-only runtime diagnosis of the falling record element to identify the exact DOM source of the pink-and-white bullseye.
 - [x] Replace the binary contents of /embedded-assets/selectah-dubplate-5d-production-v2.png with the approved transparent 56x56 vinyl art.
 - [x] Add record-specific visual sizing override to .arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record (max-width: 80px, max-height: 80px).
+- [x] Repair Game Over state race in DjMiniGame.tsx (deduct life first, check currentLives === 0 before scheduling recovery/playing timeouts, and guard delayed state updates with gameplayStateRef and livesRef checks).
