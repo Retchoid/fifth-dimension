@@ -66,15 +66,17 @@
 .arcade-cabinet-bezel .game-viewport .falling-object.record .record-dubplate-sprite {
   display: block !important;
   position: absolute !important;
-  width: 56px !important;
-  height: 56px !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
   inset: 0 !important;
   margin: auto !important;
   object-fit: contain !important;
+  object-position: center !important;
   opacity: 1 !important;
   visibility: visible !important;
   z-index: 5 !important;
   pointer-events: none !important;
+  transform: none !important;
 }
