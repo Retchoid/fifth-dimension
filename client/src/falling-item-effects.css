@@ -1,0 +1,78 @@
+/* SELECTAH SHOWDOWN — falling-item motion + semantic glow.
+   Visual-only: wrapper geometry/collision remain untouched. */
+
+/* Hazard artwork: red warning glow plus slightly erratic motion. */
+.falling-object.cop > .urban-prop-asset,
+.falling-object.pill > .urban-prop-asset,
+.falling-object.phone > .urban-prop-asset,
+.falling-object.bottle > .urban-prop-asset,
+.falling-object.apple > .urban-prop-asset {
+  filter:
+    drop-shadow(0 0 2px rgba(255, 42, 42, .98))
+    drop-shadow(0 0 6px rgba(255, 20, 20, .68))
+    drop-shadow(3px 4px 0 rgba(5,4,7,.78)) !important;
+  animation: selectah-hazard-tumble 760ms ease-in-out infinite alternate !important;
+  transform-origin: 50% 50% !important;
+  will-change: transform, filter;
+}
+
+.falling-object.phone > .urban-prop-asset,
+.falling-object.bottle > .urban-prop-asset {
+  animation-duration: 620ms !important;
+}
+
+.falling-object.pill > .urban-prop-asset,
+.falling-object.apple > .urban-prop-asset {
+  animation-duration: 540ms !important;
+}
+
+/* Positive gear: green reward glow and steadier arcade hover/rotation. */
+.falling-object.cdj > .urban-prop-asset,
+.falling-object.mixer > .urban-prop-asset,
+.falling-object.turntable > .urban-prop-asset,
+.falling-object.adapter > .urban-prop-asset,
+.falling-object.lion > .urban-prop-asset,
+.falling-object .mixer-pickup,
+.falling-object .turntable-pickup,
+.falling-object .adapter-pickup,
+.falling-object .lion-head-pickup {
+  filter:
+    drop-shadow(0 0 2px rgba(93, 255, 113, .98))
+    drop-shadow(0 0 7px rgba(38, 255, 91, .58))
+    drop-shadow(3px 4px 0 rgba(5,4,7,.72)) !important;
+  animation: selectah-bonus-float 900ms ease-in-out infinite alternate !important;
+  transform-origin: 50% 50% !important;
+  will-change: transform, filter;
+}
+
+@keyframes selectah-hazard-tumble {
+  0%   { transform: translate3d(-1px, -1px, 0) rotate(-7deg) scale(.98); }
+  45%  { transform: translate3d(1px, 0, 0) rotate(5deg) scale(1.02); }
+  100% { transform: translate3d(-1px, 1px, 0) rotate(10deg) scale(.99); }
+}
+
+@keyframes selectah-bonus-float {
+  0%   { transform: translate3d(0, -1px, 0) rotate(-2deg) scale(1); }
+  100% { transform: translate3d(0, 1px, 0) rotate(2deg) scale(1.04); }
+}
+
+/* The record is a primary collectible, not a hazard/bonus. Keep its own cyan/magenta identity. */
+.record-direct-sprite-v3 {
+  animation: selectah-record-spin 1050ms linear infinite !important;
+}
+
+@keyframes selectah-record-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .falling-object > .urban-prop-asset,
+  .falling-object .mixer-pickup,
+  .falling-object .turntable-pickup,
+  .falling-object .adapter-pickup,
+  .falling-object .lion-head-pickup,
+  .record-direct-sprite-v3 {
+    animation: none !important;
+  }
+}
