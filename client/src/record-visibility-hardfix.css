@@ -88,8 +88,16 @@
   }
 }
 
-/* The repository PNG path currently fails visually on-device. Hide only that nested
-   record asset and keep the working wrapper-owned vinyl visible. */
+/* Enable the approved 5D vinyl raster PNG asset directly inside the falling record wrapper. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record {
-  display: none !important;
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-image: var(--urban-prop-url) !important;
+  background-size: contain !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  z-index: 5 !important;
 }

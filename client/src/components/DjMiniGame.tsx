@@ -81,7 +81,7 @@ type PitEntityType = PitGearType | PitHazardType;
 type FallingItemType = "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
 
 const URBAN_PROP_ASSETS: Partial<Record<FallingItemType, string>> = {
-  record: "/embedded-assets/selectah-dubplate-urban_052862f6.png",
+  record: "/embedded-assets/selectah-dubplate-5d-production-v2.png",
   cop: "/embedded-assets/selectah-police-siren-urban_5fb879fa.png",
   pill: "/embedded-assets/selectah-pill-urban_e2f4393e.png",
   phone: "/embedded-assets/selectah-phone-urban_0aebd4d4.png",
