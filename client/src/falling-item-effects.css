@@ -57,7 +57,51 @@
 }
 
 /* The record is a primary collectible, not a hazard/bonus. Keep its own cyan/magenta identity. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record {
+  z-index: 31 !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .falling-object.record::before,
+.arcade-cabinet-bezel .game-viewport .falling-object.record::after {
+  content: none !important;
+  display: none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport .falling-object.record > .record-dubplate-sprite {
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: translate(-50%, -50%) !important;
+  transform-origin: 50% 50% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+  clip: auto !important;
+  clip-path: none !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  filter: drop-shadow(0 0 2px #00e7ff) drop-shadow(0 0 3px #ff007a) !important;
+  image-rendering: pixelated !important;
+}
+
 .record-direct-sprite-v3 {
+  animation: selectah-record-spin 1050ms linear infinite !important;
+}
+
+.record-dubplate-sprite {
   animation: selectah-record-spin 1050ms linear infinite !important;
 }
 
@@ -73,6 +117,10 @@
   .falling-object .adapter-pickup,
   .falling-object .lion-head-pickup,
   .record-direct-sprite-v3 {
+    animation: none !important;
+  }
+
+  .record-dubplate-sprite {
     animation: none !important;
   }
 }

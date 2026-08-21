@@ -4339,11 +4339,19 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   "--fall-tilt": `${item.tilt}deg`,
                 } as React.CSSProperties}
               >
-                {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : URBAN_PROP_ASSETS[item.type] ? (
+                {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : item.type === "record" ? (
+                  <img
+                    className="record-dubplate-sprite"
+                    src="/manus-storage/selectah-dubplate-5d-production-v2_bc9aa293.png"
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                  />
+                ) : URBAN_PROP_ASSETS[item.type] ? (
                   <div
                     className={`urban-prop-asset ${item.type}`}
                     style={{ "--urban-prop-url": `url(${URBAN_PROP_ASSETS[item.type]})` } as React.CSSProperties}
-                    aria-label={item.type === "record" ? "Dubplate pickup" : item.type === "cop" ? "Police siren hazard" : item.type === "pill" ? "Falling pill hazard" : item.type === "phone" ? "Falling mobile phone hazard" : "CDJ pickup worth 5 records"}
+                    aria-label={item.type === "cop" ? "Police siren hazard" : item.type === "pill" ? "Falling pill hazard" : item.type === "phone" ? "Falling mobile phone hazard" : "CDJ pickup worth 5 records"}
                   />
                 ) : item.type === "lion" ? (
                   <div className="lion-head-pickup" aria-label="Lion of Judah pickup worth 2 records"><span className="lion-crown-rays" /><span className="lion-mane" /><span className="lion-face"><i /><i /><b /><em /></span><span className="lion-jah-crown"><i /><i /><i /></span><strong>+2</strong></div>
@@ -4353,12 +4361,6 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   <div className="turntable-pickup" aria-label="Turntable pickup worth 3 records"><span className="turntable-pickup-platter" /><i className="turntable-pickup-arm" /><b>+3</b></div>
                 ) : item.type === "adapter" ? (
                   <div className="adapter-pickup" aria-label="45 adapter pickup worth 2 records"><span /><b>+2</b></div>
-                ) : item.type === "record" ? (
-                  <div className="vinyl-record-sprite" aria-hidden="true">
-                    <span className="vinyl-grooves" />
-                    <span className="vinyl-label" />
-                    <span className="vinyl-spindle" />
-                  </div>
                 ) : item.type === "cop" ? (
                   <div className="police-badge-sprite" aria-hidden="true">
                     <span className="badge-shield">

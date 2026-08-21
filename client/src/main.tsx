@@ -6,7 +6,6 @@ import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { startLogin } from "./const";
-import { installDirectRecordRenderer } from "./record-direct-renderer";
 import "./index.css";
 import "./download-box-paint.css";
 import "./exclusive-third-strike.css";
@@ -102,5 +101,3 @@ createRoot(document.getElementById("root")!).render(
     </QueryClientProvider>
   </trpc.Provider>
 );
-
-installDirectRecordRenderer();

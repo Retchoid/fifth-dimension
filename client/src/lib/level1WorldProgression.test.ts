@@ -6,6 +6,7 @@ const root = resolve(process.cwd(), "client/src");
 const game = readFileSync(resolve(root, "components/DjMiniGame.tsx"), "utf8");
 const levelOneCss = readFileSync(resolve(root, "level1-approved-sunset-art.css"), "utf8");
 const levelOneAcceptanceCss = readFileSync(resolve(root, "level1-visual-acceptance.css"), "utf8");
+const fallingItemEffects = readFileSync(resolve(root, "falling-item-effects.css"), "utf8");
 const world = readFileSync(resolve(root, "lib/gameWorld.ts"), "utf8");
 
 describe("Level 1 independent world progression contracts", () => {
@@ -88,6 +89,15 @@ describe("Level 1 independent world progression contracts", () => {
     expect(game).toContain("selectah-mixer-urban");
     expect(game).toContain("selectah-lion-urban");
     expect(game).toContain("selectah-turntable-urban");
+  });
+
+  it("owns the record art in the React render tree with a visible mobile paint contract", () => {
+    expect(game).toContain('item.type === "record" ? (');
+    expect(game).toContain('className="record-dubplate-sprite"');
+    expect(game).toContain('src="/manus-storage/selectah-dubplate-5d-production-v2_bc9aa293.png"');
+    expect(fallingItemEffects).toContain(".falling-object.record > .record-dubplate-sprite");
+    expect(fallingItemEffects).toContain("z-index: 31 !important");
+    expect(fallingItemEffects).toContain("width: 30px !important");
   });
 
   it("requires the authoritative terminal state before showing the loss or game-over overlay", () => {
