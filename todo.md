@@ -1547,3 +1547,6 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Verify that zero audio files are staged or tracked in git
 - [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
 - [x] Deploy exact commit 75b81629bbaec28d4e9b58d27565030f79927948 without code changes.
+- [x] Perform read-only runtime diagnosis of the falling record element to identify the exact DOM source of the pink-and-white bullseye.
+- [x] Replace the binary contents of /embedded-assets/selectah-dubplate-5d-production-v2.png with the approved transparent 56x56 vinyl art.
+- [x] Add record-specific visual sizing override to .arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record (max-width: 80px, max-height: 80px).
