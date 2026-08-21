@@ -14,50 +14,78 @@
 .arcade-cabinet-bezel .game-viewport .falling-object.record {
   position: absolute !important;
   display: block !important;
-  width: clamp(44px, 10vw, 66px) !important;
-  height: clamp(44px, 10vw, 66px) !important;
-  min-width: 44px !important;
-  min-height: 44px !important;
+  width: clamp(50px, 11vw, 72px) !important;
+  height: clamp(50px, 11vw, 72px) !important;
+  min-width: 50px !important;
+  min-height: 50px !important;
   overflow: visible !important;
   opacity: 1 !important;
   visibility: visible !important;
   z-index: 31 !important;
   border-radius: 50% !important;
   background:
-    radial-gradient(circle at 50% 50%,
-      #f4ead7 0 5%,
-      #ff2f95 6% 14%,
-      #0a0a10 15% 24%,
-      #1c1b24 25% 27%,
-      #07070b 28% 39%,
-      #24232c 40% 42%,
-      #08080d 43% 55%,
-      #1b1a23 56% 58%,
-      #06060a 59% 72%,
-      #17161e 73% 75%,
-      #050508 76% 100%) !important;
+    repeating-radial-gradient(circle at 50% 50%,
+      rgba(255,255,255,.055) 0 1px,
+      rgba(4,4,8,.98) 2px 4px,
+      rgba(26,25,34,.98) 5px 6px,
+      rgba(5,5,9,.99) 7px 9px) !important;
   box-shadow:
-    0 0 0 2px #06060a,
-    0 7px 10px rgba(0,0,0,.62),
-    0 0 14px rgba(0,231,255,.28) !important;
+    inset 3px 3px 7px rgba(255,255,255,.07),
+    inset -4px -5px 8px rgba(0,0,0,.65),
+    0 0 0 2px #050509,
+    0 8px 12px rgba(0,0,0,.66),
+    0 0 10px rgba(0,212,255,.2) !important;
   pointer-events: none !important;
 }
 
-/* Add a small paper-label ring and spindle so the collectible reads as a dubplate,
-   while remaining fully deterministic and independent of the broken PNG asset. */
+/* Small paper centre label: readable but subdued, so the object reads as vinyl rather than a target. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record::before {
   content: "" !important;
   position: absolute !important;
   left: 50% !important;
   top: 50% !important;
-  width: 30% !important;
-  height: 30% !important;
+  width: 27% !important;
+  height: 27% !important;
   transform: translate(-50%, -50%) rotate(var(--fall-tilt, -7deg)) !important;
   border-radius: 50% !important;
   background:
-    radial-gradient(circle at 50% 50%, #0a0a10 0 9%, #f4ead7 10% 31%, #ff2f95 32% 100%) !important;
-  box-shadow: 0 0 0 1px rgba(244,234,215,.45) !important;
+    radial-gradient(circle at 50% 50%,
+      #050509 0 8%,
+      #e8dfcc 9% 34%,
+      #c72b79 35% 57%,
+      #22131d 58% 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(232,223,204,.42),
+    inset 1px 1px 1px rgba(255,255,255,.18) !important;
   pointer-events: none !important;
+}
+
+/* Moving specular slash adds depth/rotation feel without changing the wrapper transform or hitbox. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 7% !important;
+  border-radius: 50% !important;
+  background: linear-gradient(112deg,
+    transparent 0 39%,
+    rgba(255,255,255,.13) 43%,
+    rgba(255,255,255,.035) 48%,
+    transparent 53% 100%) !important;
+  transform: rotate(var(--fall-tilt, -7deg)) !important;
+  transform-origin: center !important;
+  animation: dubplate-surface-roll 900ms linear infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes dubplate-surface-roll {
+  from { transform: rotate(var(--fall-tilt, -7deg)); }
+  to { transform: rotate(calc(var(--fall-tilt, -7deg) + 360deg)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-cabinet-bezel .game-viewport .falling-object.record::after {
+    animation: none !important;
+  }
 }
 
 /* The repository PNG path currently fails visually on-device. Hide only that nested
