@@ -247,8 +247,27 @@
   .arcade-cabinet-bezel .level-two-club-layer.layer-fx { opacity:.28; }
 }
 
+.arcade-cabinet-bezel .falling-object {
+  position: absolute !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 20 !important;
+  pointer-events: none !important;
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+}
 .arcade-cabinet-bezel .falling-object .urban-prop-asset {
-  transform: rotate(var(--fall-tilt, 0deg)) scale(1.22) !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-image: var(--urban-prop-url) !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+  transform: rotate(var(--fall-tilt, 0deg)) scale(var(--item-visual-scale, 1)) !important;
   transform-origin: center !important;
   filter: drop-shadow(3px 4px 0 rgba(10,10,18,.96)) !important;
 }

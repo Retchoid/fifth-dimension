@@ -1556,3 +1556,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Audit and ensure consistent falling dubplate visibility across the z-index stack without altering spawn logic, fall speed, collisions, scoring, or controls.
 - [x] Verify complete test suite (all 87 unit tests), TypeScript compilation, Vite production build, and public production deployment at https://fifthdim-ahhcmq4d.manus.space/.
 - [x] Apply surgical Game Over callback race fix in DjMiniGame.tsx: order life deduction before scheduling recovery/playing timeouts, and guard delayed callbacks with `gameplayStateRef.current === "GAME_OVER"` and `livesRef.current <= 0`.
+- [x] Investigate and fix falling dubplate visual visibility in DjMiniGame.tsx / CSS layers without altering collision, spawn, or environment transitions.
