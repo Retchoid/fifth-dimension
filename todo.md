@@ -1546,4 +1546,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Stage all website code, game logic, styles, documentation, and visual assets (images/sprites)
 - [ ] Verify that zero audio files are staged or tracked in git
 - [ ] Push updates to `Retchoid/fifth-dimension` and provide the repository link
-- [x] Deploy and verify exact commit f32e17b0eaffdbd69879a705a4e6aa563f595c45 without code changes.
+- [x] Deploy exact commit 75b81629bbaec28d4e9b58d27565030f79927948 without code changes.
