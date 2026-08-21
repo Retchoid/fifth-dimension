@@ -1560,3 +1560,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Task 1: Unify site typography under 'Press Start 2P' (headlines, buttons, navigation) and 'Courier New' (body, captions, descriptions), all uppercase with letter-spacing.
 - [x] Add explicit inline background-image, background-repeat, background-position, and background-size properties to urban-prop-asset in DjMiniGame.tsx so falling records/props render visibly.
 - [x] Diagnose record asset path /embedded-assets/selectah-dubplate-urban_052862f6.png, verify its standalone render geometry and transparency, and ensure falling records render correctly in-game.
+- [x] Deploy and publish the latest verified commit on branch repair/level1-gameplay-2026-08-20 to production without modifying source code.
