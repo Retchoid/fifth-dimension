@@ -1557,3 +1557,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [ ] Ensure static asset files under public/embedded-assets or server storage proxy correctly serve image/png
 - [ ] Verify build output and live production HTTP Content-Type for selectah-dubplate-5d-production-v2.png
 - [ ] Diagnose and fix record image clipping in record-visibility-hardfix.css
+- [ ] Calibrate record-dubplate-sprite to 32px centered unclipped vinyl in record-visibility-hardfix.css
