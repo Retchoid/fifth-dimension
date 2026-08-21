@@ -1559,3 +1559,4 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Investigate and fix falling dubplate visual visibility in DjMiniGame.tsx / CSS layers without altering collision, spawn, or environment transitions.
 - [x] Task 1: Unify site typography under 'Press Start 2P' (headlines, buttons, navigation) and 'Courier New' (body, captions, descriptions), all uppercase with letter-spacing.
 - [x] Add explicit inline background-image, background-repeat, background-position, and background-size properties to urban-prop-asset in DjMiniGame.tsx so falling records/props render visibly.
+- [x] Diagnose record asset path /embedded-assets/selectah-dubplate-urban_052862f6.png, verify its standalone render geometry and transparency, and ensure falling records render correctly in-game.
