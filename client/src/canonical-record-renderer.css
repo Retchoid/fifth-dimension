@@ -1,0 +1,59 @@
+/* ============================================================
+   SELECTAH SHOWDOWN — CANONICAL RECORD RENDERER
+   One late-loaded visual contract for the existing record child.
+   Gameplay, spawn, collision, scoring, and state remain untouched.
+   ============================================================ */
+
+.arcade-cabinet-bezel .game-viewport .falling-object.record {
+  overflow: visible !important;
+  background: none !important;
+  box-shadow: none !important;
+  clip: auto !important;
+  clip-path: none !important;
+  mask: none !important;
+}
+
+/* The existing DOM node is the only record visual source. It is deliberately
+   larger than the 15–16px physics wrapper, matching the phone/mixer anchor model. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record > .urban-prop-asset.record {
+  display: block !important;
+  position: absolute !important;
+  inset: auto !important;
+  left: 50% !important;
+  top: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: transparent url('/embedded-assets/selectah-dubplate-5d-production-v2.png') center / contain no-repeat !important;
+  transform: translate(-50%, -50%) !important;
+  transform-origin: center !important;
+  scale: 1 !important;
+  clip: auto !important;
+  clip-path: none !important;
+  mask: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+}
+
+/* Retire every competing record-only paint path. */
+.arcade-cabinet-bezel .game-viewport .falling-object.record > .record-dubplate-sprite,
+.arcade-cabinet-bezel .game-viewport .falling-object.record::before,
+.arcade-cabinet-bezel .game-viewport .falling-object.record::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+}
