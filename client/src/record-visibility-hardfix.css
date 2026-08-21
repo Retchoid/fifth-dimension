@@ -10,8 +10,8 @@
   pointer-events: none !important;
 }
 
-/* Force the actual record wrapper itself to be a visible positioned entity.
-   This protects against any legacy record-specific display/position override. */
+/* The record wrapper is now proven to spawn and move correctly. Keep that exact
+   wrapper geometry/layering and paint the approved dubplate art directly on it. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record {
   position: absolute !important;
   display: block !important;
@@ -23,30 +23,25 @@
   opacity: 1 !important;
   visibility: visible !important;
   z-index: 31 !important;
-  border-radius: 50% !important;
-  background:
+  border-radius: 8% !important;
+  background-image:
+    url("/embedded-assets/selectah-dubplate-urban_052862f6.png"),
     radial-gradient(circle at 50% 50%, #f2ead7 0 7%, #ff2f95 8% 17%, #0a0a10 18% 25%, transparent 26%),
     repeating-radial-gradient(circle at 50% 50%, #08080d 0 3px, #1c1b24 4px 5px, #06060a 6px 8px) !important;
-  box-shadow: 0 0 0 2px #06060a, 0 7px 10px rgba(0,0,0,.6), 0 0 14px rgba(0,231,255,.32) !important;
+  background-size: contain, 100% 100%, 100% 100% !important;
+  background-position: center, center, center !important;
+  background-repeat: no-repeat, no-repeat, no-repeat !important;
+  box-shadow: 0 7px 10px rgba(0,0,0,.6), 0 0 14px rgba(0,231,255,.22) !important;
   pointer-events: none !important;
 }
 
-/* The wrapper now owns the deterministic visible vinyl. Suppress the nested art
-   only for records so it cannot mask or replace the repaired presentation. */
+/* Avoid double-painting: the wrapper now owns the approved dubplate art. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record {
   display: none !important;
 }
 
+/* Diagnostic 5D label removed now that wrapper visibility is proven. */
 .arcade-cabinet-bezel .game-viewport .falling-object.record::after {
-  content: "5D" !important;
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) rotate(var(--fall-tilt, -7deg)) !important;
-  color: #f2ead7 !important;
-  font: 700 8px/1 "Courier New", monospace !important;
-  letter-spacing: .02em !important;
-  text-shadow: 1px 1px 0 #06060a !important;
-  z-index: 32 !important;
-  pointer-events: none !important;
+  content: none !important;
+  display: none !important;
 }
