@@ -1552,3 +1552,7 @@ The appended brief extends the preceding Level 1 surgical pass. Record progress 
 - [x] Add record-specific visual sizing override to .arcade-cabinet-bezel .game-viewport .falling-object.record .urban-prop-asset.record (max-width: 80px, max-height: 80px).
 - [x] Repair Game Over state race in DjMiniGame.tsx (deduct life first, check currentLives === 0 before scheduling recovery/playing timeouts, and guard delayed state updates with gameplayStateRef and livesRef checks).
 - [x] Remove the pink bullseye pseudo-elements from .falling-object.record in record-visibility-hardfix.css and render the approved 56x56 vinyl PNG cleanly.
+- [ ] Perform read-only image load runtime diagnostic on selectah-dubplate-5d-production-v2.png
+- [ ] Inspect vite.config.ts and server static middleware configuration for embedded-assets
+- [ ] Ensure static asset files under public/embedded-assets or server storage proxy correctly serve image/png
+- [ ] Verify build output and live production HTTP Content-Type for selectah-dubplate-5d-production-v2.png

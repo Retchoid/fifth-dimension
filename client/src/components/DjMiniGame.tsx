@@ -4342,7 +4342,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : item.type === "record" ? (
                   <img
                     className="record-dubplate-sprite"
-                    src="/embedded-assets/selectah-dubplate-5d-production-v2.png"
+                    src="/manus-storage/selectah-dubplate-5d-production-v2_eaba2713.png"
                     alt=""
                     aria-hidden="true"
                     draggable={false}

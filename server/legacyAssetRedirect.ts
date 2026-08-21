@@ -5,6 +5,9 @@ import type { Express } from "express";
  * media is moved out of the repository and into managed project storage.
  */
 export function managedAssetUrl(assetName: string): string {
+  if (assetName === "selectah-dubplate-5d-production-v2.png") {
+    return `/manus-storage/selectah-dubplate-5d-production-v2_eaba2713.png`;
+  }
   return `/manus-storage/${encodeURIComponent(assetName)}`;
 }
 
