@@ -1,31 +1,35 @@
 /* ============================================================
-   SELECTAH SHOWDOWN — CANONICAL RECORD RENDERER
-   One late-loaded visual contract for the existing record child.
-   Gameplay, spawn, collision, scoring, and state remain untouched.
+   SELECTAH SHOWDOWN — RECORD VISUAL HARD CONTRACT
+
+   The record's gameplay wrapper remains the authoritative hitbox.
+   The artwork is painted as generated replaced content so legacy
+   background/background-image rules cannot erase it.
    ============================================================ */
 
-/* Keep the logical record wrapper untouched, but guarantee it cannot clip the visual. */
 .falling-object.record {
   overflow: visible !important;
-  background: none !important;
-  box-shadow: none !important;
   clip: auto !important;
   clip-path: none !important;
   mask: none !important;
+  z-index: 31 !important;
 }
 
-/* IMPORTANT: this selector intentionally does NOT depend on cabinet/viewport ancestry.
-   Live production diagnostics showed the previous ancestry-scoped selector was not
-   reaching the actual record child, leaving it at 0x0 with no background paint. */
+/* Retire every older record paint path. */
 .falling-object.record > .urban-prop-asset.record,
-.urban-prop-asset.record {
+.falling-object.record > .record-dubplate-sprite,
+.falling-object.record::after {
+  display: none !important;
+}
+
+/* Paint the committed PNG independently of all child/background CSS.
+   This is deliberately attached to the live physics wrapper itself. */
+.falling-object.record::before {
+  content: url('/embedded-assets/selectah-dubplate-5d-production-v2.png') !important;
   display: block !important;
   position: absolute !important;
-  inset: auto !important;
+  box-sizing: border-box !important;
   left: 50% !important;
   top: 50% !important;
-  right: auto !important;
-  bottom: auto !important;
   width: 30px !important;
   height: 30px !important;
   min-width: 30px !important;
@@ -34,33 +38,18 @@
   max-height: 30px !important;
   margin: 0 !important;
   padding: 0 !important;
-  overflow: visible !important;
+  transform: translate(-50%, -50%) scale(0.5357142857) !important;
+  transform-origin: center !important;
   opacity: 1 !important;
   visibility: visible !important;
-  background-color: transparent !important;
-  background-image: var(--urban-prop-url, url('/embedded-assets/selectah-dubplate-5d-production-v2.png')) !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  transform: translate(-50%, -50%) !important;
-  transform-origin: center !important;
-  scale: 1 !important;
+  overflow: visible !important;
   clip: auto !important;
   clip-path: none !important;
   mask: none !important;
+  background: none !important;
   border: 0 !important;
-  border-radius: 0 !important;
   box-shadow: none !important;
   filter: drop-shadow(0 0 1px #00e7ff) drop-shadow(0 0 2px #ff007a) !important;
-  z-index: 50 !important;
+  z-index: 999 !important;
   pointer-events: none !important;
-}
-
-/* Retire competing record-only paint paths. */
-.falling-object.record > .record-dubplate-sprite,
-.falling-object.record::before,
-.falling-object.record::after {
-  display: none !important;
-  content: none !important;
-  background: none !important;
 }
