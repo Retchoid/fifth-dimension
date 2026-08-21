@@ -34,6 +34,7 @@ import "./final-regression-fix-pass.css";
 import "./strict-visual-repair.css";
 import "./visual-recovery-site.css";
 import "./level1-final-transition-calibration.css";
+import "./record-visibility-hardfix.css";
 
 const queryClient = new QueryClient();
 
