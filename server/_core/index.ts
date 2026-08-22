@@ -35,6 +35,13 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+  // Managed hosts use this endpoint to determine whether the exact deployed
+  // application instance is ready to receive traffic.
+  app.get("/healthz", (_req, res) => {
+    res.status(200).json({ ok: true });
+  });
+
   registerStorageProxy(app);
   registerLegacyAssetRedirect(app);
   registerOAuthRoutes(app);
@@ -54,14 +61,19 @@ async function startServer() {
   }
 
   const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
+  // Production platforms route traffic to the exact PORT they provide. Never
+  // silently move to another port in production. Keep the local development
+  // fallback because it is convenient when 3000 is already occupied.
+  const port = process.env.NODE_ENV === "production"
+    ? preferredPort
+    : await findAvailablePort(preferredPort);
 
   if (port !== preferredPort) {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+  server.listen(port, "0.0.0.0", () => {
+    console.log(`Server running on http://0.0.0.0:${port}/`);
   });
 }
 
