@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: fifth-dimension
+    runtime: node
+    branch: main2
+    buildCommand: corepack enable && corepack prepare pnpm@10.4.1 --activate && pnpm install --frozen-lockfile && pnpm check && pnpm test && pnpm audit:selector && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
