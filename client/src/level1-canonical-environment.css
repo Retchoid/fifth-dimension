@@ -103,6 +103,36 @@
   filter: brightness(1.18) contrast(.94) saturate(1.06) !important;
 }
 
+/* Dusk uses the approved canonical Dusk master unchanged. Localized existing-
+   scene light pools improve environmental readability without replacing pixels,
+   changing the Dusk hue family, or touching gameplay layers. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-art-dusk {
+  filter: none !important;
+}
+
+/* State 3 keeps the approved Cell-5-family night master supplied by the
+   existing late-state visibility contract. Lift it only enough to preserve
+   street, queue, player, and signage readability before State 4's fuller
+   practical-light activation; State 4 remains unchanged. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-art-night {
+  filter: brightness(1.18) contrast(.94) saturate(1.06) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-sunset-alley::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(ellipse 38% 28% at 53% 27%, rgba(65, 92, 222, .29), transparent 72%),
+    radial-gradient(ellipse 17% 18% at 17% 47%, rgba(255, 177, 70, .16), transparent 76%),
+    radial-gradient(ellipse 18% 18% at 79% 45%, rgba(255, 45, 149, .20), transparent 76%),
+    radial-gradient(ellipse 20% 15% at 52% 63%, rgba(0, 212, 255, .15), transparent 78%),
+    radial-gradient(ellipse 26% 18% at 55% 84%, rgba(98, 74, 228, .14), transparent 80%);
+}
+
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
   position: absolute !important;
   inset: 0 !important;

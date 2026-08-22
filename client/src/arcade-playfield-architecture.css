@@ -107,6 +107,15 @@
   transform: translateX(-50%) !important;
 }
 
+/* Level 1 only: at desktop the cabinet keeps its original vertical arcade
+   posture while widening from 520px to 624px (20%). The canonical masters
+   remain `object-fit: cover`, so no artwork is stretched or replaced. */
+@media (min-width: 651px) {
+  .arcade-flow-shell .arcade-cabinet-bezel:has(.game-viewport:not(.is-level-two)) {
+    max-width: min(624px, calc(100vw - 2rem)) !important;
+  }
+}
+
 /* LAYER 1 — one full original environment for each level. */
 .arcade-cabinet-bezel .game-grid-bg {
   position: absolute !important;

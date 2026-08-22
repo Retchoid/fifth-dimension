@@ -1,11 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { clientXToWorldX, overlaps, playerRectFromCenterX, PLAYFIELD_BOUNDS, resolveWorldCollision } from "./gameWorld";
+import { clientXToWorldX, LEVEL_ONE_DESKTOP_PLAYFIELD_BOUNDS, overlaps, playerRectFromCenterX, PLAYFIELD_BOUNDS, resolveWorldCollision } from "./gameWorld";
 
 describe("game-world coordinates", () => {
   it("maps a 390px playfield from left to centre to right with shared player bounds", () => {
     expect(clientXToWorldX(100, 100, 390)).toBe(PLAYFIELD_BOUNDS.minX);
     expect(clientXToWorldX(295, 100, 390)).toBe(50);
     expect(clientXToWorldX(490, 100, 390)).toBe(PLAYFIELD_BOUNDS.maxX);
+  });
+
+  it("uses wider desktop-only level-one centre limits without changing the level-one collision rectangle", () => {
+    const left = playerRectFromCenterX(0, "playing", "level-one", LEVEL_ONE_DESKTOP_PLAYFIELD_BOUNDS);
+    const right = playerRectFromCenterX(100, "playing", "level-one", LEVEL_ONE_DESKTOP_PLAYFIELD_BOUNDS);
+
+    expect(clientXToWorldX(0, 0, 624, LEVEL_ONE_DESKTOP_PLAYFIELD_BOUNDS)).toBe(6);
+    expect(clientXToWorldX(624, 0, 624, LEVEL_ONE_DESKTOP_PLAYFIELD_BOUNDS)).toBe(94);
+    expect(left).toMatchObject({ x: 0.5, width: 11, height: 14 });
+    expect(right).toMatchObject({ x: 88.5, width: 11, height: 14 });
   });
 
   it("uses one world-rectangle system for pickup and hazard collisions", () => {

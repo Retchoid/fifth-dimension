@@ -1,6 +1,12 @@
 /* SELECTAH SHOWDOWN — falling-item motion + semantic glow.
    Visual-only: wrapper geometry/collision remain untouched. */
 
+/* Physics wrappers own world X/Y, hitboxes, and collision. Disable legacy
+   wrapper animations so all visible motion is intentionally child-only. */
+.arcade-cabinet-bezel .game-viewport .falling-object {
+  animation: none !important;
+}
+
 /* Hazard artwork: red warning glow plus slightly erratic motion. */
 .falling-object.cop > .urban-prop-asset,
 .falling-object.pill > .urban-prop-asset,
@@ -26,6 +32,23 @@
   animation-duration: 540ms !important;
 }
 
+/* Deterministic per-item phase variation. The outer falling-object wrapper
+   retains world X/Y and collision ownership; these transforms belong only to
+   visual children. */
+.falling-object > .urban-prop-asset,
+.falling-object .mixer-pickup,
+.falling-object .turntable-pickup,
+.falling-object .adapter-pickup,
+.falling-object .lion-head-pickup {
+  animation-delay: calc(var(--fall-motion-delay, 0ms) * -1) !important;
+}
+
+/* Phone and small handheld items swing rather than tumble aggressively. */
+.falling-object.phone > .urban-prop-asset {
+  animation-name: selectah-phone-pendulum !important;
+  animation-duration: 1220ms !important;
+}
+
 /* Positive gear: green reward glow and steadier arcade hover/rotation. */
 .falling-object.cdj > .urban-prop-asset,
 .falling-object.mixer > .urban-prop-asset,
@@ -45,6 +68,11 @@
   will-change: transform, filter;
 }
 
+/* CDJs, mixers, and turntables carry visual mass: slower, quieter movement. */
+.falling-object:is(.cdj, .mixer, .turntable) > .urban-prop-asset {
+  animation: selectah-heavy-gear-drift 1640ms ease-in-out infinite alternate !important;
+}
+
 @keyframes selectah-hazard-tumble {
   0%   { transform: translate3d(-1px, -1px, 0) rotate(-7deg) scale(.98); }
   45%  { transform: translate3d(1px, 0, 0) rotate(5deg) scale(1.02); }
@@ -54,6 +82,18 @@
 @keyframes selectah-bonus-float {
   0%   { transform: translate3d(0, -1px, 0) rotate(-2deg) scale(1); }
   100% { transform: translate3d(0, 1px, 0) rotate(2deg) scale(1.04); }
+}
+
+@keyframes selectah-phone-pendulum {
+  0% { transform: translate3d(-1px, -1px, 0) rotate(-7deg) scale(1); }
+  50% { transform: translate3d(1px, 0, 0) rotate(4deg) scale(1.01); }
+  100% { transform: translate3d(-1px, 1px, 0) rotate(7deg) scale(1); }
+}
+
+@keyframes selectah-heavy-gear-drift {
+  0% { transform: translate3d(-1px, 0, 0) rotate(-2deg) scale(1); }
+  50% { transform: translate3d(1px, -1px, 0) rotate(1deg) scale(1.01); }
+  100% { transform: translate3d(-1px, 1px, 0) rotate(2deg) scale(1); }
 }
 
 /* The record is a primary collectible, not a hazard/bonus. Keep its own cyan/magenta identity. */
@@ -103,6 +143,8 @@
 
 .record-dubplate-sprite {
   animation: selectah-record-spin 1050ms linear infinite !important;
+  animation-delay: calc(var(--fall-motion-delay, 0ms) * -1) !important;
+  animation-direction: var(--fall-spin-direction, normal) !important;
 }
 
 @keyframes selectah-record-spin {

@@ -7,7 +7,7 @@ import { resolveFinaleTag, sanitizeSelectorTag } from "@/lib/selectorTag";
 import { shouldAwardBonusCrown } from "@/lib/bonusCrown";
 import { scheduledNamedHazardExposure } from "@/lib/hazardExposure";
 import { reactionForCombo, stageReactions, StageReactionController, type StageReaction, type StageSnapshot } from "@/lib/stageReactionController";
-import { clientXToWorldX, playerRectFromCenterX, resolveWorldCollision, type ObjectWorld, type PlayerWorld } from "@/lib/gameWorld";
+import { clientXToWorldX, LEVEL_ONE_DESKTOP_PLAYFIELD_BOUNDS, playerRectFromCenterX, resolveWorldCollision, type ObjectWorld, type PlayerWorld } from "@/lib/gameWorld";
 import { equipmentIsDamaged, worsenEquipmentCondition, type EquipmentCondition } from "@/lib/equipmentCondition";
 import { applyCrowdPressureOutcome, applyPitRunHazard, canUnlockCrowdPressure, pitRunCompletes, pitRunProgressLimit, recoverPitGear, resolveCrowdPressureOutcome, transitionChapter } from "@/lib/chapterProgression";
 import { BONUS_EVENTS, createBonusEventDiagnostics, type BonusEventDiagnostic, type BonusEventDiagnostics, type BonusEventId } from "@/lib/bonusEvents";
@@ -363,6 +363,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   const nameJourneyVerificationMode = import.meta.env.DEV && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-name-journey") : null;
   const sandboxArcadeVerifier = typeof window !== "undefined" && window.location.hostname.endsWith(".manus.computer");
   const viewportVerificationMode = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-viewport-verify") : null;
+  const playerPositionProbe = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-player-probe") : null;
   const arcadeFocusVerifier = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-focus") === "true";
   const mobileMatrixVerifier = import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("arcade-mobile-matrix") === "true";
   const sceneVerificationMode = (import.meta.env.DEV || sandboxArcadeVerifier) && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arcade-scene-verify") : null;
@@ -635,13 +636,26 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     setGameplayState(nextState);
   };
 
+  const usesDesktopLevelOnePlayfield = () =>
+    levelRef.current === 1
+    && typeof window !== "undefined"
+    && window.matchMedia("(min-width: 651px)").matches;
+
+  const activePlayerHorizontalBounds = () =>
+    usesDesktopLevelOnePlayfield() ? LEVEL_ONE_DESKTOP_PLAYFIELD_BOUNDS : undefined;
+
   // Key state for smooth movement
   const keysRef = useRef<{ [key: string]: boolean }>({});
   const playerPositionWriteRef = useRef({ source: "none", previousX: 50, nextX: 50, timestamp: null as number | null });
 
   const setPlayerWorldX = (centerX: number, state: PlayerWorld["state"] = "playing", source = "runtime") => {
     const previousX = playerWorldRef.current.x + playerWorldRef.current.width / 2;
-    const nextPlayer = playerRectFromCenterX(centerX, state, levelRef.current === 1 ? "level-one" : "default");
+    const nextPlayer = playerRectFromCenterX(
+      centerX,
+      state,
+      levelRef.current === 1 ? "level-one" : "default",
+      activePlayerHorizontalBounds(),
+    );
     playerWorldRef.current = nextPlayer;
     const clampedCenterX = nextPlayer.x + nextPlayer.width / 2;
     djXRef.current = clampedCenterX;
@@ -2296,13 +2310,13 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
   }, [mobileMatrixVerifier]);
 
   useEffect(() => {
-    if (viewportVerificationPreparedRef.current || !["active", "dissolve", "live", "transition", "level-one", "level-one-rave", "level-two-50"].includes(viewportVerificationMode ?? "")) return;
+    if (viewportVerificationPreparedRef.current || !["active", "dissolve", "live", "transition", "level-one", "level-one-entry", "level-one-live", "level-one-rave", "level-two-50"].includes(viewportVerificationMode ?? "")) return;
     viewportVerificationPreparedRef.current = true;
     let transitionReleaseTimer = 0;
     const verifierTimer = window.setTimeout(() => {
       gameRunIdRef.current += 1;
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      const isLevelOneVerifier = viewportVerificationMode === "level-one" || viewportVerificationMode === "level-one-rave";
+      const isLevelOneVerifier = viewportVerificationMode === "level-one" || viewportVerificationMode === "level-one-entry" || viewportVerificationMode === "level-one-live" || viewportVerificationMode === "level-one-rave";
       const levelOneRave = viewportVerificationMode === "level-one-rave";
       const levelTwoFifty = viewportVerificationMode === "level-two-50";
       levelRef.current = isLevelOneVerifier ? 1 : 2;
@@ -2323,11 +2337,25 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         { id: -705, x: 12, y: 37, type: "lion", velocity: 9, state: "active", ...FALLING_ITEM_RULES.lion },
         { id: -706, x: 84, y: 46, type: "cdj", velocity: 9, state: "active", ...FALLING_ITEM_RULES.cdj },
       ];
-      const levelOneItems = verificationItems.filter((item) => !["bottle", "apple", "lion"].includes(item.type));
-      const showVerifierItems = ["active", "live", "level-one", "level-one-rave"].includes(viewportVerificationMode ?? "");
+      const levelOneItems = verificationItems
+        .filter((item) => !["bottle", "apple", "lion"].includes(item.type))
+        .map((item) => viewportVerificationMode === "level-one-live"
+          ? item.type === "record"
+            ? { ...item, x: 8, y: -34, velocity: 36 }
+            : item.type === "cop"
+              ? { ...item, x: 48, y: -38, velocity: 36 }
+              : { ...item, x: 85, y: -42, velocity: 36 }
+          : viewportVerificationMode === "level-one-entry"
+            ? item.type === "record"
+              ? { ...item, x: 8, y: -2 }
+              : item.type === "cop"
+                ? { ...item, x: 48, y: -3 }
+                : { ...item, x: 85, y: -4 }
+            : item);
+      const showVerifierItems = ["active", "live", "level-one", "level-one-entry", "level-one-live", "level-one-rave"].includes(viewportVerificationMode ?? "");
       const activeVerifierItems = isLevelOneVerifier ? levelOneItems : verificationItems;
       itemsRef.current = showVerifierItems ? activeVerifierItems : [];
-      spawnTimerRef.current = viewportVerificationMode === "live" ? -1000 : 0;
+      spawnTimerRef.current = viewportVerificationMode === "live" || viewportVerificationMode === "level-one-live" ? -1000 : 0;
       setLevel(isLevelOneVerifier ? 1 : 2);
       setRecordsCaught(isLevelOneVerifier ? (levelOneRave ? 25 : 0) : levelTwoFifty ? LEVEL_TWO_REQUIRED_RECORDS : 6);
       setLives(4);
@@ -2340,6 +2368,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       stageControllerRef.current?.setLevel(isLevelOneVerifier ? 1 : 2);
       stageControllerRef.current?.setEnergy(isLevelOneVerifier && levelOneRave ? 1 : 0);
       setPlayerWorldX(50, "playing");
+      const probeX = playerPositionProbe === "left" ? 6 : playerPositionProbe === "right" ? 94 : playerPositionProbe === "centre" ? 50 : null;
+      if (probeX !== null) setPlayerWorldX(probeX, "playing", "verifier");
       isPlayingRef.current = true;
       setIsPlaying(true);
       lastTimeRef.current = performance.now();
@@ -2354,7 +2384,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         }, 520);
       } else {
         setIsRecordTransitioning(false);
-        if (viewportVerificationMode === "live") queueGameFrame();
+        if (viewportVerificationMode === "live" || viewportVerificationMode === "level-one-live") queueGameFrame();
       }
     }, 0);
     return () => {
@@ -2877,8 +2907,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
     let currentX = djXRef.current;
     const moveSpeed = 78;
-    if (keysRef.current["left"]) currentX = Math.max(4, currentX - moveSpeed * dt);
-    if (keysRef.current["right"]) currentX = Math.min(90, currentX + moveSpeed * dt);
+    const playerBounds = activePlayerHorizontalBounds();
+    const playerMinX = playerBounds?.minX ?? 4;
+    const playerMaxX = playerBounds?.maxX ?? 90;
+    if (keysRef.current["left"]) currentX = Math.max(playerMinX, currentX - moveSpeed * dt);
+    if (keysRef.current["right"]) currentX = Math.min(playerMaxX, currentX + moveSpeed * dt);
     if (currentX !== djXRef.current) {
       setPlayerWorldX(currentX);
     }
@@ -2898,11 +2931,17 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       // Level 1 remains free of bottles and apple cores; only Level 2 crowd throws them.
       const spawnedType = scheduledNamedHazard ?? pickFallingItemType(activeFallingLevel, roll);
       const itemRule = FALLING_ITEM_RULES[spawnedType];
-      // Level 1's larger approved-art presentation needs extra edge clearance
-      // on narrow phones. This changes only the visual entry lane—not timing,
-      // item dimensions, motion, hitbox ownership, or collision resolution.
-      const visualSafeLaneInset = levelRef.current === 1 ? 14 : FALLING_ITEM_SAFE_LANE_INSET;
-      const visualSafeSpawnY = levelRef.current === 1 ? 16 : HUD_SAFE_FALLING_SPAWN_Y;
+      // Desktop Level 1 expands the visible/catchable alley and therefore uses
+      // the matching wider safe lane. Phones retain their previously approved
+      // lane. Scheduler, weights, dimensions, speed, and collision stay fixed.
+      const visualSafeLaneInset = levelRef.current === 1
+        ? (usesDesktopLevelOnePlayfield() ? 8 : 14)
+        : FALLING_ITEM_SAFE_LANE_INSET;
+      // Level 1 entities begin fully above the visible stage, then fall through
+      // the existing HUD-safe entry boundary at their unchanged velocity.
+      const visualSafeSpawnY = levelRef.current === 1
+        ? -(Math.max(itemRule.height, 6) + 3)
+        : HUD_SAFE_FALLING_SPAWN_Y;
       // Increase speed moderately with progression / score
       const baseSpeed = levelRef.current === 2 ? 50 : 36;
       const speedRamp = Math.min(18, Math.floor(scoreRef.current / 400) * 2);
@@ -3380,7 +3419,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const playfield = containerRef.current;
     if (!isPlayingRef.current || !playfield) return;
     const rect = playfield.getBoundingClientRect();
-    setPlayerWorldX(clientXToWorldX(clientX, rect.left, rect.width), "playing", "pointer");
+    setPlayerWorldX(clientXToWorldX(clientX, rect.left, rect.width, activePlayerHorizontalBounds()), "playing", "pointer");
   };
 
   const inspectRealPointerEvent = (phase: RealPointerDiagnostics["phase"], e: React.PointerEvent<HTMLDivElement>) => {
@@ -3388,7 +3427,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
     const playfield = containerRef.current;
     if (!playfield) return;
     const rect = playfield.getBoundingClientRect();
-    const worldX = clientXToWorldX(e.clientX, rect.left, rect.width);
+    const worldX = clientXToWorldX(e.clientX, rect.left, rect.width, activePlayerHorizontalBounds());
     const normalizedX = rect.width > 0 ? (e.clientX - rect.left) / rect.width : 0;
     const elementAtPointer = document.elementFromPoint(e.clientX, e.clientY);
     const domTarget = elementAtPointer
@@ -4334,9 +4373,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                   top: `${item.y}%`,
                   width: `${item.width}%`,
                   height: `${item.height}%`,
-                   "--item-visual-size": `${item.visualSize}px`,
-                   "--item-visual-scale": item.visualScale,
+                  "--item-visual-size": `${item.visualSize}px`,
+                  "--item-visual-scale": item.visualScale,
                   "--fall-tilt": `${item.tilt}deg`,
+                  "--fall-motion-delay": `${(item.id * 137) % 1000}ms`,
+                  "--fall-spin-direction": item.id % 2 === 0 ? "normal" : "reverse",
                 } as React.CSSProperties}
               >
                 {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : item.type === "record" ? (
