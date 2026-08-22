@@ -296,6 +296,14 @@
   mix-blend-mode: normal !important;
 }
 
+/* Desktop Level 1 only: restore the selector as the visual anchor without
+   changing its collision wrapper, horizontal bounds, or mobile presentation. */
+@media (min-width: 651px) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .dj-catcher-art {
+    transform: scale(.96) !important;
+  }
+}
+
 /* LAYER 5 — short-lived status FX above entities and below the HUD. */
 .arcade-cabinet-bezel .damage-feedback,
 .arcade-cabinet-bezel .in-world-reward {

@@ -147,6 +147,24 @@
   animation-direction: var(--fall-spin-direction, normal) !important;
 }
 
+/* Level 1 acceptance styles intentionally erase box-like decoration, but their
+   generic filter also muted the existing semantic threat/reward language.
+   Reassert only localized cut-out sprite shadows here: no wrapper geometry,
+   image asset, collision, or motion contract is changed. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .falling-object:is(.cop, .pill, .phone, .bottle, .apple) > .urban-prop-asset {
+  filter:
+    drop-shadow(3px 4px 0 rgba(5, 4, 7, .88))
+    drop-shadow(0 0 2px rgba(255, 42, 42, .82))
+    drop-shadow(0 0 5px rgba(255, 20, 20, .48)) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .falling-object:is(.cdj, .mixer, .turntable, .adapter, .lion) > .urban-prop-asset {
+  filter:
+    drop-shadow(3px 4px 0 rgba(5, 4, 7, .82))
+    drop-shadow(0 0 2px rgba(93, 255, 113, .82))
+    drop-shadow(0 0 6px rgba(38, 255, 91, .46)) !important;
+}
+
 @keyframes selectah-record-spin {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to   { transform: translate(-50%, -50%) rotate(360deg); }
