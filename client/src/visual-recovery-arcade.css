@@ -13,7 +13,7 @@
   opacity: 1 !important;
   background-image:
     linear-gradient(180deg, rgba(10, 10, 18, .08) 0 36%, rgba(10, 10, 18, .72) 84% 100%),
-    url("/embedded-assets/selectah-level-one-urban-stage-reference_43ddc07a.png") !important;
+    url("/assets/selectah-level-one-urban-stage-reference_43ddc07a.webp") !important;
   background-position: center;
   background-size: cover !important;
   filter: saturate(1.08) contrast(1.08) brightness(.82) !important;
@@ -33,7 +33,7 @@
   width: 28%;
   pointer-events: none;
   opacity: .42;
-  background-image: url("/embedded-assets/selectah-splash-art-direction_4d1c250f.png");
+  background-image: url("/assets/selectah-splash-art-direction_4d1c250f.webp");
   background-repeat: no-repeat;
   background-size: auto 100%;
   filter: saturate(1.12) contrast(1.16);
@@ -57,7 +57,7 @@
   opacity: 1 !important;
   background-image:
     linear-gradient(180deg, rgba(10, 10, 18, .08), rgba(10, 10, 18, .58) 88%),
-    url("/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png") !important;
+    url("/assets/5d-selector-level-two-detailed-stage_89e2157b.webp") !important;
   background-position: center;
   background-size: cover !important;
   filter: saturate(1.08) contrast(1.1) brightness(.75) !important;

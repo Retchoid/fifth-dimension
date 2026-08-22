@@ -10,11 +10,11 @@ describe("Visuals Archive collage", () => {
     expect(homeSource).toContain('id="visuals"');
     expect(homeSource).toContain("className=\"art-lightbox-trigger\"");
     expect(homeSource).toContain("ragga-revival_bc56c618.png");
-    expect(homeSource).toContain("mix-cover-cfmu-hostile-airwaves_9603abc2.png");
-    expect(homeSource).toContain("png-review-deep-on-rolling_481214e6.png");
-    expect(homeSource).toContain("selectah-splash-art-direction_4d1c250f.png");
-    expect(homeSource).toContain("5d-selector-level-two-detailed-stage_89e2157b.png");
-    expect(homeSource).not.toContain('src: "/embedded-assets/placeholder');
+    expect(homeSource).toContain("mix-cover-cfmu-hostile-airwaves_9603abc2.webp");
+    expect(homeSource).toContain("png-review-deep-on-rolling_481214e6.webp");
+    expect(homeSource).toContain("selectah-splash-art-direction_4d1c250f.webp");
+    expect(homeSource).toContain("5d-selector-level-two-detailed-stage_89e2157b.webp");
+    expect(homeSource).not.toContain('src: "/assets/placeholder');
   });
 
   it("protects the hard-framed, asymmetric, mobile-safe archive composition", () => {

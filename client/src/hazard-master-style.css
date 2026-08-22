@@ -24,13 +24,13 @@
 }
 
 .game-viewport .police-seizure-overlay {
-  background:#0A0A12 url("/embedded-assets/selectah-splash-art-direction_4d1c250f.png") center / cover no-repeat !important;
+  background:#0A0A12 url("/assets/selectah-splash-art-direction_4d1c250f.webp") center / cover no-repeat !important;
 }
 .game-viewport .pill-overload-overlay {
-  background:#0A0A12 url("/embedded-assets/selectah-splash-art-direction_4d1c250f.png") center / cover no-repeat !important;
+  background:#0A0A12 url("/assets/selectah-splash-art-direction_4d1c250f.webp") center / cover no-repeat !important;
 }
 .game-viewport .crowd-anger-overlay {
-  background:#0A0A12 url("/embedded-assets/selectah-urban-brawler-visual-target_a56c19c4.png") center / cover no-repeat !important;
+  background:#0A0A12 url("/assets/selectah-urban-brawler-visual-target_a56c19c4.webp") center / cover no-repeat !important;
 }
 
 .game-viewport :is(.police-seizure-overlay,.pill-overload-overlay,.crowd-anger-overlay)::before {

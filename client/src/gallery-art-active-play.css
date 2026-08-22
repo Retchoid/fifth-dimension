@@ -12,7 +12,7 @@
 .arcade-cabinet-bezel .game-grid-bg:not(.level-two-grid-bg) {
   background-image:
     linear-gradient(180deg, rgba(10,10,18,.03) 0 28%, rgba(10,10,18,.34) 58%, rgba(10,10,18,.82) 100%),
-    url("/embedded-assets/selectah-splash-art-direction_4d1c250f.png") !important;
+    url("/assets/selectah-splash-art-direction_4d1c250f.webp") !important;
   background-position: center, center 48% !important;
   background-size: cover !important;
   filter: saturate(1.12) contrast(1.12) brightness(.86) !important;
@@ -41,14 +41,14 @@
 
 .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::before {
   left: -8% !important;
-  background-image: url("/embedded-assets/selectah-level-one-urban-stage-reference_43ddc07a.png") !important;
+  background-image: url("/assets/selectah-level-one-urban-stage-reference_43ddc07a.webp") !important;
   background-position: left center !important;
   clip-path: polygon(0 0, 100% 6%, 82% 91%, 0 100%);
 }
 
 .arcade-cabinet-bezel .rave-world-dressing:not(.level-two-rave-world)::after {
   right: -8% !important;
-  background-image: url("/embedded-assets/selectah-police-siren-urban_5fb879fa.png") !important;
+  background-image: url("/assets/selectah-police-siren-urban_5fb879fa.webp") !important;
   background-position: right center !important;
   clip-path: polygon(18% 7%, 100% 0, 100% 100%, 0 92%);
 }
@@ -58,7 +58,7 @@
 .arcade-cabinet-bezel .game-grid-bg.level-two-grid-bg {
   background-image:
     linear-gradient(180deg, rgba(10,10,18,.05) 0 18%, rgba(10,10,18,.18) 46%, rgba(10,10,18,.66) 100%),
-    url("/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png") !important;
+    url("/assets/5d-selector-level-two-detailed-stage_89e2157b.webp") !important;
   background-position: center, center 46% !important;
   background-size: cover !important;
   filter: saturate(1.2) contrast(1.12) brightness(.9) !important;
@@ -91,7 +91,7 @@
   bottom: 8%;
   width: 28%;
   height: 44%;
-  background-image: url("/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png");
+  background-image: url("/assets/selectah-speaker-stack-urban_9fd16c27.webp");
   background-position: left bottom;
 }
 
@@ -100,7 +100,7 @@
   top: 22%;
   width: 34%;
   height: 35%;
-  background-image: url("/embedded-assets/selectah-dubplate-urban_052862f6.png");
+  background-image: url("/assets/selectah-dubplate-urban_052862f6.webp");
   background-position: right center;
 }
 

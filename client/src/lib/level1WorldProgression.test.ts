@@ -28,7 +28,7 @@ describe("Level 1 independent world progression contracts", () => {
       "1000001166_e9b75dd0.png",
       "1000001168_c5184bab.png",
     ]) {
-      expect(game).toContain(`/manus-storage/${asset}`);
+      expect(game).toContain(`/assets/${asset}`);
     }
     expect(game).toContain("LEVEL_ONE_MASTER_ASSETS");
     expect(game).toContain("levelOneMasterStateForTimeStage");
@@ -84,7 +84,7 @@ describe("Level 1 independent world progression contracts", () => {
 
   it("audits every configured Level 1 physical object against an approved asset", () => {
     for (const type of ["record", "cop", "pill", "phone", "cdj", "mixer", "turntable", "adapter", "bottle", "apple", "lion"]) {
-      expect(game).toContain(`${type}: "/embedded-assets/`);
+      expect(game).toContain(`${type}: "/assets/`);
     }
     expect(game).toContain("selectah-mixer-urban");
     expect(game).toContain("selectah-lion-urban");
@@ -94,7 +94,7 @@ describe("Level 1 independent world progression contracts", () => {
   it("owns the record art in the React render tree with a visible mobile paint contract", () => {
     expect(game).toContain('item.type === "record" ? (');
     expect(game).toContain('className="record-dubplate-sprite"');
-    expect(game).toContain('src="/manus-storage/selectah-dubplate-5d-production-v2_bc9aa293.png"');
+    expect(game).toContain('src="/assets/selectah-dubplate-5d-production-v2_bc9aa293.png"');
     expect(fallingItemEffects).toContain(".falling-object.record > .record-dubplate-sprite");
     expect(fallingItemEffects).toContain("z-index: 31 !important");
     expect(fallingItemEffects).toContain("width: 30px !important");

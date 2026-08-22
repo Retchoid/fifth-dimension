@@ -1,0 +1,1384 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-22T13:46:23.162336+00:00",
+  "purpose": "Byte-preserving Render migration from Manus-managed public media",
+  "assets": [
+    {
+      "original_managed_paths": [
+        "/manus-storage/1000001162_aa49120d.png"
+      ],
+      "original_filename": "1000001162_aa49120d.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/1000001162_aa49120d.png",
+      "repository_path": "client/public/assets/1000001162_aa49120d.png",
+      "mime_type": "image/png",
+      "byte_size": 2987562,
+      "source_sha256": "82ef39385e37aeb6dfb08c5921943c428d48b0e77524745d61cd1eeb851317a3",
+      "sha256": "82ef39385e37aeb6dfb08c5921943c428d48b0e77524745d61cd1eeb851317a3",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1678,
+        "height": 937
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/1000001166_e9b75dd0.png"
+      ],
+      "original_filename": "1000001166_e9b75dd0.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/1000001166_e9b75dd0.png",
+      "repository_path": "client/public/assets/1000001166_e9b75dd0.png",
+      "mime_type": "image/png",
+      "byte_size": 3166340,
+      "source_sha256": "5ad579d84e91516576a2c7f7d79b176349bc4eb96c9d18416ff216371b3961c6",
+      "sha256": "5ad579d84e91516576a2c7f7d79b176349bc4eb96c9d18416ff216371b3961c6",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1680,
+        "height": 936
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/1000001168_c5184bab.png"
+      ],
+      "original_filename": "1000001168_c5184bab.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/1000001168_c5184bab.png",
+      "repository_path": "client/public/assets/1000001168_c5184bab.png",
+      "mime_type": "image/png",
+      "byte_size": 2661513,
+      "source_sha256": "d6802e6942de9f9450cc91d2b8564d32ca6d7ff12bff66eeaa18981351cfb557",
+      "sha256": "d6802e6942de9f9450cc91d2b8564d32ca6d7ff12bff66eeaa18981351cfb557",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1661,
+        "height": 947
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/1000001169_3204905a.png"
+      ],
+      "original_filename": "1000001169_3204905a.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/1000001169_3204905a.png",
+      "repository_path": "client/public/assets/1000001169_3204905a.png",
+      "mime_type": "image/png",
+      "byte_size": 3139140,
+      "source_sha256": "6ef30e9f0f6f7563a3897a4542ab2d8ba34ec7597775a4ab7bb309cc43fb35e2",
+      "sha256": "6ef30e9f0f6f7563a3897a4542ab2d8ba34ec7597775a4ab7bb309cc43fb35e2",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1624,
+        "height": 969
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5d-frequency-loading-boombox_ce5a46d2.png"
+      ],
+      "original_filename": "5d-frequency-loading-boombox_ce5a46d2.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5d-frequency-loading-boombox_ce5a46d2.webp",
+      "repository_path": "client/public/assets/5d-frequency-loading-boombox_ce5a46d2.webp",
+      "mime_type": "image/webp",
+      "byte_size": 469776,
+      "source_sha256": "fa474a4b35dff3a5c56bb0ad650fe668ce47326d414e10a4dd9139e3db11c703",
+      "sha256": "fa474a4b35dff3a5c56bb0ad650fe668ce47326d414e10a4dd9139e3db11c703",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1440
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5d-jungle-dancer-cyan_391dfc3c.png"
+      ],
+      "original_filename": "5d-jungle-dancer-cyan_391dfc3c.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5d-jungle-dancer-cyan_391dfc3c.webp",
+      "repository_path": "client/public/assets/5d-jungle-dancer-cyan_391dfc3c.webp",
+      "mime_type": "image/webp",
+      "byte_size": 238486,
+      "source_sha256": "54f3c3c5c051b79afe230066a0e11dd88d4e563dc17242605ec00afecc029716",
+      "sha256": "54f3c3c5c051b79afe230066a0e11dd88d4e563dc17242605ec00afecc029716",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1280,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5d-jungle-dancer-lime_af13269a.png"
+      ],
+      "original_filename": "5d-jungle-dancer-lime_af13269a.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5d-jungle-dancer-lime_af13269a.webp",
+      "repository_path": "client/public/assets/5d-jungle-dancer-lime_af13269a.webp",
+      "mime_type": "image/webp",
+      "byte_size": 289426,
+      "source_sha256": "0e309faf64c4b4bcb58b4cda98485e371a5ffa1568b3cee6b9b681120e2068c2",
+      "sha256": "0e309faf64c4b4bcb58b4cda98485e371a5ffa1568b3cee6b9b681120e2068c2",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1280,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5d-jungle-dancer-magenta_da5bea9b.png"
+      ],
+      "original_filename": "5d-jungle-dancer-magenta_da5bea9b.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5d-jungle-dancer-magenta_da5bea9b.webp",
+      "repository_path": "client/public/assets/5d-jungle-dancer-magenta_da5bea9b.webp",
+      "mime_type": "image/webp",
+      "byte_size": 272028,
+      "source_sha256": "c15cc4a478ec401884820163a8a068d18ec6d02e4b31a3fdc7bb9368b667d27c",
+      "sha256": "c15cc4a478ec401884820163a8a068d18ec6d02e4b31a3fdc7bb9368b667d27c",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1280,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5d-jungle-genesis-track_ff9d149a.mp3"
+      ],
+      "original_filename": "5d-jungle-genesis-track_ff9d149a.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5d-jungle-genesis-track_ff9d149a.mp3",
+      "repository_path": "client/public/assets/5d-jungle-genesis-track_ff9d149a.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 3587969,
+      "source_sha256": "e78f7e414dc923019a10f8f00236117a2fd13a9b57c534ddb40433bd321733de",
+      "sha256": "e78f7e414dc923019a10f8f00236117a2fd13a9b57c534ddb40433bd321733de",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 149.499
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png",
+        "/manus-storage/5d-selector-jungle-dj-sprite_502781f7.png"
+      ],
+      "original_filename": "5d-selector-jungle-dj-sprite_502781f7.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5d-selector-jungle-dj-sprite_502781f7.webp",
+      "repository_path": "client/public/assets/5d-selector-jungle-dj-sprite_502781f7.webp",
+      "mime_type": "image/webp",
+      "byte_size": 707408,
+      "source_sha256": "aeae16a7f5532a004656c12d2993f1ea76819c4ccdf171ade0ed415ac4032d49",
+      "sha256": "aeae16a7f5532a004656c12d2993f1ea76819c4ccdf171ade0ed415ac4032d49",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png"
+      ],
+      "original_filename": "5d-selector-level-two-detailed-stage_89e2157b.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5d-selector-level-two-detailed-stage_89e2157b.webp",
+      "repository_path": "client/public/assets/5d-selector-level-two-detailed-stage_89e2157b.webp",
+      "mime_type": "image/webp",
+      "byte_size": 644482,
+      "source_sha256": "af0a4d7094614de0e871c8b3e5ccce08c902d7a9a36bf5b44e5226db9d950414",
+      "sha256": "af0a4d7094614de0e871c8b3e5ccce08c902d7a9a36bf5b44e5226db9d950414",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5d-selector-rave-stage_e4fdff4b.png"
+      ],
+      "original_filename": "5d-selector-rave-stage_e4fdff4b.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5d-selector-rave-stage_e4fdff4b.webp",
+      "repository_path": "client/public/assets/5d-selector-rave-stage_e4fdff4b.webp",
+      "mime_type": "image/webp",
+      "byte_size": 345152,
+      "source_sha256": "7338a27065b6ba3d09a18d42f9b4169accf9a3bbb771d487f4abfd17d23ce2d6",
+      "sha256": "7338a27065b6ba3d09a18d42f9b4169accf9a3bbb771d487f4abfd17d23ce2d6",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5th-dimension-character_a901a681.jpg"
+      ],
+      "original_filename": "5th-dimension-character_a901a681.jpg",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5th-dimension-character_a901a681.jpg",
+      "repository_path": "client/public/assets/5th-dimension-character_a901a681.jpg",
+      "mime_type": "image/jpeg",
+      "byte_size": 42497,
+      "source_sha256": "df10d72b36f21d80f64e9f8b17c580f43df07f7f1029cdd4b21733d5a9860bad",
+      "sha256": "df10d72b36f21d80f64e9f8b17c580f43df07f7f1029cdd4b21733d5a9860bad",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 400,
+        "height": 400
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png",
+        "/manus-storage/5th-dimension-graffiti-mark_f607b9d3.png"
+      ],
+      "original_filename": "5th-dimension-graffiti-mark_f607b9d3.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/5th-dimension-graffiti-mark_f607b9d3.png",
+      "repository_path": "client/public/assets/5th-dimension-graffiti-mark_f607b9d3.png",
+      "mime_type": "image/png",
+      "byte_size": 2091691,
+      "source_sha256": "87cf2c4d9141a7a29568e665960e271fdb506a16ff330661bfddeb1037b0c096",
+      "sha256": "87cf2c4d9141a7a29568e665960e271fdb506a16ff330661bfddeb1037b0c096",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1086,
+        "height": 1448
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/afterparty-runner-fast-breakbeat_0d617411.mp3"
+      ],
+      "original_filename": "afterparty-runner-fast-breakbeat_0d617411.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/afterparty-runner-fast-breakbeat_0d617411.mp3",
+      "repository_path": "client/public/assets/afterparty-runner-fast-breakbeat_0d617411.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 2134098,
+      "source_sha256": "5f87ed6e0d5c8098bce93d5c0e0dad052572e28186227c2ae9d32da7628f6823",
+      "sha256": "5f87ed6e0d5c8098bce93d5c0e0dad052572e28186227c2ae9d32da7628f6823",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 88.921
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/approved-pit-run-afterparty-board_b135c77c.png"
+      ],
+      "original_filename": "approved-pit-run-afterparty-board_b135c77c.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/approved-pit-run-afterparty-board_b135c77c.png",
+      "repository_path": "client/public/assets/approved-pit-run-afterparty-board_b135c77c.png",
+      "mime_type": "image/png",
+      "byte_size": 2915953,
+      "source_sha256": "dfa7499ab24897216513ebd540ea24c6d5da47a42070efa214bc34a3a49dc03a",
+      "sha256": "dfa7499ab24897216513ebd540ea24c6d5da47a42070efa214bc34a3a49dc03a",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1684,
+        "height": 934
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3"
+      ],
+      "original_filename": "cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3",
+      "repository_path": "client/public/assets/cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 56875533,
+      "source_sha256": "91f43ee4f8387ef153eea1c46df7e429c3fd360e2bbfe1294ba785b2bb1f1d21",
+      "sha256": "91f43ee4f8387ef153eea1c46df7e429c3fd360e2bbfe1294ba785b2bb1f1d21",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 3536.964
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/cool-world-piece_b1a88e9c.png"
+      ],
+      "original_filename": "cool-world-piece_b1a88e9c.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/cool-world-piece_b1a88e9c.png",
+      "repository_path": "client/public/assets/cool-world-piece_b1a88e9c.png",
+      "mime_type": "image/png",
+      "byte_size": 1477058,
+      "source_sha256": "8525302b446352e878b89a2a355c818fe6638c0f5ec037e3b8f9335431ccba37",
+      "sha256": "8525302b446352e878b89a2a355c818fe6638c0f5ec037e3b8f9335431ccba37",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1080,
+        "height": 2400
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/deep-on-rolling-bobbyjackets-final_0c567ad7.mp3"
+      ],
+      "original_filename": "deep-on-rolling-bobbyjackets-final_0c567ad7.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/deep-on-rolling-bobbyjackets-final_0c567ad7.mp3",
+      "repository_path": "client/public/assets/deep-on-rolling-bobbyjackets-final_0c567ad7.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 121296035,
+      "source_sha256": "f73a7d482a8752c2a1b4aed566ed68c71334e4f06bfbef7946352dc5ed179601",
+      "sha256": "f73a7d482a8752c2a1b4aed566ed68c71334e4f06bfbef7946352dc5ed179601",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 3024.378
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/dimension-performance-matrix_c45b9b28.png"
+      ],
+      "original_filename": "dimension-performance-matrix_c45b9b28.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/dimension-performance-matrix_c45b9b28.png",
+      "repository_path": "client/public/assets/dimension-performance-matrix_c45b9b28.png",
+      "mime_type": "image/png",
+      "byte_size": 2174133,
+      "source_sha256": "592cfbaa64f4c040a2da7f1814e128e9596551b0b7969400e5d5afc16e55c2d2",
+      "sha256": "592cfbaa64f4c040a2da7f1814e128e9596551b0b7969400e5d5afc16e55c2d2",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1254,
+        "height": 1254
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3"
+      ],
+      "original_filename": "festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3",
+      "repository_path": "client/public/assets/festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 73034478,
+      "source_sha256": "0f937d1d562f9f7c021c23ea46eb7ef61d0a73c8250eddc95643ceda4530a3f3",
+      "sha256": "0f937d1d562f9f7c021c23ea46eb7ef61d0a73c8250eddc95643ceda4530a3f3",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 1817.976
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3"
+      ],
+      "original_filename": "festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3",
+      "repository_path": "client/public/assets/festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 76368626,
+      "source_sha256": "fd861df8437a652e6c48b8b30da14892e8ce564f26c7debe1e073b932fd90dd7",
+      "sha256": "fd861df8437a652e6c48b8b30da14892e8ce564f26c7debe1e073b932fd90dd7",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 1901.808
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3"
+      ],
+      "original_filename": "festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3",
+      "repository_path": "client/public/assets/festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 62681564,
+      "source_sha256": "cdb5c1e36cf81d4d51d04e6be854ba75d65c0827ae8a6a3d5a8e94920f49b89b",
+      "sha256": "cdb5c1e36cf81d4d51d04e6be854ba75d65c0827ae8a6a3d5a8e94920f49b89b",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 1559.808
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3"
+      ],
+      "original_filename": "festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3",
+      "repository_path": "client/public/assets/festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 78200407,
+      "source_sha256": "6cc33189b5bf5e958e4bff0da7a54a58a93fde1c7d638d78fd9fce5fec7a742c",
+      "sha256": "6cc33189b5bf5e958e4bff0da7a54a58a93fde1c7d638d78fd9fce5fec7a742c",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 1947.888
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/graffiti-collage_bac19afe.png"
+      ],
+      "original_filename": "graffiti-collage_bac19afe.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/graffiti-collage_bac19afe.png",
+      "repository_path": "client/public/assets/graffiti-collage_bac19afe.png",
+      "mime_type": "image/png",
+      "byte_size": 2582613,
+      "source_sha256": "31086760718346557485f7ef6d7dddeaa6a7ed79acad211d9f8ab78fd8a51c1d",
+      "sha256": "31086760718346557485f7ef6d7dddeaa6a7ed79acad211d9f8ab78fd8a51c1d",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1080,
+        "height": 2400
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/holes-in-our-souls-bobbyjackets-final_9ab83342.mp3"
+      ],
+      "original_filename": "holes-in-our-souls-bobbyjackets-final_9ab83342.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/holes-in-our-souls-bobbyjackets-final_9ab83342.mp3",
+      "repository_path": "client/public/assets/holes-in-our-souls-bobbyjackets-final_9ab83342.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 57640877,
+      "source_sha256": "ef9b2c4963e2824efa57393f3c8fcd7c7d62e61fc5d499d9eb1fba8984392501",
+      "sha256": "ef9b2c4963e2824efa57393f3c8fcd7c7d62e61fc5d499d9eb1fba8984392501",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 1794.0
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/jersh-in-case-5th-dimension_36de0a4f.mp3"
+      ],
+      "original_filename": "jersh-in-case-5th-dimension_36de0a4f.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/jersh-in-case-5th-dimension_36de0a4f.mp3",
+      "repository_path": "client/public/assets/jersh-in-case-5th-dimension_36de0a4f.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 12068570,
+      "source_sha256": "f6f5e19b0929a935b2246d8450f64a62802d1812525a26cdb506527f8ca77a1f",
+      "sha256": "f6f5e19b0929a935b2246d8450f64a62802d1812525a26cdb506527f8ca77a1f",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 301.714
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/level2-club-architecture_b59eb6c5.png"
+      ],
+      "original_filename": "level2-club-architecture_b59eb6c5.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/level2-club-architecture_b59eb6c5.webp",
+      "repository_path": "client/public/assets/level2-club-architecture_b59eb6c5.webp",
+      "mime_type": "image/webp",
+      "byte_size": 258678,
+      "source_sha256": "23ea0f48602e10b8d35d6dcdae7af8737ca8f9c2dd7438fc657bf7ba7f4535bb",
+      "sha256": "23ea0f48602e10b8d35d6dcdae7af8737ca8f9c2dd7438fc657bf7ba7f4535bb",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/level2-club-backwall_0fefe2b1.png"
+      ],
+      "original_filename": "level2-club-backwall_0fefe2b1.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/level2-club-backwall_0fefe2b1.webp",
+      "repository_path": "client/public/assets/level2-club-backwall_0fefe2b1.webp",
+      "mime_type": "image/webp",
+      "byte_size": 239150,
+      "source_sha256": "99252f44d3c882c779a6c539199bfdcdd03b5d382d22576e5eb1eba2ed877f38",
+      "sha256": "99252f44d3c882c779a6c539199bfdcdd03b5d382d22576e5eb1eba2ed877f38",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/level2-club-crowd-bands_f8a90d30.png"
+      ],
+      "original_filename": "level2-club-crowd-bands_f8a90d30.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/level2-club-crowd-bands_f8a90d30.webp",
+      "repository_path": "client/public/assets/level2-club-crowd-bands_f8a90d30.webp",
+      "mime_type": "image/webp",
+      "byte_size": 310578,
+      "source_sha256": "4adc7bcfd9dd846447181aaa0b338091d805777ce7fb23fce06306df33b9546a",
+      "sha256": "4adc7bcfd9dd846447181aaa0b338091d805777ce7fb23fce06306df33b9546a",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/level2-club-reactive-fx_59e2c1c8.png"
+      ],
+      "original_filename": "level2-club-reactive-fx_59e2c1c8.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/level2-club-reactive-fx_59e2c1c8.webp",
+      "repository_path": "client/public/assets/level2-club-reactive-fx_59e2c1c8.webp",
+      "mime_type": "image/webp",
+      "byte_size": 298278,
+      "source_sha256": "ff0807e72398219af2fe512fd83954e1b621cf91c930228aa2f98e3adec353c5",
+      "sha256": "ff0807e72398219af2fe512fd83954e1b621cf91c930228aa2f98e3adec353c5",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/level2-club-speaker-edges_2cd0f111.png"
+      ],
+      "original_filename": "level2-club-speaker-edges_2cd0f111.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/level2-club-speaker-edges_2cd0f111.webp",
+      "repository_path": "client/public/assets/level2-club-speaker-edges_2cd0f111.webp",
+      "mime_type": "image/webp",
+      "byte_size": 227402,
+      "source_sha256": "c1b309c7729518b033fc05f4d235257fdd8711ba99bd2e8bb36e29be4de53e57",
+      "sha256": "c1b309c7729518b033fc05f4d235257fdd8711ba99bd2e8bb36e29be4de53e57",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3"
+      ],
+      "original_filename": "live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3",
+      "repository_path": "client/public/assets/live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 288329674,
+      "source_sha256": "0c87d350370d6a4d39bad3569fb80ee2ec151cafe9ed059b8fffd6ef0fb2adba",
+      "sha256": "0c87d350370d6a4d39bad3569fb80ee2ec151cafe9ed059b8fffd6ef0fb2adba",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 7200.939
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/minianimilism-2-5th-dimension-final_567b354e.mp3"
+      ],
+      "original_filename": "minianimilism-2-5th-dimension-final_567b354e.mp3",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/minianimilism-2-5th-dimension-final_567b354e.mp3",
+      "repository_path": "client/public/assets/minianimilism-2-5th-dimension-final_567b354e.mp3",
+      "mime_type": "audio/mpeg",
+      "byte_size": 133787982,
+      "source_sha256": "ea9af8e5a1f8abc02223feffc3e15f568558810d37e3ae915fad095992ca8621",
+      "sha256": "ea9af8e5a1f8abc02223feffc3e15f568558810d37e3ae915fad095992ca8621",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "duration_seconds": 3336.068
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/mix-cover-cfmu-hostile-airwaves_9603abc2.png"
+      ],
+      "original_filename": "mix-cover-cfmu-hostile-airwaves_9603abc2.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/mix-cover-cfmu-hostile-airwaves_9603abc2.webp",
+      "repository_path": "client/public/assets/mix-cover-cfmu-hostile-airwaves_9603abc2.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1547364,
+      "source_sha256": "ad6ac96a17e88f898b4057e7c96826db19efb7294a199867473790078431feeb",
+      "sha256": "ad6ac96a17e88f898b4057e7c96826db19efb7294a199867473790078431feeb",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/no-request-bonus-dawn-vaporwave_fcfcb990.png"
+      ],
+      "original_filename": "no-request-bonus-dawn-vaporwave_fcfcb990.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/no-request-bonus-dawn-vaporwave_fcfcb990.webp",
+      "repository_path": "client/public/assets/no-request-bonus-dawn-vaporwave_fcfcb990.webp",
+      "mime_type": "image/webp",
+      "byte_size": 415622,
+      "source_sha256": "df323401f6c197d5c9601ed8535d59e8e552a3eb3c0201ae7e7ebcd493401287",
+      "sha256": "df323401f6c197d5c9601ed8535d59e8e552a3eb3c0201ae7e7ebcd493401287",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/painted-character_15d43de1.png"
+      ],
+      "original_filename": "painted-character_15d43de1.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/painted-character_15d43de1.png",
+      "repository_path": "client/public/assets/painted-character_15d43de1.png",
+      "mime_type": "image/png",
+      "byte_size": 1102473,
+      "source_sha256": "f39575ebffd3173251acd725729417f8e91c7a4fb15beab7ebaec14aafbb0445",
+      "sha256": "f39575ebffd3173251acd725729417f8e91c7a4fb15beab7ebaec14aafbb0445",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1080,
+        "height": 2400
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/png-review-deep-on-rolling_481214e6.png"
+      ],
+      "original_filename": "png-review-deep-on-rolling_481214e6.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/png-review-deep-on-rolling_481214e6.webp",
+      "repository_path": "client/public/assets/png-review-deep-on-rolling_481214e6.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1440678,
+      "source_sha256": "9d3a4762d8d610cea3696938dd9ed55d1cd48259efad8c34946399b742c2a30b",
+      "sha256": "9d3a4762d8d610cea3696938dd9ed55d1cd48259efad8c34946399b742c2a30b",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/png-review-festival-house-side-a_b1083694.png"
+      ],
+      "original_filename": "png-review-festival-house-side-a_b1083694.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/png-review-festival-house-side-a_b1083694.webp",
+      "repository_path": "client/public/assets/png-review-festival-house-side-a_b1083694.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1560678,
+      "source_sha256": "d95e695eff0530bb26db4531c22f37b4dce2d8d7790710d6fd1c9d88798f4f5d",
+      "sha256": "d95e695eff0530bb26db4531c22f37b4dce2d8d7790710d6fd1c9d88798f4f5d",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/png-review-festival-house-side-b_9e1003bf.png"
+      ],
+      "original_filename": "png-review-festival-house-side-b_9e1003bf.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/png-review-festival-house-side-b_9e1003bf.webp",
+      "repository_path": "client/public/assets/png-review-festival-house-side-b_9e1003bf.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1404002,
+      "source_sha256": "62f0ec67f48e388e64423b4a1587c75824c2edcee003af62761066abbd6e30ec",
+      "sha256": "62f0ec67f48e388e64423b4a1587c75824c2edcee003af62761066abbd6e30ec",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/png-review-festival-house-side-c_dc39199f.png"
+      ],
+      "original_filename": "png-review-festival-house-side-c_dc39199f.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/png-review-festival-house-side-c_dc39199f.webp",
+      "repository_path": "client/public/assets/png-review-festival-house-side-c_dc39199f.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1594518,
+      "source_sha256": "cbfb97c896dbd473dc8cd04c84f00f4f78c753c81eed10f36a7e8f5aea79be48",
+      "sha256": "cbfb97c896dbd473dc8cd04c84f00f4f78c753c81eed10f36a7e8f5aea79be48",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/png-review-festival-house-side-d_a5ceb8e8.png"
+      ],
+      "original_filename": "png-review-festival-house-side-d_a5ceb8e8.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/png-review-festival-house-side-d_a5ceb8e8.webp",
+      "repository_path": "client/public/assets/png-review-festival-house-side-d_a5ceb8e8.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1820570,
+      "source_sha256": "cb9e3bc4334c852b748b9817cd448b12bbaf54d4f3084536b90eea8209fe4093",
+      "sha256": "cb9e3bc4334c852b748b9817cd448b12bbaf54d4f3084536b90eea8209fe4093",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/png-review-holes-in-our-souls_ec90b79e.png"
+      ],
+      "original_filename": "png-review-holes-in-our-souls_ec90b79e.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/png-review-holes-in-our-souls_ec90b79e.webp",
+      "repository_path": "client/public/assets/png-review-holes-in-our-souls_ec90b79e.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1294310,
+      "source_sha256": "84c2b0e7c4d61d68ace39859b1b9dca64163bcaac93d11c17714674f8ae5e5c4",
+      "sha256": "84c2b0e7c4d61d68ace39859b1b9dca64163bcaac93d11c17714674f8ae5e5c4",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/png-review-live-festival-house-2022_4dd116a7.png"
+      ],
+      "original_filename": "png-review-live-festival-house-2022_4dd116a7.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/png-review-live-festival-house-2022_4dd116a7.webp",
+      "repository_path": "client/public/assets/png-review-live-festival-house-2022_4dd116a7.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1620552,
+      "source_sha256": "76f3238672444628ef3026dd7729fe2cbd3010c4a4a3aa817e2734bc633d8368",
+      "sha256": "76f3238672444628ef3026dd7729fe2cbd3010c4a4a3aa817e2734bc633d8368",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/png-review-minianimilism-2_f8c55f62.png"
+      ],
+      "original_filename": "png-review-minianimilism-2_f8c55f62.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/png-review-minianimilism-2_f8c55f62.webp",
+      "repository_path": "client/public/assets/png-review-minianimilism-2_f8c55f62.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1496192,
+      "source_sha256": "5cda956e3e311adc66ede73bcb86f8307669f3fb5313f0b45720e9b149c2a19f",
+      "sha256": "5cda956e3e311adc66ede73bcb86f8307669f3fb5313f0b45720e9b149c2a19f",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/ragga-revival_bc56c618.png"
+      ],
+      "original_filename": "ragga-revival_bc56c618.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/ragga-revival_bc56c618.png",
+      "repository_path": "client/public/assets/ragga-revival_bc56c618.png",
+      "mime_type": "image/png",
+      "byte_size": 2024176,
+      "source_sha256": "3a604f10fb5bc5192bdbbee2674f4836b0efb2508ab96a5366adf9ff2b4ae7d0",
+      "sha256": "3a604f10fb5bc5192bdbbee2674f4836b0efb2508ab96a5366adf9ff2b4ae7d0",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1080,
+        "height": 2400
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-adapter-urban_ab9d38ca.png"
+      ],
+      "original_filename": "selectah-adapter-urban_ab9d38ca.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-adapter-urban_ab9d38ca.webp",
+      "repository_path": "client/public/assets/selectah-adapter-urban_ab9d38ca.webp",
+      "mime_type": "image/webp",
+      "byte_size": 305304,
+      "source_sha256": "448b34afffcde3dbbac3d8870473e656ac79270d37752ed4d1a9eaab26bf1549",
+      "sha256": "448b34afffcde3dbbac3d8870473e656ac79270d37752ed4d1a9eaab26bf1549",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-afterparty-door-urban_0b6d1ed4.png"
+      ],
+      "original_filename": "selectah-afterparty-door-urban_0b6d1ed4.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-afterparty-door-urban_0b6d1ed4.webp",
+      "repository_path": "client/public/assets/selectah-afterparty-door-urban_0b6d1ed4.webp",
+      "mime_type": "image/webp",
+      "byte_size": 411886,
+      "source_sha256": "1d2d57923a4823c615799f42620f18f4cce566f6ba6a3deca40bab7c84ea14e9",
+      "sha256": "1d2d57923a4823c615799f42620f18f4cce566f6ba6a3deca40bab7c84ea14e9",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1280,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-apple-core-urban_66dacfaa.png"
+      ],
+      "original_filename": "selectah-apple-core-urban_66dacfaa.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-apple-core-urban_66dacfaa.webp",
+      "repository_path": "client/public/assets/selectah-apple-core-urban_66dacfaa.webp",
+      "mime_type": "image/webp",
+      "byte_size": 673444,
+      "source_sha256": "fc9ac7fc1864f09bded95a62a71b27d21f49d65c8d89b80ed3d1b28246e7d3fc",
+      "sha256": "fc9ac7fc1864f09bded95a62a71b27d21f49d65c8d89b80ed3d1b28246e7d3fc",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-bottle-urban_fc7e712f.png"
+      ],
+      "original_filename": "selectah-bottle-urban_fc7e712f.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-bottle-urban_fc7e712f.webp",
+      "repository_path": "client/public/assets/selectah-bottle-urban_fc7e712f.webp",
+      "mime_type": "image/webp",
+      "byte_size": 676628,
+      "source_sha256": "ff176cbff71eaf727a2227e749b4c714a9da4c65d4e143afb2fed7f3eab7bb05",
+      "sha256": "ff176cbff71eaf727a2227e749b4c714a9da4c65d4e143afb2fed7f3eab7bb05",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-cdj-urban_79c0b46c.png"
+      ],
+      "original_filename": "selectah-cdj-urban_79c0b46c.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-cdj-urban_79c0b46c.webp",
+      "repository_path": "client/public/assets/selectah-cdj-urban_79c0b46c.webp",
+      "mime_type": "image/webp",
+      "byte_size": 357656,
+      "source_sha256": "a525177a3e7a995fad0a8129564b41601bca2c1dc93ffe52f50ce4ccb8518f65",
+      "sha256": "a525177a3e7a995fad0a8129564b41601bca2c1dc93ffe52f50ce4ccb8518f65",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-dubplate-5d-production-v2.png"
+      ],
+      "original_filename": "selectah-dubplate-5d-production-v2.png",
+      "source_kind": "approved-tracked-repository-copy",
+      "destination_path": "/assets/selectah-dubplate-5d-production-v2.png",
+      "repository_path": "client/public/assets/selectah-dubplate-5d-production-v2.png",
+      "mime_type": "image/png",
+      "byte_size": 7261,
+      "source_sha256": "73a578c4e19b4e37b1a5142b47089723b65db942ebf7a18e5485a8ac695c73e5",
+      "sha256": "73a578c4e19b4e37b1a5142b47089723b65db942ebf7a18e5485a8ac695c73e5",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 56,
+        "height": 56
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/manus-storage/selectah-dubplate-5d-production-v2_bc9aa293.png"
+      ],
+      "original_filename": "selectah-dubplate-5d-production-v2_bc9aa293.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-dubplate-5d-production-v2_bc9aa293.png",
+      "repository_path": "client/public/assets/selectah-dubplate-5d-production-v2_bc9aa293.png",
+      "mime_type": "image/png",
+      "byte_size": 7261,
+      "source_sha256": "73a578c4e19b4e37b1a5142b47089723b65db942ebf7a18e5485a8ac695c73e5",
+      "sha256": "73a578c4e19b4e37b1a5142b47089723b65db942ebf7a18e5485a8ac695c73e5",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 56,
+        "height": 56
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-dubplate-urban_052862f6.png"
+      ],
+      "original_filename": "selectah-dubplate-urban_052862f6.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-dubplate-urban_052862f6.webp",
+      "repository_path": "client/public/assets/selectah-dubplate-urban_052862f6.webp",
+      "mime_type": "image/webp",
+      "byte_size": 693964,
+      "source_sha256": "c47422c83c33ef75f818801f0a41d059d8b646985af82bf5b9a5957fd6a2b334",
+      "sha256": "c47422c83c33ef75f818801f0a41d059d8b646985af82bf5b9a5957fd6a2b334",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-level-one-urban-stage-reference_43ddc07a.png"
+      ],
+      "original_filename": "selectah-level-one-urban-stage-reference_43ddc07a.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-level-one-urban-stage-reference_43ddc07a.webp",
+      "repository_path": "client/public/assets/selectah-level-one-urban-stage-reference_43ddc07a.webp",
+      "mime_type": "image/webp",
+      "byte_size": 231078,
+      "source_sha256": "f1cb0e1aae1bc5a7702ba10e32c4a2cdd0692bbb344561f7eda66500835940c8",
+      "sha256": "f1cb0e1aae1bc5a7702ba10e32c4a2cdd0692bbb344561f7eda66500835940c8",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-lion-urban_9431e50b.png"
+      ],
+      "original_filename": "selectah-lion-urban_9431e50b.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-lion-urban_9431e50b.webp",
+      "repository_path": "client/public/assets/selectah-lion-urban_9431e50b.webp",
+      "mime_type": "image/webp",
+      "byte_size": 697816,
+      "source_sha256": "1d47f1ccbe7652d5ca516db9f355f45addadf74939b9e0453a21a42fd1244864",
+      "sha256": "1d47f1ccbe7652d5ca516db9f355f45addadf74939b9e0453a21a42fd1244864",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-mixer-urban_aa64e423.png"
+      ],
+      "original_filename": "selectah-mixer-urban_aa64e423.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-mixer-urban_aa64e423.webp",
+      "repository_path": "client/public/assets/selectah-mixer-urban_aa64e423.webp",
+      "mime_type": "image/webp",
+      "byte_size": 374568,
+      "source_sha256": "e78bc06fcd7bc4add7af4df8ca6d140edf51b14d029021a2669dc496db91ca92",
+      "sha256": "e78bc06fcd7bc4add7af4df8ca6d140edf51b14d029021a2669dc496db91ca92",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-phone-urban_0aebd4d4.png"
+      ],
+      "original_filename": "selectah-phone-urban_0aebd4d4.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-phone-urban_0aebd4d4.webp",
+      "repository_path": "client/public/assets/selectah-phone-urban_0aebd4d4.webp",
+      "mime_type": "image/webp",
+      "byte_size": 195550,
+      "source_sha256": "65c8abaabbe0d89f354a939c6681abda1739405610ee5a4fd3d64400404d06ac",
+      "sha256": "65c8abaabbe0d89f354a939c6681abda1739405610ee5a4fd3d64400404d06ac",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-pill-urban_e2f4393e.png"
+      ],
+      "original_filename": "selectah-pill-urban_e2f4393e.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-pill-urban_e2f4393e.webp",
+      "repository_path": "client/public/assets/selectah-pill-urban_e2f4393e.webp",
+      "mime_type": "image/webp",
+      "byte_size": 1049824,
+      "source_sha256": "44bff38511aeb50d31881be71ff1591d555a4f4567cf2383ce8613833d9d4d7e",
+      "sha256": "44bff38511aeb50d31881be71ff1591d555a4f4567cf2383ce8613833d9d4d7e",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-police-siren-urban_5fb879fa.png"
+      ],
+      "original_filename": "selectah-police-siren-urban_5fb879fa.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-police-siren-urban_5fb879fa.webp",
+      "repository_path": "client/public/assets/selectah-police-siren-urban_5fb879fa.webp",
+      "mime_type": "image/webp",
+      "byte_size": 636732,
+      "source_sha256": "e6a0f7ffbfbb713cc10422539fb9b2ede8d6fc3516e23b3e33be62950647dc74",
+      "sha256": "e6a0f7ffbfbb713cc10422539fb9b2ede8d6fc3516e23b3e33be62950647dc74",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-runner-can-urban_b243de6f.png"
+      ],
+      "original_filename": "selectah-runner-can-urban_b243de6f.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-runner-can-urban_b243de6f.webp",
+      "repository_path": "client/public/assets/selectah-runner-can-urban_b243de6f.webp",
+      "mime_type": "image/webp",
+      "byte_size": 945574,
+      "source_sha256": "c727f6684d2a9fc6878f1811104596e048d496401cda68a29332009e199ee172",
+      "sha256": "c727f6684d2a9fc6878f1811104596e048d496401cda68a29332009e199ee172",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-runner-cart-urban_9a222f37.png"
+      ],
+      "original_filename": "selectah-runner-cart-urban_9a222f37.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-runner-cart-urban_9a222f37.webp",
+      "repository_path": "client/public/assets/selectah-runner-cart-urban_9a222f37.webp",
+      "mime_type": "image/webp",
+      "byte_size": 929742,
+      "source_sha256": "1f4849afe5f93cd5789c28a92c0e782beca8ecbd613c26fdc941c251e71cff65",
+      "sha256": "1f4849afe5f93cd5789c28a92c0e782beca8ecbd613c26fdc941c251e71cff65",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-runner-gear-urban_47eea311.png"
+      ],
+      "original_filename": "selectah-runner-gear-urban_47eea311.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-runner-gear-urban_47eea311.webp",
+      "repository_path": "client/public/assets/selectah-runner-gear-urban_47eea311.webp",
+      "mime_type": "image/webp",
+      "byte_size": 950392,
+      "source_sha256": "29e94f8170839c96ac79ae5bc03a2b0cad895111bf6cfc3dd43c626eceb3c741",
+      "sha256": "29e94f8170839c96ac79ae5bc03a2b0cad895111bf6cfc3dd43c626eceb3c741",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-runner-rat-urban_42c505b7.png"
+      ],
+      "original_filename": "selectah-runner-rat-urban_42c505b7.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-runner-rat-urban_42c505b7.webp",
+      "repository_path": "client/public/assets/selectah-runner-rat-urban_42c505b7.webp",
+      "mime_type": "image/webp",
+      "byte_size": 774878,
+      "source_sha256": "1c1d07d76a59f6d6f89c4fdc700ae0e4137da2f1446ee279d2cf3e24c541b8e5",
+      "sha256": "1c1d07d76a59f6d6f89c4fdc700ae0e4137da2f1446ee279d2cf3e24c541b8e5",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-runner-rock-urban_3cfc2fac.png"
+      ],
+      "original_filename": "selectah-runner-rock-urban_3cfc2fac.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-runner-rock-urban_3cfc2fac.webp",
+      "repository_path": "client/public/assets/selectah-runner-rock-urban_3cfc2fac.webp",
+      "mime_type": "image/webp",
+      "byte_size": 728796,
+      "source_sha256": "548bad236e377ae935b5c54b883fa39615aef6bd24906a9bdaf894283943e6d9",
+      "sha256": "548bad236e377ae935b5c54b883fa39615aef6bd24906a9bdaf894283943e6d9",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png"
+      ],
+      "original_filename": "selectah-speaker-stack-urban_9fd16c27.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-speaker-stack-urban_9fd16c27.webp",
+      "repository_path": "client/public/assets/selectah-speaker-stack-urban_9fd16c27.webp",
+      "mime_type": "image/webp",
+      "byte_size": 490318,
+      "source_sha256": "cd2dba426cad0e73a6b0de64361aa3564476fadce24ce0280728ae7d4b6ed358",
+      "sha256": "cd2dba426cad0e73a6b0de64361aa3564476fadce24ce0280728ae7d4b6ed358",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1280,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-splash-art-direction_4d1c250f.png",
+        "/manus-storage/selectah-splash-art-direction_4d1c250f.png"
+      ],
+      "original_filename": "selectah-splash-art-direction_4d1c250f.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-splash-art-direction_4d1c250f.webp",
+      "repository_path": "client/public/assets/selectah-splash-art-direction_4d1c250f.webp",
+      "mime_type": "image/webp",
+      "byte_size": 553610,
+      "source_sha256": "6b67a17a4625421346f2047ffecbce0672b863a29c2a8bccb0724e8bb39969b5",
+      "sha256": "6b67a17a4625421346f2047ffecbce0672b863a29c2a8bccb0724e8bb39969b5",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-turntable-urban_de17fd21.png"
+      ],
+      "original_filename": "selectah-turntable-urban_de17fd21.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-turntable-urban_de17fd21.webp",
+      "repository_path": "client/public/assets/selectah-turntable-urban_de17fd21.webp",
+      "mime_type": "image/webp",
+      "byte_size": 658314,
+      "source_sha256": "9ae0849b9ac449b57d4d5a1785beabe2859bdac672228c068f14df05ecbb9597",
+      "sha256": "9ae0849b9ac449b57d4d5a1785beabe2859bdac672228c068f14df05ecbb9597",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1920
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selectah-urban-brawler-visual-target_a56c19c4.png"
+      ],
+      "original_filename": "selectah-urban-brawler-visual-target_a56c19c4.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selectah-urban-brawler-visual-target_a56c19c4.webp",
+      "repository_path": "client/public/assets/selectah-urban-brawler-visual-target_a56c19c4.webp",
+      "mime_type": "image/webp",
+      "byte_size": 480628,
+      "source_sha256": "035cd510cfaf37ee5b8a782460e70e39a5464de262e49dc1207ce8b108711595",
+      "sha256": "035cd510cfaf37ee5b8a782460e70e39a5464de262e49dc1207ce8b108711595",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "original_managed_paths": [
+        "/embedded-assets/selector-dj-rear-runner-transparent_35d3ab26.png"
+      ],
+      "original_filename": "selector-dj-rear-runner-transparent_35d3ab26.png",
+      "source_kind": "managed-storage",
+      "destination_path": "/assets/selector-dj-rear-runner-transparent_35d3ab26.png",
+      "repository_path": "client/public/assets/selector-dj-rear-runner-transparent_35d3ab26.png",
+      "mime_type": "image/png",
+      "byte_size": 1385865,
+      "source_sha256": "3cb31826f80fc07e55bc577cf0d1ad86f35c973455b48f70910f2cf777a3ef32",
+      "sha256": "3cb31826f80fc07e55bc577cf0d1ad86f35c973455b48f70910f2cf777a3ef32",
+      "sha256_match": true,
+      "migration_status": "copied-byte-for-byte",
+      "production_reference_status": "pending-reference-update",
+      "dimensions": {
+        "width": 972,
+        "height": 1940
+      }
+    }
+  ],
+  "exceptions": [
+    {
+      "original_managed_paths": [
+        "/manus-storage/mix%20cover%20%26%20edit.mp3"
+      ],
+      "original_filename": "mix%20cover%20%26%20edit.mp3",
+      "migration_status": "skipped-test-only-legacy-reference",
+      "production_reference_status": "no-active-production-reference"
+    }
+  ]
+}

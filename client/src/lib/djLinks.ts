@@ -50,5 +50,5 @@ export const EXCLUSIVE_RELEASE = {
   title: "Jersh In Case",
   artist: "5th Dimension, Skavo featuring MC Mestup",
   duration: "5:01",
-  url: "/embedded-assets/jersh-in-case-5th-dimension_36de0a4f.mp3",
+  url: "/assets/jersh-in-case-5th-dimension_36de0a4f.mp3",
 } as const;

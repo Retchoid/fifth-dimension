@@ -120,3 +120,7 @@ client/public/__manus__/version.json
 *.flac
 *.m4a
 
+# The approved public 5th Dimension catalogue is byte-preserved runtime media,
+# tracked through Git LFS rather than ordinary Git blobs.
+!client/public/assets/
+!client/public/assets/*.mp3

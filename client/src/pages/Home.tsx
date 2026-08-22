@@ -62,74 +62,74 @@ const projects = [
     title: "Frequency loading",
     detail: "A fresh 5th Dimension mix is taking shape between breakbeat pressure, bassline weight, and late-night jungle heat.",
     status: "In the lab",
-    image: "/embedded-assets/5d-frequency-loading-boombox_ce5a46d2.png",
+    image: "/assets/5d-frequency-loading-boombox_ce5a46d2.webp",
   },
   {
     id: "LIVE SIGNAL",
     title: "Floor rewiring sessions",
     detail: "Upcoming appearances, special broadcasts, and after-hours selections will land here when the coordinates are locked.",
     status: "Signal incoming",
-    image: "/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png",
+    image: "/assets/5th-dimension-graffiti-mark_f607b9d3.png",
   },
 ];
 
 const art = [
   {
-    src: "/embedded-assets/ragga-revival_bc56c618.png",
+    src: "/assets/ragga-revival_bc56c618.png",
     alt: "Ragga Revival event poster featuring Hi Deaf",
     label: "RAGGA REVIVAL / 2012",
     className: "art-tall art-ragga",
   },
   {
-    src: "/embedded-assets/graffiti-collage_bac19afe.png",
+    src: "/assets/graffiti-collage_bac19afe.png",
     alt: "Graffiti collage with retro figures and neon green paint",
     label: "GRAFFITI CAKE / 2025",
     className: "art-square art-cake",
   },
   {
-    src: "/embedded-assets/cool-world-piece_b1a88e9c.png",
+    src: "/assets/cool-world-piece_b1a88e9c.png",
     alt: "Cool World-inspired painted art with a rabbit character and green graffiti",
     label: "COOL WORLD STUDY",
     className: "art-tall art-cool",
   },
   {
-    src: "/embedded-assets/painted-character_15d43de1.png",
+    src: "/assets/painted-character_15d43de1.png",
     alt: "Hand-painted portrait with a wax-style graffiti cap",
     label: "WAX PORTRAIT",
     className: "art-square art-wax",
   },
   {
-    src: "/embedded-assets/5th-dimension-character_a901a681.jpg",
+    src: "/assets/5th-dimension-character_a901a681.jpg",
     alt: "Neon vaporwave portrait in magenta, cyan and violet",
     label: "NEON FREQUENCY PORTRAIT",
     className: "art-square art-portrait",
   },
   {
-    src: "/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png",
+    src: "/assets/5th-dimension-graffiti-mark_f607b9d3.png",
     alt: "5th Dimension graffiti logo on cyan paint texture",
     label: "DIMENSION TAG",
     className: "art-tall art-tag",
   },
   {
-    src: "/embedded-assets/mix-cover-cfmu-hostile-airwaves_9603abc2.png",
+    src: "/assets/mix-cover-cfmu-hostile-airwaves_9603abc2.webp",
     alt: "CFMU Hostile Airwaves May 9 mix cover from the 5th Dimension archive",
     label: "CFMU HOSTILE AIRWAVES / DUBPLATE",
     className: "art-cover art-cfmu",
   },
   {
-    src: "/embedded-assets/png-review-deep-on-rolling_481214e6.png",
+    src: "/assets/png-review-deep-on-rolling_481214e6.webp",
     alt: "Deep On Rolling liquid funk mix cover from the 5th Dimension archive",
     label: "DEEP ON ROLLING / LIQUID PRESSURE",
     className: "art-cover art-deep-rolling",
   },
   {
-    src: "/embedded-assets/selectah-splash-art-direction_4d1c250f.png",
+    src: "/assets/selectah-splash-art-direction_4d1c250f.webp",
     alt: "Selectah Showdown arcade splash art direction with pirate-radio hazard energy",
     label: "SELECTAH SHOWDOWN / SPLASH FRAME",
     className: "art-screen art-splash",
   },
   {
-    src: "/embedded-assets/5d-selector-level-two-detailed-stage_89e2157b.png",
+    src: "/assets/5d-selector-level-two-detailed-stage_89e2157b.webp",
     alt: "Selectah Showdown Level 2 detailed crowd-pressure stage",
     label: "CROWD PRESSURE / STAGE FRAME",
     className: "art-screen art-crowd",
@@ -143,27 +143,27 @@ const MIX_ARCHIVE = {
       title: "CFMU Hostile Airwaves May 9",
       artist: "Dj Hideaf",
       description: "Hostile Airwaves archive recording. Date: May 9; year not listed.",
-      file: "/embedded-assets/cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3",
+      file: "/assets/cfmu-hostile-airwaves-may-9-dj-hideaf-final_dc5a204c.mp3",
       downloadName: "CFMU Hostile Airwaves May 9 - Dj Hideaf.mp3",
-      cover: "/embedded-assets/mix-cover-cfmu-hostile-airwaves_9603abc2.png",
+      cover: "/assets/mix-cover-cfmu-hostile-airwaves_9603abc2.webp",
     },
     {
       id: "DNB / 02",
       title: "Deep On Rolling",
       artist: "Bobbyjackets",
       description: "Liquid funk feature recorded for Red.fm.",
-      file: "/embedded-assets/deep-on-rolling-bobbyjackets-final_0c567ad7.mp3",
+      file: "/assets/deep-on-rolling-bobbyjackets-final_0c567ad7.mp3",
       downloadName: "Deep On Rolling - Bobbyjackets.mp3",
-      cover: "/embedded-assets/png-review-deep-on-rolling_481214e6.png",
+      cover: "/assets/png-review-deep-on-rolling_481214e6.webp",
     },
     {
       id: "DNB / 03",
       title: "Minianimilism 2",
       artist: "5th Dimension",
       description: "Drum-and-bass transmission from the 5D archive.",
-      file: "/embedded-assets/minianimilism-2-5th-dimension-final_567b354e.mp3",
+      file: "/assets/minianimilism-2-5th-dimension-final_567b354e.mp3",
       downloadName: "Minianimilism 2 - 5th Dimension.mp3",
-      cover: "/embedded-assets/png-review-minianimilism-2_f8c55f62.png",
+      cover: "/assets/png-review-minianimilism-2_f8c55f62.webp",
     },
   ],
   house: [
@@ -172,54 +172,54 @@ const MIX_ARCHIVE = {
       title: "Live festival house mix 2022",
       artist: "Bobbyjackets",
       description: "Live festival house broadcast from 2022.",
-      file: "/embedded-assets/live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3",
+      file: "/assets/live-festival-house-mix-2022-bobbyjackets-final_228c9c66.mp3",
       downloadName: "Live festival house mix 2022 - Bobbyjackets.mp3",
-      cover: "/embedded-assets/png-review-live-festival-house-2022_4dd116a7.png",
+      cover: "/assets/png-review-live-festival-house-2022_4dd116a7.webp",
     },
     {
       id: "HOUSE / 02",
       title: "Holes in Our Souls",
       artist: "Bobbyjackets",
       description: "Multi-style downtempo and deep-house session.",
-      file: "/embedded-assets/holes-in-our-souls-bobbyjackets-final_9ab83342.mp3",
+      file: "/assets/holes-in-our-souls-bobbyjackets-final_9ab83342.mp3",
       downloadName: "Holes in Our Souls - Bobbyjackets.mp3",
-      cover: "/embedded-assets/png-review-holes-in-our-souls_ec90b79e.png",
+      cover: "/assets/png-review-holes-in-our-souls_ec90b79e.webp",
     },
     {
       id: "LIVE HOUSE / A",
       title: "Festival live mix house — Side A",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part A: techy electro bass house.",
-      file: "/embedded-assets/festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3",
+      file: "/assets/festival-live-mix-house-side-a-bobbyjackets-final_201d86ef.mp3",
       downloadName: "Festival live mix house - Side A - Bobbyjackets.mp3",
-      cover: "/embedded-assets/png-review-festival-house-side-a_b1083694.png",
+      cover: "/assets/png-review-festival-house-side-a_b1083694.webp",
     },
     {
       id: "LIVE HOUSE / B",
       title: "Festival live mix house — Side B",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part B: slightly harder bass.",
-      file: "/embedded-assets/festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3",
+      file: "/assets/festival-live-mix-house-side-b-bobbyjackets-final_e64122a2.mp3",
       downloadName: "Festival live mix house - Side B - Bobbyjackets.mp3",
-      cover: "/embedded-assets/png-review-festival-house-side-b_9e1003bf.png",
+      cover: "/assets/png-review-festival-house-side-b_9e1003bf.webp",
     },
     {
       id: "LIVE HOUSE / C",
       title: "Festival live mix house — Side C",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part C: keep it moving on the dancefloor.",
-      file: "/embedded-assets/festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3",
+      file: "/assets/festival-live-mix-house-side-c-bobbyjackets-final_44ca40df.mp3",
       downloadName: "Festival live mix house - Side C - Bobbyjackets.mp3",
-      cover: "/embedded-assets/png-review-festival-house-side-c_dc39199f.png",
+      cover: "/assets/png-review-festival-house-side-c_dc39199f.webp",
     },
     {
       id: "LIVE HOUSE / D",
       title: "Festival live mix house — Side D",
       artist: "Bobbyjackets",
       description: "Long progressive live-house set, Part D: sun coming up, totally turnt.",
-      file: "/embedded-assets/festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3",
+      file: "/assets/festival-live-mix-house-side-d-bobbyjackets-final_66e8eaa3.mp3",
       downloadName: "Festival live mix house - Side D - Bobbyjackets.mp3",
-      cover: "/embedded-assets/png-review-festival-house-side-d_a5ceb8e8.png",
+      cover: "/assets/png-review-festival-house-side-d_a5ceb8e8.webp",
     },
   ],
 } as const;
@@ -434,7 +434,7 @@ export default function Home() {
       <header className="dj-header">
         <a className="header-brand" href="#top" aria-label="5th Dimension home">
           <span className="brand-pulse" aria-hidden="true" />
-          <img className="header-seal" src="/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png" alt="" />
+          <img className="header-seal" src="/assets/5th-dimension-graffiti-mark_f607b9d3.png" alt="" />
           <span className="header-brand-copy"><small>5D / PIRATE RADIO AUTH</small><b>BASS TRANSMISSION</b></span>
         </a>
         <nav className="dj-nav" aria-label="Main navigation">
@@ -557,7 +557,7 @@ export default function Home() {
           <div className="hero-logo-stage">
             <div className="logo-grid" aria-hidden="true" />
             <img
-              src="/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png"
+              src="/assets/5th-dimension-graffiti-mark_f607b9d3.png"
               alt="5th Dimension graffiti logo"
               className="hero-logo"
             />
@@ -635,7 +635,7 @@ export default function Home() {
               <div className="tags"><span>#DANCEHALLVIBES</span><span>#JUNGLEREVIVAL</span><span>#SOUNDSYSTEMWEIGHT</span><span>#BREAKBEATALCHEMIST</span></div>
             </div>
             <div className="zine-right-column">
-              <img src="/embedded-assets/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
+              <img src="/assets/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
               <span className="zine-emblem-caption">JUNGLE / GROOVE / PRESSURE</span>
             </div>
           </div>
@@ -727,7 +727,7 @@ export default function Home() {
           </div>
           <article className="matrix-preview" aria-labelledby="matrix-title">
             <div className="matrix-art-window" aria-hidden="true">
-              <img src="/embedded-assets/dimension-performance-matrix_c45b9b28.png" alt="" />
+              <img src="/assets/dimension-performance-matrix_c45b9b28.png" alt="" />
             </div>
             <div className="matrix-scrim" aria-hidden="true" />
             <div className="matrix-content">
@@ -966,7 +966,7 @@ export default function Home() {
             </div>
           </div>
           <div className="contact-logo-wrap">
-            <img src="/embedded-assets/5th-dimension-graffiti-mark_f607b9d3.png" alt="5th Dimension graffiti mark" />
+            <img src="/assets/5th-dimension-graffiti-mark_f607b9d3.png" alt="5th Dimension graffiti mark" />
           </div>
         </section>
 

@@ -3,19 +3,13 @@ services:
     name: fifth-dimension
     runtime: node
     branch: main2
-    buildCommand: corepack enable && corepack prepare pnpm@10.4.1 --activate && pnpm install --frozen-lockfile && pnpm check && pnpm test && pnpm audit:selector && pnpm build
+    buildCommand: git lfs pull && corepack enable && corepack prepare pnpm@10.4.1 --activate && pnpm install --frozen-lockfile && pnpm check && pnpm test && pnpm audit:selector && pnpm build
     startCommand: pnpm start
     healthCheckPath: /healthz
     autoDeployTrigger: commit
     envVars:
       - key: NODE_ENV
         value: production
-      # Required for the existing /manus-storage/* asset proxy. Do not deploy
-      # without these values or canonical game/site artwork may fail to load.
-      - key: BUILT_IN_FORGE_API_URL
-        sync: false
-      - key: BUILT_IN_FORGE_API_KEY
-        sync: false
       # Optional unless account-backed features are required on this deployment.
       - key: DATABASE_URL
         sync: false

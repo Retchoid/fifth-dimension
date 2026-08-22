@@ -31,10 +31,10 @@ const REQUIRED_RECORDS = 25;
 const LEVEL_TWO_REQUIRED_RECORDS = 50;
 
 const LEVEL_ONE_MASTER_ASSETS = {
-  golden: "/manus-storage/1000001169_3204905a.png",
-  night: "/manus-storage/1000001168_c5184bab.png",
-  dusk: "/manus-storage/1000001166_e9b75dd0.png",
-  waking: "/manus-storage/1000001162_aa49120d.png",
+  golden: "/assets/1000001169_3204905a.png",
+  night: "/assets/1000001168_c5184bab.png",
+  dusk: "/assets/1000001166_e9b75dd0.png",
+  waking: "/assets/1000001162_aa49120d.png",
 } as const;
 
 type LevelOneMasterState = keyof typeof LEVEL_ONE_MASTER_ASSETS;
@@ -81,30 +81,30 @@ type PitEntityType = PitGearType | PitHazardType;
 type FallingItemType = "record" | "cop" | "bottle" | "apple" | "lion" | "cdj" | "mixer" | "turntable" | "adapter" | "pill" | "phone";
 
 const URBAN_PROP_ASSETS: Partial<Record<FallingItemType, string>> = {
-  record: "/embedded-assets/selectah-dubplate-5d-production-v2.png",
-  cop: "/embedded-assets/selectah-police-siren-urban_5fb879fa.png",
-  pill: "/embedded-assets/selectah-pill-urban_e2f4393e.png",
-  phone: "/embedded-assets/selectah-phone-urban_0aebd4d4.png",
-  cdj: "/embedded-assets/selectah-cdj-urban_79c0b46c.png",
-  mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
-  turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
-  adapter: "/embedded-assets/selectah-adapter-urban_ab9d38ca.png",
-  lion: "/embedded-assets/selectah-lion-urban_9431e50b.png",
-  bottle: "/embedded-assets/selectah-bottle-urban_fc7e712f.png",
-  apple: "/embedded-assets/selectah-apple-core-urban_66dacfaa.png",
+  record: "/assets/selectah-dubplate-5d-production-v2.png",
+  cop: "/assets/selectah-police-siren-urban_5fb879fa.webp",
+  pill: "/assets/selectah-pill-urban_e2f4393e.webp",
+  phone: "/assets/selectah-phone-urban_0aebd4d4.webp",
+  cdj: "/assets/selectah-cdj-urban_79c0b46c.webp",
+  mixer: "/assets/selectah-mixer-urban_aa64e423.webp",
+  turntable: "/assets/selectah-turntable-urban_de17fd21.webp",
+  adapter: "/assets/selectah-adapter-urban_ab9d38ca.webp",
+  lion: "/assets/selectah-lion-urban_9431e50b.webp",
+  bottle: "/assets/selectah-bottle-urban_fc7e712f.webp",
+  apple: "/assets/selectah-apple-core-urban_66dacfaa.webp",
 };
 
 const URBAN_RUNNER_ASSETS: Record<BonusRunnerType, string> = {
-  headphones: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
-  turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
-  mic: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
-  speaker: "/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png",
-  mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
-  cdj: "/embedded-assets/selectah-cdj-urban_79c0b46c.png",
-  cart: "/embedded-assets/selectah-runner-cart-urban_9a222f37.png",
-  can: "/embedded-assets/selectah-runner-can-urban_b243de6f.png",
-  rock: "/embedded-assets/selectah-runner-rock-urban_3cfc2fac.png",
-  rat: "/embedded-assets/selectah-runner-rat-urban_42c505b7.png",
+  headphones: "/assets/selectah-runner-gear-urban_47eea311.webp",
+  turntable: "/assets/selectah-turntable-urban_de17fd21.webp",
+  mic: "/assets/selectah-runner-gear-urban_47eea311.webp",
+  speaker: "/assets/selectah-speaker-stack-urban_9fd16c27.webp",
+  mixer: "/assets/selectah-mixer-urban_aa64e423.webp",
+  cdj: "/assets/selectah-cdj-urban_79c0b46c.webp",
+  cart: "/assets/selectah-runner-cart-urban_9a222f37.webp",
+  can: "/assets/selectah-runner-can-urban_b243de6f.webp",
+  rock: "/assets/selectah-runner-rock-urban_3cfc2fac.webp",
+  rat: "/assets/selectah-runner-rat-urban_42c505b7.webp",
 };
 
 const FALLING_ITEM_RULES: Record<FallingItemType, { width: number; height: number; visualSize: number; visualScale: number; levelOneVisualScale?: number; tilt: number }> = {
@@ -171,9 +171,9 @@ interface PitRunEntity {
 }
 
 const CELEBRATION_DANCERS = [
-  { className: "dancer-lime", src: "/embedded-assets/5d-jungle-dancer-lime_af13269a.png" },
-  { className: "dancer-cyan", src: "/embedded-assets/5d-jungle-dancer-cyan_391dfc3c.png" },
-  { className: "dancer-magenta", src: "/embedded-assets/5d-jungle-dancer-magenta_da5bea9b.png" },
+  { className: "dancer-lime", src: "/assets/5d-jungle-dancer-lime_af13269a.webp" },
+  { className: "dancer-cyan", src: "/assets/5d-jungle-dancer-cyan_391dfc3c.webp" },
+  { className: "dancer-magenta", src: "/assets/5d-jungle-dancer-magenta_da5bea9b.webp" },
 ] as const;
 
 const COMBO_CALLOUTS = ["Big Up!", "Gun Finger Massive", "Maximum Boost", "Maximum Respekt"] as const;
@@ -183,18 +183,18 @@ const BONUS_HAZARD_TYPES: BonusHazardType[] = ["cart", "can", "rock", "rat"];
 const PIT_REQUIRED_GEAR: PitGearType[] = ["crate", "mic", "mixer", "cdj", "turntable", "headphones"];
 const PIT_HAZARD_TYPES: PitHazardType[] = ["bin", "rat", "bottle", "cart", "barrier", "pothole"];
 const PIT_RUN_ENTITY_ASSETS: Record<PitEntityType, string> = {
-  crate: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
-  mic: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
-  mixer: "/embedded-assets/selectah-mixer-urban_aa64e423.png",
-  cdj: "/embedded-assets/selectah-cdj-urban_79c0b46c.png",
-  turntable: "/embedded-assets/selectah-turntable-urban_de17fd21.png",
-  headphones: "/embedded-assets/selectah-runner-gear-urban_47eea311.png",
-  bin: "/embedded-assets/selectah-runner-can-urban_b243de6f.png",
-  rat: "/embedded-assets/selectah-runner-rat-urban_42c505b7.png",
-  bottle: "/embedded-assets/selectah-bottle-urban_fc7e712f.png",
-  cart: "/embedded-assets/selectah-runner-cart-urban_9a222f37.png",
-  barrier: "/embedded-assets/selectah-runner-cart-urban_9a222f37.png",
-  pothole: "/embedded-assets/selectah-runner-rock-urban_3cfc2fac.png",
+  crate: "/assets/selectah-runner-gear-urban_47eea311.webp",
+  mic: "/assets/selectah-runner-gear-urban_47eea311.webp",
+  mixer: "/assets/selectah-mixer-urban_aa64e423.webp",
+  cdj: "/assets/selectah-cdj-urban_79c0b46c.webp",
+  turntable: "/assets/selectah-turntable-urban_de17fd21.webp",
+  headphones: "/assets/selectah-runner-gear-urban_47eea311.webp",
+  bin: "/assets/selectah-runner-can-urban_b243de6f.webp",
+  rat: "/assets/selectah-runner-rat-urban_42c505b7.webp",
+  bottle: "/assets/selectah-bottle-urban_fc7e712f.webp",
+  cart: "/assets/selectah-runner-cart-urban_9a222f37.webp",
+  barrier: "/assets/selectah-runner-cart-urban_9a222f37.webp",
+  pothole: "/assets/selectah-runner-rock-urban_3cfc2fac.webp",
 };
 const PIT_RUN_ENTITY_LABELS: Record<PitEntityType, string> = {
   crate: "LAST CRATE!", mic: "MIC FOUND", mixer: "MIXER", cdj: "CDJ", turntable: "DECK", headphones: "HEADPHONES",
@@ -3601,7 +3601,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
       <audio
         ref={bgMusicRef}
-        src="/embedded-assets/5d-jungle-genesis-track_ff9d149a.mp3"
+        src="/assets/5d-jungle-genesis-track_ff9d149a.mp3"
         loop
         preload="auto"
         playsInline
@@ -3609,7 +3609,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
       />
       <audio
         ref={bonusMusicRef}
-        src="/embedded-assets/afterparty-runner-fast-breakbeat_0d617411.mp3"
+        src="/assets/afterparty-runner-fast-breakbeat_0d617411.mp3"
         loop
         preload="auto"
         playsInline
@@ -3718,11 +3718,11 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           )}
           {level === 2 && (
             <div className="level-two-club-layers" aria-hidden="true">
-              <img className="level-two-club-layer layer-backwall" src="/manus-storage/level2-club-backwall_0fefe2b1.png" alt="" />
-              <img className="level-two-club-layer layer-architecture" src="/manus-storage/level2-club-architecture_b59eb6c5.png" alt="" />
-              <img className="level-two-club-layer layer-crowd" src="/manus-storage/level2-club-crowd-bands_f8a90d30.png" alt="" />
-              <img className="level-two-club-layer layer-speakers" src="/manus-storage/level2-club-speaker-edges_2cd0f111.png" alt="" />
-              <img className="level-two-club-layer layer-fx" src="/manus-storage/level2-club-reactive-fx_59e2c1c8.png" alt="" />
+              <img className="level-two-club-layer layer-backwall" src="/assets/level2-club-backwall_0fefe2b1.webp" alt="" />
+              <img className="level-two-club-layer layer-architecture" src="/assets/level2-club-architecture_b59eb6c5.webp" alt="" />
+              <img className="level-two-club-layer layer-crowd" src="/assets/level2-club-crowd-bands_f8a90d30.webp" alt="" />
+              <img className="level-two-club-layer layer-speakers" src="/assets/level2-club-speaker-edges_2cd0f111.webp" alt="" />
+              <img className="level-two-club-layer layer-fx" src="/assets/level2-club-reactive-fx_59e2c1c8.webp" alt="" />
               <span className="level-two-action-corridor" />
             </div>
           )}
@@ -3762,7 +3762,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           ) : (
             <>
               <span className="stage-sign stage-sign-left" /><span className="stage-sign stage-sign-right" />
-              <img className="stage-edge-speaker" src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" />
+              <img className="stage-edge-speaker" src="/assets/selectah-speaker-stack-urban_9fd16c27.webp" alt="" />
               <img className="stage-npc-reaction" src={CELEBRATION_DANCERS[1].src} alt="" />
               <i className="stage-flyer stage-flyer-one" /><i className="stage-flyer stage-flyer-two" /><i className="stage-flyer stage-flyer-three" />
             </>
@@ -3938,7 +3938,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             </div>
             <div className="bonus-tip">AUTO RUN · A / D OR ARROWS STEER · DRAG OR TAP A ROAD LANE · ONE HIT ENDS THE DASH</div>
             <div className={`bonus-dj-runner afterparty-dj-runner lane-${bonusLane}${bonusDoorOpen ? " is-exit-lit" : ""}`}>
-              <img src="/embedded-assets/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ running toward the after party" />
+              <img src="/assets/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ running toward the after party" />
             </div>
             <div className="bonus-obstacle-layer afterparty-entity-layer" aria-hidden="true">
               {bonusObstacles.map((entity) => <span key={entity.id} className={`bonus-obstacle afterparty-entity ${entity.type} lane-${entity.lane}`} data-entity={entity.type} style={{ "--runner-depth": `${entity.depth}%` } as React.CSSProperties}><i className="urban-runner-asset" style={{ "--urban-runner-url": `url(${URBAN_RUNNER_ASSETS[entity.type]})` } as React.CSSProperties} /><b>{entity.type === "headphones" ? "HP" : entity.type === "turntable" ? "TT" : entity.type === "speaker" ? "SPK" : entity.type === "mixer" ? "MIX" : entity.type === "cart" ? "CART" : entity.type.toUpperCase()}</b></span>)}
@@ -3950,8 +3950,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {isPitRunActive && (
           <div className={`pit-run-stage pit-run-frame-${pitRunFrame} pit-run-hit-${pitRunHits}`} role="application" aria-label="Level 3 Pit Run. Touch or point horizontally to guide the Selectah through the approaching street, recover all six critical sound-system items, and avoid the street hazards.">
             <div className="pit-run-approved-world" aria-hidden="true">
-              <img className="pit-run-world-art pit-run-world-deep" src="/manus-storage/approved-pit-run-afterparty-board_b135c77c.png" alt="" />
-              <img className="pit-run-world-art pit-run-world-arrival" src="/manus-storage/approved-pit-run-afterparty-board_b135c77c.png" alt="" />
+              <img className="pit-run-world-art pit-run-world-deep" src="/assets/approved-pit-run-afterparty-board_b135c77c.png" alt="" />
+              <img className="pit-run-world-art pit-run-world-arrival" src="/assets/approved-pit-run-afterparty-board_b135c77c.png" alt="" />
               <i className="pit-run-dawn-wash" />
               <i className="pit-run-street-light" />
               <i className="pit-run-police-light" />
@@ -3964,7 +3964,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="pit-run-inventory" aria-label="Critical gear recovery inventory">
               {PIT_REQUIRED_GEAR.map((gear) => <span key={gear} className={pitRunInventory.includes(gear) ? "secured" : "missing"}>{gear === "turntable" ? "TT" : gear === "headphones" ? "HP" : gear === "crate" ? "CRT" : gear.toUpperCase()}</span>)}
             </div>
-            <div className={`pit-runner lane-${pitRunLane}`}><img src="/embedded-assets/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ moving through the pit run" /></div>
+            <div className={`pit-runner lane-${pitRunLane}`}><img src="/assets/selector-dj-rear-runner-transparent_35d3ab26.png" alt="Rear-view jungle DJ moving through the pit run" /></div>
             <div className="pit-run-entity-layer" aria-hidden="true">
               {pitRunEntities.map((entity) => <span key={entity.id} className={`pit-run-entity ${entity.type} lane-${entity.lane}${(PIT_REQUIRED_GEAR as readonly string[]).includes(entity.type) ? " is-gear" : " is-hazard"}`} style={{ "--pit-depth": `${entity.depth}%` } as React.CSSProperties}><i className="pit-run-entity-art" style={{ "--pit-run-entity-url": `url(${PIT_RUN_ENTITY_ASSETS[entity.type]})` } as React.CSSProperties} /><b>{PIT_RUN_ENTITY_LABELS[entity.type]}</b></span>)}
             </div>
@@ -3973,7 +3973,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {isAfterpartyUnlocked && !isPitRunActive && (
           <div className="afterparty-arrival-stage" role="status" aria-live="polite">
-            <img className="afterparty-arrival-art" src="/manus-storage/approved-pit-run-afterparty-board_b135c77c.png" alt="Sunrise over the illustrated afterparty destination" />
+            <img className="afterparty-arrival-art" src="/assets/approved-pit-run-afterparty-board_b135c77c.png" alt="Sunrise over the illustrated afterparty destination" />
             <div className="afterparty-arrival-copy"><span>YOU MADE IT.</span><strong>RUN THE AFTERS.</strong><em>{pitRunInventory.map((gear) => gear === "turntable" ? "TT" : gear === "headphones" ? "HP" : gear === "crate" ? "CRT" : gear.toUpperCase()).join(" · ")}</em></div>
           </div>
         )}
@@ -4046,7 +4046,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
               <span className="cop-car-wheel cop-car-wheel-right" />
             </div>
             <div className="police-dj-reaction" aria-hidden="true">
-              <img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="" />
+              <img src="/assets/5d-selector-jungle-dj-sprite_502781f7.webp" alt="" />
             </div>
             <div className="police-recovery-prompt" aria-hidden="true">
               <strong>RECOVERY COMBO</strong>
@@ -4066,7 +4066,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
             <div className="empty-club-room" aria-hidden="true">
               <span className="empty-club-light empty-club-light-left" /><span className="empty-club-light empty-club-light-right" />
               <span className="empty-club-speaker empty-club-speaker-left" /><span className="empty-club-speaker empty-club-speaker-right" />
-              <span className="empty-club-dj"><img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /></span>
+              <span className="empty-club-dj"><img src="/assets/5d-selector-jungle-dj-sprite_502781f7.webp" alt="" /></span>
               <span className="empty-club-door door-one" /><span className="empty-club-door door-two" /><span className="empty-club-tumbleweed" />
             </div>
             <div className={`crowd-anger-copy${crowdHazardVariantRef.current === "thrown" ? " is-thrown-tune" : " is-wrong-tune"}`}>
@@ -4079,7 +4079,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
         {activeArcadeSequence === "pill" && !gameOver && (
           <div className="game-overlay hazard-splash pill-overload-overlay" role="status" aria-live="assertive">
             <div className="pill-trip-burst" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index} className={`pill-trip-ray pill-trip-ray-${index % 6}`} />)}</div>
-            <div className="dopey-dj-portrait" aria-hidden="true"><img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="dopey-pupil pupil-left" /><span className="dopey-pupil pupil-right" /><span className="dopey-smile"><i /><i /><i /></span></div>
+            <div className="dopey-dj-portrait" aria-hidden="true"><img src="/assets/5d-selector-jungle-dj-sprite_502781f7.webp" alt="" /><span className="dopey-pupil pupil-left" /><span className="dopey-pupil pupil-right" /><span className="dopey-smile"><i /><i /><i /></span></div>
             <div className="pill-pitch-wobble" aria-hidden="true"><i>PITCH</i><b>WOBBLE</b><i>PITCH</i></div>
             <div className="pill-overload-copy"><span>PILL PRESSURE / 2 CONSECUTIVE HITS / PITCH WOBBLE</span><strong>TOO HIGH<br />TO PLAY!</strong><em>BRUV. YOU ATE THE PILL. THE RIDDIM IS LITERALLY MELTING. 🫠</em></div>
             <div className="pill-floaters" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <i key={index} className={`pill-floater pill-floater-${index % 4}`} />)}</div>
@@ -4285,7 +4285,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className={`game-overlay loss-curb-overlay${heldLossPreview ? " viewport-verify-hold" : ""}`} role="status" aria-live="assertive">
             <div className="loss-curb-night" aria-hidden="true"><span className="loss-moon" /><span className="loss-venue-sign">RAVE</span><span className="loss-venue-door" /><span className="loss-neon-spill" /></div>
             <div className="loss-curb-ground" aria-hidden="true"><i /><i /><i /></div>
-            <div className="loss-curb-dj" aria-hidden="true"><img src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png" alt="" /><span className="loss-dj-leg loss-dj-leg-left" /><span className="loss-dj-leg loss-dj-leg-right" /><span className="loss-dj-crate" /></div>
+            <div className="loss-curb-dj" aria-hidden="true"><img src="/assets/5d-selector-jungle-dj-sprite_502781f7.webp" alt="" /><span className="loss-dj-leg loss-dj-leg-left" /><span className="loss-dj-leg loss-dj-leg-right" /><span className="loss-dj-crate" /></div>
             <div className="loss-curb-copy"><span>LAST TUNE / CURB-SIDE COMEDOWN</span><strong>THE RAVE<br />LEFT YOU OUTSIDE.</strong><em>TAKE A BREATH. THE NEXT SESSION IS WAITING.</em></div>
           </div>
         )}
@@ -4383,7 +4383,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
                 {mechanicsDebugEnabled ? <div className={`mechanics-debug-object ${item.type === "record" ? "collectible" : item.type === "cop" || item.type === "pill" || item.type === "phone" || item.type === "bottle" || item.type === "apple" ? "hazard" : "bonus"}`} /> : item.type === "record" ? (
                   <img
                     className="record-dubplate-sprite"
-                    src="/manus-storage/selectah-dubplate-5d-production-v2_bc9aa293.png"
+                    src="/assets/selectah-dubplate-5d-production-v2_bc9aa293.png"
                     alt=""
                     aria-hidden="true"
                     draggable={false}
@@ -4474,8 +4474,8 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
 
         {/* Level 1 sound-system assembly: half stack at 10, full stack at 15, and a dancer payoff at the 18-dub streak. */}
         <div className={`dj-booth-stage${level === 1 && recordsCaught >= 10 ? " speakers-half-raised" : ""}${level === 1 && recordsCaught >= 15 ? " speakers-full-raised" : ""}${level === 2 ? " level-two-speaker-stage" : ""}${isUnlockCelebrating ? " celebration-active" : ""}`} aria-hidden="true">
-          <div className="speaker-tower urban-speaker-tower speaker-tower-left"><img src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" /></div>
-          <div className="speaker-tower urban-speaker-tower speaker-tower-right"><img src="/embedded-assets/selectah-speaker-stack-urban_9fd16c27.png" alt="" /></div>
+          <div className="speaker-tower urban-speaker-tower speaker-tower-left"><img src="/assets/selectah-speaker-stack-urban_9fd16c27.webp" alt="" /></div>
+          <div className="speaker-tower urban-speaker-tower speaker-tower-right"><img src="/assets/selectah-speaker-stack-urban_9fd16c27.webp" alt="" /></div>
           {((level === 1 && recordsCaught >= 20) || (level === 2 && recordsCaught >= LEVEL_TWO_REQUIRED_RECORDS)) && (
             <div className="speaker-stack-dancers">
               <img className="speaker-stack-dancer dancer-lime" src={CELEBRATION_DANCERS[0].src} alt="" />
@@ -4519,7 +4519,7 @@ export default function DjMiniGame({ onUnlockDownload, onAchievementFlowComplete
           <div className="dj-catcher-art" role="img" aria-label="2-bit jungle DJ selector holding a turntable">
             <img
               className="dj-sprite"
-              src="/embedded-assets/5d-selector-jungle-dj-sprite_502781f7.png"
+              src="/assets/5d-selector-jungle-dj-sprite_502781f7.webp"
               alt=""
               onError={(event) => {
                 event.currentTarget.style.display = "none";
