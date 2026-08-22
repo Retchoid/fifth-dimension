@@ -44,22 +44,6 @@
   background-repeat: no-repeat !important;
 }
 
-/* Keep the four supplied Level 1 masters tied directly to the record-time
-   classes. This bypasses the stale master-state mapping that kept 0–9 records
-   on the same golden image. 0–4 golden, 5–9 waking, 10–14 dusk, 15+ night. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
-  opacity: 0 !important;
-  transition: opacity 900ms cubic-bezier(.22,.72,.24,1) !important;
-}
-.arcade-cabinet-bezel .game-viewport.level-one-time-0 .level-one-master-art-golden,
-.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-master-art-waking,
-.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-master-art-dusk,
-.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-master-art-night,
-.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-master-art-night,
-.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-master-art-night {
-  opacity: 1 !important;
-}
-
 .game-grid-bg { z-index: 1 !important; }
 .game-hud { z-index: 41 !important; }
 .dj-catcher { z-index: 21 !important; pointer-events: none !important; }

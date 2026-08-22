@@ -1,5 +1,25 @@
 /* Final Level 1 transition calibration.
-   Scope: visual timing/lighting only. Gameplay, scoring, collision, and the approved 2 -> 3 handoff remain unchanged. */
+   Scope: environment-master presentation only. Gameplay, scoring, collision,
+   state thresholds, and canonical source artwork remain unchanged. */
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) {
+  --level-one-master-handoff-duration: 900ms;
+  --level-one-master-handoff-easing: cubic-bezier(.22, .72, .24, 1);
+}
+
+/* Every Level 1 master remains mounted in the same camera frame. This shared
+   opacity contract keeps both masters visible through every actual state
+   boundary, so no transition can reveal the empty backdrop. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+  transition: opacity var(--level-one-master-handoff-duration) var(--level-one-master-handoff-easing) !important;
+  transition-duration: var(--level-one-master-handoff-duration) !important;
+  transition-timing-function: var(--level-one-master-handoff-easing) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art:not(.level-one-master-art-golden) {
+  transition-duration: var(--level-one-master-handoff-duration) !important;
+  transition-timing-function: var(--level-one-master-handoff-easing) !important;
+}
 
 /* 1 -> 2 is now keyed to the actual BIG UP event. BOH remains entirely on the
    golden frame. The transition synchronizer adds level-one-big-up-reached when
@@ -14,23 +34,20 @@
 
 .arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-master-art-golden {
   opacity: 0 !important;
-  transition: opacity 1050ms cubic-bezier(.22, .68, .24, 1) !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-master-art-waking {
   opacity: 1 !important;
-  transition: opacity 1050ms cubic-bezier(.22, .68, .24, 1) !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-sunset-alley::after {
   background: linear-gradient(180deg, rgba(255, 132, 63, .04), rgba(255, 44, 149, .08) 54%, rgba(0, 224, 255, .02));
-  animation: level-one-big-up-handoff 1450ms ease-in-out 1 !important;
+  animation: level-one-master-handoff-pulse var(--level-one-master-handoff-duration) var(--level-one-master-handoff-easing) 1 !important;
 }
 
-@keyframes level-one-big-up-handoff {
+@keyframes level-one-master-handoff-pulse {
   0% { opacity: 0; }
-  42% { opacity: .24; }
-  76% { opacity: .10; }
+  45% { opacity: .12; }
   100% { opacity: 0; }
 }
 
@@ -56,34 +73,23 @@
   100% { opacity: .14; transform: scaleY(1); }
 }
 
-/* Time-stage 2 is already the waking master; keep it stable so 2 -> 3 remains
-   the approved waking -> dusk transition and receives no extra visual pulse. */
-.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-master-art-waking {
-  opacity: 1 !important;
-}
-
-/* 2 -> 3 intentionally untouched. */
-
-/* 3 -> 4: retain the slower arrival and keep the visual continuity in the city
-   lighting instead of reading as a hard cut. */
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art {
-  transition: opacity 1520ms cubic-bezier(.22, .68, .24, 1) !important;
-}
-
+/* Dusk -> Night keeps the same opacity curve as the benchmark handoff. The
+   source Dusk master stays visible for the full overlap while a restrained
+   existing-environment pulse absorbs the larger luminance difference. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley::after {
-  animation: level-one-night-handoff-final 1680ms ease-in-out 1 !important;
+  animation: level-one-master-handoff-pulse var(--level-one-master-handoff-duration) var(--level-one-master-handoff-easing) 1 !important;
 }
 
-@keyframes level-one-night-handoff-final {
-  0% { opacity: 0; }
-  30% { opacity: .24; }
-  70% { opacity: .09; }
-  100% { opacity: 0; }
-}
-
-/* Scene 4 is late-night, but it must remain fully playable and visually rich. */
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art-night {
-  filter: brightness(2.05) contrast(.82) saturate(1.16) !important;
+/* Development-only capture holds for deterministic review of the exact shared
+   opacity midpoint. The component can only add these classes in DEV or the
+   local sandbox verifier; public production never receives them. */
+.arcade-cabinet-bezel .game-viewport.level-one-transition-capture-golden-waking .level-one-master-art-golden,
+.arcade-cabinet-bezel .game-viewport.level-one-transition-capture-golden-waking .level-one-master-art-waking,
+.arcade-cabinet-bezel .game-viewport.level-one-transition-capture-waking-dusk .level-one-master-art-waking,
+.arcade-cabinet-bezel .game-viewport.level-one-transition-capture-waking-dusk .level-one-master-art-dusk,
+.arcade-cabinet-bezel .game-viewport.level-one-transition-capture-dusk-night .level-one-master-art-dusk,
+.arcade-cabinet-bezel .game-viewport.level-one-transition-capture-dusk-night .level-one-master-art-night {
+  opacity: .5 !important;
 }
 
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette {
