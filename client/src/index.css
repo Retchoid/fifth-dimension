@@ -1,14 +1,13 @@
 /* Archive-faithful 5th Dimension signal collage: street-poster texture, rave-spectrum contrast, bass-first hierarchy, and restrained broadcast motion. */
 /* 5D design: vaporwave city mystique, dancehall-jungle rawness, and readable arcade geometry; the bonus stage stays a dawn detour inside the existing Sega cabinet world. */
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "Space Grotesk", Courier New, Courier New;
-  --font-display: "Press Start 2P", Press Start 2P, Courier New;
+  --font-sans: "Courier New", monospace;
+  --font-display: "Press Start 2P", monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -30,7 +29,7 @@
 :root { --background:#09070f; --foreground:#fff; --card:#12101d; --card-foreground:#fff; --primary:#ff5a1f; --primary-foreground:#fff; --secondary:#201832; --secondary-foreground:#fff; --muted:#181421; --muted-foreground:#a59cac; --accent:#c6ff00; --accent-foreground:#151900; --border:#392d4b; --input:#392d4b; --ring:#00e7ff; --signal-orange:#ff5a1f; --ease-out:cubic-bezier(.23,1,.32,1); }
 * { box-sizing: border-box; border-color: var(--border); }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: #09070f; color: #fff; font-family: "Space Grotesk", Courier New, Courier New; }
+body { margin: 0; background: #09070f; color: #fff; font-family: "Courier New", monospace; }
 a { color: inherit; text-decoration: none; }
 button, a[href] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
