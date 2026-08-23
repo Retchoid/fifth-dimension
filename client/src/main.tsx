@@ -36,6 +36,7 @@ import "./visual-recovery-site.css";
 import "./level1-final-transition-calibration.css";
 import "./falling-item-effects.css";
 import "./level1-camera-framing.css";
+import "./level1-sky-mask-v2.css";
 
 const queryClient = new QueryClient();
 
