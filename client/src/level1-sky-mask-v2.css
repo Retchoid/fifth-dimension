@@ -27,9 +27,8 @@
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::before { opacity:.25 !important;background:radial-gradient(ellipse at 50% 34%,rgba(221,117,171,.18) 0 8%,transparent 42%),linear-gradient(180deg,#79538f 0%,#664d93 35%,#46507c 63%,transparent 100%) !important; }
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::before { opacity:.27 !important;background:radial-gradient(ellipse at 50% 34%,rgba(103,110,208,.15) 0 8%,transparent 42%),linear-gradient(180deg,#24365f 0%,#304674 38%,#394b74 64%,transparent 100%) !important;filter:saturate(1.06) brightness(.96) !important; }
 
-/* Street continuation plus staged practical-light ambience. The glows are broad and
-   low-opacity on purpose: they illuminate existing painted windows/signage rather
-   than drawing replacement windows or changing the artwork. */
+/* Practical-light carrier. Glows are broad and low-opacity so they illuminate
+   existing painted features rather than drawing replacement windows/signage. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley > .level-one-master-vignette::after {
   content:"" !important; position:absolute !important; inset:0 !important; pointer-events:none !important;
   opacity:.13 !important;
@@ -39,10 +38,13 @@
     radial-gradient(ellipse at 50% 61%,rgba(255,150,66,.08) 0 4%,transparent 20%),
     linear-gradient(90deg,rgba(8,11,16,.38),transparent 22% 78%,rgba(8,11,16,.38)),
     repeating-linear-gradient(168deg,transparent 0 16px,rgba(237,171,92,.07) 17px 18px) !important;
+  background-size:100% 100% !important;
+  background-position:center !important;
   mix-blend-mode:screen !important;
   transition:opacity 2200ms ease,filter 2600ms ease,background 2800ms ease !important;
   -webkit-mask-image:linear-gradient(180deg,transparent 18%,#000 31% 100%) !important;
   mask-image:linear-gradient(180deg,transparent 18%,#000 31% 100%) !important;
+  transform:translateZ(0);
 }
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::after { opacity:.24 !important;filter:saturate(1.08); }
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::after {
@@ -52,8 +54,10 @@
     radial-gradient(ellipse at 82% 40%,rgba(255,55,177,.25) 0 3%,transparent 14%),
     radial-gradient(ellipse at 50% 60%,rgba(255,135,56,.18) 0 4%,transparent 21%),
     radial-gradient(ellipse at 70% 48%,rgba(59,218,255,.13) 0 2%,transparent 12%),
+    radial-gradient(ellipse at 42% 59%,rgba(35,205,255,.10),rgba(255,45,149,.08) 8%,transparent 18%),
     linear-gradient(90deg,rgba(8,11,16,.35),transparent 22% 78%,rgba(8,11,16,.35)),
     repeating-linear-gradient(168deg,transparent 0 16px,rgba(237,171,92,.07) 17px 18px) !important;
+  animation:l1-dusk-practical-breathe 5.8s ease-in-out infinite alternate !important;
 }
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::after {
   opacity:.60 !important; filter:saturate(1.28) brightness(1.08);
@@ -63,12 +67,32 @@
     radial-gradient(ellipse at 50% 59%,rgba(255,132,50,.28) 0 4%,transparent 22%),
     radial-gradient(ellipse at 70% 48%,rgba(53,220,255,.24) 0 2%,transparent 13%),
     radial-gradient(ellipse at 31% 47%,rgba(255,94,174,.18) 0 2%,transparent 12%),
+    radial-gradient(ellipse at 41% 58%,rgba(30,211,255,.17) 0 2%,rgba(255,39,150,.14) 5%,transparent 17%),
     linear-gradient(90deg,rgba(8,11,16,.32),transparent 22% 78%,rgba(8,11,16,.32)),
     repeating-linear-gradient(168deg,transparent 0 16px,rgba(237,171,92,.07) 17px 18px) !important;
+  animation:l1-night-practical-life 6.7s ease-in-out infinite alternate !important;
+}
+
+/* Uneven timings prevent the city from pulsing as a single synchronized overlay.
+   The tiny horizontal drift is the police-car cyan/magenta reflection changing on
+   pavement; brightness variation reads as windows/signs breathing rather than flashing. */
+@keyframes l1-dusk-practical-breathe {
+  0%   { opacity:.37; filter:saturate(1.12) brightness(1.01); transform:translate3d(0,0,0); }
+  37%  { opacity:.45; filter:saturate(1.20) brightness(1.06); transform:translate3d(.15%,0,0); }
+  71%  { opacity:.40; filter:saturate(1.16) brightness(1.03); transform:translate3d(-.10%,0,0); }
+  100% { opacity:.46; filter:saturate(1.21) brightness(1.07); transform:translate3d(.08%,0,0); }
+}
+@keyframes l1-night-practical-life {
+  0%   { opacity:.54; filter:saturate(1.22) brightness(1.03); transform:translate3d(-.16%,0,0); }
+  19%  { opacity:.62; filter:saturate(1.31) brightness(1.09); transform:translate3d(.11%,0,0); }
+  43%  { opacity:.57; filter:saturate(1.25) brightness(1.05); transform:translate3d(.20%,0,0); }
+  67%  { opacity:.64; filter:saturate(1.33) brightness(1.10); transform:translate3d(-.08%,0,0); }
+  82%  { opacity:.58; filter:saturate(1.27) brightness(1.06); transform:translate3d(-.18%,0,0); }
+  100% { opacity:.63; filter:saturate(1.32) brightness(1.09); transform:translate3d(.06%,0,0); }
 }
 
 @media (prefers-reduced-motion:reduce) {
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::after { transition:none !important; }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::after { transition:none !important; animation:none !important; }
 }
