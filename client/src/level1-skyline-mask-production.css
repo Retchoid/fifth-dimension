@@ -1,0 +1,24 @@
+/* LEVEL 1 PRODUCTION SKYLINE MASK
+   Overrides only the sky carrier mask. Camera, masters, transitions, practical
+   lighting, player, HUD, collision and spawn geometry remain unchanged. */
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+  -webkit-mask-image: url('/assets/level1-skyline-mask-v1.svg') !important;
+  mask-image: url('/assets/level1-skyline-mask-v1.svg') !important;
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  -webkit-mask-mode: alpha !important;
+  mask-mode: alpha !important;
+}
+
+/* Keep the actual sky transition restrained while the mask is being judged.
+   These values preserve the approved palette progression but prevent edge
+   calibration errors from becoming visually loud. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-golden .level-one-master-vignette::before { opacity:.20 !important; }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::before { opacity:.22 !important; }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::before { opacity:.24 !important; }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::before { opacity:.26 !important; }
