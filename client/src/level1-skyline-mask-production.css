@@ -1,7 +1,7 @@
-/* LEVEL 1 PRODUCTION SKYLINE MASK — visible calibration pass.
-   This deliberately changes ONLY the atmospheric sky carrier. The approved
-   camera, master art, player, HUD, transitions, collision and spawn geometry
-   remain frozen. */
+/* LEVEL 1 CONTINUOUS INDEPENDENT SKY
+   The sky now runs on its own timeline behind the approved skyline mask.
+   It is intentionally NOT keyed to Golden/Waking/Dusk/Night master classes.
+   Camera, master art, player, HUD, transitions, collision and spawn geometry stay frozen. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
   -webkit-mask-image: url('/assets/level1-skyline-mask-v1.svg') !important;
@@ -14,31 +14,71 @@
   mask-position: center !important;
   -webkit-mask-mode: alpha !important;
   mask-mode: alpha !important;
+  opacity: .54 !important;
   mix-blend-mode: normal !important;
-  filter:none !important;
-  transition:background 2600ms cubic-bezier(.22,.72,.2,1),opacity 2200ms ease !important;
+  filter: none !important;
+  background:
+    radial-gradient(ellipse at 52% 78%, rgba(255,180,92,.42) 0 7%, transparent 28%),
+    linear-gradient(180deg,
+      #ffb54d 0%,
+      #f47c4f 14%,
+      #dc5b79 30%,
+      #9d528d 47%,
+      #5e4d88 64%,
+      #344775 82%,
+      #1c2c54 100%) !important;
+  background-size: 100% 235% !important;
+  background-position: 50% 0% !important;
+  animation: level-one-independent-sky-cycle 82s linear infinite alternate !important;
+  will-change: background-position, filter, opacity !important;
 }
 
-/* Strong enough to SEE the production mask working. The previous .20-.26
-   calibration sat on top of nearly identical master-sky colours and was too
-   subtle to distinguish from the already-approved temporary sky treatment. */
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-golden .level-one-master-vignette::before {
-  opacity:.46 !important;
-  background:linear-gradient(180deg,rgba(255,184,78,.96) 0%,rgba(255,132,66,.88) 45%,rgba(232,91,91,.72) 76%,transparent 100%) !important;
-}
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::before {
-  opacity:.50 !important;
-  background:linear-gradient(180deg,rgba(235,103,82,.94) 0%,rgba(210,81,117,.88) 48%,rgba(150,70,142,.72) 78%,transparent 100%) !important;
-}
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::before {
-  opacity:.54 !important;
-  background:linear-gradient(180deg,rgba(113,75,142,.94) 0%,rgba(84,72,139,.90) 50%,rgba(58,70,117,.76) 80%,transparent 100%) !important;
-}
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::before {
-  opacity:.58 !important;
-  background:linear-gradient(180deg,rgba(27,43,83,.96) 0%,rgba(37,58,105,.92) 52%,rgba(52,67,111,.78) 82%,transparent 100%) !important;
+/* One continuous sky timeline. It does not know or care which environment master
+   is currently visible. Slow position travel creates the day-to-night colour shift;
+   small filter changes add atmospheric evolution without a slide-like jump. */
+@keyframes level-one-independent-sky-cycle {
+  0% {
+    background-position: 50% 0%;
+    filter: saturate(1.02) brightness(1.10) !important;
+    opacity: .50;
+  }
+  18% {
+    background-position: 50% 17%;
+    filter: saturate(1.05) brightness(1.07) !important;
+    opacity: .52;
+  }
+  38% {
+    background-position: 50% 37%;
+    filter: saturate(1.08) brightness(1.03) !important;
+    opacity: .54;
+  }
+  60% {
+    background-position: 50% 60%;
+    filter: saturate(1.10) brightness(.99) !important;
+    opacity: .56;
+  }
+  80% {
+    background-position: 50% 81%;
+    filter: saturate(1.08) brightness(.96) !important;
+    opacity: .57;
+  }
+  100% {
+    background-position: 50% 100%;
+    filter: saturate(1.06) brightness(.94) !important;
+    opacity: .58;
+  }
 }
 
-@media (prefers-reduced-motion:reduce) {
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before { transition:none !important; }
+/* A second, extremely slow atmospheric drift keeps the sky from feeling like a
+   static gradient merely sliding vertically. This remains inside the same mask. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
+  --l1-sky-drift-x: 0%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+    animation: none !important;
+    background-position: 50% 45% !important;
+    filter: saturate(1.06) brightness(1) !important;
+  }
 }
