@@ -37,6 +37,7 @@ import "./level1-final-transition-calibration.css";
 import "./falling-item-effects.css";
 import "./level1-camera-framing.css";
 import "./level1-sky-mask-v2.css";
+import "./level1-skyline-mask-production.css";
 
 const queryClient = new QueryClient();
 
