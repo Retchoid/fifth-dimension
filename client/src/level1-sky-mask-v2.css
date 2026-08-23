@@ -1,117 +1,74 @@
-/* LEVEL 1 SKY MASK V2 — production sky/extension layer.
-   Keeps the pulled-back canonical masters and fills the exposed contain bands
-   without returning to a cropped cover frame. The upper atmosphere is feathered
-   rather than polygon-clipped, so buildings, people, props, player, HUD and the
-   collision/playfield layers remain untouched. */
+/* LEVEL 1 SKY MASK V2 — production sky/extension + night-life layer.
+   Camera, player, HUD, collision and spawn geometry stay locked. */
 
-:root {
-  --level1-sky-v2-enabled: 1;
-}
+:root { --level1-sky-v2-enabled: 1; }
 
-/* The contain matte is now environment, not empty black space. The top is an
-   atmospheric continuation; the bottom continues the alley/street value range. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
-  --l1-sky-top: #f39a45;
-  --l1-sky-mid: #ef6e55;
-  --l1-sky-horizon: #ce5677;
-  --l1-street-edge: #372423;
-  --l1-street-deep: #12151c;
-  background:
-    linear-gradient(180deg,
-      var(--l1-sky-top) 0%,
-      var(--l1-sky-mid) 24%,
-      var(--l1-sky-horizon) 43%,
-      #241b25 58%,
-      var(--l1-street-edge) 76%,
-      var(--l1-street-deep) 100%) !important;
-  transition: background 2600ms cubic-bezier(.22,.72,.2,1) !important;
+  --l1-sky-top:#f39a45; --l1-sky-mid:#ef6e55; --l1-sky-horizon:#ce5677;
+  --l1-street-edge:#372423; --l1-street-deep:#12151c;
+  background:linear-gradient(180deg,var(--l1-sky-top) 0%,var(--l1-sky-mid) 24%,var(--l1-sky-horizon) 43%,#241b25 58%,var(--l1-street-edge) 76%,var(--l1-street-deep) 100%) !important;
+  transition:background 2600ms cubic-bezier(.22,.72,.2,1) !important;
 }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-sunset-alley { --l1-sky-top:#e96852;--l1-sky-mid:#d85e72;--l1-sky-horizon:#a94f8a;--l1-street-edge:#30212a;--l1-street-deep:#11151f; }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-sunset-alley { --l1-sky-top:#79538f;--l1-sky-mid:#684d8f;--l1-sky-horizon:#46517d;--l1-street-edge:#202031;--l1-street-deep:#0d1421; }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley { --l1-sky-top:#24365f;--l1-sky-mid:#304673;--l1-sky-horizon:#384b76;--l1-street-edge:#171d2c;--l1-street-deep:#090f1a; }
 
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-sunset-alley {
-  --l1-sky-top: #e96852;
-  --l1-sky-mid: #d85e72;
-  --l1-sky-horizon: #a94f8a;
-  --l1-street-edge: #30212a;
-  --l1-street-deep: #11151f;
-}
-
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-sunset-alley {
-  --l1-sky-top: #79538f;
-  --l1-sky-mid: #684d8f;
-  --l1-sky-horizon: #46517d;
-  --l1-street-edge: #202031;
-  --l1-street-deep: #0d1421;
-}
-
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley {
-  --l1-sky-top: #24365f;
-  --l1-sky-mid: #304673;
-  --l1-sky-horizon: #384b76;
-  --l1-street-edge: #171d2c;
-  --l1-street-deep: #090f1a;
-}
-
-/* Reuse the canonical vignette as the sky carrier. Its pseudo-element is a
-   soft upper mask: no hand-authored skyline polygon and no hard cut line. */
+/* Sky carrier: soft upper mask, never a hard skyline polygon. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  pointer-events: none !important;
-  opacity: .22 !important;
-  background:
-    radial-gradient(ellipse at 50% 31%, rgba(255,220,145,.42) 0 10%, transparent 44%),
-    linear-gradient(180deg, #ffb14d 0%, #f06b55 32%, #d5527b 58%, transparent 100%) !important;
-  -webkit-mask-image: linear-gradient(180deg, #000 0 31%, rgba(0,0,0,.94) 40%, rgba(0,0,0,.58) 49%, rgba(0,0,0,.18) 57%, transparent 64%) !important;
-  mask-image: linear-gradient(180deg, #000 0 31%, rgba(0,0,0,.94) 40%, rgba(0,0,0,.58) 49%, rgba(0,0,0,.18) 57%, transparent 64%) !important;
-  mix-blend-mode: screen !important;
-  transition: background 2800ms cubic-bezier(.22,.72,.2,1), opacity 2400ms ease, filter 2800ms ease !important;
-  will-change: background, opacity, filter !important;
+  content:"" !important; position:absolute !important; inset:0 !important; pointer-events:none !important;
+  opacity:.22 !important;
+  background:radial-gradient(ellipse at 50% 31%,rgba(255,220,145,.42) 0 10%,transparent 44%),linear-gradient(180deg,#ffb14d 0%,#f06b55 32%,#d5527b 58%,transparent 100%) !important;
+  -webkit-mask-image:linear-gradient(180deg,#000 0 31%,rgba(0,0,0,.94) 40%,rgba(0,0,0,.58) 49%,rgba(0,0,0,.18) 57%,transparent 64%) !important;
+  mask-image:linear-gradient(180deg,#000 0 31%,rgba(0,0,0,.94) 40%,rgba(0,0,0,.58) 49%,rgba(0,0,0,.18) 57%,transparent 64%) !important;
+  mix-blend-mode:screen !important;
+  transition:background 2800ms cubic-bezier(.22,.72,.2,1),opacity 2400ms ease,filter 2800ms ease !important;
 }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::before { opacity:.24 !important;background:radial-gradient(ellipse at 50% 33%,rgba(255,173,121,.28) 0 9%,transparent 43%),linear-gradient(180deg,#ec7350 0%,#d95e71 35%,#a64f8e 62%,transparent 100%) !important; }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::before { opacity:.25 !important;background:radial-gradient(ellipse at 50% 34%,rgba(221,117,171,.18) 0 8%,transparent 42%),linear-gradient(180deg,#79538f 0%,#664d93 35%,#46507c 63%,transparent 100%) !important; }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::before { opacity:.27 !important;background:radial-gradient(ellipse at 50% 34%,rgba(103,110,208,.15) 0 8%,transparent 42%),linear-gradient(180deg,#24365f 0%,#304674 38%,#394b74 64%,transparent 100%) !important;filter:saturate(1.06) brightness(.96) !important; }
 
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::before {
-  opacity: .24 !important;
-  background:
-    radial-gradient(ellipse at 50% 33%, rgba(255,173,121,.28) 0 9%, transparent 43%),
-    linear-gradient(180deg, #ec7350 0%, #d95e71 35%, #a64f8e 62%, transparent 100%) !important;
-}
-
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::before {
-  opacity: .25 !important;
-  background:
-    radial-gradient(ellipse at 50% 34%, rgba(221,117,171,.18) 0 8%, transparent 42%),
-    linear-gradient(180deg, #79538f 0%, #664d93 35%, #46507c 63%, transparent 100%) !important;
-}
-
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::before {
-  opacity: .27 !important;
-  background:
-    radial-gradient(ellipse at 50% 34%, rgba(103,110,208,.15) 0 8%, transparent 42%),
-    linear-gradient(180deg, #24365f 0%, #304674 38%, #394b74 64%, transparent 100%) !important;
-  filter: saturate(1.06) brightness(.96) !important;
-}
-
-/* Give the bottom contain band a little perspective/texture so it reads as a
-   continuation of the street rather than a second UI panel. */
+/* Street continuation plus staged practical-light ambience. The glows are broad and
+   low-opacity on purpose: they illuminate existing painted windows/signage rather
+   than drawing replacement windows or changing the artwork. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley > .level-one-master-vignette::after {
-  content: "" !important;
-  position: absolute !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  height: 28% !important;
-  pointer-events: none !important;
-  opacity: .24 !important;
+  content:"" !important; position:absolute !important; inset:0 !important; pointer-events:none !important;
+  opacity:.13 !important;
   background:
-    linear-gradient(90deg, rgba(8,11,16,.38), transparent 22% 78%, rgba(8,11,16,.38)),
-    repeating-linear-gradient(168deg, transparent 0 16px, rgba(237,171,92,.07) 17px 18px) !important;
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 42%) !important;
-  mask-image: linear-gradient(180deg, transparent, #000 42%) !important;
+    radial-gradient(ellipse at 15% 39%,rgba(255,181,72,.18) 0 2%,transparent 10%),
+    radial-gradient(ellipse at 83% 40%,rgba(255,71,174,.10) 0 3%,transparent 13%),
+    radial-gradient(ellipse at 50% 61%,rgba(255,150,66,.08) 0 4%,transparent 20%),
+    linear-gradient(90deg,rgba(8,11,16,.38),transparent 22% 78%,rgba(8,11,16,.38)),
+    repeating-linear-gradient(168deg,transparent 0 16px,rgba(237,171,92,.07) 17px 18px) !important;
+  mix-blend-mode:screen !important;
+  transition:opacity 2200ms ease,filter 2600ms ease,background 2800ms ease !important;
+  -webkit-mask-image:linear-gradient(180deg,transparent 18%,#000 31% 100%) !important;
+  mask-image:linear-gradient(180deg,transparent 18%,#000 31% 100%) !important;
+}
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::after { opacity:.24 !important;filter:saturate(1.08); }
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::after {
+  opacity:.42 !important; filter:saturate(1.18) brightness(1.05);
+  background:
+    radial-gradient(ellipse at 15% 39%,rgba(255,188,76,.34) 0 2%,transparent 11%),
+    radial-gradient(ellipse at 82% 40%,rgba(255,55,177,.25) 0 3%,transparent 14%),
+    radial-gradient(ellipse at 50% 60%,rgba(255,135,56,.18) 0 4%,transparent 21%),
+    radial-gradient(ellipse at 70% 48%,rgba(59,218,255,.13) 0 2%,transparent 12%),
+    linear-gradient(90deg,rgba(8,11,16,.35),transparent 22% 78%,rgba(8,11,16,.35)),
+    repeating-linear-gradient(168deg,transparent 0 16px,rgba(237,171,92,.07) 17px 18px) !important;
+}
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::after {
+  opacity:.60 !important; filter:saturate(1.28) brightness(1.08);
+  background:
+    radial-gradient(ellipse at 15% 39%,rgba(255,191,78,.48) 0 2%,transparent 12%),
+    radial-gradient(ellipse at 82% 40%,rgba(255,42,181,.38) 0 3%,transparent 15%),
+    radial-gradient(ellipse at 50% 59%,rgba(255,132,50,.28) 0 4%,transparent 22%),
+    radial-gradient(ellipse at 70% 48%,rgba(53,220,255,.24) 0 2%,transparent 13%),
+    radial-gradient(ellipse at 31% 47%,rgba(255,94,174,.18) 0 2%,transparent 12%),
+    linear-gradient(90deg,rgba(8,11,16,.32),transparent 22% 78%,rgba(8,11,16,.32)),
+    repeating-linear-gradient(168deg,transparent 0 16px,rgba(237,171,92,.07) 17px 18px) !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion:reduce) {
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
-    transition: none !important;
-  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::after { transition:none !important; }
 }
