@@ -1,11 +1,117 @@
-/* Level 1 Sky Mask V2 — scaffold only.
-   Intentionally NOT imported by production main.tsx yet.
-   Goal: replace the rejected hand-drawn polygon sky overlay with an artwork-derived mask
-   positioned behind the canonical environment, while preserving all bouncers, crowd,
-   police car, props, speakers, characters and ambience.
-
-   This file remains inert until the real skyline mask asset is derived and verified. */
+/* LEVEL 1 SKY MASK V2 — production sky/extension layer.
+   Keeps the pulled-back canonical masters and fills the exposed contain bands
+   without returning to a cropped cover frame. The upper atmosphere is feathered
+   rather than polygon-clipped, so buildings, people, props, player, HUD and the
+   collision/playfield layers remain untouched. */
 
 :root {
-  --level1-sky-v2-enabled: 0;
+  --level1-sky-v2-enabled: 1;
+}
+
+/* The contain matte is now environment, not empty black space. The top is an
+   atmospheric continuation; the bottom continues the alley/street value range. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
+  --l1-sky-top: #f39a45;
+  --l1-sky-mid: #ef6e55;
+  --l1-sky-horizon: #ce5677;
+  --l1-street-edge: #372423;
+  --l1-street-deep: #12151c;
+  background:
+    linear-gradient(180deg,
+      var(--l1-sky-top) 0%,
+      var(--l1-sky-mid) 24%,
+      var(--l1-sky-horizon) 43%,
+      #241b25 58%,
+      var(--l1-street-edge) 76%,
+      var(--l1-street-deep) 100%) !important;
+  transition: background 2600ms cubic-bezier(.22,.72,.2,1) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-sunset-alley {
+  --l1-sky-top: #e96852;
+  --l1-sky-mid: #d85e72;
+  --l1-sky-horizon: #a94f8a;
+  --l1-street-edge: #30212a;
+  --l1-street-deep: #11151f;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-sunset-alley {
+  --l1-sky-top: #79538f;
+  --l1-sky-mid: #684d8f;
+  --l1-sky-horizon: #46517d;
+  --l1-street-edge: #202031;
+  --l1-street-deep: #0d1421;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley {
+  --l1-sky-top: #24365f;
+  --l1-sky-mid: #304673;
+  --l1-sky-horizon: #384b76;
+  --l1-street-edge: #171d2c;
+  --l1-street-deep: #090f1a;
+}
+
+/* Reuse the canonical vignette as the sky carrier. Its pseudo-element is a
+   soft upper mask: no hand-authored skyline polygon and no hard cut line. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  opacity: .22 !important;
+  background:
+    radial-gradient(ellipse at 50% 31%, rgba(255,220,145,.42) 0 10%, transparent 44%),
+    linear-gradient(180deg, #ffb14d 0%, #f06b55 32%, #d5527b 58%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(180deg, #000 0 31%, rgba(0,0,0,.94) 40%, rgba(0,0,0,.58) 49%, rgba(0,0,0,.18) 57%, transparent 64%) !important;
+  mask-image: linear-gradient(180deg, #000 0 31%, rgba(0,0,0,.94) 40%, rgba(0,0,0,.58) 49%, rgba(0,0,0,.18) 57%, transparent 64%) !important;
+  mix-blend-mode: screen !important;
+  transition: background 2800ms cubic-bezier(.22,.72,.2,1), opacity 2400ms ease, filter 2800ms ease !important;
+  will-change: background, opacity, filter !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::before {
+  opacity: .24 !important;
+  background:
+    radial-gradient(ellipse at 50% 33%, rgba(255,173,121,.28) 0 9%, transparent 43%),
+    linear-gradient(180deg, #ec7350 0%, #d95e71 35%, #a64f8e 62%, transparent 100%) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::before {
+  opacity: .25 !important;
+  background:
+    radial-gradient(ellipse at 50% 34%, rgba(221,117,171,.18) 0 8%, transparent 42%),
+    linear-gradient(180deg, #79538f 0%, #664d93 35%, #46507c 63%, transparent 100%) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::before {
+  opacity: .27 !important;
+  background:
+    radial-gradient(ellipse at 50% 34%, rgba(103,110,208,.15) 0 8%, transparent 42%),
+    linear-gradient(180deg, #24365f 0%, #304674 38%, #394b74 64%, transparent 100%) !important;
+  filter: saturate(1.06) brightness(.96) !important;
+}
+
+/* Give the bottom contain band a little perspective/texture so it reads as a
+   continuation of the street rather than a second UI panel. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley > .level-one-master-vignette::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  height: 28% !important;
+  pointer-events: none !important;
+  opacity: .24 !important;
+  background:
+    linear-gradient(90deg, rgba(8,11,16,.38), transparent 22% 78%, rgba(8,11,16,.38)),
+    repeating-linear-gradient(168deg, transparent 0 16px, rgba(237,171,92,.07) 17px 18px) !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 42%) !important;
+  mask-image: linear-gradient(180deg, transparent, #000 42%) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+    transition: none !important;
+  }
 }
