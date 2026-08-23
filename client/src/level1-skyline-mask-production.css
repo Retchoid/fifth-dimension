@@ -1,6 +1,7 @@
-/* LEVEL 1 PRODUCTION SKYLINE MASK
-   Overrides only the sky carrier mask. Camera, masters, transitions, practical
-   lighting, player, HUD, collision and spawn geometry remain unchanged. */
+/* LEVEL 1 PRODUCTION SKYLINE MASK — visible calibration pass.
+   This deliberately changes ONLY the atmospheric sky carrier. The approved
+   camera, master art, player, HUD, transitions, collision and spawn geometry
+   remain frozen. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
   -webkit-mask-image: url('/assets/level1-skyline-mask-v1.svg') !important;
@@ -13,12 +14,31 @@
   mask-position: center !important;
   -webkit-mask-mode: alpha !important;
   mask-mode: alpha !important;
+  mix-blend-mode: normal !important;
+  filter:none !important;
+  transition:background 2600ms cubic-bezier(.22,.72,.2,1),opacity 2200ms ease !important;
 }
 
-/* Keep the actual sky transition restrained while the mask is being judged.
-   These values preserve the approved palette progression but prevent edge
-   calibration errors from becoming visually loud. */
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-golden .level-one-master-vignette::before { opacity:.20 !important; }
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::before { opacity:.22 !important; }
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::before { opacity:.24 !important; }
-.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::before { opacity:.26 !important; }
+/* Strong enough to SEE the production mask working. The previous .20-.26
+   calibration sat on top of nearly identical master-sky colours and was too
+   subtle to distinguish from the already-approved temporary sky treatment. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-golden .level-one-master-vignette::before {
+  opacity:.46 !important;
+  background:linear-gradient(180deg,rgba(255,184,78,.96) 0%,rgba(255,132,66,.88) 45%,rgba(232,91,91,.72) 76%,transparent 100%) !important;
+}
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-master-vignette::before {
+  opacity:.50 !important;
+  background:linear-gradient(180deg,rgba(235,103,82,.94) 0%,rgba(210,81,117,.88) 48%,rgba(150,70,142,.72) 78%,transparent 100%) !important;
+}
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-master-vignette::before {
+  opacity:.54 !important;
+  background:linear-gradient(180deg,rgba(113,75,142,.94) 0%,rgba(84,72,139,.90) 50%,rgba(58,70,117,.76) 80%,transparent 100%) !important;
+}
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette::before {
+  opacity:.58 !important;
+  background:linear-gradient(180deg,rgba(27,43,83,.96) 0%,rgba(37,58,105,.92) 52%,rgba(52,67,111,.78) 82%,transparent 100%) !important;
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before { transition:none !important; }
+}
