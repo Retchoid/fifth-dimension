@@ -1,16 +1,16 @@
 /* LEVEL 1 CAMERA FRAMING — presentation only.
-   Keep the approved wide-angle `contain` composition on every viewport.
-   Anchor the contained master to the TOP of the playfield so the skyline meets
-   the HUD with no exposed upper letterbox. Any unavoidable extra vertical space
-   is pushed below the artwork where it blends into the dark catch-floor region.
-   No duplicate scene, overlay carrier, collision, spawn, HUD or timing change. */
+   Pull the four canonical masters back to expose more of the supplied artwork.
+   Every master shares the exact same frame so state transitions remain locked.
+   No viewport, collision, spawn, player, HUD, timing, or progression geometry changes. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   object-fit: contain !important;
-  object-position: 50% 0% !important;
+  object-position: 50% 50% !important;
   transform: scale(1.04) !important;
-  transform-origin: 50% 0% !important;
+  transform-origin: 50% 50% !important;
 }
 
+/* The canonical alley already owns the matte behind the masters. Keep any
+   newly exposed edge pixels visually integrated instead of introducing a UI box. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   background: #08101b !important;
 }
