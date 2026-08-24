@@ -1,7 +1,9 @@
 /* LEVEL 1 CAMERA FRAMING — presentation only.
-   Preserve the approved wider desktop composition while preventing tall mobile
-   viewports from exposing the alley matte above/below the canonical masters.
-   Every master shares the exact same frame so state transitions remain locked.
+   Restore the approved wide-angle composition on every viewport.
+   The previous mobile `cover` override removed the exposed band, but did so by
+   cropping too much of the supplied alley artwork. Keep the canonical masters
+   on the shared wide frame; retired sky/building/pavement carriers remain
+   disabled elsewhere and must not be used to cover this framing.
    No viewport, collision, spawn, player, HUD, timing, or progression geometry changes. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   object-fit: contain !important;
@@ -10,18 +12,8 @@
   transform-origin: 50% 50% !important;
 }
 
-/* The canonical alley owns the matte behind the masters. */
+/* The canonical alley owns the neutral matte behind the masters. This is not a
+   scenery/sky overlay and stays behind the supplied artwork. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   background: #08101b !important;
-}
-
-/* Tall phone cabinets cannot use `contain` without visible letterboxing. Fill
-   the playfield from the same canonical master instead of covering the gap with
-   another sky/presentation layer. The widened cabinet keeps side crop modest. */
-@media (max-width: 650px) {
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
-    object-fit: cover !important;
-    object-position: 50% 50% !important;
-    transform: scale(1.01) !important;
-  }
 }
