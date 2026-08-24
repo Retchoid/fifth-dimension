@@ -1,19 +1,16 @@
-/* LEVEL 1 TRUE INDEPENDENT SKY COMPOSITE
-   The sky is now a background layer BEHIND the canonical master paintings.
-   A complementary inverse skyline mask punches the painted sky out of every
-   Level-1 master, so the continuous sky is genuinely visible through the scene.
-   Camera, master transitions, player, HUD, collision and spawn geometry stay frozen. */
+/* LEVEL 1 TRUE INDEPENDENT PAINTED SKY
+   The animated sky now reuses the ACTUAL Golden master painting as its texture.
+   Only the sky pixels are revealed through the skyline mask; buildings/street stay
+   on the foreground master plates. The sky timeline remains independent of slides. */
 
-/* Continuous sky lives at the back of the canonical alley. It is not tied to
-   Golden/Waking/Dusk/Night state classes. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
   content:"" !important;
   position:absolute !important;
   inset:0 !important;
   z-index:0 !important;
   pointer-events:none !important;
-  opacity:.92 !important;
-  mix-blend-mode:normal !important;
+  opacity:1 !important;
+
   -webkit-mask-image:url('/assets/level1-skyline-mask-v1.svg') !important;
   mask-image:url('/assets/level1-skyline-mask-v1.svg') !important;
   -webkit-mask-size:100% 100% !important;
@@ -22,25 +19,22 @@
   mask-position:center !important;
   -webkit-mask-repeat:no-repeat !important;
   mask-repeat:no-repeat !important;
-  background:
-    linear-gradient(180deg,
-      #ffb45c 0%,
-      #f69361 19%,
-      #df6b82 38%,
-      #a05b91 57%,
-      #67558a 72%,
-      #425078 86%,
-      #25365f 100%) !important;
-  background-size:100% 250% !important;
-  background-position:50% 0% !important;
-  animation:level-one-true-sky-cycle 96s linear infinite alternate !important;
-  will-change:background-position,filter !important;
+
+  /* Exact supplied illustration, not a synthetic CSS sky. 104% mirrors the
+     approved camera zoom while leaving the skyline mask registered to viewport. */
+  background-image:url('/assets/1000001169_3204905a.png') !important;
+  background-repeat:no-repeat !important;
+  background-size:104% auto !important;
+  background-position:50% 50% !important;
+  background-color:rgba(255,151,86,0) !important;
+  background-blend-mode:color !important;
+
+  animation:level-one-painted-sky-cycle 104s linear infinite alternate !important;
+  will-change:background-position,background-color,filter !important;
 }
 
-/* The four masters become foreground plates. The mask is the inverse of the
-   sky mask: architecture/street remain opaque while the sky window is clear.
-   96.15% compensates for the approved 1.04 camera transform so the mask edge
-   stays registered to the viewport instead of enlarging with the image. */
+/* Canonical masters remain foreground plates; only their painted sky window is
+   transparent. All approved master opacity transitions remain untouched. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
   -webkit-mask-image:url('/assets/level1-foreground-inverse-sky-mask-v1.svg') !important;
@@ -55,8 +49,7 @@
   mask-mode:luminance !important;
 }
 
-/* The old vignette pseudo-element used to carry the fake sky overlay. Retire it
-   completely now that the real sky sits behind the foreground masters. */
+/* Retire the former synthetic vignette sky carrier completely. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
   content:none !important;
   display:none !important;
@@ -64,24 +57,52 @@
   background:none !important;
 }
 
-/* Preserve existing handoff pulses above the foreground plate. */
+/* Existing environment handoff pulse remains above the foreground. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::after {
   z-index:4 !important;
 }
 
-@keyframes level-one-true-sky-cycle {
-  0%   { background-position:50% 0%;   filter:saturate(1.03) brightness(1.06); }
-  20%  { background-position:50% 18%;  filter:saturate(1.04) brightness(1.04); }
-  40%  { background-position:50% 39%;  filter:saturate(1.05) brightness(1.01); }
-  62%  { background-position:50% 62%;  filter:saturate(1.06) brightness(.99); }
-  82%  { background-position:50% 82%;  filter:saturate(1.05) brightness(.97); }
-  100% { background-position:50% 100%; filter:saturate(1.04) brightness(.95); }
+/* Continuous independent evolution of the SAME painted sky. The texture/clouds
+   never change style; only very slow colour temperature, exposure and a sub-pixel
+   atmospheric drift evolve. No state selectors participate in this animation. */
+@keyframes level-one-painted-sky-cycle {
+  0% {
+    background-position:50% 50%;
+    background-color:rgba(255,154,84,0);
+    filter:saturate(1.01) brightness(1.02) contrast(1.00);
+  }
+  22% {
+    background-position:49.8% 50%;
+    background-color:rgba(226,101,115,.08);
+    filter:saturate(1.03) brightness(1.01) contrast(1.00);
+  }
+  45% {
+    background-position:50.15% 49.9%;
+    background-color:rgba(174,88,143,.16);
+    filter:saturate(1.04) brightness(.99) contrast(1.01);
+  }
+  68% {
+    background-position:49.75% 50.05%;
+    background-color:rgba(104,87,151,.24);
+    filter:saturate(1.03) brightness(.96) contrast(1.02);
+  }
+  84% {
+    background-position:50.2% 49.95%;
+    background-color:rgba(62,82,139,.31);
+    filter:saturate(1.01) brightness(.92) contrast(1.03);
+  }
+  100% {
+    background-position:50% 50%;
+    background-color:rgba(38,61,112,.36);
+    filter:saturate(.98) brightness(.88) contrast(1.04);
+  }
 }
 
 @media (prefers-reduced-motion:reduce) {
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
     animation:none !important;
-    background-position:50% 45% !important;
-    filter:saturate(1.04) brightness(1) !important;
+    background-position:50% 50% !important;
+    background-color:rgba(151,91,145,.12) !important;
+    filter:saturate(1.02) brightness(.99) !important;
   }
 }
