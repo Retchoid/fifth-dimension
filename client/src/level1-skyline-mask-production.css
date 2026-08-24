@@ -1,24 +1,79 @@
-/* LEVEL 1 SKY SAFETY ROLLBACK
-   The independent overlay experiment can fully cover the canonical Level 1
-   master plates on mobile. Restore the approved environment immediately.
-   Keep this file as the isolated integration point for the next sky asset pass. */
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
-  content:none !important;
-  display:none !important;
-  animation:none !important;
-  background:none !important;
-  -webkit-mask-image:none !important;
-  mask-image:none !important;
-}
+/* LEVEL 1 PAINTED SKY — SAFE NON-DESTRUCTIVE INTEGRATION
+   Preserve every canonical master pixel. The approved Golden painting is reused
+   as a sky-only atmospheric overlay; no inverse mask or transparency is applied
+   to the environment masters. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
-  opacity:1;
+  opacity:1 !important;
   -webkit-mask-image:none !important;
   mask-image:none !important;
 }
 
+/* Sky-only copy of the existing approved artwork. It is intentionally subtle:
+   the base master remains visible underneath, so a mask failure cannot erase the
+   alley/buildings again. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
+  content:"" !important;
+  display:block !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+
+  background-image:url('/assets/1000001169_3204905a.png') !important;
+  background-repeat:no-repeat !important;
+  background-size:contain !important;
+  background-position:50% 50% !important;
+
+  -webkit-mask-image:url('/assets/level1-skyline-mask-v1.svg') !important;
+  mask-image:url('/assets/level1-skyline-mask-v1.svg') !important;
+  -webkit-mask-size:100% 100% !important;
+  mask-size:100% 100% !important;
+  -webkit-mask-position:center !important;
+  mask-position:center !important;
+  -webkit-mask-repeat:no-repeat !important;
+  mask-repeat:no-repeat !important;
+
+  opacity:.34 !important;
+  transform:scale(1.04) translate3d(0,0,0) !important;
+  transform-origin:50% 50% !important;
+  mix-blend-mode:screen !important;
+  animation:level-one-approved-sky-breathe 150s linear infinite !important;
+  will-change:transform,filter,opacity !important;
+}
+
+/* Natural atmospheric evolution: extremely small travel, with most perceived
+   change coming from light/temperature rather than the image visibly sliding. */
+@keyframes level-one-approved-sky-breathe {
+  0% {
+    transform:scale(1.04) translate3d(-.10%,0,0);
+    filter:saturate(1.02) brightness(1.015) hue-rotate(0deg);
+    opacity:.31;
+  }
+  25% {
+    transform:scale(1.041) translate3d(-.03%,-.025%,0);
+    filter:saturate(1.025) brightness(1.005) hue-rotate(2deg);
+    opacity:.34;
+  }
+  50% {
+    transform:scale(1.042) translate3d(.04%,-.04%,0);
+    filter:saturate(1.02) brightness(.99) hue-rotate(5deg);
+    opacity:.36;
+  }
+  75% {
+    transform:scale(1.041) translate3d(.10%,-.015%,0);
+    filter:saturate(1.01) brightness(.975) hue-rotate(8deg);
+    opacity:.34;
+  }
+  100% {
+    transform:scale(1.04) translate3d(-.10%,0,0);
+    filter:saturate(1.02) brightness(1.015) hue-rotate(0deg);
+    opacity:.31;
+  }
+}
+
+/* Keep previous pseudo-vignette sky systems retired. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
   content:none !important;
   display:none !important;
@@ -28,4 +83,13 @@
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::after {
   z-index:4 !important;
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
+    animation:none !important;
+    transform:scale(1.04) !important;
+    filter:none !important;
+    opacity:.30 !important;
+  }
 }
