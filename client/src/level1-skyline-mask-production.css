@@ -1,64 +1,87 @@
-/* LEVEL 1 CONTINUOUS INDEPENDENT SKY — subtle atmosphere pass.
-   Independent from Golden/Waking/Dusk/Night master classes.
-   Keeps the approved skyline mask and removes obvious cloud/blob shapes. */
+/* LEVEL 1 TRUE INDEPENDENT SKY COMPOSITE
+   The sky is now a background layer BEHIND the canonical master paintings.
+   A complementary inverse skyline mask punches the painted sky out of every
+   Level-1 master, so the continuous sky is genuinely visible through the scene.
+   Camera, master transitions, player, HUD, collision and spawn geometry stay frozen. */
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
-  -webkit-mask-image: url('/assets/level1-skyline-mask-v1.svg') !important;
-  mask-image: url('/assets/level1-skyline-mask-v1.svg') !important;
-  -webkit-mask-size: 100% 100% !important;
-  mask-size: 100% 100% !important;
-  -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;
-  -webkit-mask-position: center !important;
-  mask-position: center !important;
-  -webkit-mask-mode: alpha !important;
-  mask-mode: alpha !important;
-  opacity: .34 !important;
-  mix-blend-mode: soft-light !important;
+/* Continuous sky lives at the back of the canonical alley. It is not tied to
+   Golden/Waking/Dusk/Night state classes. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  opacity:.92 !important;
+  mix-blend-mode:normal !important;
+  -webkit-mask-image:url('/assets/level1-skyline-mask-v1.svg') !important;
+  mask-image:url('/assets/level1-skyline-mask-v1.svg') !important;
+  -webkit-mask-size:100% 100% !important;
+  mask-size:100% 100% !important;
+  -webkit-mask-position:center !important;
+  mask-position:center !important;
+  -webkit-mask-repeat:no-repeat !important;
+  mask-repeat:no-repeat !important;
   background:
     linear-gradient(180deg,
-      rgba(255,185,91,.92) 0%,
-      rgba(245,132,87,.88) 20%,
-      rgba(211,91,121,.84) 38%,
-      rgba(146,78,135,.80) 56%,
-      rgba(87,75,127,.78) 73%,
-      rgba(48,65,109,.80) 87%,
-      rgba(27,42,76,.84) 100%),
-    repeating-linear-gradient(172deg,
-      transparent 0 22px,
-      rgba(255,255,255,.018) 23px 24px,
-      transparent 25px 48px) !important;
-  background-size: 100% 245%, 165% 100% !important;
-  background-position: 50% 0%, 0% 0% !important;
-  animation: level-one-independent-sky-tone 96s linear infinite alternate,
-             level-one-independent-sky-drift 44s ease-in-out infinite alternate !important;
-  will-change: background-position, opacity, filter !important;
+      #ffb45c 0%,
+      #f69361 19%,
+      #df6b82 38%,
+      #a05b91 57%,
+      #67558a 72%,
+      #425078 86%,
+      #25365f 100%) !important;
+  background-size:100% 250% !important;
+  background-position:50% 0% !important;
+  animation:level-one-true-sky-cycle 96s linear infinite alternate !important;
+  will-change:background-position,filter !important;
 }
 
-/* Slow tonal migration only — no cloud blobs, no obvious moving shapes. */
-@keyframes level-one-independent-sky-tone {
-  0%   { background-position:50% 0%,0% 0%;   opacity:.31; filter:saturate(1.00) brightness(1.06); }
-  20%  { background-position:50% 18%,8% 0%;  opacity:.32; filter:saturate(1.02) brightness(1.04); }
-  40%  { background-position:50% 39%,16% 0%; opacity:.34; filter:saturate(1.04) brightness(1.01); }
-  62%  { background-position:50% 62%,24% 0%; opacity:.35; filter:saturate(1.05) brightness(.99); }
-  82%  { background-position:50% 82%,31% 0%; opacity:.36; filter:saturate(1.04) brightness(.97); }
-  100% { background-position:50% 100%,38% 0%;opacity:.37; filter:saturate(1.03) brightness(.95); }
+/* The four masters become foreground plates. The mask is the inverse of the
+   sky mask: architecture/street remain opaque while the sky window is clear.
+   96.15% compensates for the approved 1.04 camera transform so the mask edge
+   stays registered to the viewport instead of enlarging with the image. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+  z-index:1 !important;
+  -webkit-mask-image:url('/assets/level1-foreground-inverse-sky-mask-v1.svg') !important;
+  mask-image:url('/assets/level1-foreground-inverse-sky-mask-v1.svg') !important;
+  -webkit-mask-size:96.15% 96.15% !important;
+  mask-size:96.15% 96.15% !important;
+  -webkit-mask-position:center !important;
+  mask-position:center !important;
+  -webkit-mask-repeat:no-repeat !important;
+  mask-repeat:no-repeat !important;
+  -webkit-mask-mode:luminance !important;
+  mask-mode:luminance !important;
 }
 
-/* Extremely small lateral texture drift so the sky feels alive without reading
-   as an animated object. */
-@keyframes level-one-independent-sky-drift {
-  0%   { transform:translate3d(-.35%,0,0) scale(1.01); }
-  50%  { transform:translate3d(.20%,0,0) scale(1.012); }
-  100% { transform:translate3d(.42%,0,0) scale(1.01); }
+/* The old vignette pseudo-element used to carry the fake sky overlay. Retire it
+   completely now that the real sky sits behind the foreground masters. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+  content:none !important;
+  display:none !important;
+  animation:none !important;
+  background:none !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+/* Preserve existing handoff pulses above the foreground plate. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::after {
+  z-index:4 !important;
+}
+
+@keyframes level-one-true-sky-cycle {
+  0%   { background-position:50% 0%;   filter:saturate(1.03) brightness(1.06); }
+  20%  { background-position:50% 18%;  filter:saturate(1.04) brightness(1.04); }
+  40%  { background-position:50% 39%;  filter:saturate(1.05) brightness(1.01); }
+  62%  { background-position:50% 62%;  filter:saturate(1.06) brightness(.99); }
+  82%  { background-position:50% 82%;  filter:saturate(1.05) brightness(.97); }
+  100% { background-position:50% 100%; filter:saturate(1.04) brightness(.95); }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
     animation:none !important;
-    background-position:50% 45%,18% 0% !important;
-    transform:none !important;
-    opacity:.33 !important;
-    filter:saturate(1.02) brightness(1) !important;
+    background-position:50% 45% !important;
+    filter:saturate(1.04) brightness(1) !important;
   }
 }
