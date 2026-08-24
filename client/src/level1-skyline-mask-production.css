@@ -1,40 +1,29 @@
-/* LEVEL 1 SINGLE-MASTER PRODUCTION LOCK
-   Keep the experimental sky disabled and guarantee that only the currently
-   selected canonical Level 1 master is visible. A previous safety rule forced
-   every `.level-one-master-art` to opacity:1, stacking Golden/Waking/Dusk/Night
-   on top of one another and making the wide contained frame appear to sit over
-   a second full-size scene. */
+/* LEVEL 1 SKY SAFETY ROLLBACK
+   The independent overlay experiment can fully cover the canonical Level 1
+   master plates on mobile. Restore the approved environment immediately.
+   Keep this file as the isolated integration point for the next sky asset pass. */
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .game-grid-bg.stage-background,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
-  background:#08101b !important;
-  background-image:none !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
-  z-index:1 !important;
-  opacity:0 !important;
-  -webkit-mask-image:none !important;
-  mask-image:none !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-golden .level-one-master-art-golden,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-waking .level-one-master-art-waking,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-dusk .level-one-master-art-dusk,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-night .level-one-master-art-night {
-  opacity:1 !important;
-}
-
-/* Experimental/generated sky carriers remain off until a verified transparent
-   sky asset is ready. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
   content:none !important;
   display:none !important;
   animation:none !important;
   background:none !important;
   -webkit-mask-image:none !important;
   mask-image:none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+  z-index:1 !important;
+  opacity:1;
+  -webkit-mask-image:none !important;
+  mask-image:none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+  content:none !important;
+  display:none !important;
+  animation:none !important;
+  background:none !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::after {
