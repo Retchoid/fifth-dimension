@@ -1,35 +1,16 @@
 /* LEVEL 1 CAMERA FRAMING — presentation only.
    Keep the approved wide-angle `contain` composition on every viewport.
-   The canonical masters remain the only scene artwork. The space exposed by
-   `contain` is now a passive state-aware matte BEHIND the master so the top
-   edge reads as a continuation of atmosphere rather than a black UI strip.
+   Anchor the contained master to the TOP of the playfield so the skyline meets
+   the HUD with no exposed upper letterbox. Any unavoidable extra vertical space
+   is pushed below the artwork where it blends into the dark catch-floor region.
    No duplicate scene, overlay carrier, collision, spawn, HUD or timing change. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   object-fit: contain !important;
-  object-position: 50% 50% !important;
+  object-position: 50% 0% !important;
   transform: scale(1.04) !important;
-  transform-origin: 50% 50% !important;
+  transform-origin: 50% 0% !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
-  background: linear-gradient(180deg, #171530 0%, #16182f 42%, #0d1725 72%, #08101b 100%) !important;
-  transition: background 1200ms ease !important;
-}
-
-/* The matte follows the active canonical master's broad sky family. These are
-   deliberately dark/supporting tones so they cannot read as replacement art. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley.level-one-master-golden {
-  background: linear-gradient(180deg, #34203a 0%, #2b1d38 42%, #171b2b 72%, #08101b 100%) !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley.level-one-master-waking {
-  background: linear-gradient(180deg, #291d43 0%, #251c3d 42%, #141a2b 72%, #08101b 100%) !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley.level-one-master-dusk {
-  background: linear-gradient(180deg, #1b1a49 0%, #1d1747 42%, #11182d 72%, #08101b 100%) !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley.level-one-master-night {
-  background: linear-gradient(180deg, #10183a 0%, #15133c 42%, #0e172a 72%, #08101b 100%) !important;
+  background: #08101b !important;
 }
