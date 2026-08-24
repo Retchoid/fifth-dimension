@@ -1,5 +1,6 @@
 /* LEVEL 1 CAMERA FRAMING — presentation only.
-   Pull the four canonical masters back to expose more of the supplied artwork.
+   Preserve the approved wider desktop composition while preventing tall mobile
+   viewports from exposing the alley matte above/below the canonical masters.
    Every master shares the exact same frame so state transitions remain locked.
    No viewport, collision, spawn, player, HUD, timing, or progression geometry changes. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
@@ -9,8 +10,18 @@
   transform-origin: 50% 50% !important;
 }
 
-/* The canonical alley already owns the matte behind the masters. Keep any
-   newly exposed edge pixels visually integrated instead of introducing a UI box. */
+/* The canonical alley owns the matte behind the masters. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   background: #08101b !important;
+}
+
+/* Tall phone cabinets cannot use `contain` without visible letterboxing. Fill
+   the playfield from the same canonical master instead of covering the gap with
+   another sky/presentation layer. The widened cabinet keeps side crop modest. */
+@media (max-width: 650px) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+    object-fit: cover !important;
+    object-position: 50% 50% !important;
+    transform: scale(1.01) !important;
+  }
 }
