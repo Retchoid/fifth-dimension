@@ -1,17 +1,21 @@
-/* LEVEL 1 CONTINUOUS LIGHTING — LEGACY SKY RETIRED
-   The old `.level-one-time-sky` gradient system caused the persistent peach
-   rectangle above the canonical Level 1 environment. The sky layer itself and
-   its feather are permanently disabled here. Useful lighting helpers remain. */
+/* LEVEL 1 CONTINUOUS LIGHTING — OVERLAY CARRIERS RETIRED
+   Keep the canonical Level 1 master artwork unobstructed. The legacy sky,
+   building wash and pavement reflection are disabled so no full-viewport or
+   rectangular presentation carrier can sit above the approved environment.
+   Night calibration remains on the master art itself. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky::after,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-building-wash,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-pavement-reflection,
 .arcade-cabinet-bezel .game-viewport.level-one-time-0 .level-one-time-sky,
 .arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-time-sky,
 .arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-time-sky,
 .arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-sky,
 .arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-sky,
 .arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-sky,
-.arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-time-sky {
+.arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-time-pavement-reflection {
   content:none !important;
   display:none !important;
   opacity:0 !important;
@@ -23,50 +27,7 @@
   transition:none !important;
 }
 
-/* BIG UP pavement reflection remains available as a separate lighting event. */
-.arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-time-pavement-reflection {
-  display:block !important;
-  position:absolute !important;
-  left:15% !important;
-  right:15% !important;
-  bottom:13% !important;
-  height:25% !important;
-  z-index:3 !important;
-  pointer-events:none !important;
-  opacity:.22 !important;
-  background:radial-gradient(ellipse at 50% 100%, rgba(255,48,161,.42), rgba(0,218,255,.20) 34%, transparent 72%) !important;
-  filter:blur(12px) !important;
-  mix-blend-mode:screen !important;
-  animation:level-one-sky-big-up-bounce 1400ms ease-out 1 !important;
-}
-
-@keyframes level-one-sky-big-up-bounce {
-  0% { opacity:.05; transform:scale(.72,.68); }
-  42% { opacity:.46; transform:scale(1.04,1.12); }
-  100% { opacity:.22; transform:scale(1,1); }
-}
-
-/* Keep only subtle environment lighting helpers. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-building-wash {
-  display:block !important;
-  position:absolute !important;
-  inset:0 !important;
-  z-index:3 !important;
-  pointer-events:none !important;
-  opacity:.16 !important;
-  background:linear-gradient(110deg, rgba(255,121,65,.16), transparent 36%, rgba(255,43,154,.10) 66%, rgba(0,215,255,.09)) !important;
-  mix-blend-mode:screen !important;
-  transition:opacity 2600ms ease, background 2800ms ease !important;
-}
-
-.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-building-wash,
-.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-building-wash,
-.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-building-wash {
-  opacity:.24 !important;
-  background:linear-gradient(110deg, rgba(126,85,220,.10), transparent 33%, rgba(255,43,154,.18) 62%, rgba(0,218,255,.16)) !important;
-}
-
-/* Preserve the approved late-night calibration. */
+/* Preserve the approved late-night calibration on the canonical master only. */
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-art-night {
   filter:brightness(2.18) contrast(.80) saturate(1.18) !important;
 }
