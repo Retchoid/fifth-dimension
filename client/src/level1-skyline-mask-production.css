@@ -1,15 +1,15 @@
-/* LEVEL 1 TRUE INDEPENDENT PAINTED SKY
-   The animated sky now reuses the ACTUAL Golden master painting as its texture.
-   Only the sky pixels are revealed through the skyline mask; buildings/street stay
-   on the foreground master plates. The sky timeline remains independent of slides. */
+/* LEVEL 1 INDEPENDENT PAINTED SKY — non-destructive composite
+   The canonical masters stay completely intact. A second copy of the supplied
+   Golden painting supplies the sky texture only, aligned to the same camera and
+   softly masked over the skyline. No inverse cutout touches building pixels. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
   content:"" !important;
   position:absolute !important;
   inset:0 !important;
-  z-index:0 !important;
+  z-index:2 !important;
   pointer-events:none !important;
-  opacity:1 !important;
+  opacity:.90 !important;
 
   -webkit-mask-image:url('/assets/level1-skyline-mask-v1.svg') !important;
   mask-image:url('/assets/level1-skyline-mask-v1.svg') !important;
@@ -20,36 +20,29 @@
   -webkit-mask-repeat:no-repeat !important;
   mask-repeat:no-repeat !important;
 
-  /* Exact supplied illustration, not a synthetic CSS sky. 104% mirrors the
-     approved camera zoom while leaving the skyline mask registered to viewport. */
+  /* Match the locked master framing: contain + centered camera + 1.04 zoom. */
   background-image:url('/assets/1000001169_3204905a.png') !important;
   background-repeat:no-repeat !important;
-  background-size:104% auto !important;
+  background-size:contain !important;
   background-position:50% 50% !important;
   background-color:rgba(255,151,86,0) !important;
   background-blend-mode:color !important;
+  transform:scale(1.04) !important;
+  transform-origin:50% 50% !important;
 
-  animation:level-one-painted-sky-cycle 104s linear infinite alternate !important;
-  will-change:background-position,background-color,filter !important;
+  animation:level-one-painted-sky-cycle 126s ease-in-out infinite alternate !important;
+  will-change:transform,background-position,background-color,filter !important;
 }
 
-/* Canonical masters remain foreground plates; only their painted sky window is
-   transparent. All approved master opacity transitions remain untouched. */
+/* Undo the previous destructive inverse mask. Masters are once again pristine
+   foreground artwork, so rooftop detail, antennas, pipes and signs cannot halo. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
-  -webkit-mask-image:url('/assets/level1-foreground-inverse-sky-mask-v1.svg') !important;
-  mask-image:url('/assets/level1-foreground-inverse-sky-mask-v1.svg') !important;
-  -webkit-mask-size:96.15% 96.15% !important;
-  mask-size:96.15% 96.15% !important;
-  -webkit-mask-position:center !important;
-  mask-position:center !important;
-  -webkit-mask-repeat:no-repeat !important;
-  mask-repeat:no-repeat !important;
-  -webkit-mask-mode:luminance !important;
-  mask-mode:luminance !important;
+  -webkit-mask-image:none !important;
+  mask-image:none !important;
 }
 
-/* Retire the former synthetic vignette sky carrier completely. */
+/* Retire the former vignette sky carrier. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
   content:none !important;
   display:none !important;
@@ -57,52 +50,59 @@
   background:none !important;
 }
 
-/* Existing environment handoff pulse remains above the foreground. */
+/* Existing handoff pulse stays above both master and sky overlay. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::after {
   z-index:4 !important;
 }
 
-/* Continuous independent evolution of the SAME painted sky. The texture/clouds
-   never change style; only very slow colour temperature, exposure and a sub-pixel
-   atmospheric drift evolve. No state selectors participate in this animation. */
+/* Natural occurrence: tiny continuous atmospheric travel, not slide-like shifts.
+   The original painted clouds remain recognizable while colour temperature and
+   exposure evolve slowly. */
 @keyframes level-one-painted-sky-cycle {
   0% {
+    transform:scale(1.04) translate3d(-.18%,0,0);
     background-position:50% 50%;
     background-color:rgba(255,154,84,0);
-    filter:saturate(1.01) brightness(1.02) contrast(1.00);
+    filter:saturate(1.01) brightness(1.02) contrast(1);
   }
-  22% {
-    background-position:49.8% 50%;
-    background-color:rgba(226,101,115,.08);
-    filter:saturate(1.03) brightness(1.01) contrast(1.00);
+  20% {
+    transform:scale(1.042) translate3d(-.08%,-.03%,0);
+    background-position:49.94% 50%;
+    background-color:rgba(226,101,115,.05);
+    filter:saturate(1.025) brightness(1.01) contrast(1);
   }
-  45% {
-    background-position:50.15% 49.9%;
-    background-color:rgba(174,88,143,.16);
-    filter:saturate(1.04) brightness(.99) contrast(1.01);
+  42% {
+    transform:scale(1.044) translate3d(.03%,-.05%,0);
+    background-position:49.88% 49.98%;
+    background-color:rgba(174,88,143,.10);
+    filter:saturate(1.035) brightness(.995) contrast(1.005);
   }
-  68% {
-    background-position:49.75% 50.05%;
-    background-color:rgba(104,87,151,.24);
-    filter:saturate(1.03) brightness(.96) contrast(1.02);
+  64% {
+    transform:scale(1.043) translate3d(.13%,-.02%,0);
+    background-position:49.82% 50%;
+    background-color:rgba(104,87,151,.16);
+    filter:saturate(1.025) brightness(.975) contrast(1.01);
   }
-  84% {
-    background-position:50.2% 49.95%;
-    background-color:rgba(62,82,139,.31);
-    filter:saturate(1.01) brightness(.92) contrast(1.03);
+  82% {
+    transform:scale(1.041) translate3d(.20%,.01%,0);
+    background-position:49.76% 50.02%;
+    background-color:rgba(62,82,139,.21);
+    filter:saturate(1.01) brightness(.95) contrast(1.015);
   }
   100% {
-    background-position:50% 50%;
-    background-color:rgba(38,61,112,.36);
-    filter:saturate(.98) brightness(.88) contrast(1.04);
+    transform:scale(1.04) translate3d(.25%,.03%,0);
+    background-position:49.72% 50.03%;
+    background-color:rgba(38,61,112,.25);
+    filter:saturate(.995) brightness(.925) contrast(1.02);
   }
 }
 
 @media (prefers-reduced-motion:reduce) {
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
     animation:none !important;
+    transform:scale(1.04) !important;
     background-position:50% 50% !important;
-    background-color:rgba(151,91,145,.12) !important;
-    filter:saturate(1.02) brightness(.99) !important;
+    background-color:rgba(151,91,145,.08) !important;
+    filter:saturate(1.01) brightness(.99) !important;
   }
 }
