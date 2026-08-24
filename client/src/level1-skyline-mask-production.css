@@ -1,7 +1,6 @@
-/* LEVEL 1 CONTINUOUS INDEPENDENT SKY
-   The sky now runs on its own timeline behind the approved skyline mask.
-   It is intentionally NOT keyed to Golden/Waking/Dusk/Night master classes.
-   Camera, master art, player, HUD, transitions, collision and spawn geometry stay frozen. */
+/* LEVEL 1 CONTINUOUS INDEPENDENT SKY — subtle atmosphere pass.
+   Independent from Golden/Waking/Dusk/Night master classes.
+   Keeps the approved skyline mask and removes obvious cloud/blob shapes. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
   -webkit-mask-image: url('/assets/level1-skyline-mask-v1.svg') !important;
@@ -14,71 +13,52 @@
   mask-position: center !important;
   -webkit-mask-mode: alpha !important;
   mask-mode: alpha !important;
-  opacity: .54 !important;
-  mix-blend-mode: normal !important;
-  filter: none !important;
+  opacity: .34 !important;
+  mix-blend-mode: soft-light !important;
   background:
-    radial-gradient(ellipse at 52% 78%, rgba(255,180,92,.42) 0 7%, transparent 28%),
     linear-gradient(180deg,
-      #ffb54d 0%,
-      #f47c4f 14%,
-      #dc5b79 30%,
-      #9d528d 47%,
-      #5e4d88 64%,
-      #344775 82%,
-      #1c2c54 100%) !important;
-  background-size: 100% 235% !important;
-  background-position: 50% 0% !important;
-  animation: level-one-independent-sky-cycle 82s linear infinite alternate !important;
-  will-change: background-position, filter, opacity !important;
+      rgba(255,185,91,.92) 0%,
+      rgba(245,132,87,.88) 20%,
+      rgba(211,91,121,.84) 38%,
+      rgba(146,78,135,.80) 56%,
+      rgba(87,75,127,.78) 73%,
+      rgba(48,65,109,.80) 87%,
+      rgba(27,42,76,.84) 100%),
+    repeating-linear-gradient(172deg,
+      transparent 0 22px,
+      rgba(255,255,255,.018) 23px 24px,
+      transparent 25px 48px) !important;
+  background-size: 100% 245%, 165% 100% !important;
+  background-position: 50% 0%, 0% 0% !important;
+  animation: level-one-independent-sky-tone 96s linear infinite alternate,
+             level-one-independent-sky-drift 44s ease-in-out infinite alternate !important;
+  will-change: background-position, opacity, filter !important;
 }
 
-/* One continuous sky timeline. It does not know or care which environment master
-   is currently visible. Slow position travel creates the day-to-night colour shift;
-   small filter changes add atmospheric evolution without a slide-like jump. */
-@keyframes level-one-independent-sky-cycle {
-  0% {
-    background-position: 50% 0%;
-    filter: saturate(1.02) brightness(1.10) !important;
-    opacity: .50;
-  }
-  18% {
-    background-position: 50% 17%;
-    filter: saturate(1.05) brightness(1.07) !important;
-    opacity: .52;
-  }
-  38% {
-    background-position: 50% 37%;
-    filter: saturate(1.08) brightness(1.03) !important;
-    opacity: .54;
-  }
-  60% {
-    background-position: 50% 60%;
-    filter: saturate(1.10) brightness(.99) !important;
-    opacity: .56;
-  }
-  80% {
-    background-position: 50% 81%;
-    filter: saturate(1.08) brightness(.96) !important;
-    opacity: .57;
-  }
-  100% {
-    background-position: 50% 100%;
-    filter: saturate(1.06) brightness(.94) !important;
-    opacity: .58;
-  }
+/* Slow tonal migration only — no cloud blobs, no obvious moving shapes. */
+@keyframes level-one-independent-sky-tone {
+  0%   { background-position:50% 0%,0% 0%;   opacity:.31; filter:saturate(1.00) brightness(1.06); }
+  20%  { background-position:50% 18%,8% 0%;  opacity:.32; filter:saturate(1.02) brightness(1.04); }
+  40%  { background-position:50% 39%,16% 0%; opacity:.34; filter:saturate(1.04) brightness(1.01); }
+  62%  { background-position:50% 62%,24% 0%; opacity:.35; filter:saturate(1.05) brightness(.99); }
+  82%  { background-position:50% 82%,31% 0%; opacity:.36; filter:saturate(1.04) brightness(.97); }
+  100% { background-position:50% 100%,38% 0%;opacity:.37; filter:saturate(1.03) brightness(.95); }
 }
 
-/* A second, extremely slow atmospheric drift keeps the sky from feeling like a
-   static gradient merely sliding vertically. This remains inside the same mask. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
-  --l1-sky-drift-x: 0%;
+/* Extremely small lateral texture drift so the sky feels alive without reading
+   as an animated object. */
+@keyframes level-one-independent-sky-drift {
+  0%   { transform:translate3d(-.35%,0,0) scale(1.01); }
+  50%  { transform:translate3d(.20%,0,0) scale(1.012); }
+  100% { transform:translate3d(.42%,0,0) scale(1.01); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
-    animation: none !important;
-    background-position: 50% 45% !important;
-    filter: saturate(1.06) brightness(1) !important;
+    animation:none !important;
+    background-position:50% 45%,18% 0% !important;
+    transform:none !important;
+    opacity:.33 !important;
+    filter:saturate(1.02) brightness(1) !important;
   }
 }
