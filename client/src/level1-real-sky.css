@@ -1,0 +1,85 @@
+/* REAL LEVEL 1 SKY
+   The sky images sit behind transparent master foregrounds.
+   No filters, gradients, clip-paths, or building polygons. */
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
+  isolation:isolate !important;
+  overflow:hidden !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky {
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-frame {
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:50% 50% !important;
+  opacity:0;
+  pointer-events:none !important;
+  image-rendering:auto !important;
+  transform:none !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  will-change:opacity;
+}
+
+/* Simple independent slideshow: Dusk -> Sunset -> Night.
+   The short overlaps are real image crossfades, not colour effects. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-dusk {
+  animation:level-one-real-sky-dusk 48s linear infinite !important;
+}
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-sunset {
+  animation:level-one-real-sky-sunset 48s linear infinite !important;
+}
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-night {
+  animation:level-one-real-sky-night 48s linear infinite !important;
+}
+
+@keyframes level-one-real-sky-dusk {
+  0%,27% { opacity:1; }
+  31%,94% { opacity:0; }
+  98%,100% { opacity:1; }
+}
+@keyframes level-one-real-sky-sunset {
+  0%,27% { opacity:0; }
+  31%,59% { opacity:1; }
+  63%,100% { opacity:0; }
+}
+@keyframes level-one-real-sky-night {
+  0%,59% { opacity:0; }
+  63%,94% { opacity:1; }
+  98%,100% { opacity:0; }
+}
+
+/* Foreground masters remain exactly where the current camera system places them. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
+  z-index:1 !important;
+  clip-path:none !important;
+  -webkit-clip-path:none !important;
+  -webkit-mask-image:none !important;
+  mask-image:none !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
+  z-index:2 !important;
+}
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-canonical-ambience {
+  z-index:3 !important;
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-frame {
+    animation:none !important;
+  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-sunset {
+    opacity:1 !important;
+  }
+}
