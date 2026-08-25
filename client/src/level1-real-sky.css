@@ -1,6 +1,8 @@
 /* LEVEL 1 INDEPENDENT SKY
    One animated sky surface sits behind the transparent approved master.
-   No scene image is duplicated and the master camera/framing is untouched. */
+   The sky box is sized to the master's actual object-fit:contain bitmap rect,
+   then clipped to the checkerboard sky hole. It never fills the viewport or
+   the contain letterbox. No scene image is duplicated. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   isolation:isolate !important;
@@ -9,7 +11,6 @@
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky {
   position:absolute !important;
-  inset:0 !important;
   z-index:0 !important;
   display:block !important;
   pointer-events:none !important;
@@ -31,8 +32,7 @@
   opacity:1;
 }
 
-/* Slow cloud banks. They are part of the sky behind the master, never an
-   overlay on the scene. */
+/* Slow cloud banks remain entirely inside the clipped sky hole. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::before,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::after {
   content:"";
@@ -63,21 +63,11 @@
 }
 
 @keyframes level-one-sky-palette {
-  0% {
-    background-position:50% 0%;
-  }
-  24% {
-    background-position:50% 25%;
-  }
-  54% {
-    background-position:50% 52%;
-  }
-  78% {
-    background-position:50% 76%;
-  }
-  100% {
-    background-position:50% 100%;
-  }
+  0% { background-position:50% 0%; }
+  24% { background-position:50% 25%; }
+  54% { background-position:50% 52%; }
+  78% { background-position:50% 76%; }
+  100% { background-position:50% 100%; }
 }
 
 @keyframes level-one-cloud-drift-a {
