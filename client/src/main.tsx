@@ -38,6 +38,7 @@ import "./falling-item-effects.css";
 import "./level1-camera-framing.css";
 import "./level1-skyline-mask-production.css";
 import "./hud-hazard-polish.css";
+import "./level1-real-sky";
 
 const queryClient = new QueryClient();
 
