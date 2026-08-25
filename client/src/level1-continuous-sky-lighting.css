@@ -131,3 +131,24 @@
 .arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-master-vignette {
   background:linear-gradient(180deg, rgba(4,6,18,.008) 0 18%, transparent 44% 78%, rgba(7,9,20,.008) 100%) !important;
 }
+
+/* PRODUCTION HOLD: remove the legacy rectangular sky carrier completely.
+   The full canonical scene and its Golden/Waking/Dusk/Night timing stay intact.
+   A future independent sky will be placed behind a verified skyline cutout. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky::after,
+.arcade-cabinet-bezel .game-viewport.level-one-time-0 .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport.level-one-time-1 .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport.level-one-time-2 .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport.level-one-time-3 .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport.level-one-time-4 .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport.level-one-time-5 .level-one-time-sky,
+.arcade-cabinet-bezel .game-viewport.level-one-big-up-reached .level-one-time-sky {
+  content:none !important;
+  display:none !important;
+  opacity:0 !important;
+  background:none !important;
+  clip-path:none !important;
+  filter:none !important;
+  animation:none !important;
+}
