@@ -1,12 +1,11 @@
 /*
  * LEVEL 1 REAL SKY COMPOSITOR
  *
- * This is deliberately not a CSS colour/filter overlay.
- * It uses the approved Golden master to discover the connected centre-sky
- * pixels, punches those pixels out of every Level 1 master, and places the
- * approved dusk/sunset/night images behind the resulting transparent masters.
- * The normal master-state timing remains untouched; only the sky background
- * runs on its own clock.
+ * True stack:
+ *   sky-only pixels -> punched foreground master -> gameplay
+ *
+ * Nothing is resized. The approved master dimensions, camera, crop and
+ * positioning remain untouched. Old CSS/polygon/filter sky paths stay retired.
  */
 
 import "./level1-real-sky.css";
@@ -52,12 +51,11 @@ const createSkyMask = (image: HTMLImageElement): Uint8Array | null => {
   let head = 0;
   let tail = 0;
 
-  // The approved Level 1 sky is the connected opening in the centre of the
-  // composition. Keeping the flood-fill inside this generous centre corridor
-  // prevents the side facades from ever becoming candidates.
-  const minX = Math.floor(width * 0.18);
-  const maxX = Math.ceil(width * 0.82);
-  const maxY = Math.ceil(height * 0.61);
+  // The sky is the central opening between the two building masses. Keep the
+  // search deliberately conservative so architecture can never be punched out.
+  const minX = Math.floor(width * 0.29);
+  const maxX = Math.ceil(width * 0.71);
+  const maxY = Math.ceil(height * 0.46);
 
   const enqueue = (x: number, y: number) => {
     if (x < minX || x > maxX || y < 0 || y > maxY) return;
@@ -67,10 +65,9 @@ const createSkyMask = (image: HTMLImageElement): Uint8Array | null => {
     queue[tail++] = index;
   };
 
-  // Multiple seeds across the top-centre opening make the mask resilient to
-  // cloud bands while remaining well clear of the two building masses.
-  const seedY = Math.max(1, Math.floor(height * 0.018));
-  [0.34, 0.42, 0.5, 0.58, 0.66].forEach((ratio) => enqueue(Math.floor(width * ratio), seedY));
+  // Seeds stay well inside the visible sky and away from roof edges.
+  const seedY = Math.max(1, Math.floor(height * 0.09));
+  [0.42, 0.46, 0.5, 0.54, 0.58].forEach((ratio) => enqueue(Math.floor(width * ratio), seedY));
 
   while (head < tail) {
     const index = queue[head++];
@@ -92,10 +89,9 @@ const createSkyMask = (image: HTMLImageElement): Uint8Array | null => {
       if (queued[nextIndex]) continue;
       const next = pixelAt(pixels.data, nextIndex);
 
-      // Smooth sky gradients/clouds change gradually from pixel to pixel;
-      // architecture edges are much sharper. This follows the actual image
-      // boundary rather than imposing a polygon.
-      const threshold = y < height * 0.34 ? 92 : 66;
+      // Sky gradients/clouds remain locally smooth. A much lower threshold than
+      // the previous pass prevents the flood-fill from crossing roof/building edges.
+      const threshold = y < height * 0.28 ? 42 : 30;
       if (localDistance(current, next) <= threshold) enqueue(nx, ny);
     }
   }
@@ -103,7 +99,11 @@ const createSkyMask = (image: HTMLImageElement): Uint8Array | null => {
   return mask;
 };
 
-const punchSky = (source: HTMLImageElement, mask: Uint8Array): string | null => {
+const renderWithMask = (
+  source: HTMLImageElement,
+  mask: Uint8Array,
+  mode: "foreground" | "sky",
+): string | null => {
   const width = source.naturalWidth;
   const height = source.naturalHeight;
   if (!width || !height || mask.length !== width * height) return null;
@@ -123,8 +123,11 @@ const punchSky = (source: HTMLImageElement, mask: Uint8Array): string | null => 
   }
 
   for (let index = 0; index < mask.length; index += 1) {
-    if (mask[index]) pixels.data[index * 4 + 3] = 0;
+    const isSky = Boolean(mask[index]);
+    const shouldClear = mode === "foreground" ? isSky : !isSky;
+    if (shouldClear) pixels.data[index * 4 + 3] = 0;
   }
+
   context.putImageData(pixels, 0, 0);
   return canvas.toDataURL("image/png");
 };
@@ -158,22 +161,28 @@ const installOnHost = async (host: Element) => {
   const skyMask = createSkyMask(golden);
   if (!skyMask) return;
 
-  // Create the independent sky slideshow BEFORE altering the foreground masters.
+  const dusk = host.querySelector<HTMLImageElement>(".level-one-master-art-dusk");
+  const night = host.querySelector<HTMLImageElement>(".level-one-master-art-night");
+
+  // Build SKY-ONLY images first. Every non-sky pixel is transparent, so there
+  // is no second copy of buildings, street, crowd, car, or foreground behind.
   const sky = document.createElement("div");
   sky.className = "level-one-real-sky";
   sky.setAttribute("aria-hidden", "true");
 
   const frameSources = [
-    ["dusk", host.querySelector<HTMLImageElement>(".level-one-master-art-dusk")],
+    ["dusk", dusk],
     ["sunset", golden],
-    ["night", host.querySelector<HTMLImageElement>(".level-one-master-art-night")],
+    ["night", night],
   ] as const;
 
   frameSources.forEach(([name, source]) => {
     if (!source) return;
+    const skyOnly = renderWithMask(source, skyMask, "sky");
+    if (!skyOnly) return;
     const frame = document.createElement("img");
     frame.className = `level-one-real-sky-frame level-one-real-sky-${name}`;
-    frame.src = source.dataset.levelOneOriginalSrc || source.currentSrc || source.src;
+    frame.src = skyOnly;
     frame.alt = "";
     frame.draggable = false;
     sky.appendChild(frame);
@@ -181,13 +190,12 @@ const installOnHost = async (host: Element) => {
 
   host.insertBefore(sky, host.firstChild);
 
-  // The master art now becomes a true foreground with transparent sky pixels.
-  // We deliberately reuse ONE sky mask for every state so the opening never
-  // changes shape when the existing Golden/Waking/Dusk/Night masters switch.
+  // Each approved master becomes one foreground image with ONLY the real sky
+  // pixels transparent. No size/crop/position changes are made.
   masters.forEach((master) => {
-    const transparentMaster = punchSky(master, skyMask);
-    if (transparentMaster) {
-      master.src = transparentMaster;
+    const foreground = renderWithMask(master, skyMask, "foreground");
+    if (foreground) {
+      master.src = foreground;
       master.dataset.levelOneSkyPunched = "true";
     }
   });
