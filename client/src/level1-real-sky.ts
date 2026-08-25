@@ -1,12 +1,13 @@
 /*
- * LEVEL 1 SKY — CANONICAL MASTER SAFE
+ * LEVEL 1 CHECKERBOARD-ONLY REAL SKY
  *
- * The canonical Level 1 master images remain the visible environment.
- * Never substitute 5d_level1_no_sky.png for them and never hide them.
- * The animated sky is only an underlay; transparency already present in the
- * rendered master is the only place where it can be seen.
- *
- * Camera contract stays object-fit:contain, centered, scale(1.04).
+ * Safety contract:
+ * - canonical Level 1 masters remain mounted, visible, unmasked and untouched
+ * - no replacement foreground PNG and no canvas/runtime pixel punching
+ * - the sky overlay is aligned to the master's real object-fit:contain bitmap
+ * - CSS inverts the supplied SVG on the SKY OVERLAY only, so the overlay can
+ *   exist only in the checkerboard/window region
+ * - camera remains centered with scale(1.04)
  */
 
 import "./level1-real-sky.css";
@@ -24,7 +25,7 @@ const waitForImage = (image: HTMLImageElement) => new Promise<void>((resolve) =>
   image.addEventListener("error", finish, { once: true });
 });
 
-const syncSkyToMasterImageRect = (host: Element, master: HTMLImageElement, sky: HTMLElement) => {
+const syncOverlayToMasterImageRect = (host: Element, master: HTMLImageElement, overlay: HTMLElement) => {
   const hostRect = host.getBoundingClientRect();
   const naturalWidth = master.naturalWidth;
   const naturalHeight = master.naturalHeight;
@@ -36,12 +37,12 @@ const syncSkyToMasterImageRect = (host: Element, master: HTMLImageElement, sky: 
   const left = (hostRect.width - renderedWidth) / 2;
   const top = (hostRect.height - renderedHeight) / 2;
 
-  sky.style.left = `${left}px`;
-  sky.style.top = `${top}px`;
-  sky.style.width = `${renderedWidth}px`;
-  sky.style.height = `${renderedHeight}px`;
-  sky.style.transform = `scale(${CAMERA_SCALE})`;
-  sky.style.transformOrigin = "50% 50%";
+  overlay.style.left = `${left}px`;
+  overlay.style.top = `${top}px`;
+  overlay.style.width = `${renderedWidth}px`;
+  overlay.style.height = `${renderedHeight}px`;
+  overlay.style.transform = `scale(${CAMERA_SCALE})`;
+  overlay.style.transformOrigin = "50% 50%";
 };
 
 const installOnHost = async (host: Element) => {
@@ -55,17 +56,22 @@ const installOnHost = async (host: Element) => {
   const geometryMaster = masters.find((master) => master.naturalWidth && master.naturalHeight);
   if (!geometryMaster) return;
 
-  const sky = document.createElement("span");
-  sky.className = "level-one-animated-sky";
-  sky.setAttribute("aria-hidden", "true");
-  host.insertBefore(sky, host.firstChild);
+  const staleSky = host.querySelector(".level-one-animated-sky");
+  staleSky?.remove();
 
-  syncSkyToMasterImageRect(host, geometryMaster, sky);
-  const ro = new ResizeObserver(() => syncSkyToMasterImageRect(host, geometryMaster, sky));
+  const sky = document.createElement("span");
+  sky.className = "level-one-checkerboard-sky";
+  sky.setAttribute("aria-hidden", "true");
+  host.appendChild(sky);
+
+  const sync = () => syncOverlayToMasterImageRect(host, geometryMaster, sky);
+  sync();
+
+  const ro = new ResizeObserver(sync);
   ro.observe(host);
   resizeObservers.set(host, ro);
 
-  host.classList.add("level-one-real-sky-ready");
+  host.classList.add("level-one-checkerboard-sky-ready");
 };
 
 const scan = () => {
