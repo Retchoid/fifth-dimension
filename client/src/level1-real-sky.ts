@@ -1,203 +1,109 @@
 /*
- * LEVEL 1 REAL SKY COMPOSITOR
+ * LEVEL 1 FIXED SKY CUTOUT
  *
- * True stack:
- *   sky-only pixels -> transparent foreground master -> gameplay
- *
- * No resizing. The approved master dimensions, object-fit, scale, crop and
- * position remain unchanged. Only pixels confidently identified as the real
- * central sky are made transparent.
+ * Stack: animated sky -> transparent approved master -> gameplay.
+ * The cutout is fixed from the user's checkerboard reference. There is no
+ * runtime colour detection, flood-fill, second master, filter, crop or resize.
  */
 
 import "./level1-real-sky.css";
 
 const SKY_HOST_SELECTOR = ".arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley";
 const MASTER_SELECTOR = ".level-one-master-art";
-const GOLDEN_SELECTOR = ".level-one-master-art-golden";
 const processedHosts = new WeakSet<Element>();
 
-type Pixel = { r: number; g: number; b: number };
+/* Normalized contour traced from the supplied checkerboard sky-removal reference.
+   Coordinates are multiplied by each master's natural width/height. */
+const SKY_CUTOUT: ReadonlyArray<readonly [number, number]> = [
+  [0.3654,0.0069],[0.3593,0.0322],[0.3685,0.0368],[0.3685,0.0575],[0.3609,0.0506],
+  [0.3685,0.0736],[0.3685,0.1678],[0.3884,0.1655],[0.3884,0.1448],[0.4021,0.1425],
+  [0.4006,0.1609],[0.4220,0.1724],[0.4419,0.2138],[0.4419,0.2782],[0.4343,0.2736],
+  [0.4297,0.2989],[0.4419,0.3333],[0.4327,0.3356],[0.4205,0.4368],[0.4343,0.4506],
+  [0.4587,0.4483],[0.4786,0.4943],[0.4801,0.4506],[0.4847,0.4598],[0.4924,0.4414],
+  [0.5076,0.4414],[0.5183,0.4828],[0.5352,0.4989],[0.5382,0.4805],[0.5398,0.4920],
+  [0.5505,0.4805],[0.5550,0.4483],[0.5719,0.4506],[0.5703,0.4230],[0.6024,0.3379],
+  [0.6116,0.4184],[0.6254,0.4230],[0.6254,0.4437],[0.6131,0.4414],[0.6300,0.4805],
+  [0.6269,0.4506],[0.6376,0.4483],[0.6361,0.3954],[0.6422,0.4069],[0.6498,0.4000],
+  [0.6498,0.0092],[0.6407,0.0322],[0.6269,0.0299],[0.6254,0.0069],[0.5948,0.0161],
+  [0.6009,0.0276],[0.5917,0.0322],[0.5887,0.0069],[0.5703,0.0069],[0.5550,0.0322],
+  [0.5520,0.0069],[0.5336,0.0069],[0.5291,0.0322],[0.5168,0.0069],[0.4969,0.0069],
+  [0.4817,0.0322],[0.4786,0.0069],[0.4235,0.0069],[0.4113,0.0276],[0.4067,0.0069],
+];
 
-const pixelAt = (data: Uint8ClampedArray, index: number): Pixel => {
-  const o = index * 4;
-  return { r: data[o], g: data[o + 1], b: data[o + 2] };
-};
+const waitForImage = (image: HTMLImageElement) => new Promise<void>((resolve) => {
+  if (image.complete && image.naturalWidth && image.naturalHeight) return resolve();
+  const finish = () => resolve();
+  image.addEventListener("load", finish, { once: true });
+  image.addEventListener("error", finish, { once: true });
+});
 
-const distanceSq = (a: Pixel, b: Pixel) => {
-  const dr = a.r - b.r;
-  const dg = a.g - b.g;
-  const db = a.b - b.b;
-  return dr * dr + dg * dg + db * db;
-};
-
-const brightness = (p: Pixel) => (p.r + p.g + p.b) / 3;
-
-const createSkyMask = (image: HTMLImageElement): Uint8Array | null => {
-  const width = image.naturalWidth;
-  const height = image.naturalHeight;
+const punchFixedSky = (source: HTMLImageElement): string | null => {
+  const width = source.naturalWidth;
+  const height = source.naturalHeight;
   if (!width || !height) return null;
 
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  const ctx = canvas.getContext("2d");
   if (!ctx) return null;
-  ctx.drawImage(image, 0, 0, width, height);
 
-  let pixels: ImageData;
-  try {
-    pixels = ctx.getImageData(0, 0, width, height);
-  } catch {
-    return null;
-  }
-
-  /* Sample only from positions unquestionably inside the approved centre sky.
-     This palette prevents the fill from walking through similarly coloured brick. */
-  const palette: Pixel[] = [];
-  const sampleXs = [0.42, 0.47, 0.5, 0.53, 0.58];
-  const sampleYs = [0.06, 0.11, 0.16, 0.21, 0.26, 0.31];
-  for (const xr of sampleXs) {
-    for (const yr of sampleYs) {
-      const x = Math.min(width - 1, Math.max(0, Math.round(width * xr)));
-      const y = Math.min(height - 1, Math.max(0, Math.round(height * yr)));
-      palette.push(pixelAt(pixels.data, y * width + x));
-    }
-  }
-
-  const mask = new Uint8Array(width * height);
-  const queued = new Uint8Array(width * height);
-  const queue = new Int32Array(width * height);
-  let head = 0;
-  let tail = 0;
-
-  const minX = Math.floor(width * 0.31);
-  const maxX = Math.ceil(width * 0.69);
-  const maxY = Math.ceil(height * 0.43);
-
-  const isSkyCandidate = (index: number, y: number) => {
-    const p = pixelAt(pixels.data, index);
-    /* Buildings/fire escapes are substantially darker than the Golden sky.
-       Keep the threshold conservative; leaving a few baked-sky edge pixels is
-       preferable to removing one architecture pixel. */
-    if (brightness(p) < (y < height * 0.30 ? 104 : 116)) return false;
-    let best = Number.POSITIVE_INFINITY;
-    for (const sample of palette) best = Math.min(best, distanceSq(p, sample));
-    return best <= 6400; // ~80 RGB units, against the actual sampled sky palette.
-  };
-
-  const enqueue = (x: number, y: number) => {
-    if (x < minX || x > maxX || y < 0 || y > maxY) return;
-    const index = y * width + x;
-    if (queued[index] || !isSkyCandidate(index, y)) return;
-    queued[index] = 1;
-    queue[tail++] = index;
-  };
-
-  /* Several seeds inside the real open sky. */
-  for (const xr of [0.43, 0.47, 0.5, 0.53, 0.57]) {
-    for (const yr of [0.08, 0.14, 0.20]) enqueue(Math.round(width * xr), Math.round(height * yr));
-  }
-
-  while (head < tail) {
-    const index = queue[head++];
-    const x = index % width;
-    const y = Math.floor(index / width);
-    mask[index] = 1;
-    enqueue(x - 1, y);
-    enqueue(x + 1, y);
-    enqueue(x, y - 1);
-    enqueue(x, y + 1);
-  }
-
-  return mask;
-};
-
-const renderWithMask = (source: HTMLImageElement, mask: Uint8Array, mode: "foreground" | "sky") => {
-  const width = source.naturalWidth;
-  const height = source.naturalHeight;
-  if (!width || !height || mask.length !== width * height) return null;
-
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  if (!ctx) return null;
+  /* Exact natural dimensions: this changes alpha only, never geometry. */
   ctx.drawImage(source, 0, 0, width, height);
+  ctx.save();
+  ctx.globalCompositeOperation = "destination-out";
+  ctx.beginPath();
+  SKY_CUTOUT.forEach(([nx, ny], index) => {
+    const x = nx * width;
+    const y = ny * height;
+    if (index === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
 
-  let pixels: ImageData;
-  try {
-    pixels = ctx.getImageData(0, 0, width, height);
-  } catch {
-    return null;
-  }
-
-  for (let i = 0; i < mask.length; i += 1) {
-    const clear = mode === "foreground" ? Boolean(mask[i]) : !mask[i];
-    if (clear) pixels.data[i * 4 + 3] = 0;
-  }
-  ctx.putImageData(pixels, 0, 0);
   return canvas.toDataURL("image/png");
 };
-
-const waitForImage = (image: HTMLImageElement) => new Promise<void>((resolve) => {
-  if (image.complete && image.naturalWidth) return resolve();
-  const finish = () => resolve();
-  image.addEventListener("load", finish, { once: true });
-  image.addEventListener("error", finish, { once: true });
-});
 
 const installOnHost = async (host: Element) => {
   if (processedHosts.has(host)) return;
   processedHosts.add(host);
 
   const masters = Array.from(host.querySelectorAll<HTMLImageElement>(MASTER_SELECTOR));
-  const golden = host.querySelector<HTMLImageElement>(GOLDEN_SELECTOR);
-  if (!golden || masters.length < 4) return;
+  if (!masters.length) return;
 
   await Promise.all(masters.map(waitForImage));
-  if (!golden.naturalWidth || !golden.naturalHeight) return;
+  if (masters.some((master) => !master.naturalWidth || !master.naturalHeight)) return;
 
-  const mask = createSkyMask(golden);
-  if (!mask) return;
-
-  const dusk = host.querySelector<HTMLImageElement>(".level-one-master-art-dusk");
-  const night = host.querySelector<HTMLImageElement>(".level-one-master-art-night");
-
-  const sky = document.createElement("div");
-  sky.className = "level-one-real-sky";
+  /* One lightweight sky surface only. It contains no copy of the scene. */
+  const sky = document.createElement("span");
+  sky.className = "level-one-animated-sky";
   sky.setAttribute("aria-hidden", "true");
-
-  for (const [name, source] of [["dusk", dusk], ["sunset", golden], ["night", night]] as const) {
-    if (!source) continue;
-    const skyOnly = renderWithMask(source, mask, "sky");
-    if (!skyOnly) continue;
-    const frame = document.createElement("img");
-    frame.className = `level-one-real-sky-frame level-one-real-sky-${name}`;
-    frame.src = skyOnly;
-    frame.alt = "";
-    frame.draggable = false;
-    sky.appendChild(frame);
-  }
   host.insertBefore(sky, host.firstChild);
 
-  /* Replace each current master in-place with the same-size transparent
-     foreground. No CSS sizing/positioning values are changed here. */
   for (const master of masters) {
-    const foreground = renderWithMask(master, mask, "foreground");
+    const foreground = punchFixedSky(master);
     if (!foreground) continue;
     master.src = foreground;
-    master.dataset.levelOneSkyPunched = "true";
+    master.dataset.levelOneSkyPunched = "fixed-reference";
   }
 
   host.classList.add("level-one-real-sky-ready");
 };
 
-const scan = () => document.querySelectorAll(SKY_HOST_SELECTOR).forEach((host) => void installOnHost(host));
+const scan = () => {
+  document.querySelectorAll(SKY_HOST_SELECTOR).forEach((host) => void installOnHost(host));
+};
+
 const observer = new MutationObserver(scan);
 const start = () => {
   scan();
   if (document.body) observer.observe(document.body, { childList: true, subtree: true });
 };
 
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
-else start();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", start, { once: true });
+} else {
+  start();
+}
