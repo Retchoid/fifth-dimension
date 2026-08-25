@@ -1,17 +1,46 @@
-/* LEVEL 1 SKY SAFETY ROLLBACK
-   The independent overlay experiment can fully cover the canonical Level 1
-   master plates on mobile. Restore the approved environment immediately.
-   Keep this file as the isolated integration point for the next sky asset pass. */
+/* LEVEL 1 INDEPENDENT ANIMATED SKY
+   Sky-only treatment. The canonical wide-angle master plates remain untouched.
+   The mask is deliberately confined to the open-sky window above the painted
+   skyline/buildings so it cannot create a rectangular overlay over the scene. */
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
-  content:none !important;
-  display:none !important;
-  animation:none !important;
-  background:none !important;
-  -webkit-mask-image:none !important;
-  mask-image:none !important;
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
+  position: relative !important;
+  isolation: isolate;
 }
 
+/* Independent sky carrier. It sits behind every canonical master plate. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
+  content:"" !important;
+  display:block !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  opacity:.72;
+  background:
+    radial-gradient(ellipse at 51% 24%,rgba(255,214,126,.46) 0 7%,rgba(255,147,88,.16) 17%,transparent 34%),
+    linear-gradient(180deg,#f6a04f 0%,#ef7358 23%,#c95b79 43%,#684d91 61%,#26355e 100%);
+  background-size:108% 108%,100% 100%;
+  background-position:48% 48%,center;
+  /* Open-sky silhouette only: side buildings + stepped distant skyline are cut out.
+     Nothing below the skyline can receive this layer. */
+  clip-path:polygon(
+    0 0,100% 0,100% 31%,
+    94% 31%,94% 36%,90% 36%,90% 40%,86% 40%,86% 43%,
+    82% 43%,82% 47%,78% 47%,78% 44%,74% 44%,74% 49%,
+    70% 49%,70% 46%,66% 46%,66% 51%,62% 51%,62% 47%,
+    58% 47%,58% 52%,54% 52%,54% 46%,50% 46%,50% 51%,
+    46% 51%,46% 48%,42% 48%,42% 52%,38% 52%,38% 47%,
+    34% 47%,34% 50%,30% 50%,30% 45%,26% 45%,26% 48%,
+    22% 48%,22% 43%,18% 43%,18% 40%,14% 40%,14% 36%,
+    8% 36%,8% 31%,0 31%
+  );
+  animation:level-one-sky-drift 18s ease-in-out infinite alternate !important;
+  transition:background 2400ms cubic-bezier(.22,.72,.24,1),opacity 1800ms ease,filter 2200ms ease !important;
+  transform:translateZ(0);
+}
+
+/* Keep the approved full-scene masters above the sky. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
   opacity:1;
@@ -19,13 +48,49 @@
   mask-image:none !important;
 }
 
+/* Sky colour follows the existing Level 1 state machine; no timing/progression changes. */
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-waking .level-one-sunset-alley::before {
+  opacity:.68;
+  background:
+    radial-gradient(ellipse at 52% 25%,rgba(255,176,125,.30) 0 7%,transparent 31%),
+    linear-gradient(180deg,#e87558 0%,#d45e72 32%,#a24e8b 61%,#4b426f 100%);
+}
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-dusk .level-one-sunset-alley::before {
+  opacity:.66;
+  background:
+    radial-gradient(ellipse at 53% 26%,rgba(224,124,180,.17) 0 7%,transparent 29%),
+    linear-gradient(180deg,#76518d 0%,#604b8d 35%,#414b78 66%,#1d294b 100%);
+}
+.arcade-cabinet-bezel .game-viewport.level-one-master-state-night .level-one-sunset-alley::before {
+  opacity:.70;
+  background:
+    radial-gradient(ellipse at 54% 25%,rgba(102,111,205,.12) 0 6%,transparent 28%),
+    linear-gradient(180deg,#1c2d55 0%,#283d69 40%,#33466f 70%,#111b34 100%);
+  filter:saturate(1.06) brightness(.94);
+}
+
+/* Very slow atmospheric movement: sky drifts, the city does not. */
+@keyframes level-one-sky-drift {
+  0%   { background-position:46% 47%,center; filter:saturate(1) brightness(1); }
+  38%  { background-position:49% 49%,center; filter:saturate(1.025) brightness(1.015); }
+  71%  { background-position:52% 48%,center; filter:saturate(1.015) brightness(.995); }
+  100% { background-position:55% 50%,center; filter:saturate(1.035) brightness(1.01); }
+}
+
+/* Existing scene effects remain above the masters; no replacement vignette/block. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
   content:none !important;
   display:none !important;
   animation:none !important;
   background:none !important;
 }
-
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::after {
   z-index:4 !important;
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
+    animation:none !important;
+    transition:none !important;
+  }
 }
