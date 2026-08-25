@@ -4,13 +4,20 @@
  * Stack: animated sky -> transparent approved master -> gameplay.
  * The cutout is fixed from the user's checkerboard reference. There is no
  * runtime colour detection, flood-fill, second master, filter, crop or resize.
+ *
+ * IMPORTANT: the sky is NOT a viewport-sized layer. Its box is calculated from
+ * the master's actual rendered object-fit:contain image rect, then given the
+ * exact same camera scale. This prevents sky from appearing in contain bars or
+ * anywhere outside the checkerboard cutout.
  */
 
 import "./level1-real-sky.css";
 
 const SKY_HOST_SELECTOR = ".arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley";
 const MASTER_SELECTOR = ".level-one-master-art";
+const CAMERA_SCALE = 1.04;
 const processedHosts = new WeakSet<Element>();
+const resizeObservers = new WeakMap<Element, ResizeObserver>();
 
 /* Normalized contour traced from the supplied checkerboard sky-removal reference.
    Coordinates are multiplied by each master's natural width/height. */
@@ -29,6 +36,8 @@ const SKY_CUTOUT: ReadonlyArray<readonly [number, number]> = [
   [0.5520,0.0069],[0.5336,0.0069],[0.5291,0.0322],[0.5168,0.0069],[0.4969,0.0069],
   [0.4817,0.0322],[0.4786,0.0069],[0.4235,0.0069],[0.4113,0.0276],[0.4067,0.0069],
 ];
+
+const SKY_CLIP = `polygon(${SKY_CUTOUT.map(([x, y]) => `${(x * 100).toFixed(4)}% ${(y * 100).toFixed(4)}%`).join(",")})`;
 
 const waitForImage = (image: HTMLImageElement) => new Promise<void>((resolve) => {
   if (image.complete && image.naturalWidth && image.naturalHeight) return resolve();
@@ -66,6 +75,31 @@ const punchFixedSky = (source: HTMLImageElement): string | null => {
   return canvas.toDataURL("image/png");
 };
 
+const syncSkyToMasterImageRect = (host: Element, master: HTMLImageElement, sky: HTMLElement) => {
+  const hostRect = host.getBoundingClientRect();
+  const naturalWidth = master.naturalWidth;
+  const naturalHeight = master.naturalHeight;
+  if (!hostRect.width || !hostRect.height || !naturalWidth || !naturalHeight) return;
+
+  /* Match object-fit: contain exactly. The master element fills the host, but the
+     actual bitmap may be letterboxed inside it. Sky must live only under that
+     bitmap, never under the letterbox. */
+  const fit = Math.min(hostRect.width / naturalWidth, hostRect.height / naturalHeight);
+  const renderedWidth = naturalWidth * fit;
+  const renderedHeight = naturalHeight * fit;
+  const left = (hostRect.width - renderedWidth) / 2;
+  const top = (hostRect.height - renderedHeight) / 2;
+
+  sky.style.left = `${left}px`;
+  sky.style.top = `${top}px`;
+  sky.style.width = `${renderedWidth}px`;
+  sky.style.height = `${renderedHeight}px`;
+  sky.style.transform = `scale(${CAMERA_SCALE})`;
+  sky.style.transformOrigin = "50% 50%";
+  sky.style.clipPath = SKY_CLIP;
+  sky.style.setProperty("-webkit-clip-path", SKY_CLIP);
+};
+
 const installOnHost = async (host: Element) => {
   if (processedHosts.has(host)) return;
   processedHosts.add(host);
@@ -76,11 +110,19 @@ const installOnHost = async (host: Element) => {
   await Promise.all(masters.map(waitForImage));
   if (masters.some((master) => !master.naturalWidth || !master.naturalHeight)) return;
 
-  /* One lightweight sky surface only. It contains no copy of the scene. */
+  /* One lightweight sky surface only. It contains no copy of the scene and is
+     clipped to exactly the same hole cut from the approved master. */
   const sky = document.createElement("span");
   sky.className = "level-one-animated-sky";
   sky.setAttribute("aria-hidden", "true");
   host.insertBefore(sky, host.firstChild);
+
+  const geometryMaster = masters[0];
+  syncSkyToMasterImageRect(host, geometryMaster, sky);
+
+  const ro = new ResizeObserver(() => syncSkyToMasterImageRect(host, geometryMaster, sky));
+  ro.observe(host);
+  resizeObservers.set(host, ro);
 
   for (const master of masters) {
     const foreground = punchFixedSky(master);
