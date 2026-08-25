@@ -1,0 +1,167 @@
+/* SELECTAH SHOWDOWN — HUD + HAZARD POLISH
+   Presentation only. No scoring, collision, spawn, timing, player geometry,
+   environment artwork, or Level 1 transition state changes. */
+
+/* --- HUD: one slim instrument strip, not seven boxed counters. --- */
+.arcade-cabinet-bezel .game-hud {
+  display:grid !important;
+  grid-template-columns:.72fr .72fr 1.42fr 1.08fr 1fr 1.18fr .82fr !important;
+  grid-template-areas:"score level records combo high lives audio" !important;
+  gap:0 !important;
+  align-items:center !important;
+  min-height:2.15rem !important;
+  padding:0 5px !important;
+  background:linear-gradient(180deg,rgba(8,9,16,.96),rgba(13,12,22,.90)) !important;
+  border-top:1px solid rgba(0,229,255,.64) !important;
+  border-bottom:2px solid rgba(255,38,145,.72) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 3px 0 rgba(8,9,16,.72) !important;
+  overflow:visible !important;
+}
+
+.arcade-cabinet-bezel .game-hud > .hud-badge,
+.arcade-cabinet-bezel .game-hud > .audio-toggle {
+  min-width:0 !important;
+  min-height:1.65rem !important;
+  height:100% !important;
+  margin:0 !important;
+  padding:3px 5px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:3px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#f2ead8 !important;
+  font-size:clamp(.29rem,1.45vw,.44rem) !important;
+  line-height:1 !important;
+  letter-spacing:.02em !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+}
+
+.arcade-cabinet-bezel .game-hud > .hud-badge + .hud-badge,
+.arcade-cabinet-bezel .game-hud > .audio-toggle {
+  border-left:1px solid rgba(0,229,255,.24) !important;
+}
+
+.arcade-cabinet-bezel .game-hud > .hud-badge strong,
+.arcade-cabinet-bezel .game-hud > .audio-toggle strong {
+  color:#ff3c98 !important;
+  font-size:inherit !important;
+  text-shadow:0 0 7px rgba(255,47,151,.26) !important;
+}
+
+.arcade-cabinet-bezel .game-hud > .hud-badge svg,
+.arcade-cabinet-bezel .game-hud > .audio-toggle svg {
+  width:10px !important;
+  height:10px !important;
+  flex:0 0 auto !important;
+  opacity:.88 !important;
+}
+
+.arcade-cabinet-bezel .game-hud > .hud-badge:nth-child(1){grid-area:score;}
+.arcade-cabinet-bezel .game-hud > .level-hud{grid-area:level;}
+.arcade-cabinet-bezel .game-hud > .records-hud{grid-area:records;}
+.arcade-cabinet-bezel .game-hud > .combo-badge{grid-area:combo;}
+.arcade-cabinet-bezel .game-hud > .high-score-badge{grid-area:high;}
+.arcade-cabinet-bezel .game-hud > .lives-badge{grid-area:lives;}
+.arcade-cabinet-bezel .game-hud > .audio-toggle{grid-area:audio;}
+
+/* Pickup feedback becomes a temporary transmission tag instead of consuming HUD width. */
+.arcade-cabinet-bezel .game-hud > .pickup-flash-slot {
+  position:absolute !important;
+  left:50% !important;
+  top:calc(100% + 3px) !important;
+  transform:translateX(-50%) !important;
+  width:max-content !important;
+  max-width:78% !important;
+  min-height:0 !important;
+  padding:2px 6px !important;
+  border:1px solid rgba(0,229,255,.42) !important;
+  background:rgba(7,9,16,.88) !important;
+  color:#f2ead8 !important;
+  box-shadow:2px 2px 0 rgba(255,35,144,.32) !important;
+  z-index:42 !important;
+}
+
+/* Lives retain their warning role without turning the whole bar red. */
+.arcade-cabinet-bezel .game-hud > .lives-badge {
+  color:#ffd9c8 !important;
+}
+
+/* --- Hazard motion: visual child only; physics wrapper remains untouched. --- */
+.arcade-cabinet-bezel .falling-object.cop > .urban-prop-asset {
+  animation:selectah-cop-heavy-sway 1380ms cubic-bezier(.45,.02,.55,.98) infinite alternate !important;
+}
+
+.arcade-cabinet-bezel .falling-object.pill > .urban-prop-asset {
+  animation:selectah-pill-skitter 780ms linear infinite !important;
+}
+
+.arcade-cabinet-bezel .falling-object.phone > .urban-prop-asset {
+  animation:selectah-phone-swing 1520ms ease-in-out infinite alternate !important;
+}
+
+.arcade-cabinet-bezel .falling-object.bottle > .urban-prop-asset {
+  animation:selectah-bottle-endover 1160ms linear infinite !important;
+}
+
+.arcade-cabinet-bezel .falling-object.apple > .urban-prop-asset {
+  animation:selectah-apple-lurch 1020ms ease-in-out infinite alternate !important;
+}
+
+@keyframes selectah-cop-heavy-sway {
+  0%{transform:translate3d(-2px,-1px,0) rotate(-4deg) scale(.99);}
+  52%{transform:translate3d(1px,1px,0) rotate(2deg) scale(1.015);}
+  100%{transform:translate3d(2px,-1px,0) rotate(5deg) scale(1);}
+}
+@keyframes selectah-pill-skitter {
+  0%{transform:translate3d(-1px,0,0) rotate(0deg) scale(.98);}
+  25%{transform:translate3d(1px,-1px,0) rotate(92deg) scale(1.02);}
+  50%{transform:translate3d(0,1px,0) rotate(181deg) scale(.99);}
+  75%{transform:translate3d(-1px,-1px,0) rotate(271deg) scale(1.015);}
+  100%{transform:translate3d(1px,0,0) rotate(360deg) scale(.98);}
+}
+@keyframes selectah-phone-swing {
+  0%{transform:translate3d(-2px,-1px,0) rotate(-10deg);}
+  45%{transform:translate3d(1px,1px,0) rotate(3deg);}
+  100%{transform:translate3d(2px,-1px,0) rotate(9deg);}
+}
+@keyframes selectah-bottle-endover {
+  0%{transform:translate3d(-1px,-1px,0) rotate(-12deg) scale(1);}
+  50%{transform:translate3d(1px,1px,0) rotate(168deg) scale(1.02);}
+  100%{transform:translate3d(-1px,-1px,0) rotate(348deg) scale(1);}
+}
+@keyframes selectah-apple-lurch {
+  0%{transform:translate3d(-2px,0,0) rotate(-5deg) scale(.985);}
+  38%{transform:translate3d(1px,-2px,0) rotate(4deg) scale(1.02);}
+  72%{transform:translate3d(2px,1px,0) rotate(-2deg) scale(.995);}
+  100%{transform:translate3d(-1px,-1px,0) rotate(6deg) scale(1.01);}
+}
+
+@media (max-width:430px){
+  .arcade-cabinet-bezel .game-hud {
+    grid-template-columns:.62fr .68fr 1.34fr 1fr .9fr 1.12fr .72fr !important;
+    min-height:2rem !important;
+    padding:0 3px !important;
+  }
+  .arcade-cabinet-bezel .game-hud > .hud-badge,
+  .arcade-cabinet-bezel .game-hud > .audio-toggle {
+    padding:2px 3px !important;
+    gap:2px !important;
+    font-size:clamp(.255rem,1.48vw,.34rem) !important;
+  }
+  .arcade-cabinet-bezel .game-hud > .hud-badge svg,
+  .arcade-cabinet-bezel .game-hud > .audio-toggle svg {
+    width:8px !important;
+    height:8px !important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .arcade-cabinet-bezel .falling-object:is(.cop,.pill,.phone,.bottle,.apple) > .urban-prop-asset {
+    animation:none !important;
+  }
+}
