@@ -1,8 +1,7 @@
-/* LEVEL 1 CHECKERBOARD-ONLY SKY
-   One animated sky surface sits behind the exact uploaded matching PNG.
-   rEU3ZkO01.svg is applied only to that PNG foreground. The canonical Level 1
-   masters are never masked or rewritten; they remain intact as fallback/state
-   references and are visually suppressed only after the matching PNG validates. */
+/* LEVEL 1 SKY UNDERLAY
+   The canonical Level 1 master remains the visible scene. The animated sky is
+   strictly behind it and can only be visible through transparency in that
+   rendered master. No replacement foreground, SVG mask, crop, or master hiding. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   isolation:isolate !important;
@@ -83,8 +82,7 @@
   100% { transform:translate3d(235%,-2%,0) scale(.84); opacity:0; }
 }
 
-/* Canonical painted masters are never masked or mutated. They remain the safe
-   fallback until the exact 810x1800 matching PNG has loaded and validated. */
+/* Hard safety contract: canonical masters are visible, untouched and unmasked. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
   clip-path:none !important;
@@ -93,32 +91,10 @@
   mask-image:none !important;
 }
 
-/* Once the validated matching foreground is ready, retire only the visual output
-   of the canonical masters. They remain mounted and untouched underneath. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley.level-one-checkerboard-foreground-ready .level-one-master-art {
-  opacity:0 !important;
-}
-
-/* Exact uploaded matching PNG. This is the ONLY element allowed to receive the
-   supplied SVG alpha geometry. Therefore only its checkerboard opening can be
-   replaced by the animated sky; every painted pixel in this PNG is preserved. */
+/* Explicitly neutralize the incorrect full-scene replacement path if stale DOM
+   from a previous bundle survives during hot reload/navigation. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-foreground {
-  position:absolute !important;
-  z-index:1 !important;
-  display:block !important;
-  pointer-events:none !important;
-  object-fit:fill !important;
-  opacity:1 !important;
-  -webkit-mask-image:url("https://raw.githubusercontent.com/Retchoid/fifth-dimension/3f83ee510cad87e7cd1bfb320e04d81d9d1fdecc/rEU3ZkO01.svg") !important;
-  mask-image:url("https://raw.githubusercontent.com/Retchoid/fifth-dimension/3f83ee510cad87e7cd1bfb320e04d81d9d1fdecc/rEU3ZkO01.svg") !important;
-  -webkit-mask-repeat:no-repeat !important;
-  mask-repeat:no-repeat !important;
-  -webkit-mask-position:50% 50% !important;
-  mask-position:50% 50% !important;
-  -webkit-mask-size:100% 100% !important;
-  mask-size:100% 100% !important;
-  -webkit-mask-mode:alpha !important;
-  mask-mode:alpha !important;
+  display:none !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
