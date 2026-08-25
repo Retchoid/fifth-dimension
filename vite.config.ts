@@ -64,8 +64,28 @@ function writeToLogFile(source: LogSource, entries: unknown[]) {
   // Append to log file
   fs.appendFileSync(logPath, `${lines.join("\n")}\n`, "utf-8");
 
-  // Trim if exceeds max size
+  // Trim if exceeds size limit
   trimLogFile(logPath, MAX_LOG_SIZE_BYTES);
+}
+
+function vitePluginLevelOneSkyMask(): Plugin {
+  const source = path.join(PROJECT_ROOT, "rEU3ZkO01.svg");
+  const targetDir = path.join(PROJECT_ROOT, "client", "public", "assets");
+  const target = path.join(targetDir, "level1-checkerboard-mask.svg");
+
+  const copyMask = () => {
+    if (!fs.existsSync(source)) {
+      throw new Error(`Missing Level 1 checkerboard mask: ${source}`);
+    }
+    fs.mkdirSync(targetDir, { recursive: true });
+    fs.copyFileSync(source, target);
+  };
+
+  return {
+    name: "level-one-sky-mask-asset",
+    configResolved: copyMask,
+    buildStart: copyMask,
+  };
 }
 
 /**
@@ -98,7 +118,7 @@ function vitePluginManusDebugCollector(): Plugin {
     },
 
     configureServer(server: ViteDevServer) {
-      // POST /__manus__/logs: Browser sends logs (written directly to files)
+      // POST /__manus__/logs: Browser sends logs, written directly to files
       server.middlewares.use("/__manus__/logs", (req, res, next) => {
         if (req.method !== "POST") {
           return next();
@@ -150,7 +170,7 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginLevelOneSkyMask(), vitePluginManusDebugCollector()];
 
 export default defineConfig({
   plugins,
