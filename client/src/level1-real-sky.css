@@ -34,19 +34,18 @@
   filter:none !important;
   mix-blend-mode:normal !important;
 
-  /* Chrome/WebKit: full rectangle XOR foreground silhouette = sky/checkerboard. */
+  /* Full rectangle XOR foreground silhouette = checkerboard/sky window only. */
   -webkit-mask-image:
     linear-gradient(#000 0 0),
-    url("https://raw.githubusercontent.com/Retchoid/fifth-dimension/3f83ee510cad87e7cd1bfb320e04d81d9d1fdecc/rEU3ZkO01.svg") !important;
+    url('/assets/level1-checkerboard-mask.svg') !important;
   -webkit-mask-size:100% 100%,100% 100% !important;
   -webkit-mask-position:0 0,50% 50% !important;
   -webkit-mask-repeat:no-repeat,no-repeat !important;
   -webkit-mask-composite:xor !important;
 
-  /* Standards equivalent. */
   mask-image:
     linear-gradient(#000 0 0),
-    url("https://raw.githubusercontent.com/Retchoid/fifth-dimension/3f83ee510cad87e7cd1bfb320e04d81d9d1fdecc/rEU3ZkO01.svg") !important;
+    url('/assets/level1-checkerboard-mask.svg') !important;
   mask-size:100% 100%,100% 100% !important;
   mask-position:0 0,50% 50% !important;
   mask-repeat:no-repeat,no-repeat !important;
