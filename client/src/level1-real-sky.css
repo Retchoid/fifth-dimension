@@ -1,6 +1,6 @@
 /* REAL LEVEL 1 SKY
-   The sky images sit behind transparent master foregrounds.
-   No filters, gradients, clip-paths, or building polygons. */
+   Sky-only pixels sit behind the transparent master foreground.
+   IMPORTANT: use the exact same camera fit/position/scale as the approved master. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   isolation:isolate !important;
@@ -20,19 +20,18 @@
   inset:0 !important;
   width:100% !important;
   height:100% !important;
-  object-fit:cover !important;
+  object-fit:contain !important;
   object-position:50% 50% !important;
+  transform:scale(1.04) !important;
+  transform-origin:50% 50% !important;
   opacity:0;
   pointer-events:none !important;
   image-rendering:auto !important;
-  transform:none !important;
   filter:none !important;
   mix-blend-mode:normal !important;
   will-change:opacity;
 }
 
-/* Simple independent slideshow: Dusk -> Sunset -> Night.
-   The short overlaps are real image crossfades, not colour effects. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-dusk {
   animation:level-one-real-sky-dusk 48s linear infinite !important;
 }
@@ -59,7 +58,6 @@
   98%,100% { opacity:0; }
 }
 
-/* Foreground masters remain exactly where the current camera system places them. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
   clip-path:none !important;
