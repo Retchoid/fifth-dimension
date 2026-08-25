@@ -1,21 +1,24 @@
-/* LEVEL 1 — INDEPENDENT CENTRAL SKY ANIMATION
-   SAFE CONTRACT
-   - canonical Level 1 master images remain full-frame and untouched
-   - no polygon/building cutout and no master clipping
-   - animation is confined to the existing central sky opening
-   - soft mask edges prevent a visible rectangle
-   - HUD, player, hazards, collision, camera and master timing are unchanged */
+/* LEVEL 1 — REAL IMAGE SKY ANIMATION
+   Contract:
+   - canonical Level 1 master scene remains completely untouched
+   - use approved master artwork itself as the animation source
+   - only the conservative central sky opening is visible
+   - no gradients, tint filters, hue rotation, or building cutouts
+   - independent animation clock; existing master timing/gameplay unchanged */
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before {
+/* Retire earlier pseudo-sky experiments. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley::before,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
   content:none !important;
   display:none !important;
   animation:none !important;
   background:none !important;
+  filter:none !important;
   -webkit-mask-image:none !important;
   mask-image:none !important;
 }
 
-/* Keep every approved master exactly as supplied. */
+/* Approved scene stays full-frame. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
   clip-path:none !important;
@@ -24,94 +27,94 @@
   mask-image:none !important;
 }
 
-/*
-  SKY APERTURE
-  The scene's sky is the central opening between the buildings. This layer sits
-  above the baked sky but occupies only that conservative center window. It uses
-  a feathered alpha mask rather than a traced building polygon, so it cannot cut
-  away or replace any architecture/street art.
+/* Existing dedicated Level 1 sky DOM surface. It spans the same frame as the
+   master artwork so background-size:cover / position:center maps the approved
+   sky pixels to the exact same camera. Only the centre aperture is revealed. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky {
+  display:block !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:1 !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+  opacity:1 !important;
+  background-image:url('/assets/1000001169_3204905a.png') !important;
+  background-size:cover !important;
+  background-position:50% 50% !important;
+  background-repeat:no-repeat !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  transform:none !important;
+  /* This is deliberately an aperture inside the sky, not a traced building
+     silhouette. It never reaches the street, crowd, façades, or HUD. */
+  clip-path:polygon(32% 13%,68% 13%,64% 35%,59% 43%,41% 43%,36% 35%) !important;
+  -webkit-clip-path:polygon(32% 13%,68% 13%,64% 35%,59% 43%,41% 43%,36% 35%) !important;
+}
 
-  The master-vignette itself remains the normal scene vignette at z-index:2.
-  Its ::before child is the independent sky colour/motion surface.
-*/
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+/* Dusk and Night are real approved master-image layers, not CSS colour effects. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky::before,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky::after {
   content:"" !important;
   display:block !important;
   position:absolute !important;
-  left:29% !important;
-  top:5% !important;
-  width:42% !important;
-  height:38% !important;
-  z-index:0 !important;
+  inset:0 !important;
   pointer-events:none !important;
-  opacity:.66 !important;
+  background-size:cover !important;
+  background-position:50% 50% !important;
+  background-repeat:no-repeat !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  will-change:opacity,background-position;
+}
 
-  /* Preserve the illustrated sky beneath while changing atmosphere/light. */
-  mix-blend-mode:color !important;
-  background:
-    radial-gradient(ellipse 72% 48% at 48% 78%, rgba(255,174,91,.72) 0%, rgba(238,91,109,.54) 34%, transparent 72%),
-    radial-gradient(ellipse 74% 52% at 56% 38%, rgba(110,75,159,.52) 0%, rgba(55,62,122,.38) 46%, transparent 78%),
-    linear-gradient(180deg,
-      rgba(18,31,71,.92) 0%,
-      rgba(48,55,112,.88) 22%,
-      rgba(107,69,145,.84) 45%,
-      rgba(205,80,119,.82) 69%,
-      rgba(245,138,77,.86) 100%) !important;
-  background-size:150% 150%,145% 145%,100% 230% !important;
-  background-position:42% 35%,58% 62%,50% 100% !important;
-
-  /* Soft aperture: strongest at the real centre sky, fades before façades/roofs. */
-  -webkit-mask-image:
-    radial-gradient(ellipse 70% 76% at 50% 42%, #000 0 50%, rgba(0,0,0,.92) 61%, rgba(0,0,0,.48) 73%, transparent 88%),
-    linear-gradient(180deg,#000 0 72%,rgba(0,0,0,.82) 82%,transparent 100%) !important;
-  -webkit-mask-composite:source-in !important;
-  mask-image:
-    radial-gradient(ellipse 70% 76% at 50% 42%, #000 0 50%, rgba(0,0,0,.92) 61%, rgba(0,0,0,.48) 73%, transparent 88%),
-    linear-gradient(180deg,#000 0 72%,rgba(0,0,0,.82) 82%,transparent 100%) !important;
-  mask-composite:intersect !important;
-
-  transform:translate3d(0,0,0) scale(1.03) !important;
-  transform-origin:50% 50% !important;
-  will-change:background-position,filter,opacity,transform;
-
-  /* Independent clock: not tied to record/master handoffs. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky::before {
+  background-image:url('/assets/1000001166_e9b75dd0.png') !important;
+  opacity:0;
   animation:
-    level-one-sky-daycycle 52s cubic-bezier(.42,0,.58,1) infinite alternate,
-    level-one-sky-drift 17s ease-in-out infinite alternate !important;
+    level-one-real-sky-dusk 58s linear infinite,
+    level-one-real-sky-drift-dusk 23s ease-in-out infinite alternate !important;
 }
 
-/* Independent sunset -> dusk -> night atmospheric progression. */
-@keyframes level-one-sky-daycycle {
-  0% {
-    background-position:42% 35%,58% 62%,50% 100%;
-    opacity:.54;
-    filter:saturate(1.08) brightness(1.08) hue-rotate(0deg);
-  }
-  30% {
-    background-position:45% 37%,55% 59%,50% 74%;
-    opacity:.60;
-    filter:saturate(1.06) brightness(1.02) hue-rotate(3deg);
-  }
-  62% {
-    background-position:49% 39%,52% 56%,50% 42%;
-    opacity:.65;
-    filter:saturate(1.04) brightness(.96) hue-rotate(7deg);
-  }
-  100% {
-    background-position:53% 41%,48% 53%,50% 4%;
-    opacity:.70;
-    filter:saturate(1.02) brightness(.86) hue-rotate(11deg);
-  }
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky::after {
+  background-image:url('/assets/1000001168_c5184bab.png') !important;
+  opacity:0;
+  animation:
+    level-one-real-sky-night 58s linear infinite,
+    level-one-real-sky-drift-night 29s ease-in-out infinite alternate !important;
 }
 
-/* Slow cloud/light drift layered over the longer colour cycle. */
-@keyframes level-one-sky-drift {
-  0%   { transform:translate3d(-1.2%,0,0) scale(1.03); }
-  48%  { transform:translate3d(.7%,-.6%,0) scale(1.045); }
-  100% { transform:translate3d(1.4%,.5%,0) scale(1.035); }
+/* Independent 58s visual cycle:
+   0–24%   Golden sunset master sky
+   24–58%  real Dusk master sky crossfade
+   58–100% real Night master sky crossfade/hold
+   Then the loop restarts at sunset. */
+@keyframes level-one-real-sky-dusk {
+  0%,18%   { opacity:0; }
+  31%,51%  { opacity:1; }
+  68%,100% { opacity:0; }
 }
 
-/* Existing scene vignette and transition pulse keep their established order. */
+@keyframes level-one-real-sky-night {
+  0%,50%   { opacity:0; }
+  68%,94%  { opacity:1; }
+  100%     { opacity:0; }
+}
+
+/* Actual image movement: tiny independent pans within the same aligned master
+   camera. No colour/filter manipulation. */
+@keyframes level-one-real-sky-drift-dusk {
+  0%   { background-position:49.4% 50%; }
+  50%  { background-position:50.4% 49.6%; }
+  100% { background-position:50.8% 50.2%; }
+}
+
+@keyframes level-one-real-sky-drift-night {
+  0%   { background-position:50.5% 50.2%; }
+  50%  { background-position:49.7% 49.7%; }
+  100% { background-position:49.3% 50.1%; }
+}
+
+/* Keep scene vignette and established handoff pulse in their existing order. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
   z-index:2 !important;
   pointer-events:none !important;
@@ -121,19 +124,17 @@
 }
 
 @media (max-width:650px) {
-  /* Mobile uses the same central sky opening, narrowed slightly to stay clear of
-     the close left/right façades in the approved mobile crop. */
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
-    left:31% !important;
-    width:38% !important;
-    top:6% !important;
-    height:36% !important;
+  /* Slightly narrower mobile aperture because the approved cover crop brings
+     the close façades inward. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky {
+    clip-path:polygon(35% 14%,65% 14%,62% 34%,58% 41%,42% 41%,38% 34%) !important;
+    -webkit-clip-path:polygon(35% 14%,65% 14%,62% 34%,58% 41%,42% 41%,38% 34%) !important;
   }
 }
 
 @media (prefers-reduced-motion:reduce) {
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette::before {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky::before,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky::after {
     animation:none !important;
-    filter:saturate(1.03) brightness(.98) !important;
   }
 }
