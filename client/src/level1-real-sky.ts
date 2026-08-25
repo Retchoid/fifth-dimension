@@ -1,13 +1,12 @@
 /*
- * LEVEL 1 SVG OCCLUSION SKY
+ * LEVEL 1 CHECKERBOARD-SCOPED SKY
  *
- * Stack: animated sky -> approved painted master -> gameplay.
+ * Contract: animated sky -> approved painted master -> gameplay.
  *
- * The approved painted masters remain the visible scene. The supplied SVG is
- * used only as the alpha/occlusion geometry for those masters so the animated
- * sky can show through the true sky opening. There is no runtime colour
- * detection, flood-fill, canvas punching, replacement foreground PNG, crop or
- * resize.
+ * IMPORTANT: rEU3ZkO01.svg belongs only to its matching checkerboard PNG.
+ * It must never be applied generically to the four Level 1 master images.
+ * Only the exact matching PNG, at its expected 810x1800 geometry, may receive
+ * the SVG alpha/occlusion mask. Every other painted master remains untouched.
  *
  * Camera contract is preserved exactly: object-fit:contain, centered, scale 1.04.
  */
@@ -17,6 +16,9 @@ import "./level1-real-sky.css";
 const SKY_HOST_SELECTOR = ".arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley";
 const MASTER_SELECTOR = ".level-one-master-art";
 const CAMERA_SCALE = 1.04;
+const MATCHING_CHECKERBOARD_PNG = "5d_level1_no_sky.png";
+const MATCHING_WIDTH = 810;
+const MATCHING_HEIGHT = 1800;
 const processedHosts = new WeakSet<Element>();
 const resizeObservers = new WeakMap<Element, ResizeObserver>();
 
@@ -27,14 +29,19 @@ const waitForImage = (image: HTMLImageElement) => new Promise<void>((resolve) =>
   image.addEventListener("error", finish, { once: true });
 });
 
+const isExactCheckerboardSource = (master: HTMLImageElement) => {
+  const source = master.currentSrc || master.src || "";
+  return source.includes(MATCHING_CHECKERBOARD_PNG)
+    && master.naturalWidth === MATCHING_WIDTH
+    && master.naturalHeight === MATCHING_HEIGHT;
+};
+
 const syncSkyToMasterImageRect = (host: Element, master: HTMLImageElement, sky: HTMLElement) => {
   const hostRect = host.getBoundingClientRect();
   const naturalWidth = master.naturalWidth;
   const naturalHeight = master.naturalHeight;
   if (!hostRect.width || !hostRect.height || !naturalWidth || !naturalHeight) return;
 
-  /* Match the approved master's real object-fit:contain bitmap rectangle.
-     The sky exists only beneath that image plane, never in the contain bars. */
   const fit = Math.min(hostRect.width / naturalWidth, hostRect.height / naturalHeight);
   const renderedWidth = naturalWidth * fit;
   const renderedHeight = naturalHeight * fit;
@@ -59,24 +66,25 @@ const installOnHost = async (host: Element) => {
   await Promise.all(masters.map(waitForImage));
   if (masters.some((master) => !master.naturalWidth || !master.naturalHeight)) return;
 
-  /* One sky surface only. The SVG mask is applied to the painted masters by CSS;
-     this element contains no duplicate scene artwork. */
+  /* Never alter ordinary painted masters. The SVG is authorized only for its
+     exact matching checkerboard PNG. */
+  const checkerboardMaster = masters.find(isExactCheckerboardSource);
+  if (!checkerboardMaster) {
+    host.classList.remove("level-one-real-sky-ready");
+    return;
+  }
+
   const sky = document.createElement("span");
   sky.className = "level-one-animated-sky";
   sky.setAttribute("aria-hidden", "true");
   host.insertBefore(sky, host.firstChild);
 
-  const geometryMaster = masters[0];
-  syncSkyToMasterImageRect(host, geometryMaster, sky);
-
-  const ro = new ResizeObserver(() => syncSkyToMasterImageRect(host, geometryMaster, sky));
+  syncSkyToMasterImageRect(host, checkerboardMaster, sky);
+  const ro = new ResizeObserver(() => syncSkyToMasterImageRect(host, checkerboardMaster, sky));
   ro.observe(host);
   resizeObservers.set(host, ro);
 
-  masters.forEach((master) => {
-    master.dataset.levelOneSkyMask = "svg-occlusion";
-  });
-
+  checkerboardMaster.dataset.levelOneSkyMask = "checkerboard-svg";
   host.classList.add("level-one-real-sky-ready");
 };
 
