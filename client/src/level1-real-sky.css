@@ -1,88 +1,15 @@
-/* LEVEL 1 SKY UNDERLAY
-   The canonical Level 1 master remains the visible scene. The animated sky is
-   strictly behind it and can only be visible through transparency in that
-   rendered master. No replacement foreground, SVG mask, crop, or master hiding. */
+/* LEVEL 1 CHECKERBOARD-ONLY REAL SKY
+   The painted Level 1 masters are never hidden, replaced or masked. A separate
+   real-image sky overlay sits above them and is clipped by the INVERSE of the
+   supplied SVG alpha. The failed direct-mask pass proved the SVG opaque region
+   is the keep/foreground silhouette; its inverse is the checkerboard window. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   isolation:isolate !important;
   overflow:hidden !important;
 }
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky {
-  position:absolute !important;
-  z-index:0 !important;
-  display:block !important;
-  pointer-events:none !important;
-  overflow:hidden !important;
-  opacity:0;
-  background:
-    linear-gradient(180deg,
-      #f06d55 0%,
-      #ea7890 27%,
-      #87519d 56%,
-      #242557 78%,
-      #10152f 100%);
-  background-size:100% 400%;
-  background-position:50% 0%;
-  animation:level-one-sky-palette 72s ease-in-out infinite alternate !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-ready > .level-one-animated-sky {
-  opacity:1;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::before,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::after {
-  content:"";
-  position:absolute;
-  left:-45%;
-  width:72%;
-  height:14%;
-  pointer-events:none;
-  opacity:.22;
-  background:
-    radial-gradient(ellipse at 18% 55%, rgba(255,229,211,.78) 0 17%, transparent 18%),
-    radial-gradient(ellipse at 38% 44%, rgba(255,220,212,.68) 0 20%, transparent 21%),
-    radial-gradient(ellipse at 60% 58%, rgba(255,230,225,.58) 0 18%, transparent 19%),
-    radial-gradient(ellipse at 82% 47%, rgba(245,218,225,.48) 0 16%, transparent 17%);
-  will-change:transform,opacity;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::before {
-  top:13%;
-  animation:level-one-cloud-drift-a 54s linear infinite !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::after {
-  top:24%;
-  opacity:.14;
-  transform:scale(.78);
-  animation:level-one-cloud-drift-b 76s linear infinite !important;
-}
-
-@keyframes level-one-sky-palette {
-  0% { background-position:50% 0%; }
-  24% { background-position:50% 25%; }
-  54% { background-position:50% 52%; }
-  78% { background-position:50% 76%; }
-  100% { background-position:50% 100%; }
-}
-
-@keyframes level-one-cloud-drift-a {
-  0% { transform:translate3d(-10%,0,0) scale(1); opacity:.08; }
-  15% { opacity:.22; }
-  82% { opacity:.18; }
-  100% { transform:translate3d(215%,2%,0) scale(1.05); opacity:0; }
-}
-
-@keyframes level-one-cloud-drift-b {
-  0% { transform:translate3d(-28%,0,0) scale(.78); opacity:0; }
-  18% { opacity:.14; }
-  86% { opacity:.11; }
-  100% { transform:translate3d(235%,-2%,0) scale(.84); opacity:0; }
-}
-
-/* Hard safety contract: canonical masters are visible, untouched and unmasked. */
+/* Absolute safety: the approved masters remain exactly as supplied. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
   clip-path:none !important;
@@ -91,32 +18,119 @@
   mask-image:none !important;
 }
 
-/* Explicitly neutralize the incorrect full-scene replacement path if stale DOM
-   from a previous bundle survives during hot reload/navigation. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-foreground {
-  display:none !important;
+/* Real Golden sky at the base. This layer is sized by level1-real-sky.ts to the
+   master's actual object-fit:contain bitmap rectangle and shares scale(1.04). */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-sky {
+  position:absolute !important;
+  z-index:2 !important;
+  display:block !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+  opacity:0;
+  background-image:url('/assets/1000001169_3204905a.png') !important;
+  background-size:100% 100% !important;
+  background-position:50% 50% !important;
+  background-repeat:no-repeat !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+
+  /* Chrome/WebKit: full rectangle XOR foreground silhouette = sky/checkerboard. */
+  -webkit-mask-image:
+    linear-gradient(#000 0 0),
+    url("https://raw.githubusercontent.com/Retchoid/fifth-dimension/3f83ee510cad87e7cd1bfb320e04d81d9d1fdecc/rEU3ZkO01.svg") !important;
+  -webkit-mask-size:100% 100%,100% 100% !important;
+  -webkit-mask-position:0 0,50% 50% !important;
+  -webkit-mask-repeat:no-repeat,no-repeat !important;
+  -webkit-mask-composite:xor !important;
+
+  /* Standards equivalent. */
+  mask-image:
+    linear-gradient(#000 0 0),
+    url("https://raw.githubusercontent.com/Retchoid/fifth-dimension/3f83ee510cad87e7cd1bfb320e04d81d9d1fdecc/rEU3ZkO01.svg") !important;
+  mask-size:100% 100%,100% 100% !important;
+  mask-position:0 0,50% 50% !important;
+  mask-repeat:no-repeat,no-repeat !important;
+  mask-composite:exclude !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley.level-one-checkerboard-sky-ready > .level-one-checkerboard-sky {
+  opacity:1 !important;
+}
+
+/* Dusk and Night are approved image skies, not CSS gradients/tints. The parent
+   inverse mask clips both to the exact same checkerboard window. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-sky::before,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-sky::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-size:100% 100% !important;
+  background-position:50% 50% !important;
+  background-repeat:no-repeat !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  opacity:0;
+  will-change:opacity,background-position;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-sky::before {
+  background-image:url('/assets/1000001166_e9b75dd0.png') !important;
+  animation:
+    level-one-checkerboard-dusk 72s linear infinite,
+    level-one-checkerboard-dusk-drift 26s ease-in-out infinite alternate !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-sky::after {
+  background-image:url('/assets/1000001168_c5184bab.png') !important;
+  animation:
+    level-one-checkerboard-night 72s linear infinite,
+    level-one-checkerboard-night-drift 31s ease-in-out infinite alternate !important;
+}
+
+@keyframes level-one-checkerboard-dusk {
+  0%,18% { opacity:0; }
+  34%,54% { opacity:1; }
+  70%,100% { opacity:0; }
+}
+
+@keyframes level-one-checkerboard-night {
+  0%,50% { opacity:0; }
+  70%,94% { opacity:1; }
+  100% { opacity:0; }
+}
+
+@keyframes level-one-checkerboard-dusk-drift {
+  0% { background-position:49.5% 50%; }
+  100% { background-position:50.5% 49.7%; }
+}
+
+@keyframes level-one-checkerboard-night-drift {
+  0% { background-position:50.4% 50.1%; }
+  100% { background-position:49.5% 49.8%; }
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
-  z-index:2 !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-canonical-ambience {
   z-index:3 !important;
 }
 
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-canonical-ambience {
+  z-index:4 !important;
+}
+
+/* Retire every earlier sky/replacement experiment. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-foreground,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-frame {
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-frame,
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-time-sky {
   display:none !important;
 }
 
 @media (prefers-reduced-motion:reduce) {
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::before,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::after {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-sky::before,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-checkerboard-sky::after {
     animation:none !important;
-  }
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky {
-    background-position:50% 45%;
+    opacity:0 !important;
   }
 }
