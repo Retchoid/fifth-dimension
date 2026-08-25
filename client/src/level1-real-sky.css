@@ -1,8 +1,7 @@
 /* LEVEL 1 INDEPENDENT SKY
    One animated sky surface sits behind the approved painted master.
-   The supplied rEU3ZkO01.svg is used only as the master's alpha/occlusion
-   geometry so the true sky opening is transparent. No alternate foreground
-   image, runtime tracing, canvas punching, crop or resize is used. */
+   The supplied rEU3ZkO01.svg may only be applied to its exact matching
+   checkerboard PNG. Ordinary Level 1 masters are never masked by this file. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   isolation:isolate !important;
@@ -32,7 +31,6 @@
   opacity:1;
 }
 
-/* Slow cloud banks remain entirely beneath the painted master. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::before,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-animated-sky::after {
   content:"";
@@ -84,14 +82,18 @@
   100% { transform:translate3d(235%,-2%,0) scale(.84); opacity:0; }
 }
 
-/* Approved painted master remains the visible environment. The SVG contributes
-   alpha only: opaque vector areas keep the master; transparent SVG areas expose
-   the animated sky behind it. The mask rides with the same transformed image
-   element, so contain / center / scale(1.04) remain locked together. */
+/* Base contract: every painted Level 1 master remains completely unmasked. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art {
   z-index:1 !important;
   clip-path:none !important;
   -webkit-clip-path:none !important;
+  -webkit-mask-image:none !important;
+  mask-image:none !important;
+}
+
+/* Exception: only the exact PNG explicitly identified by level1-real-sky.ts as
+   the matching 810x1800 checkerboard source may use the supplied SVG. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-art[data-level-one-sky-mask="checkerboard-svg"] {
   -webkit-mask-image:url("https://raw.githubusercontent.com/Retchoid/fifth-dimension/3f83ee510cad87e7cd1bfb320e04d81d9d1fdecc/rEU3ZkO01.svg") !important;
   mask-image:url("https://raw.githubusercontent.com/Retchoid/fifth-dimension/3f83ee510cad87e7cd1bfb320e04d81d9d1fdecc/rEU3ZkO01.svg") !important;
   -webkit-mask-repeat:no-repeat !important;
@@ -112,7 +114,6 @@
   z-index:3 !important;
 }
 
-/* Retire every previous image-frame sky implementation. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky,
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-frame {
   display:none !important;
