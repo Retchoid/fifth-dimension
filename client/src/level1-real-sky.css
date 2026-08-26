@@ -1,38 +1,46 @@
 /* LEVEL 1 TRUE TRANSPARENT FOREGROUND
-   The user-supplied PNG owns the foreground alpha. No SVG mask is used here.
-   Foreground keeps the locked contain / center / scale(1.04) camera.
-   Sky layers use cover so no black letterboxing can appear behind the aperture. */
+   One foreground scene + one independent sky layer. Full Level 1 scene masters
+   are never used as sky sources once the transparent foreground has loaded. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   isolation:isolate !important;
   overflow:hidden !important;
 }
 
+/* Independent sky occupies the same host box for every Level 1 state. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack {
   position:absolute !important;
-  inset:-3% !important;
-  width:106% !important;
-  height:106% !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
   z-index:0 !important;
   overflow:hidden !important;
   pointer-events:none !important;
   transform:none !important;
+  background:
+    radial-gradient(ellipse at 50% 30%,rgba(255,222,151,.48) 0 11%,transparent 42%),
+    linear-gradient(180deg,#f49b46 0%,#ef7453 30%,#d35b79 58%,#634c74 100%) !important;
+  transition:background 2200ms cubic-bezier(.22,.72,.2,1),filter 2200ms ease !important;
 }
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-image {
+/* This asset contains only painted sky detail. It is allowed to fill the host
+   because it cannot introduce duplicate buildings, pavement or architecture. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky {
   position:absolute !important;
   inset:0 !important;
   width:100% !important;
   height:100% !important;
   object-fit:cover !important;
-  object-position:50% 50% !important;
+  object-position:50% 42% !important;
   pointer-events:none !important;
-  opacity:0;
-  transition:opacity 1500ms ease-in-out !important;
-  transform:scale(1.03) !important;
+  opacity:.72 !important;
+  transform:scale(1.04) !important;
   transform-origin:50% 50% !important;
+  mix-blend-mode:screen !important;
+  transition:filter 2200ms ease,opacity 1800ms ease !important;
 }
 
+/* Foreground camera is the locked approved Level 1 camera. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground {
   position:absolute !important;
   inset:0 !important;
@@ -52,39 +60,51 @@
   opacity:1 !important;
 }
 
-/* Hide the old baked-sky masters only AFTER the transparent foreground has
-   loaded successfully. They remain untouched as the automatic fallback. */
+/* Once the transparent foreground succeeds, old baked-sky masters leave the
+   layout entirely. This prevents any state rule from resurrecting a full scene. */
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready > .level-one-master-art {
+  display:none !important;
   opacity:0 !important;
   visibility:hidden !important;
   pointer-events:none !important;
+  animation:none !important;
+  transition:none !important;
 }
 
-/* Golden is the unconditional base sky once this compositor is installed.
-   This guarantees the transparent aperture never falls through to the host's
-   old gradient/background while the state classes initialize or transition. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-golden {
-  opacity:1 !important;
+/* Time progression changes only sky colour/light. The city never swaps. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-waking .level-one-real-sky-stack {
+  background:
+    radial-gradient(ellipse at 50% 31%,rgba(255,178,123,.30) 0 10%,transparent 42%),
+    linear-gradient(180deg,#e66f51 0%,#d96070 34%,#a85189 64%,#4c476e 100%) !important;
+}
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-waking .level-one-painted-sky {
+  opacity:.64 !important;
+  filter:hue-rotate(8deg) saturate(.96) brightness(.94) !important;
 }
 
-/* IMPORTANT: Level 1 state classes are on .game-viewport, not on the sunset
-   alley host. Dusk/Night layers crossfade above the always-present Golden base. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-waking .level-one-sunset-alley > .level-one-real-sky-stack .level-one-real-sky-dusk {
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-dusk .level-one-real-sky-stack {
+  background:
+    radial-gradient(ellipse at 50% 33%,rgba(211,116,174,.20) 0 9%,transparent 42%),
+    linear-gradient(180deg,#77548e 0%,#654e91 36%,#47517e 66%,#29384f 100%) !important;
+}
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-dusk .level-one-painted-sky {
+  opacity:.52 !important;
+  filter:hue-rotate(28deg) saturate(.82) brightness(.78) !important;
+}
+
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-night .level-one-real-sky-stack {
+  background:
+    radial-gradient(ellipse at 50% 34%,rgba(95,110,201,.15) 0 8%,transparent 42%),
+    linear-gradient(180deg,#24365f 0%,#304674 38%,#394b74 67%,#172237 100%) !important;
+}
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-night .level-one-painted-sky {
   opacity:.38 !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-dusk .level-one-sunset-alley > .level-one-real-sky-stack .level-one-real-sky-dusk {
-  opacity:1 !important;
-}
-
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-night .level-one-sunset-alley > .level-one-real-sky-stack .level-one-real-sky-night {
-  opacity:1 !important;
+  filter:hue-rotate(56deg) saturate(.72) brightness(.60) !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-vignette {
   z-index:2 !important;
 }
-
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-canonical-ambience {
   z-index:3 !important;
 }
@@ -100,7 +120,8 @@
 }
 
 @media (prefers-reduced-motion:reduce) {
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-image {
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky {
     transition:none !important;
   }
 }
