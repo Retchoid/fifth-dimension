@@ -1,7 +1,7 @@
 /*
  * LEVEL 1 TRUE TRANSPARENT FOREGROUND COMPOSITOR + ALLEY LIFE
- * One fixed foreground, one independent painted sky, and sparse asynchronous
- * ambient events. No full-scene master participates after foreground load.
+ * One fixed foreground, the original approved painted sky moving subtly behind
+ * its alpha opening, and sparse asynchronous ambient events.
  */
 
 import "./level1-real-sky.css";
@@ -9,9 +9,8 @@ import "./level1-real-sky.css";
 const SKY_HOST_SELECTOR = ".arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley";
 const MASTER_SELECTOR = ".level-one-master-art";
 const FOREGROUND_SRC = "https://raw.githubusercontent.com/Retchoid/fifth-dimension/49898bf04b85d0eb3373abafd063e85e586cc4bb/5d_level1_no_sky.png";
-const PAINTED_SKY_SRC = "/assets/level1-painted-sky-transparent-v1.webp";
+const ORIGINAL_SKY_SRC = "https://raw.githubusercontent.com/Retchoid/fifth-dimension/4bf5ac658e541491b31c9a044161825c7c2abdc0/5d_level1_sky_preview-5.png";
 const processedHosts = new WeakSet<Element>();
-const cleanupByHost = new WeakMap<Element, () => void>();
 
 const waitForImage = (image: HTMLImageElement) => new Promise<boolean>((resolve) => {
   if (image.complete) return resolve(Boolean(image.naturalWidth && image.naturalHeight));
@@ -27,44 +26,6 @@ const makeImage = (className: string, src: string) => {
   image.draggable = false;
   image.setAttribute("aria-hidden", "true");
   return image;
-};
-
-const installVisibleSkyOverride = () => {
-  if (document.getElementById("level-one-visible-sky-override")) return;
-  const style = document.createElement("style");
-  style.id = "level-one-visible-sky-override";
-  style.textContent = `
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky{
-    opacity:.96!important;mix-blend-mode:normal!important;filter:saturate(1.16) contrast(1.12) brightness(.98)!important;
-  }
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::before{
-    top:8%!important;height:28%!important;opacity:.72!important;mix-blend-mode:normal!important;filter:none!important;
-    background:
-      radial-gradient(ellipse at 8% 58%,rgba(255,236,211,.78) 0 7%,rgba(248,184,170,.42) 12%,transparent 22%),
-      radial-gradient(ellipse at 24% 47%,rgba(255,225,203,.70) 0 10%,rgba(241,164,169,.36) 16%,transparent 29%),
-      radial-gradient(ellipse at 45% 60%,rgba(255,235,214,.66) 0 9%,rgba(238,157,170,.34) 15%,transparent 27%),
-      radial-gradient(ellipse at 66% 48%,rgba(255,219,204,.62) 0 9%,rgba(228,143,173,.32) 15%,transparent 27%),
-      radial-gradient(ellipse at 86% 57%,rgba(252,214,207,.58) 0 8%,rgba(220,136,176,.28) 14%,transparent 25%);
-    animation:level-one-cloud-band-a-visible 42s linear infinite!important;
-  }
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::after{
-    top:23%!important;height:22%!important;opacity:.46!important;mix-blend-mode:normal!important;filter:none!important;
-    background:
-      radial-gradient(ellipse at 14% 45%,rgba(255,224,213,.54) 0 8%,rgba(229,151,183,.28) 14%,transparent 25%),
-      radial-gradient(ellipse at 37% 61%,rgba(250,214,213,.50) 0 9%,rgba(217,143,185,.26) 15%,transparent 27%),
-      radial-gradient(ellipse at 62% 48%,rgba(244,205,219,.46) 0 8%,rgba(203,132,190,.24) 14%,transparent 25%),
-      radial-gradient(ellipse at 85% 57%,rgba(238,197,220,.42) 0 8%,rgba(194,126,191,.22) 14%,transparent 24%);
-    animation:level-one-cloud-band-b-visible 59s linear infinite!important;
-  }
-  .game-viewport.level-one-master-state-waking .level-one-real-sky-stack::before{opacity:.64!important}
-  .game-viewport.level-one-master-state-dusk .level-one-real-sky-stack::before{opacity:.48!important}
-  .game-viewport.level-one-master-state-dusk .level-one-real-sky-stack::after{opacity:.38!important}
-  .game-viewport.level-one-master-state-night .level-one-real-sky-stack::before{opacity:.24!important}
-  .game-viewport.level-one-master-state-night .level-one-real-sky-stack::after{opacity:.19!important}
-  @keyframes level-one-cloud-band-a-visible{0%{transform:translate3d(-9%,0,0) scale(1.02)}50%{transform:translate3d(5%,-.4%,0) scale(1.04)}100%{transform:translate3d(19%,.6%,0) scale(1.02)}}
-  @keyframes level-one-cloud-band-b-visible{0%{transform:translate3d(12%,0,0) scale(.98)}50%{transform:translate3d(-2%,.6%,0) scale(1.01)}100%{transform:translate3d(-18%,-.4%,0) scale(.98)}}
-  `;
-  document.head.append(style);
 };
 
 const randomBetween = (min: number, max: number) => Math.round(min + Math.random() * (max - min));
@@ -164,7 +125,7 @@ const installOnHost = async (host: Element) => {
   const sky = document.createElement("span");
   sky.className = "level-one-real-sky-stack";
   sky.setAttribute("aria-hidden", "true");
-  sky.append(makeImage("level-one-real-sky-image level-one-painted-sky", PAINTED_SKY_SRC));
+  sky.append(makeImage("level-one-real-sky-image level-one-painted-sky", ORIGINAL_SKY_SRC));
 
   const foreground = makeImage("level-one-transparent-foreground", FOREGROUND_SRC);
   host.prepend(sky);
@@ -183,8 +144,7 @@ const installOnHost = async (host: Element) => {
 
   host.classList.add("level-one-transparent-foreground-ready");
   if (skyLoaded) host.classList.add("level-one-independent-sky-ready");
-  const cleanup = installAlleyLife(host);
-  cleanupByHost.set(host, cleanup);
+  installAlleyLife(host);
 };
 
 const scan = () => {
@@ -193,7 +153,7 @@ const scan = () => {
 
 const observer = new MutationObserver(scan);
 const start = () => {
-  installVisibleSkyOverride();
+  document.getElementById("level-one-visible-sky-override")?.remove();
   scan();
   if (document.body) observer.observe(document.body, { childList: true, subtree: true });
 };
