@@ -1,28 +1,22 @@
 /* LEVEL 1 TRUE TRANSPARENT FOREGROUND
    The user-supplied PNG owns the foreground alpha. No SVG mask is used here.
-   All layers share the existing contain / center / scale(1.04) camera. */
+   Foreground keeps the locked contain / center / scale(1.04) camera.
+   Sky layers use cover so no black letterboxing can appear behind the aperture. */
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley {
   isolation:isolate !important;
   overflow:hidden !important;
 }
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground {
-  position:absolute !important;
-  inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  pointer-events:none !important;
-  object-fit:contain !important;
-  object-position:50% 50% !important;
-  transform:scale(1.04) !important;
-  transform-origin:50% 50% !important;
-}
-
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack {
+  position:absolute !important;
+  inset:-3% !important;
+  width:106% !important;
+  height:106% !important;
   z-index:0 !important;
   overflow:hidden !important;
+  pointer-events:none !important;
+  transform:none !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-image {
@@ -30,15 +24,27 @@
   inset:0 !important;
   width:100% !important;
   height:100% !important;
-  object-fit:contain !important;
+  object-fit:cover !important;
   object-position:50% 50% !important;
+  pointer-events:none !important;
   opacity:0;
   transition:opacity 1500ms ease-in-out !important;
+  transform:scale(1.03) !important;
+  transform-origin:50% 50% !important;
 }
 
 .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground {
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
   z-index:1 !important;
   display:block !important;
+  pointer-events:none !important;
+  object-fit:contain !important;
+  object-position:50% 50% !important;
+  transform:scale(1.04) !important;
+  transform-origin:50% 50% !important;
   opacity:0;
 }
 
