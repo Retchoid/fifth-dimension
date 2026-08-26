@@ -27,6 +27,21 @@ const installOriginalSkyContract=()=>{
     pointer-events:none!important;opacity:0!important;background:transparent!important;mix-blend-mode:color!important;
     transition:opacity 1800ms ease,background 1800ms ease!important;
   }
+
+  /* Once the approved transparent foreground is live, the retired canonical
+     four-master system and its population overlays must never paint again. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-master-art,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-approved-population,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-population,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-master-vignette,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-canonical-ambience{
+    display:none!important;opacity:0!important;visibility:hidden!important;animation:none!important;transition:none!important;
+  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready::before,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready::after{
+    content:none!important;display:none!important;opacity:0!important;animation:none!important;
+  }
+
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-base,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-drift{
     position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
@@ -82,7 +97,22 @@ const installAlleyLife=(host:Element)=>{
   update();const obs=new MutationObserver(update);obs.observe(viewport,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["class"]});
 };
 
-const installOnHost=async(host:Element)=>{if(processedHosts.has(host))return;processedHosts.add(host);const masters=Array.from(host.querySelectorAll<HTMLImageElement>(MASTER_SELECTOR));if(!masters.length)return;await Promise.all(masters.map(waitForImage));host.querySelectorAll(".level-one-checkerboard-sky,.level-one-animated-sky,.level-one-transparent-foreground,.level-one-real-sky,.level-one-real-sky-stack,.level-one-alley-life").forEach(n=>n.remove());const sky=document.createElement("span");sky.className="level-one-real-sky-stack";sky.setAttribute("aria-hidden","true");sky.append(makeImage("level-one-real-sky-image level-one-painted-sky-base",ORIGINAL_SKY_SRC));sky.append(makeImage("level-one-real-sky-image level-one-painted-sky-drift",ORIGINAL_SKY_SRC));const foreground=makeImage("level-one-transparent-foreground",FOREGROUND_SRC);host.prepend(sky);host.append(foreground);const images=Array.from(sky.querySelectorAll<HTMLImageElement>("img"));const[fgOk,...skyResults]=await Promise.all([waitForImage(foreground),...images.map(waitForImage)]);if(!fgOk){foreground.remove();sky.remove();return}host.classList.add("level-one-transparent-foreground-ready");if(skyResults.every(Boolean))host.classList.add("level-one-independent-sky-ready");installAlleyLife(host)};
+const retireLegacyLevelOneLayers=(host:Element,masters:HTMLImageElement[])=>{
+  masters.forEach((master)=>{
+    master.style.setProperty("display","none","important");
+    master.style.setProperty("opacity","0","important");
+    master.style.setProperty("visibility","hidden","important");
+    master.style.setProperty("animation","none","important");
+    master.style.setProperty("transition","none","important");
+  });
+  host.querySelectorAll<HTMLElement>(".level-one-approved-population,.level-one-population,.level-one-master-vignette,.level-one-canonical-ambience").forEach((node)=>{
+    node.style.setProperty("display","none","important");
+    node.style.setProperty("opacity","0","important");
+    node.style.setProperty("visibility","hidden","important");
+  });
+};
+
+const installOnHost=async(host:Element)=>{if(processedHosts.has(host))return;processedHosts.add(host);const masters=Array.from(host.querySelectorAll<HTMLImageElement>(MASTER_SELECTOR));if(!masters.length)return;await Promise.all(masters.map(waitForImage));host.querySelectorAll(".level-one-checkerboard-sky,.level-one-animated-sky,.level-one-transparent-foreground,.level-one-real-sky,.level-one-real-sky-stack,.level-one-alley-life").forEach(n=>n.remove());const sky=document.createElement("span");sky.className="level-one-real-sky-stack";sky.setAttribute("aria-hidden","true");sky.append(makeImage("level-one-real-sky-image level-one-painted-sky-base",ORIGINAL_SKY_SRC));sky.append(makeImage("level-one-real-sky-image level-one-painted-sky-drift",ORIGINAL_SKY_SRC));const foreground=makeImage("level-one-transparent-foreground",FOREGROUND_SRC);host.prepend(sky);host.append(foreground);const images=Array.from(sky.querySelectorAll<HTMLImageElement>("img"));const[fgOk,...skyResults]=await Promise.all([waitForImage(foreground),...images.map(waitForImage)]);if(!fgOk){foreground.remove();sky.remove();return}host.classList.add("level-one-transparent-foreground-ready");retireLegacyLevelOneLayers(host,masters);if(skyResults.every(Boolean))host.classList.add("level-one-independent-sky-ready");installAlleyLife(host)};
 const scan=()=>document.querySelectorAll(SKY_HOST_SELECTOR).forEach(host=>void installOnHost(host));
 const observer=new MutationObserver(scan);const start=()=>{installOriginalSkyContract();scan();if(document.body)observer.observe(document.body,{childList:true,subtree:true})};
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
