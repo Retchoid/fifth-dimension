@@ -21,8 +21,12 @@ const installOriginalSkyContract=()=>{
   const style=document.createElement("style");style.id="level-one-original-sky-contract";
   style.textContent=`
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack{background:none!important;filter:none!important;overflow:hidden!important}
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::before,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::after{content:none!important;display:none!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::before{content:none!important;display:none!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::after{
+    content:""!important;display:block!important;position:absolute!important;inset:0!important;z-index:3!important;
+    pointer-events:none!important;opacity:0!important;background:transparent!important;mix-blend-mode:color!important;
+    transition:opacity 1800ms ease,background 1800ms ease!important;
+  }
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-base,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-drift{
     position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
@@ -30,21 +34,32 @@ const installOriginalSkyContract=()=>{
     transform-origin:50% 50%!important;pointer-events:none!important;
     transition:filter 1800ms cubic-bezier(.22,.72,.2,1),opacity 1600ms ease!important;
   }
-  /* Pixel-locked approved Golden master. This must match the transparent foreground exactly. */
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-base{opacity:1!important;transform:scale(1.04)!important;filter:none!important}
-  /* Moving duplicate is the only overscanned/moving layer. */
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-drift{opacity:.32!important;transform:scale(1.065)!important;filter:saturate(1.12) contrast(1.05) brightness(1.03)!important;animation:level-one-original-cloud-drift 11s ease-in-out infinite alternate!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-base{
+    z-index:1!important;opacity:1!important;transform:scale(1.04)!important;filter:none!important;
+  }
+  /* Only the upper sky band moves. Keeping the lower 64% clipped prevents skyline ghosting. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-drift{
+    z-index:2!important;opacity:.46!important;transform:scale(1.075)!important;clip-path:inset(0 0 64% 0)!important;
+    filter:saturate(1.18) contrast(1.08) brightness(1.06)!important;
+    animation:level-one-original-cloud-drift 8.5s ease-in-out infinite alternate!important;
+  }
 
-  .game-viewport.sky-progress-waking .level-one-painted-sky-base{filter:saturate(1.10) brightness(.92) hue-rotate(7deg)!important}
-  .game-viewport.sky-progress-waking .level-one-painted-sky-drift{opacity:.29!important;filter:saturate(1.18) contrast(1.06) brightness(.95) hue-rotate(7deg)!important}
-  .game-viewport.sky-progress-dusk .level-one-painted-sky-base{filter:saturate(1.08) brightness(.74) hue-rotate(24deg)!important}
-  .game-viewport.sky-progress-dusk .level-one-painted-sky-drift{opacity:.25!important;filter:saturate(1.15) contrast(1.08) brightness(.80) hue-rotate(24deg)!important}
-  .game-viewport.sky-progress-night .level-one-painted-sky-base{filter:saturate(.92) brightness(.48) hue-rotate(48deg)!important}
-  .game-viewport.sky-progress-night .level-one-painted-sky-drift{opacity:.20!important;filter:saturate(1.0) contrast(1.10) brightness(.57) hue-rotate(48deg)!important}
+  .game-viewport.sky-progress-waking .level-one-painted-sky-base{filter:saturate(1.13) brightness(.90) hue-rotate(10deg)!important}
+  .game-viewport.sky-progress-waking .level-one-painted-sky-drift{opacity:.48!important;filter:saturate(1.24) contrast(1.10) brightness(.96) hue-rotate(10deg)!important}
+  .game-viewport.sky-progress-waking .level-one-real-sky-stack::after{opacity:.22!important;background:#d6487c!important}
+
+  .game-viewport.sky-progress-dusk .level-one-painted-sky-base{filter:saturate(1.10) brightness(.67) hue-rotate(31deg)!important}
+  .game-viewport.sky-progress-dusk .level-one-painted-sky-drift{opacity:.42!important;filter:saturate(1.20) contrast(1.12) brightness(.76) hue-rotate(31deg)!important}
+  .game-viewport.sky-progress-dusk .level-one-real-sky-stack::after{opacity:.34!important;background:#694aa0!important}
+
+  .game-viewport.sky-progress-night .level-one-painted-sky-base{filter:saturate(.90) brightness(.40) hue-rotate(58deg)!important}
+  .game-viewport.sky-progress-night .level-one-painted-sky-drift{opacity:.34!important;filter:saturate(1.00) contrast(1.15) brightness(.51) hue-rotate(58deg)!important}
+  .game-viewport.sky-progress-night .level-one-real-sky-stack::after{opacity:.44!important;background:#213a78!important}
+
   @keyframes level-one-original-cloud-drift{
-    0%{transform:scale(1.065) translate3d(-1.6%,-.12%,0)}
-    45%{transform:scale(1.072) translate3d(.15%,-.42%,0)}
-    100%{transform:scale(1.065) translate3d(1.7%,.16%,0)}
+    0%{transform:scale(1.075) translate3d(-3.0%,-.20%,0)}
+    45%{transform:scale(1.082) translate3d(.2%,-.65%,0)}
+    100%{transform:scale(1.075) translate3d(3.1%,.28%,0)}
   }
   `;document.head.append(style);
 };
