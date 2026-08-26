@@ -60,22 +60,24 @@
   pointer-events:none !important;
 }
 
-/* Sky progression follows the existing Level 1 state classes. Only pixels
-   exposed by the foreground PNG alpha can ever reveal these images. */
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-state-golden > .level-one-real-sky-stack .level-one-real-sky-golden,
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-state-waking > .level-one-real-sky-stack .level-one-real-sky-golden {
+/* Golden is the unconditional base sky once this compositor is installed.
+   This guarantees the transparent aperture never falls through to the host's
+   old gradient/background while the state classes initialize or transition. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-golden {
   opacity:1 !important;
 }
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-state-waking > .level-one-real-sky-stack .level-one-real-sky-dusk {
+/* IMPORTANT: Level 1 state classes are on .game-viewport, not on the sunset
+   alley host. Dusk/Night layers crossfade above the always-present Golden base. */
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-waking .level-one-sunset-alley > .level-one-real-sky-stack .level-one-real-sky-dusk {
   opacity:.38 !important;
 }
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-state-dusk > .level-one-real-sky-stack .level-one-real-sky-dusk {
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-dusk .level-one-sunset-alley > .level-one-real-sky-stack .level-one-real-sky-dusk {
   opacity:1 !important;
 }
 
-.arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-master-state-night > .level-one-real-sky-stack .level-one-real-sky-night {
+.arcade-cabinet-bezel .game-viewport:not(.is-level-two).level-one-master-state-night .level-one-sunset-alley > .level-one-real-sky-stack .level-one-real-sky-night {
   opacity:1 !important;
 }
 
