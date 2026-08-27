@@ -1,4 +1,7 @@
-/* LEVEL 1 TRUE TRANSPARENT FOREGROUND + SHARED CAMERA SKY + ALLEY LIFE */
+/* LEVEL 1 — TRUE PUNCHED-SKY COMPOSITOR
+ * One static approved sky/base, one static transparent foreground, cloud-only motion.
+ * No full-scene image is ever animated or swapped after mount.
+ */
 import "./level1-real-sky.css";
 
 const SKY_HOST_SELECTOR = ".arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley";
@@ -23,49 +26,91 @@ const makeImage = (className: string, src: string) => {
   return image;
 };
 
-const randomBetween = (min: number, max: number) => Math.round(min + Math.random() * (max - min));
-
-const installOriginalSkyContract = () => {
-  if (document.getElementById("level-one-original-sky-contract")) return;
-  document.getElementById("level-one-visible-sky-override")?.remove();
+const installSkyContract = () => {
+  document.getElementById("level-one-original-sky-contract")?.remove();
   const style = document.createElement("style");
   style.id = "level-one-original-sky-contract";
   style.textContent = `
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack{position:absolute!important;inset:0!important;z-index:0!important;background:none!important;filter:none!important;overflow:hidden!important;pointer-events:none!important}
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::before{content:none!important;display:none!important}
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::after{content:""!important;display:block!important;position:absolute!important;inset:0!important;z-index:4!important;pointer-events:none!important;opacity:0!important;background:transparent!important;mix-blend-mode:color!important;transition:opacity 1600ms ease,background 1600ms ease!important}
+  /* Scene host is inert: no legacy haze, master crossfade, or pseudo overlay. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready::before,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready::after{
+    content:none!important;display:none!important;opacity:0!important;background:none!important;animation:none!important;transition:none!important;
+  }
 
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sky-camera-frame{position:absolute!important;overflow:hidden!important;z-index:1!important;pointer-events:none!important}
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-base,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-drift{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:fill!important;object-position:50% 50%!important;mix-blend-mode:normal!important;transform-origin:50% 50%!important;pointer-events:none!important;transition:filter 1600ms cubic-bezier(.22,.72,.2,1),opacity 1400ms ease!important}
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-base{z-index:1!important;opacity:1!important;transform:none!important;filter:none!important}
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-drift{z-index:2!important;opacity:.38!important;clip-path:inset(0 0 68% 0)!important;filter:saturate(1.16) contrast(1.08) brightness(1.05)!important;animation:level-one-original-cloud-drift 7.2s ease-in-out infinite alternate!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack{
+    position:absolute!important;inset:0!important;z-index:0!important;overflow:hidden!important;pointer-events:none!important;background:none!important;filter:none!important;
+  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sky-camera-frame{
+    position:absolute!important;z-index:0!important;overflow:hidden!important;pointer-events:none!important;
+  }
 
-  /* Use the game's existing reliable time-state classes, not HUD text parsing. */
-  .game-viewport.level-one-time-1 .level-one-painted-sky-base,.game-viewport.level-one-time-2 .level-one-painted-sky-base{filter:saturate(1.12) brightness(.88) hue-rotate(10deg)!important}
-  .game-viewport.level-one-time-1 .level-one-painted-sky-drift,.game-viewport.level-one-time-2 .level-one-painted-sky-drift{opacity:.42!important;filter:saturate(1.24) contrast(1.10) brightness(.94) hue-rotate(10deg)!important}
-  .game-viewport.level-one-time-1 .level-one-real-sky-stack::after,.game-viewport.level-one-time-2 .level-one-real-sky-stack::after{opacity:.20!important;background:#d94b79!important}
+  /* The approved Golden master is STATIC. It exists only to provide the exact original sky pixels behind the punch-out. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-base{
+    position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:fill!important;object-position:50% 50%!important;
+    z-index:0!important;opacity:1!important;transform:none!important;animation:none!important;transition:filter 1800ms ease!important;pointer-events:none!important;
+  }
 
-  .game-viewport.level-one-time-3 .level-one-painted-sky-base,.game-viewport.level-one-time-4 .level-one-painted-sky-base{filter:saturate(1.10) brightness(.64) hue-rotate(30deg)!important}
-  .game-viewport.level-one-time-3 .level-one-painted-sky-drift,.game-viewport.level-one-time-4 .level-one-painted-sky-drift{opacity:.36!important;filter:saturate(1.18) contrast(1.12) brightness(.72) hue-rotate(30deg)!important}
-  .game-viewport.level-one-time-3 .level-one-real-sky-stack::after,.game-viewport.level-one-time-4 .level-one-real-sky-stack::after{opacity:.34!important;background:#684a9d!important}
+  /* Cloud-only layers. They are below the punched foreground, so they can only be seen through transparent sky pixels. */
+  .level-one-cloud-field{position:absolute!important;inset:0!important;z-index:1!important;overflow:hidden!important;pointer-events:none!important;opacity:1!important;transition:filter 1800ms ease,opacity 1800ms ease!important}
+  .level-one-cloud-band{position:absolute!important;left:-24%!important;width:148%!important;pointer-events:none!important;will-change:transform!important;mix-blend-mode:screen!important}
+  .level-one-cloud-band-a{top:5%!important;height:23%!important;opacity:.38!important;background:
+    radial-gradient(ellipse at 8% 56%,rgba(255,226,191,.72) 0 7%,rgba(239,161,148,.32) 13%,transparent 26%),
+    radial-gradient(ellipse at 25% 43%,rgba(255,220,188,.66) 0 10%,rgba(231,150,153,.28) 16%,transparent 31%),
+    radial-gradient(ellipse at 47% 58%,rgba(255,230,207,.62) 0 10%,rgba(220,139,160,.26) 17%,transparent 31%),
+    radial-gradient(ellipse at 70% 45%,rgba(251,214,198,.58) 0 9%,rgba(208,130,166,.24) 16%,transparent 30%),
+    radial-gradient(ellipse at 91% 57%,rgba(247,208,202,.52) 0 8%,rgba(198,123,173,.20) 15%,transparent 28%)!important;
+    filter:blur(1px)!important;animation:level-one-cloud-only-a 38s linear infinite!important}
+  .level-one-cloud-band-b{top:17%!important;height:19%!important;opacity:.25!important;background:
+    radial-gradient(ellipse at 12% 50%,rgba(143,92,151,.42) 0 8%,transparent 25%),
+    radial-gradient(ellipse at 36% 60%,rgba(163,96,152,.38) 0 11%,transparent 29%),
+    radial-gradient(ellipse at 61% 49%,rgba(128,89,154,.34) 0 9%,transparent 27%),
+    radial-gradient(ellipse at 85% 58%,rgba(109,82,150,.30) 0 9%,transparent 25%)!important;
+    filter:blur(2px)!important;animation:level-one-cloud-only-b 57s linear infinite!important}
 
-  .game-viewport.level-one-time-5 .level-one-painted-sky-base{filter:saturate(.90) brightness(.40) hue-rotate(56deg)!important}
-  .game-viewport.level-one-time-5 .level-one-painted-sky-drift{opacity:.30!important;filter:saturate(1.0) contrast(1.14) brightness(.49) hue-rotate(56deg)!important}
-  .game-viewport.level-one-time-5 .level-one-real-sky-stack::after{opacity:.44!important;background:#203b79!important}
+  /* Color wash also lives BELOW the foreground, therefore sky aperture only. */
+  .level-one-sky-grade{position:absolute!important;inset:0!important;z-index:2!important;pointer-events:none!important;opacity:0!important;mix-blend-mode:color!important;transition:background 1800ms ease,opacity 1800ms ease!important}
 
-  @keyframes level-one-original-cloud-drift{0%{transform:scale(1.045) translate3d(-2.3%,-.12%,0)}45%{transform:scale(1.052) translate3d(.1%,-.45%,0)}100%{transform:scale(1.045) translate3d(2.4%,.18%,0)}}
+  /* Existing game time states drive only sky color/light. Buildings never move or swap. */
+  .game-viewport.level-one-time-1 .level-one-painted-sky-base,.game-viewport.level-one-time-2 .level-one-painted-sky-base{filter:saturate(1.08) brightness(.92) hue-rotate(7deg)!important}
+  .game-viewport.level-one-time-1 .level-one-sky-grade,.game-viewport.level-one-time-2 .level-one-sky-grade{opacity:.16!important;background:#d95279!important}
+  .game-viewport.level-one-time-1 .level-one-cloud-field,.game-viewport.level-one-time-2 .level-one-cloud-field{filter:saturate(1.05) brightness(.96)!important}
 
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground{position:absolute!important;z-index:2!important;display:block!important;object-fit:fill!important;object-position:50% 50%!important;transform:none!important;transform-origin:50% 50%!important;pointer-events:none!important;opacity:0}
+  .game-viewport.level-one-time-3 .level-one-painted-sky-base,.game-viewport.level-one-time-4 .level-one-painted-sky-base{filter:saturate(1.05) brightness(.70) hue-rotate(27deg)!important}
+  .game-viewport.level-one-time-3 .level-one-sky-grade,.game-viewport.level-one-time-4 .level-one-sky-grade{opacity:.30!important;background:#674b9b!important}
+  .game-viewport.level-one-time-3 .level-one-cloud-field,.game-viewport.level-one-time-4 .level-one-cloud-field{filter:saturate(.92) brightness(.78) hue-rotate(12deg)!important}
+
+  .game-viewport.level-one-time-5 .level-one-painted-sky-base{filter:saturate(.88) brightness(.45) hue-rotate(51deg)!important}
+  .game-viewport.level-one-time-5 .level-one-sky-grade{opacity:.40!important;background:#253d79!important}
+  .game-viewport.level-one-time-5 .level-one-cloud-field{filter:saturate(.78) brightness(.58) hue-rotate(22deg)!important;opacity:.72!important}
+
+  @keyframes level-one-cloud-only-a{0%{transform:translate3d(-3%,0,0)}100%{transform:translate3d(16%,.8%,0)}}
+  @keyframes level-one-cloud-only-b{0%{transform:translate3d(7%,0,0)}100%{transform:translate3d(-15%,-.5%,0)}}
+
+  /* Punched foreground is STATIC and shares the exact measured camera rectangle with the base sky. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground{
+    position:absolute!important;z-index:2!important;display:block!important;object-fit:fill!important;object-position:50% 50%!important;transform:none!important;animation:none!important;transition:none!important;pointer-events:none!important;opacity:0!important;
+  }
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready>.level-one-transparent-foreground{opacity:1!important}
 
+  /* Legacy four-master/environment systems are retired once the punch-out is live. */
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-master-art,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-approved-population,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-population,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-master-vignette,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-canonical-ambience{display:none!important;opacity:0!important;visibility:hidden!important;animation:none!important;transition:none!important}
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready::before,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready::after{content:none!important;display:none!important;opacity:0!important;animation:none!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-canonical-ambience,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-drift{
+    display:none!important;opacity:0!important;visibility:hidden!important;animation:none!important;transition:none!important;transform:none!important;
+  }
+
+  /* Remove old broad atmospheric primitives that caused the white wash. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) :is(.level-one-time-sky,.level-one-time-haze,.level-one-sunset-vignette::before){display:none!important;opacity:0!important}
+
+  /* Gameplay is always above environment. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.falling-items-layer{z-index:30!important;visibility:visible!important;opacity:1!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.falling-items-layer>.falling-object{z-index:31!important;visibility:visible!important;opacity:1!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.dj-catcher{z-index:32!important}
+
+  @media(prefers-reduced-motion:reduce){.level-one-cloud-band{animation:none!important}}
   `;
   document.head.append(style);
 };
@@ -76,61 +121,20 @@ const alignSharedCamera = (host: Element, foreground: HTMLImageElement, frame: H
   const height = hostElement.clientHeight;
   if (!width || !height || !foreground.naturalWidth || !foreground.naturalHeight) return;
 
-  /* Reproduce the approved contain + 1.04 camera ONCE, then give the exact same
-     measured rectangle to both the foreground and every sky source. */
   const containScale = Math.min(width / foreground.naturalWidth, height / foreground.naturalHeight);
   const renderedWidth = foreground.naturalWidth * containScale * 1.04;
   const renderedHeight = foreground.naturalHeight * containScale * 1.04;
   const left = (width - renderedWidth) / 2;
   const top = (height - renderedHeight) / 2;
 
-  const applyBox = (element: HTMLElement) => {
+  for (const element of [foreground, frame]) {
     element.style.setProperty("left", `${left}px`, "important");
     element.style.setProperty("top", `${top}px`, "important");
     element.style.setProperty("width", `${renderedWidth}px`, "important");
     element.style.setProperty("height", `${renderedHeight}px`, "important");
     element.style.setProperty("right", "auto", "important");
     element.style.setProperty("bottom", "auto", "important");
-  };
-  applyBox(foreground);
-  applyBox(frame);
-};
-
-const installAlleyLife = (host: Element) => {
-  const viewport = host.closest<HTMLElement>(".game-viewport");
-  if (!viewport) return;
-  const life = document.createElement("div");
-  life.className = "level-one-alley-life";
-  life.setAttribute("aria-hidden", "true");
-  life.innerHTML = `<span class="alley-rat"><i></i></span><span class="alley-pipe-steam alley-pipe-steam-a"></span><span class="alley-pipe-steam alley-pipe-steam-b"></span><span class="alley-bouncer-life alley-bouncer-left"></span><span class="alley-bouncer-life alley-bouncer-right"></span><span class="alley-crowd-life alley-crowd-a"></span><span class="alley-crowd-life alley-crowd-b"></span><span class="alley-crowd-life alley-crowd-c"></span><span class="alley-window-light alley-window-a"></span><span class="alley-window-light alley-window-b"></span><span class="alley-window-light alley-window-c"></span><span class="alley-neon-life"></span><span class="alley-flyer-life"></span><div class="alley-earned-gear"><span class="earned-gear earned-crate"><i></i><i></i><i></i></span><span class="earned-gear earned-headphones"><i></i><b></b></span><span class="earned-gear earned-flightcase"></span><span class="earned-gear earned-cable"></span></div>`;
-  host.append(life);
-
-  const timers = new Set<number>();
-  const schedule = (selector: string, className: string, minDelay: number, maxDelay: number, activeMs: number, probability = 1) => {
-    const el = life.querySelector<HTMLElement>(selector);
-    if (!el) return;
-    const run = () => {
-      if (!document.body.contains(host)) return;
-      if (Math.random() <= probability) {
-        el.classList.remove(className);
-        void el.offsetWidth;
-        el.classList.add(className);
-        timers.add(window.setTimeout(() => el.classList.remove(className), activeMs));
-      }
-      timers.add(window.setTimeout(run, randomBetween(minDelay, maxDelay)));
-    };
-    timers.add(window.setTimeout(run, randomBetween(minDelay, maxDelay)));
-  };
-  schedule(".alley-rat", "is-scuttling", 18000, 42000, 2200, .72);
-  schedule(".alley-pipe-steam-a", "is-bursting", 6500, 14500, 3300, .88);
-  schedule(".alley-pipe-steam-b", "is-bursting", 23000, 48000, 4700, .68);
-  schedule(".alley-bouncer-left", "is-moving", 12000, 29000, 1600, .72);
-  schedule(".alley-bouncer-right", "is-moving", 17000, 35000, 1900, .66);
-  schedule(".alley-crowd-a", "is-moving", 9000, 24000, 1400, .72);
-  schedule(".alley-crowd-b", "is-moving", 13000, 31000, 1800, .66);
-  schedule(".alley-crowd-c", "is-moving", 16000, 36000, 1300, .60);
-  schedule(".alley-neon-life", "is-flickering", 11000, 27000, 1200, .72);
-  schedule(".alley-flyer-life", "is-skittering", 26000, 56000, 3900, .55);
+  }
 };
 
 const retireLegacyLevelOneLayers = (host: Element, masters: HTMLImageElement[]) => {
@@ -140,6 +144,7 @@ const retireLegacyLevelOneLayers = (host: Element, masters: HTMLImageElement[]) 
     master.style.setProperty("visibility", "hidden", "important");
     master.style.setProperty("animation", "none", "important");
     master.style.setProperty("transition", "none", "important");
+    master.style.setProperty("transform", "none", "important");
   });
   host.querySelectorAll<HTMLElement>(".level-one-approved-population,.level-one-population,.level-one-master-vignette,.level-one-canonical-ambience").forEach((node) => {
     node.style.setProperty("display", "none", "important");
@@ -155,24 +160,29 @@ const installOnHost = async (host: Element) => {
   if (!masters.length) return;
   await Promise.all(masters.map(waitForImage));
 
-  host.querySelectorAll(".level-one-checkerboard-sky,.level-one-animated-sky,.level-one-transparent-foreground,.level-one-real-sky,.level-one-real-sky-stack,.level-one-alley-life").forEach((node) => node.remove());
+  host.querySelectorAll(".level-one-checkerboard-sky,.level-one-animated-sky,.level-one-transparent-foreground,.level-one-real-sky,.level-one-real-sky-stack,.level-one-alley-life,.level-one-sky-camera-frame").forEach((node) => node.remove());
 
   const sky = document.createElement("span");
   sky.className = "level-one-real-sky-stack";
   sky.setAttribute("aria-hidden", "true");
+
   const frame = document.createElement("span");
   frame.className = "level-one-sky-camera-frame";
-  frame.append(makeImage("level-one-real-sky-image level-one-painted-sky-base", ORIGINAL_SKY_SRC));
-  frame.append(makeImage("level-one-real-sky-image level-one-painted-sky-drift", ORIGINAL_SKY_SRC));
+  const baseSky = makeImage("level-one-real-sky-image level-one-painted-sky-base", ORIGINAL_SKY_SRC);
+  const cloudField = document.createElement("span");
+  cloudField.className = "level-one-cloud-field";
+  cloudField.innerHTML = `<i class="level-one-cloud-band level-one-cloud-band-a"></i><i class="level-one-cloud-band level-one-cloud-band-b"></i>`;
+  const grade = document.createElement("span");
+  grade.className = "level-one-sky-grade";
+  frame.append(baseSky, cloudField, grade);
   sky.append(frame);
 
   const foreground = makeImage("level-one-transparent-foreground", FOREGROUND_SRC);
   host.prepend(sky);
   host.append(foreground);
 
-  const images = Array.from(frame.querySelectorAll<HTMLImageElement>("img"));
-  const [fgOk, ...skyResults] = await Promise.all([waitForImage(foreground), ...images.map(waitForImage)]);
-  if (!fgOk) {
+  const [fgOk, skyOk] = await Promise.all([waitForImage(foreground), waitForImage(baseSky)]);
+  if (!fgOk || !skyOk) {
     foreground.remove();
     sky.remove();
     return;
@@ -184,14 +194,13 @@ const installOnHost = async (host: Element) => {
 
   host.classList.add("level-one-transparent-foreground-ready");
   retireLegacyLevelOneLayers(host, masters);
-  if (skyResults.every(Boolean)) host.classList.add("level-one-independent-sky-ready");
-  installAlleyLife(host);
+  host.classList.add("level-one-independent-sky-ready");
 };
 
 const scan = () => document.querySelectorAll(SKY_HOST_SELECTOR).forEach((host) => void installOnHost(host));
 const observer = new MutationObserver(scan);
 const start = () => {
-  installOriginalSkyContract();
+  installSkyContract();
   scan();
   if (document.body) observer.observe(document.body, { childList: true, subtree: true });
 };
