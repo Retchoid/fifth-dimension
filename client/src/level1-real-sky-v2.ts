@@ -1,7 +1,8 @@
-/* LEVEL 1 — EXACT PUNCHED MASTER SKY CONTRACT
- * Uses the approved 5d_level1_no_sky.png alpha silhouette as the single source
- * of truth for the sky aperture on every Level 1 master frame.
- * No polygon mask, no mist, no full-scene movement.
+/* LEVEL 1 — EXACT ALPHA-COMPOSITED SKY CONTRACT
+ * Golden / Waking / Dusk / Night masters keep their native transitions.
+ * Every master is punched once in-browser using the alpha from the approved
+ * 5d_level1_no_sky.png. No CSS masks, no polygon masks, no moving buildings.
+ * Behind the punched masters: fixed painted sky base + one-way cloud layers.
  */
 
 const HOST_SELECTOR = ".arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley";
@@ -12,12 +13,26 @@ const CLOUD_SRC = "/assets/level1-painted-sky-transparent-v1.webp";
 
 const installing = new WeakSet<Element>();
 const resizers = new WeakMap<Element, ResizeObserver>();
+const processedMasterCache = new Map<string, Promise<string>>();
+let punchImagePromise: Promise<HTMLImageElement> | null = null;
 
 const waitForImage = (image: HTMLImageElement) => new Promise<boolean>((resolve) => {
   if (image.complete) return resolve(Boolean(image.naturalWidth && image.naturalHeight));
   image.addEventListener("load", () => resolve(true), { once: true });
   image.addEventListener("error", () => resolve(false), { once: true });
 });
+
+const loadImage = async (src: string) => {
+  const image = new Image();
+  image.src = src;
+  if (!(await waitForImage(image))) throw new Error(`Unable to load image: ${src}`);
+  return image;
+};
+
+const getPunchImage = () => {
+  if (!punchImagePromise) punchImagePromise = loadImage(EXACT_PUNCH_SRC);
+  return punchImagePromise;
+};
 
 const makeImg = (className: string, src: string) => {
   const image = document.createElement("img");
@@ -29,20 +44,68 @@ const makeImg = (className: string, src: string) => {
   return image;
 };
 
-const applyExactPunch = (master: HTMLImageElement) => {
-  /* Native master opacity/crossfade state remains untouched. Only the sky hole
-     is standardized across Golden/Waking/Dusk/Night using the approved alpha. */
-  master.style.setProperty("-webkit-mask-image", `url("${EXACT_PUNCH_SRC}")`, "important");
-  master.style.setProperty("mask-image", `url("${EXACT_PUNCH_SRC}")`, "important");
-  master.style.setProperty("-webkit-mask-size", "100% 100%", "important");
-  master.style.setProperty("mask-size", "100% 100%", "important");
-  master.style.setProperty("-webkit-mask-position", "50% 50%", "important");
-  master.style.setProperty("mask-position", "50% 50%", "important");
-  master.style.setProperty("-webkit-mask-repeat", "no-repeat", "important");
-  master.style.setProperty("mask-repeat", "no-repeat", "important");
-  master.style.setProperty("mask-mode", "alpha", "important");
+const punchedObjectUrlFor = (src: string) => {
+  const cached = processedMasterCache.get(src);
+  if (cached) return cached;
+
+  const promise = (async () => {
+    const [master, punch] = await Promise.all([loadImage(src), getPunchImage()]);
+    const canvas = document.createElement("canvas");
+    canvas.width = master.naturalWidth;
+    canvas.height = master.naturalHeight;
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) throw new Error("Canvas 2D context unavailable");
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.drawImage(master, 0, 0, canvas.width, canvas.height);
+
+    /* Keep the master only where the approved punched PNG has alpha. This is
+       actual pixel compositing, so browser CSS mask semantics cannot invert or
+       erase the scene. */
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.drawImage(punch, 0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "source-over";
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Failed to encode punched master")), "image/png");
+    });
+    return URL.createObjectURL(blob);
+  })();
+
+  processedMasterCache.set(src, promise);
+  return promise;
+};
+
+const prepareMaster = async (master: HTMLImageElement) => {
+  /* Explicitly remove every mask from the retired implementations. */
+  for (const property of [
+    "-webkit-mask-image", "mask-image", "-webkit-mask-size", "mask-size",
+    "-webkit-mask-position", "mask-position", "-webkit-mask-repeat", "mask-repeat", "mask-mode"
+  ]) master.style.removeProperty(property);
+
   master.style.setProperty("z-index", "20", "important");
   master.style.setProperty("pointer-events", "none", "important");
+
+  if (master.dataset.exactPunchReady === "1") return;
+  if (master.dataset.exactPunchBusy === "1") return;
+
+  const originalSrc = master.dataset.exactPunchOriginalSrc || master.currentSrc || master.src;
+  if (!originalSrc) return;
+  master.dataset.exactPunchOriginalSrc = originalSrc;
+  master.dataset.exactPunchBusy = "1";
+
+  try {
+    const punchedSrc = await punchedObjectUrlFor(originalSrc);
+    if (!master.isConnected) return;
+    master.src = punchedSrc;
+    await waitForImage(master);
+    master.dataset.exactPunchReady = "1";
+  } catch (error) {
+    console.error("[Level1 sky] exact master punch failed", error);
+  } finally {
+    delete master.dataset.exactPunchBusy;
+  }
 };
 
 const installContract = () => {
@@ -121,14 +184,14 @@ const installContract = () => {
   ${HOST_SELECTOR} .level-one-cloud-track-v2.cloud-a{
     top:-1%!important;
     height:42%!important;
-    opacity:.52!important;
+    opacity:.48!important;
     background-size:44% 100%!important;
     animation:level-one-clouds-v2-a 34s linear infinite!important;
   }
   ${HOST_SELECTOR} .level-one-cloud-track-v2.cloud-b{
     top:12%!important;
     height:32%!important;
-    opacity:.30!important;
+    opacity:.27!important;
     background-size:31% 88%!important;
     animation:level-one-clouds-v2-b 51s linear infinite!important;
   }
@@ -150,6 +213,10 @@ const installContract = () => {
   .game-viewport.level-one-time-5 .level-one-cloud-track-v2{filter:saturate(.90) brightness(.54) hue-rotate(60deg)!important}
 
   ${HOST_SELECTOR} ${MASTER_SELECTOR}{z-index:20!important;pointer-events:none!important}
+
+  /* Cabinet/playfield framing stays black outside the rendered master. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two),
+  ${HOST_SELECTOR}{background-color:#050508!important}
 
   ${HOST_SELECTOR} > .falling-items-layer{z-index:30!important;visibility:visible!important;opacity:1!important}
   ${HOST_SELECTOR} > .falling-items-layer > .falling-object{z-index:31!important;visibility:visible!important;opacity:1!important}
@@ -186,7 +253,7 @@ const installHost = async (host: Element) => {
     if (!masters.length) return;
     await Promise.all(masters.map(waitForImage));
     if (!host.isConnected) return;
-    masters.forEach(applyExactPunch);
+    await Promise.all(masters.map(prepareMaster));
 
     host.querySelectorAll(":scope > .level-one-real-sky-stack,:scope > .level-one-real-sky-stack-v2").forEach((n) => n.remove());
 
@@ -213,7 +280,6 @@ const installHost = async (host: Element) => {
     resizers.get(host)?.disconnect();
     const ro = new ResizeObserver(() => {
       if (!host.isConnected) return ro.disconnect();
-      masters.forEach(applyExactPunch);
       alignFrame(host, frame, masters);
     });
     ro.observe(host);
@@ -227,7 +293,7 @@ const scan = () => {
   document.querySelectorAll(HOST_SELECTOR).forEach((host) => {
     const masters = Array.from(host.querySelectorAll<HTMLImageElement>(MASTER_SELECTOR));
     if (!masters.length) return;
-    masters.forEach(applyExactPunch);
+    masters.forEach((master) => void prepareMaster(master));
     const frame = host.querySelector<HTMLElement>(":scope > .level-one-real-sky-stack-v2 .level-one-sky-camera-frame-v2");
     if (!frame) {
       void installHost(host);
