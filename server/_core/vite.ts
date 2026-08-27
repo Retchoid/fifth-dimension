@@ -58,10 +58,30 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
+  app.use(
+    express.static(distPath, {
+      setHeaders(res, filePath) {
+        const normalized = filePath.split(path.sep).join("/");
+
+        // Artwork/media under /assets and Vite's fingerprinted build output are
+        // immutable between deploys. Let browsers and Render's edge cache keep
+        // them instead of re-transferring multi-megabyte images on every visit.
+        if (normalized.includes("/assets/")) {
+          res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+          return;
+        }
+
+        // Keep HTML revalidating so a deploy is picked up immediately.
+        if (normalized.endsWith("/index.html")) {
+          res.setHeader("Cache-Control", "no-cache");
+        }
+      },
+    })
+  );
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {
+    res.setHeader("Cache-Control", "no-cache");
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }
