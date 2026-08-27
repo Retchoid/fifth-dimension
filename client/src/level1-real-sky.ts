@@ -1,8 +1,7 @@
-/* LEVEL 1 — PERSISTENT PAINTED SKY + PUNCHED FOREGROUND
- * The punched foreground is the permanent Level 1 master for every time state.
- * A recreated painted sky moves slowly behind its alpha opening.
- * React/state transitions are allowed to change classes, but may never replace,
- * fade, move, or cover the punched foreground.
+/* LEVEL 1 — LIVE PAINTED SKY + PERMANENT PUNCHED FOREGROUND
+ * The game owns progression through level-one-time-0..5 (one stage per 5 records).
+ * This renderer reads that live state directly, keeps the punched master permanent,
+ * and animates only a sky-only crop behind its transparent opening.
  */
 import "./level1-real-sky.css";
 
@@ -13,6 +12,18 @@ const PAINTED_SKY_SRC = "/assets/level1-painted-sky-recreated.svg";
 
 const installingHosts = new WeakSet<Element>();
 const resizeObservers = new WeakMap<Element, ResizeObserver>();
+const skyAnimations = new WeakMap<HTMLImageElement, Animation>();
+
+/* Start at the warm Golden-hour look from the approved opening frame, then
+   progressively cool/darken through waking -> sunset -> dusk -> night. */
+const SKY_FILTERS = [
+  "sepia(.18) saturate(1.32) contrast(1.04) brightness(1.10) hue-rotate(-18deg)",
+  "sepia(.10) saturate(1.28) contrast(1.05) brightness(1.04) hue-rotate(-9deg)",
+  "saturate(1.26) contrast(1.06) brightness(.96) hue-rotate(4deg)",
+  "saturate(1.24) contrast(1.08) brightness(.83) hue-rotate(20deg)",
+  "saturate(1.18) contrast(1.10) brightness(.67) hue-rotate(38deg)",
+  "saturate(1.02) contrast(1.12) brightness(.50) hue-rotate(58deg)",
+] as const;
 
 const waitForImage = (image: HTMLImageElement) => new Promise<boolean>((resolve) => {
   if (image.complete) return resolve(Boolean(image.naturalWidth && image.naturalHeight));
@@ -30,6 +41,49 @@ const makeImage = (className: string, src: string) => {
   return image;
 };
 
+const readTimeStage = (host: Element) => {
+  const viewport = host.closest<HTMLElement>(".game-viewport");
+  if (!viewport) return 0;
+  for (let stage = 5; stage >= 0; stage -= 1) {
+    if (viewport.classList.contains(`level-one-time-${stage}`)) return stage;
+  }
+  return 0;
+};
+
+const applyLiveSkyStage = (host: Element, sky: HTMLImageElement) => {
+  const stage = readTimeStage(host);
+  if (sky.dataset.timeStage === String(stage)) return;
+  sky.dataset.timeStage = String(stage);
+  sky.style.setProperty("transition", "filter 2400ms cubic-bezier(.22,.72,.2,1)", "important");
+  sky.style.setProperty("filter", SKY_FILTERS[stage], "important");
+};
+
+const ensureSkyMotion = (sky: HTMLImageElement) => {
+  const existing = skyAnimations.get(sky);
+  if (existing && existing.playState !== "idle") return;
+  existing?.cancel();
+
+  /* The source artwork has architecture near its far-right edge, so the live
+     crop is deliberately biased left and heavily overscanned. The animation
+     moves only this sky-only crop; no foreground/building node is transformed. */
+  const animation = sky.animate(
+    [
+      { transform: "translate3d(-4.8%, 0, 0) scale(1.12)" },
+      { transform: "translate3d(-1.2%, -.35%, 0) scale(1.125)", offset: .36 },
+      { transform: "translate3d(2.2%, .15%, 0) scale(1.12)", offset: .72 },
+      { transform: "translate3d(4.8%, 0, 0) scale(1.12)" },
+    ],
+    {
+      duration: 15000,
+      iterations: Infinity,
+      direction: "alternate",
+      easing: "linear",
+      fill: "both",
+    },
+  );
+  skyAnimations.set(sky, animation);
+};
+
 const installSkyContract = () => {
   document.getElementById("level-one-checkerboard-only-contract")?.remove();
   document.getElementById("level-one-original-sky-contract")?.remove();
@@ -39,12 +93,10 @@ const installSkyContract = () => {
   style.id = "level-one-real-painted-sky-contract";
   style.textContent = `
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sunset-alley{
-    isolation:isolate!important;
-    overflow:hidden!important;
-    background:#050508!important;
+    isolation:isolate!important;overflow:hidden!important;background:#050508!important;
   }
 
-  /* Retire every previous atmosphere / scene-state renderer. */
+  /* Old scene/atmosphere systems are fully retired. */
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::before,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack::after,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) [class*="fog"],
@@ -54,121 +106,58 @@ const installSkyContract = () => {
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-canonical-ambience,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-approved-population,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-population{
-    content:none!important;
-    display:none!important;
-    visibility:hidden!important;
-    opacity:0!important;
-    background:none!important;
-    filter:none!important;
-    animation:none!important;
-    transition:none!important;
+    content:none!important;display:none!important;visibility:hidden!important;opacity:0!important;
+    background:none!important;filter:none!important;animation:none!important;transition:none!important;
   }
 
-  /* Environment plane. */
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-real-sky-stack{
-    position:absolute!important;
-    inset:0!important;
-    z-index:0!important;
-    overflow:hidden!important;
-    pointer-events:none!important;
-    background:transparent!important;
+    position:absolute!important;inset:0!important;z-index:0!important;overflow:hidden!important;
+    pointer-events:none!important;background:transparent!important;
   }
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-sky-camera-frame{
-    position:absolute!important;
-    z-index:0!important;
-    overflow:hidden!important;
-    pointer-events:none!important;
-    clip-path:none!important;
-    -webkit-clip-path:none!important;
-    background:#111224!important;
+    position:absolute!important;z-index:0!important;overflow:hidden!important;pointer-events:none!important;
+    clip-path:none!important;-webkit-clip-path:none!important;background:#111224!important;
   }
 
-  /* Real painted sky only. Extra horizontal crop keeps the source-image building
-     edge outside the punched aperture for the whole animation. */
+  /* Painted sky source only. CSS does not animate it; JS owns motion so older
+     CSS and reduced-motion rules cannot silently cancel the requested effect. */
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-painted-sky-live{
-    position:absolute!important;
-    z-index:0!important;
-    pointer-events:none!important;
-    width:142%!important;
-    height:126%!important;
-    left:-31%!important;
-    top:-13%!important;
-    object-fit:cover!important;
-    object-position:36% 47%!important;
-    opacity:1!important;
-    mix-blend-mode:normal!important;
-    filter:saturate(1.1) contrast(1.05) brightness(1.02)!important;
-    will-change:transform,filter!important;
-    animation:level-one-painted-sky-pan 18s linear infinite alternate!important;
-    transition:filter 2200ms cubic-bezier(.22,.72,.2,1)!important;
+    position:absolute!important;z-index:0!important;pointer-events:none!important;
+    width:162%!important;height:142%!important;left:-46%!important;top:-21%!important;
+    object-fit:cover!important;object-position:24% 43%!important;
+    opacity:1!important;mix-blend-mode:normal!important;animation:none!important;
+    will-change:transform,filter!important;transform-origin:50% 50%!important;
   }
 
-  .game-viewport.level-one-time-1 .level-one-painted-sky-live,
-  .game-viewport.level-one-time-2 .level-one-painted-sky-live{
-    filter:saturate(1.17) contrast(1.07) brightness(.94) hue-rotate(7deg)!important;
-  }
-  .game-viewport.level-one-time-3 .level-one-painted-sky-live,
-  .game-viewport.level-one-time-4 .level-one-painted-sky-live{
-    filter:saturate(1.22) contrast(1.1) brightness(.72) hue-rotate(28deg)!important;
-  }
-  .game-viewport.level-one-time-5 .level-one-painted-sky-live{
-    filter:saturate(.96) contrast(1.12) brightness(.48) hue-rotate(54deg)!important;
-  }
-
-  @keyframes level-one-painted-sky-pan{
-    from{transform:translate3d(-1.6%,0,0) scale(1.015)}
-    to{transform:translate3d(1.6%,0,0) scale(1.015)}
-  }
-
-  /* Permanent punched master. This selector deliberately does NOT depend on a
-     time-state class: Golden, Waking, Dusk and Night all use this exact image. */
+  /* Permanent punched master. It never depends on time/bonus/transition state. */
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready>.level-one-transparent-foreground{
-    position:absolute!important;
-    z-index:20!important;
-    display:block!important;
-    visibility:visible!important;
-    pointer-events:none!important;
-    object-fit:fill!important;
-    object-position:50% 50%!important;
-    transform:none!important;
-    filter:none!important;
-    animation:none!important;
-    transition:none!important;
-    opacity:1!important;
+    position:absolute!important;z-index:20!important;display:block!important;visibility:visible!important;
+    pointer-events:none!important;object-fit:fill!important;object-position:50% 50%!important;
+    transform:none!important;filter:none!important;animation:none!important;transition:none!important;opacity:1!important;
   }
 
-  /* Full-scene state masters are permanently retired after punch-out install. */
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-master-art,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-painted-sky-base,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-painted-sky-drift,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-original-sky-motion,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-cloud-source,
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .level-one-transparent-foreground-ready .level-one-sky-palette{
-    display:none!important;
-    visibility:hidden!important;
-    opacity:0!important;
-    animation:none!important;
-    transition:none!important;
-    transform:none!important;
-    filter:none!important;
+    display:none!important;visibility:hidden!important;opacity:0!important;animation:none!important;
+    transition:none!important;transform:none!important;filter:none!important;
   }
 
-  /* Gameplay and rewards always sit above the environment/master stack. */
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.falling-items-layer{
-    z-index:30!important;visibility:visible!important;opacity:1!important;
-  }
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.falling-items-layer>.falling-object{
-    z-index:31!important;visibility:visible!important;opacity:1!important;
-  }
+  /* Explicit gameplay / reward stack: everything interactive or celebratory is
+     above the permanent punched scene. */
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.falling-items-layer{z-index:30!important;visibility:visible!important;opacity:1!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.falling-items-layer>.falling-object{z-index:31!important;visibility:visible!important;opacity:1!important}
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.dj-catcher{z-index:32!important}
   .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .in-world-reward{z-index:50!important}
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .no-request-splash-overlay,
-  .arcade-cabinet-bezel .game-viewport:not(.is-level-two) .no-request-bonus-stage{z-index:55!important}
-
-  @media(prefers-reduced-motion:reduce){
-    .level-one-painted-sky-live{animation-duration:36s!important}
-  }
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.game-overlay{z-index:56!important}
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.bonus-level-stage,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.afterparty-runner-stage,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.no-request-splash-overlay,
+  .arcade-cabinet-bezel .game-viewport:not(.is-level-two)>.no-request-bonus-stage{z-index:58!important}
   `;
   document.head.append(style);
 };
@@ -208,7 +197,7 @@ const alignSharedCamera = (host: Element, foreground: HTMLImageElement, frame: H
   hardLockForeground(foreground);
 };
 
-const retireLegacyLevelOneLayers = (host: Element, masters: HTMLImageElement[]) => {
+const retireLegacyLevelOneLayers = (masters: HTMLImageElement[]) => {
   masters.forEach((master) => {
     master.style.setProperty("display", "none", "important");
     master.style.setProperty("opacity", "0", "important");
@@ -246,14 +235,14 @@ const installOnHost = async (host: Element) => {
 
     const [fgOk, skyOk] = await Promise.all([waitForImage(foreground), waitForImage(skyImage)]);
     if (!fgOk || !skyOk || !host.isConnected) {
-      foreground.remove();
-      stack.remove();
-      return;
+      foreground.remove();stack.remove();return;
     }
 
     host.classList.add("level-one-transparent-foreground-ready", "level-one-independent-sky-ready");
-    retireLegacyLevelOneLayers(host, masters);
+    retireLegacyLevelOneLayers(masters);
     alignSharedCamera(host, foreground, frame);
+    applyLiveSkyStage(host, skyImage);
+    ensureSkyMotion(skyImage);
 
     resizeObservers.get(host)?.disconnect();
     const resizeObserver = new ResizeObserver(() => {
@@ -267,8 +256,8 @@ const installOnHost = async (host: Element) => {
   }
 };
 
-/* Self-healing pass. React can rebuild scene children at time/bonus transitions;
-   if it removes our punched master or sky stack, restore them immediately. */
+/* Self-healing pass: React may rebuild scene children at transition/bonus points.
+   Restore the permanent master if needed and always resync sky stage + animation. */
 const scan = () => {
   document.querySelectorAll(SKY_HOST_SELECTOR).forEach((host) => {
     const foreground = host.querySelector<HTMLImageElement>(":scope > .level-one-transparent-foreground");
@@ -276,14 +265,15 @@ const scan = () => {
     const sky = host.querySelector<HTMLImageElement>(".level-one-painted-sky-live");
 
     if (!foreground || !frame || !sky || !foreground.isConnected || !frame.isConnected || !sky.isConnected) {
-      void installOnHost(host);
-      return;
+      void installOnHost(host);return;
     }
 
     host.classList.add("level-one-transparent-foreground-ready", "level-one-independent-sky-ready");
     hardLockForeground(foreground);
-    retireLegacyLevelOneLayers(host, Array.from(host.querySelectorAll<HTMLImageElement>(MASTER_SELECTOR)));
+    retireLegacyLevelOneLayers(Array.from(host.querySelectorAll<HTMLImageElement>(MASTER_SELECTOR)));
     alignSharedCamera(host, foreground, frame);
+    applyLiveSkyStage(host, sky);
+    ensureSkyMotion(sky);
   });
 };
 
@@ -291,24 +281,14 @@ let scanQueued = false;
 const queueScan = () => {
   if (scanQueued) return;
   scanQueued = true;
-  requestAnimationFrame(() => {
-    scanQueued = false;
-    scan();
-  });
+  requestAnimationFrame(() => { scanQueued = false; scan(); });
 };
 
 const observer = new MutationObserver(queueScan);
 const start = () => {
   installSkyContract();
   scan();
-  if (document.body) {
-    observer.observe(document.body, {
-      childList:true,
-      subtree:true,
-      attributes:true,
-      attributeFilter:["class","style"]
-    });
-  }
+  if (document.body) observer.observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:["class","style"] });
 };
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once:true });
