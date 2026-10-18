@@ -47,3 +47,53 @@
   .genre-mixes-section .mix-archive-card,
   .projects-section .project-card { transition: none; }
 }
+
+/* Selector profile: repair the collapsed desktop bio column seen in the
+   1440px full-page preview. Keep the original portrait and zine treatment. */
+@media (min-width: 761px) {
+  #bio.selector-profile-section {
+    padding-inline: clamp(1.5rem, 4vw, 4rem);
+  }
+  #bio .zine-spread-container {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr) !important;
+    align-items: center !important;
+    gap: clamp(2rem, 5vw, 5rem) !important;
+    width: min(100%, 1200px) !important;
+    max-width: 1200px !important;
+    margin-inline: auto !important;
+  }
+  #bio .zine-left-column,
+  #bio .zine-right-column {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    flex: initial !important;
+    position: relative;
+  }
+  #bio .zine-bio-body {
+    width: 100% !important;
+    max-width: 65ch !important;
+  }
+  #bio .zine-bio-body p {
+    max-width: 65ch !important;
+    overflow-wrap: normal;
+    word-break: normal;
+    line-height: 1.7;
+  }
+  #bio .zine-pullquote {
+    max-width: 100%;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  #bio .zine-right-column img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+@media (min-width: 761px) and (max-width: 980px) {
+  #bio .zine-spread-container {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) !important;
+    gap: 2rem !important;
+  }
+}
