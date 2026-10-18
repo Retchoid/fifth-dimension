@@ -624,8 +624,8 @@ export default function Home() {
         <div className="room-transition-banner"><span className="room-tag">ROOM 02</span><span>SELECTOR PROFILE / GRAVITY FIELD</span><span className="room-path">WAYPOINT // 02</span></div>
         <hr className="room-rail-divider" />
         <section id="bio" className="bio-section selector-profile-section" aria-labelledby="bio-title">
-          <div className="zine-spread-container">
-            <div className="zine-left-column">
+          <div className="profile-refinement-layout">
+            <div className="profile-refinement-copy">
               <p className="eyebrow"><Zap size={15} fill="currentColor" /> SELECTOR PROFILE / 02</p>
               <h2 id="bio-title" className="zine-pullquote">BASS ISN’T A GENRE.<br /><em>IT’S A GRAVITY FIELD.</em></h2>
               <div className="zine-bio-body">
@@ -634,7 +634,7 @@ export default function Home() {
               </div>
               <div className="tags"><span>#DANCEHALLVIBES</span><span>#JUNGLEREVIVAL</span><span>#SOUNDSYSTEMWEIGHT</span><span>#BREAKBEATALCHEMIST</span></div>
             </div>
-            <div className="zine-right-column">
+            <div className="profile-refinement-art">
               <img src="/assets/5th-dimension-character_a901a681.jpg" alt="5th Dimension street-art insignia" />
               <span className="zine-emblem-caption">JUNGLE / GROOVE / PRESSURE</span>
             </div>
