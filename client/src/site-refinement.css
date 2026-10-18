@@ -1,0 +1,49 @@
+/* 5th Dimension site refinement — homepage presentation only.
+   Game cabinet, game sprites, and gameplay styles intentionally excluded. */
+@media (min-width: 761px) {
+  .listen-section, .genre-mixes-section, .projects-section,
+  .visuals-section, .booking-section, .contact-section {
+    padding-block: clamp(3.5rem, 6vw, 6rem);
+  }
+}
+.listen-section .music-deck,
+.listen-section .mixcloud-deck,
+.genre-mixes-section .mix-archive-card,
+.genre-mixes-section .mix-archive-group,
+.projects-section .project-card,
+.booking-section .booking-form,
+.booking-section .booking-copy,
+.contact-section .contact-content {
+  border-width: 1px !important;
+  border-radius: 4px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.22) !important;
+}
+.listen-section .music-deck,
+.listen-section .mixcloud-deck,
+.genre-mixes-section .mix-archive-card,
+.projects-section .project-card {
+  transition: border-color .2s ease, transform .2s ease;
+}
+@media (hover: hover) {
+  .genre-mixes-section .mix-archive-card:hover,
+  .projects-section .project-card:hover { transform: translateY(-2px); }
+}
+.section-heading h2, .section-heading-dark h2 {
+  text-shadow: none;
+  letter-spacing: -.015em;
+}
+.section-heading h2 em, .section-heading-dark h2 em {
+  text-shadow: none !important;
+}
+@media (max-width: 760px) {
+  .listen-section .music-deck,
+  .listen-section .mixcloud-deck,
+  .genre-mixes-section .mix-archive-card,
+  .projects-section .project-card {
+    box-shadow: 0 8px 22px rgba(0,0,0,.22) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .genre-mixes-section .mix-archive-card,
+  .projects-section .project-card { transition: none; }
+}
