@@ -144,3 +144,32 @@
     gap: 2rem;
   }
 }
+
+/* Root cause: old .bio-section is a three-column grid. The new profile
+   wrapper was being placed into its first narrow grid track. */
+#bio.bio-section.selector-profile-section {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  grid-template-columns: none !important;
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 4rem) !important;
+}
+#bio .profile-refinement-layout {
+  box-sizing: border-box;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  background: #121222;
+  border: 2px solid #ff2d95;
+  box-shadow: 5px 5px 0 #0a0a12;
+  position: relative;
+  z-index: 3;
+}
+#bio .profile-refinement-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+#bio .profile-refinement-art {
+  padding: 1rem;
+  border: 2px solid #00d4ff;
+  background: #0a0a12;
+}
