@@ -1,0 +1,175 @@
+/* 5th Dimension site refinement — homepage presentation only.
+   Game cabinet, game sprites, and gameplay styles intentionally excluded. */
+@media (min-width: 761px) {
+  .listen-section, .genre-mixes-section, .projects-section,
+  .visuals-section, .booking-section, .contact-section {
+    padding-block: clamp(3.5rem, 6vw, 6rem);
+  }
+}
+.listen-section .music-deck,
+.listen-section .mixcloud-deck,
+.genre-mixes-section .mix-archive-card,
+.genre-mixes-section .mix-archive-group,
+.projects-section .project-card,
+.booking-section .booking-form,
+.booking-section .booking-copy,
+.contact-section .contact-content {
+  border-width: 1px !important;
+  border-radius: 4px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.22) !important;
+}
+.listen-section .music-deck,
+.listen-section .mixcloud-deck,
+.genre-mixes-section .mix-archive-card,
+.projects-section .project-card {
+  transition: border-color .2s ease, transform .2s ease;
+}
+@media (hover: hover) {
+  .genre-mixes-section .mix-archive-card:hover,
+  .projects-section .project-card:hover { transform: translateY(-2px); }
+}
+.section-heading h2, .section-heading-dark h2 {
+  text-shadow: none;
+  letter-spacing: -.015em;
+}
+.section-heading h2 em, .section-heading-dark h2 em {
+  text-shadow: none !important;
+}
+@media (max-width: 760px) {
+  .listen-section .music-deck,
+  .listen-section .mixcloud-deck,
+  .genre-mixes-section .mix-archive-card,
+  .projects-section .project-card {
+    box-shadow: 0 8px 22px rgba(0,0,0,.22) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .genre-mixes-section .mix-archive-card,
+  .projects-section .project-card { transition: none; }
+}
+
+/* Selector profile: repair the collapsed desktop bio column seen in the
+   1440px full-page preview. Keep the original portrait and zine treatment. */
+@media (min-width: 761px) {
+  #bio.selector-profile-section {
+    padding-inline: clamp(1.5rem, 4vw, 4rem);
+  }
+  #bio .zine-spread-container {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr) !important;
+    align-items: center !important;
+    gap: clamp(2rem, 5vw, 5rem) !important;
+    width: min(100%, 1200px) !important;
+    max-width: 1200px !important;
+    margin-inline: auto !important;
+  }
+  #bio .zine-left-column,
+  #bio .zine-right-column {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    flex: initial !important;
+    position: relative;
+  }
+  #bio .zine-bio-body {
+    width: 100% !important;
+    max-width: 65ch !important;
+  }
+  #bio .zine-bio-body p {
+    max-width: 65ch !important;
+    overflow-wrap: normal;
+    word-break: normal;
+    line-height: 1.7;
+  }
+  #bio .zine-pullquote {
+    max-width: 100%;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  #bio .zine-right-column img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+@media (min-width: 761px) and (max-width: 980px) {
+  #bio .zine-spread-container {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) !important;
+    gap: 2rem !important;
+  }
+}
+
+/* Independent profile layout: legacy zine column styles no longer apply. */
+#bio .profile-refinement-layout {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr) !important;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  width: min(100%, 1200px);
+  margin-inline: auto;
+}
+#bio .profile-refinement-copy,
+#bio .profile-refinement-art {
+  display: block;
+  position: relative;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+}
+#bio .profile-refinement-copy .zine-pullquote {
+  width: auto !important;
+  max-width: 100% !important;
+  font-size: clamp(2rem, 3.8vw, 4.5rem);
+  line-height: 1.08;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+#bio .profile-refinement-copy .zine-bio-body,
+#bio .profile-refinement-copy .zine-bio-body p {
+  display: block;
+  width: auto !important;
+  max-width: 65ch !important;
+  word-break: normal !important;
+  overflow-wrap: break-word;
+}
+#bio .profile-refinement-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+@media (max-width: 760px) {
+  #bio .profile-refinement-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 2rem;
+  }
+}
+
+/* Root cause: old .bio-section is a three-column grid. The new profile
+   wrapper was being placed into its first narrow grid track. */
+#bio.bio-section.selector-profile-section {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  grid-template-columns: none !important;
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 4rem) !important;
+}
+#bio .profile-refinement-layout {
+  box-sizing: border-box;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  background: #121222;
+  border: 2px solid #ff2d95;
+  box-shadow: 5px 5px 0 #0a0a12;
+  position: relative;
+  z-index: 3;
+}
+#bio .profile-refinement-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+#bio .profile-refinement-art {
+  padding: 1rem;
+  border: 2px solid #00d4ff;
+  background: #0a0a12;
+}
