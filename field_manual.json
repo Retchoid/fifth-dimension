@@ -1,0 +1,730 @@
+{
+  "stages": [
+    {
+      "id": "gathering",
+      "n": "01",
+      "name": "Gathering",
+      "window": "Illustrative arc: 9:00 PM \u2013 10:30 PM",
+      "tone": "var(--color-gather)",
+      "crowd": "Socializing, testing the vibe, minds still open.",
+      "floor": "Anticipation. The room is arriving, not performing.",
+      "frequency": "Favor warmth in the low mids. Keep sub and presence in the background so the door still feels like a door.",
+      "mix": "Long intros and clean grids. Same-key or relative-key moves. Do not slam a peak record into an empty floor.",
+      "high": [
+        "Warmth",
+        "Transition",
+        "Recovery"
+      ],
+      "low": [
+        "Energy",
+        "Aggression",
+        "Tension"
+      ],
+      "paragraphs": [
+        "The Gathering is the open. You are not chasing a reaction yet. You are telling the room what kind of night this is, and giving people permission to step closer to the booth.",
+        "Program length. Intros can run 32 to 64 bars. A first drop should feel like a hello, not a headline. Development after that drop is where regulars decide if they trust you.",
+        "If a record is loud but has no intro and no air, it is not an opener, no matter how good the tune is. Save it."
+      ],
+      "play": [
+        "Warm low-mids, moderate groove, readable drums",
+        "Intros long enough to talk over and still land the one",
+        "Minor or major is fine if the energy stays low"
+      ],
+      "avoid": [
+        "Full-tilt kicks and smashed masters from the first record",
+        "Vocal anthems that spend the hook too early",
+        "Key clashes while the floor is still sparse"
+      ],
+      "arrangement": [
+        {
+          "label": "Intro",
+          "detail": "32\u201364",
+          "weight": 48
+        },
+        {
+          "label": "Groove",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "First drop",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Develop",
+          "detail": "32+",
+          "weight": 40
+        },
+        {
+          "label": "Outro",
+          "detail": "32+",
+          "weight": 32
+        }
+      ]
+    },
+    {
+      "id": "confidence",
+      "n": "02",
+      "name": "Confidence",
+      "window": "Illustrative arc: 10:30 PM \u2013 12:00 AM",
+      "tone": "var(--color-confidence)",
+      "crowd": "Starting to move. Trust is building. Eyes come up to the booth.",
+      "floor": "Momentum. Bodies commit, conversations get shorter.",
+      "frequency": "Low-mids still carry the body. Bass weight can rise, but presence should not shred yet.",
+      "mix": "Step the energy up without breaking the key path. Neighboring Camelot numbers, same letter, are the clean lift.",
+      "high": [
+        "Groove",
+        "Warmth",
+        "Energy"
+      ],
+      "low": [
+        "Darkness",
+        "Aggression"
+      ],
+      "paragraphs": [
+        "Confidence is the hour where the night stops being background music. The job is trust: a steady grid, a groove people can find, and a lift they feel before they can name it.",
+        "Builds are short. The first drop has to pay off the promise of the Gathering without spending the biggest record in the bag. A second drop, longer than the first, is where the floor locks to you.",
+        "If the room is still talking through the hook, you are early, not failing. Raise density and bass weight. Do not jump to Chaos to prove a point."
+      ],
+      "play": [
+        "Even drums and a groove that survives a 16-bar blend",
+        "Warm records with a clear one and a usable outro",
+        "Energy in the middle of your library, not the top"
+      ],
+      "avoid": [
+        "Fake-outs and switch-ups the floor has not earned",
+        "Dark, dry rollers that make the room feel closed",
+        "Doubling the tempo jump and the key jump in one mix"
+      ],
+      "arrangement": [
+        {
+          "label": "Intro",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Build",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Drop",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Break",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Drop 2",
+          "detail": "48",
+          "weight": 48
+        },
+        {
+          "label": "Outro",
+          "detail": "16",
+          "weight": 16
+        }
+      ]
+    },
+    {
+      "id": "peak",
+      "n": "03",
+      "name": "Peak Hype",
+      "window": "Illustrative arc: 12:00 AM \u2013 1:30 AM",
+      "tone": "var(--color-peak)",
+      "crowd": "Hands up. The scream is the downbeat. This is the memory.",
+      "floor": "Explosion. Density, hooks, and a drop that the whole room can point at.",
+      "frequency": "Bass weight at 60\u2013120 Hz and presence at 2\u20135 kHz. This is impact and vocal cut, not sub hypnosis.",
+      "mix": "You can tighten blends. Outros get shorter. Keep one harmonic thread so the peak feels like a run, not a playlist.",
+      "high": [
+        "Energy",
+        "Tension",
+        "Vocal presence"
+      ],
+      "low": [
+        "Recovery",
+        "Roller index"
+      ],
+      "paragraphs": [
+        "The fake drop matters. Take the floor to the edge, deny them once, then pay them. A VIP or second drop is the souvenir. The outro should be quick \u2014 you are already holding the next anthem.",
+        "A record can be famous and still be wrong here if it has no lift. Peak is a shape: rising tension, a hit, almost no recovery inside the record itself."
+      ],
+      "play": [
+        "High loudness, heavy bass weight, a hook or chant",
+        "One clear peak, not three competing ones",
+        "Tension that resolves on the drop, not before it"
+      ],
+      "avoid": [
+        "Long hypnotic rollers with no event",
+        "Soft warm-up tools dressed up by a loud master",
+        "Back-to-back key clashes just because both tunes are big"
+      ],
+      "arrangement": [
+        {
+          "label": "Intro",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Build",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Fake drop",
+          "detail": "FX",
+          "weight": 8
+        },
+        {
+          "label": "Main",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Switch",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "VIP",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Outro",
+          "detail": "quick",
+          "weight": 12
+        }
+      ]
+    },
+    {
+      "id": "chaos",
+      "n": "04",
+      "name": "Chaos",
+      "window": "Illustrative arc: 1:30 AM \u2013 2:30 AM",
+      "tone": "var(--color-chaos)",
+      "crowd": "Adrenaline, surprise, raw emotion. They want to be shocked, not soothed.",
+      "floor": "Controlled madness. The grid can lurch. The DJ still knows where the one is.",
+      "frequency": "Presence and bass weight stay high. Flux and hard onsets matter more than a pretty low-mid.",
+      "mix": "Shorter blends, switch-ups, and fake-outs. Harmonic rules loosen, but a total clash on every handoff just sounds lost.",
+      "high": [
+        "Aggression",
+        "Tension",
+        "Energy"
+      ],
+      "low": [
+        "Warmth",
+        "Roller index",
+        "Recovery"
+      ],
+      "paragraphs": [
+        "Chaos is the spike after the anthem, not a second copy of Peak Hype. Peak is the memory. Chaos is the jolt that keeps that memory from flattening into a playlist.",
+        "Program switches: drop, flip the drum pattern, drop again, fake a landing, drop a third time. The floor should laugh or yell. If they only look confused, you left the one behind.",
+        "Keep it short. An hour of adrenaline is a set. Two hours is a headache. Sketch Hours and Locked In are how you survive what you just did."
+      ],
+      "play": [
+        "Hard onsets, bright attack, unstable energy inside the record",
+        "Switch-ups that still have a countable bar",
+        "Records that feel slightly too much, on purpose"
+      ],
+      "avoid": [
+        "Smooth warm rollers and long emotional breakdowns",
+        "Another singalong with the same kick as the peak",
+        "Effects with no drum underneath"
+      ],
+      "arrangement": [
+        {
+          "label": "Intro",
+          "detail": "fast",
+          "weight": 12
+        },
+        {
+          "label": "Drop",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Switch",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Heavy",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Fake",
+          "detail": "drop",
+          "weight": 12
+        },
+        {
+          "label": "Third",
+          "detail": "drop",
+          "weight": 24
+        },
+        {
+          "label": "Outro",
+          "detail": "cut",
+          "weight": 8
+        }
+      ]
+    },
+    {
+      "id": "locked",
+      "n": "05",
+      "name": "Locked In",
+      "window": "Illustrative arc: 2:30 AM \u2013 3:45 AM",
+      "tone": "var(--color-locked)",
+      "crowd": "Flow state. Nobody is thinking. They are just moving.",
+      "floor": "Hypnotic. Time gets unreliable. The kick is the room.",
+      "frequency": "Sub from 20\u201360 Hz is the foundation. Presence and vocals step back so the pattern can loop without fatigue.",
+      "mix": "This is the long blend hour. One possible harmonic route is 8A to 8B to 9B to 10B: A minor, C, G, D. Same-number major/minor flip, then adjacent numbers on the same letter. These moves do not guarantee an energy rise.",
+      "high": [
+        "Groove",
+        "Roller index",
+        "Transition"
+      ],
+      "low": [
+        "Vocal presence",
+        "Aggression"
+      ],
+      "paragraphs": [
+        "Locked In is where a good DJ disappears. The record does not need a hook. It needs a pattern that can be varied for minutes without the floor noticing the seam.",
+        "Think in loops, not songs. A variation every 16 bars is enough: a hat opens, a sub note moves, an effect breathes and leaves. Minimal breaks. If you pull the kick out, earn the return."
+      ],
+      "play": [
+        "Even kick, high self-similarity, low vocal",
+        "Sub that you feel more than you hear on a phone",
+        "Intros and outros long enough for a 32-bar blend"
+      ],
+      "avoid": [
+        "Anthem vocals and drop-chasing",
+        "Wild tempo swings inside a hypnotic run",
+        "Bright airy tops that pull the room out of the pocket"
+      ],
+      "arrangement": [
+        {
+          "label": "Groove",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Var 1",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Groove",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Var 2",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Groove",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "FX layer",
+          "detail": "16",
+          "weight": 16
+        },
+        {
+          "label": "Outro",
+          "detail": "blend",
+          "weight": 24
+        }
+      ]
+    },
+    {
+      "id": "sketch",
+      "n": "06",
+      "name": "Sketch Hours",
+      "window": "Illustrative arc: 3:45 AM \u2013 5:00 AM",
+      "tone": "var(--color-sketch)",
+      "crowd": "Deep immersion. Time distortion. Survivors only.",
+      "floor": "Underground. Dark, minimal, a private agreement with whoever stayed.",
+      "frequency": "Sub and dryness. Air and low-mid warmth are the wrong paint. If it sounds expensive and wide, it is probably a Sunrise record.",
+      "mix": "Stay in a narrow harmonic lane. Rollers can run long. A vocal, even a pretty one, wakes people up.",
+      "high": [
+        "Darkness",
+        "Roller index"
+      ],
+      "low": [
+        "Vocal presence",
+        "Warmth",
+        "Air"
+      ],
+      "paragraphs": [
+        "Sketch Hours is not \u2018late and still loud.\u2019 It is the room after the tourists leave. Dark, minimal, almost no voice, a roller that could run another five minutes and nobody would complain.",
+        "Open with atmosphere, bring drums in late, then live in the roller. Evolution is a filter or a ghost note, not a new chorus. The outro can be long because the next record should arrive like weather.",
+        "Darkness here is not a sad lyric. It is low air, low presence, and usually a minor color. A bright hat pattern can fake a high centroid and still be a roller. Trust the low end and the repetition."
+      ],
+      "play": [
+        "Dry subs, small kits, almost no vocal",
+        "Low loudness wobble across several minutes",
+        "Minor keys and a narrow Camelot neighborhood"
+      ],
+      "avoid": [
+        "Hands-up hooks and festival supersaws",
+        "Big breakdowns that reset the spell",
+        "Warm, wide, major-key \u2018after\u2019 records \u2014 those are Rebirth or Sunrise"
+      ],
+      "arrangement": [
+        {
+          "label": "Atmos",
+          "detail": "32\u201364",
+          "weight": 48
+        },
+        {
+          "label": "Drums",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Drop",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Roller",
+          "detail": "64+",
+          "weight": 64
+        },
+        {
+          "label": "Evolve",
+          "detail": "32+",
+          "weight": 32
+        },
+        {
+          "label": "Outro",
+          "detail": "long",
+          "weight": 40
+        }
+      ]
+    },
+    {
+      "id": "rebirth",
+      "n": "07",
+      "name": "Rebirth",
+      "window": "Illustrative arc: 5:00 AM \u2013 6:15 AM",
+      "tone": "var(--color-rebirth)",
+      "crowd": "Emotional release. Connection. Smiles come back.",
+      "floor": "Uplift. Warmth returns without pretending it is midnight again.",
+      "frequency": "Low-mids for body and air above 10 kHz for space. Presence can return if it is musical, not abrasive.",
+      "mix": "Let a breakdown breathe. Coming out of Sketch, one relative-major move (A to B on the same number) feels like sunrise indoors.",
+      "high": [
+        "Release",
+        "Warmth",
+        "Emotion"
+      ],
+      "low": [
+        "Aggression"
+      ],
+      "paragraphs": [
+        "Rebirth is the thaw. The dark hour did its job. Now chords, voice, and a real release remind the room that other people are still here.",
+        "Give the melodic intro time. A piano or vocal break is the point, not a mistake in the energy curve. The big drop after that break should feel like relief, not like another peak-time weapon.",
+        "Emotion in this system is shape: dynamics, a real dip, and body in the low mids. It is not a sadness score and it is not a streaming mood tag. If the record is flat and smashed, it will not carry this hour."
+      ],
+      "play": [
+        "Warm chords, a breakdown you can stand inside",
+        "Voice used as a human signal, not a hype chant",
+        "Air and space after a long stretch of dry sub"
+      ],
+      "avoid": [
+        "Another distorted switch-up",
+        "Dropping straight back to Peak Hype volume",
+        "Cold, vocal-less rollers that refuse to open"
+      ],
+      "arrangement": [
+        {
+          "label": "Melodic",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Voice",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Build",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Drop",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Break",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Big drop",
+          "detail": "32",
+          "weight": 32
+        },
+        {
+          "label": "Outro",
+          "detail": "warm",
+          "weight": 24
+        }
+      ]
+    },
+    {
+      "id": "sunrise",
+      "n": "08",
+      "name": "Sunrise",
+      "window": "Illustrative arc: 6:15 AM \u2013 close",
+      "tone": "var(--color-sunrise)",
+      "crowd": "Peace, gratitude, the journey home.",
+      "floor": "Closure. The night exhales. Silence is an instrument.",
+      "frequency": "Air and softness. Energy and aggression should be near the bottom of the library. Sub can remain, but it should bloom, not punch.",
+      "mix": "Slow the handoffs. An outro can dissolve instead of ending on a hot cue. Leave a bar of room tone if the system will allow it.",
+      "high": [
+        "Recovery",
+        "Release",
+        "Air"
+      ],
+      "low": [
+        "Energy",
+        "Aggression",
+        "Darkness"
+      ],
+      "paragraphs": [
+        "Ambient intro, a simple groove, one gentle drop, then atmosphere that is allowed to thin out. The last move can be smaller than the one before it. That is the point.",
+        "Recovery is how well a record lets the room reset: a breakdown, air, and less loudness than what just happened. Play it after the night, not instead of the night."
+      ],
+      "play": [
+        "Spacious tops, low aggression, a fading grid",
+        "Major color or a very gentle minor",
+        "Records you could end on, including near-silence"
+      ],
+      "avoid": [
+        "One more peak \u2018for the stragglers\u2019",
+        "Dark warehouse rollers that reopen Sketch Hours",
+        "Hard cuts into the next tune with no landing"
+      ],
+      "arrangement": [
+        {
+          "label": "Ambient",
+          "detail": "open",
+          "weight": 40
+        },
+        {
+          "label": "Groove",
+          "detail": "simple",
+          "weight": 24
+        },
+        {
+          "label": "Drop",
+          "detail": "gentle",
+          "weight": 20
+        },
+        {
+          "label": "Air",
+          "detail": "extended",
+          "weight": 48
+        },
+        {
+          "label": "Outro",
+          "detail": "minimal",
+          "weight": 28
+        },
+        {
+          "label": "Silence",
+          "detail": "\u2014",
+          "weight": 8
+        }
+      ]
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "darkness",
+      "name": "Darkness",
+      "text": "Low air, low presence, and usually a minor key. A bright hat pattern is not automatically \u2018happy.\u2019",
+      "stages": [
+        "sketch",
+        "locked"
+      ]
+    },
+    {
+      "id": "warmth",
+      "name": "Warmth",
+      "text": "Body in the low mids, roughly 120\u2013500 Hz. This is Confidence and Rebirth, not sub-bass punch.",
+      "stages": [
+        "gathering",
+        "confidence",
+        "rebirth"
+      ]
+    },
+    {
+      "id": "groove",
+      "name": "Groove",
+      "text": "How even the drum grid is. A record can groove without being a roller.",
+      "stages": [
+        "confidence",
+        "locked"
+      ]
+    },
+    {
+      "id": "aggression",
+      "name": "Aggression",
+      "text": "Onsets, spectral flux, and a smashed crest. Presence bite belongs to Peak and Chaos.",
+      "stages": [
+        "chaos",
+        "peak"
+      ]
+    },
+    {
+      "id": "emotion",
+      "name": "Emotion",
+      "text": "Shape and depth: dynamics, a real release, and low-mid body. Not a streaming mood label.",
+      "stages": [
+        "rebirth",
+        "sunrise"
+      ]
+    },
+    {
+      "id": "vocal",
+      "name": "Vocal presence",
+      "text": "Energy in the voice band. Leads and pads can score here too, so use your ears on instrumental hooks.",
+      "stages": [
+        "peak",
+        "rebirth"
+      ]
+    },
+    {
+      "id": "energy",
+      "name": "Energy",
+      "text": "Loudness plus bass weight plus how often the record attacks. Raw peak volume is not the night arc.",
+      "stages": [
+        "peak",
+        "chaos",
+        "confidence"
+      ]
+    },
+    {
+      "id": "tension",
+      "name": "Tension",
+      "text": "A rise into the loudest part of the record. Chaos lives here. Gathering should not.",
+      "stages": [
+        "peak",
+        "chaos"
+      ]
+    },
+    {
+      "id": "release",
+      "name": "Release",
+      "text": "The size of the biggest drop in energy inside the record \u2014 the breakdown that lets people breathe.",
+      "stages": [
+        "rebirth",
+        "sunrise"
+      ]
+    },
+    {
+      "id": "roller",
+      "name": "Roller index",
+      "text": "Steady loudness, a pattern that resembles itself one bar later, low vocal, low flux.",
+      "stages": [
+        "locked",
+        "sketch"
+      ]
+    },
+    {
+      "id": "recovery",
+      "name": "Recovery",
+      "text": "Space, air, and less loudness than the record before it. This is how you reset a room.",
+      "stages": [
+        "gathering",
+        "sunrise",
+        "rebirth"
+      ]
+    },
+    {
+      "id": "transition",
+      "name": "Transition",
+      "text": "Long intro, long outro, stable grid. Real compatibility is still the next tune\u2019s key and tempo.",
+      "stages": [
+        "gathering",
+        "locked",
+        "confidence"
+      ]
+    }
+  ],
+  "wheel": [
+    {
+      "n": "1",
+      "minor": "Abm",
+      "major": "B"
+    },
+    {
+      "n": "2",
+      "minor": "Ebm",
+      "major": "F#"
+    },
+    {
+      "n": "3",
+      "minor": "Bbm",
+      "major": "Db"
+    },
+    {
+      "n": "4",
+      "minor": "Fm",
+      "major": "Ab"
+    },
+    {
+      "n": "5",
+      "minor": "Cm",
+      "major": "Eb"
+    },
+    {
+      "n": "6",
+      "minor": "Gm",
+      "major": "Bb"
+    },
+    {
+      "n": "7",
+      "minor": "Dm",
+      "major": "F"
+    },
+    {
+      "n": "8",
+      "minor": "Am",
+      "major": "C"
+    },
+    {
+      "n": "9",
+      "minor": "Em",
+      "major": "G"
+    },
+    {
+      "n": "10",
+      "minor": "Bm",
+      "major": "D"
+    },
+    {
+      "n": "11",
+      "minor": "F#m",
+      "major": "A"
+    },
+    {
+      "n": "12",
+      "minor": "C#m",
+      "major": "E"
+    }
+  ]
+}

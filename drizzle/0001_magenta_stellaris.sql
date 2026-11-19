@@ -1,1 +1,0 @@
-ALTER TABLE `arcade_leaderboard_entries` ADD `hasBonusCrown` boolean DEFAULT false NOT NULL;
