@@ -1,0 +1,7 @@
+name = "selectah-showdown"
+compatibility_date = "2026-11-10"
+pages_build_output_dir = "./dist/selectah-showdown"
+
+# Create the D1 database in the Cloudflare account, then bind it to this Pages
+# project as `DB` before deploying. The Pages dashboard owns the account-specific
+# database ID, so it is intentionally not committed here.
