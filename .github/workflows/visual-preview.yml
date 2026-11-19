@@ -1,0 +1,38 @@
+name: Homepage visual previews
+on:
+  workflow_dispatch:
+  push:
+    branches: [polish/site-refinement-static-readiness]
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Start static preview
+        run: |
+          pnpm exec vite preview --host 127.0.0.1 --port 4173 > /tmp/5d-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/5d-preview.log
+          exit 1
+      - name: Capture desktop and mobile
+        run: |
+          mkdir -p visual-previews
+          pnpm exec playwright screenshot --browser chromium --full-page --viewport-size "1440,900" --wait-for-timeout 2500 http://127.0.0.1:4173/ visual-previews/desktop-1440.png
+          pnpm exec playwright screenshot --browser chromium --full-page --viewport-size "390,844" --wait-for-timeout 2500 http://127.0.0.1:4173/ visual-previews/mobile-390.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: homepage-visual-previews
+          path: visual-previews/
+          retention-days: 7
