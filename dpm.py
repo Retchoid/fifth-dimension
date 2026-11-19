@@ -134,14 +134,15 @@ def main():
  atomic_json(out, results); out.with_suffix('.scan.log').write_text(f'Unique tracks: {len(results)}\nShort files skipped: {short}\nLong files skipped: {long}\nDuplicates: {scan_duplicates}\n'+ '\n'.join(errors)); db.close(); inventory.close(); print(f'Finished: {len(results)} unique tracks; {short} short files skipped; {len(errors)} warnings/errors.')
 def atomic_json(path, payload):
  from tempfile import NamedTemporaryFile
- with NamedTemporaryFile(mode='w', encoding='utf-8', dir=path.parent, delete=False) as handle:
-  temporary = Path(handle.name)
-  try:
-   json.dump(payload, handle, indent=2, allow_nan=False)
-   handle.flush()
-   os.fsync(handle.fileno())
-   temporary.replace(path)
-  finally:
-   temporary.unlink(missing_ok=True)
+ path=Path(path);temporary=None
+ try:
+  with NamedTemporaryFile(mode='w', encoding='utf-8', dir=path.parent, delete=False) as handle:
+   temporary=Path(handle.name)
+   json.dump(payload,handle,indent=2,allow_nan=False)
+   handle.flush();os.fsync(handle.fileno())
+  # Windows requires the temporary handle to close before rename/unlink.
+  temporary.replace(path)
+ finally:
+  if temporary is not None:temporary.unlink(missing_ok=True)
 
 if __name__=='__main__': main()

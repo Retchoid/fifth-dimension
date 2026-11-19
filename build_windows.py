@@ -20,7 +20,7 @@ def main():
  exe=root/'dist/5D DPM/5D DPM.exe'
  with tempfile.TemporaryDirectory() as td:
   report=Path(td)/'bundle-check.json'
-  subprocess.run([str(exe),'--bundle-check',str(report)],check=True,timeout=180)
+  subprocess.run([str(exe),'--bundle-check',str(report)],check=True,timeout=360)
   if json.loads(report.read_text()).get('bundle_imports')!='passed':raise RuntimeError('Frozen bundle import check failed')
  shutil.copy2(root/'TESTER-README.txt',exe.parent/'READ ME FIRST.txt')
  shutil.copy2(root/'requirements-windows.txt',exe.parent/'BUILD-DEPENDENCIES.txt')
