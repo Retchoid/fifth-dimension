@@ -1,4 +1,4 @@
-# 5D DPM Windows v0.14 — set editor
+# 5D DPM Windows v0.15 — set editor
 
 Sets now build an available, unique running order from your arc or range criteria. Drag tracks to reorder, click for Energy/key/all available ratings, preview and swap alternatives, Undo edits, and export the current order directly from Sets.
 
@@ -12,4 +12,14 @@ Microsoft Edge WebView2 Runtime is required. Download it from https://developer.
 
 Data/logs: %LOCALAPPDATA%/5D DPM . No personal audio or labels are distributed. The website main2 branch remains separate and unchanged. Font and proxy_tools notices are retained; the build collects installed dependency licenses.
 
-See RELEASE-v0.14.md for text export, source folders, isolated DJ profiles, and updated set controls.
+See RELEASE-v0.15.md for text export, source folders, isolated DJ profiles, and updated set controls.
+
+## v0.15 workflow improvements
+
+The energy overview is always visible, with planned and actual lines and selectable track points. The set page follows Define / Energy / Audition / Arrange / Export, with reviewed learning kept separately. Source folders and advanced arc controls remain accessible in named expandable panels.
+
+The library has a designation dropdown on each row and an independent user-only Bangers star tag. Tag individually or in selected batches; choose Bangers in the library filter and Add visible to set for a Bangers selection. Use learned placement clears a manual designation and supports Undo.
+
+The Camelot guide has larger type, all 24 interactive keys, explicit relationship explanations, quick-move groups and all 576 combinations. Open it from Music library or Field manual.
+
+See UI-AUDIT-v0.15.md for the full audit and test limits.

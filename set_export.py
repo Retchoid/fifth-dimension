@@ -39,7 +39,7 @@ def export_set(plan,rows,destination,format='both'):
  if format in {'text','all'}:
   text=[plan['title'],'='*len(plan['title']),'']
   for i,entry,t in ordered:
-   text.append(f"{i+1:02d}. {Path(t['path']).name}")
+   text.append(f"{i+1:02d}. {Path(t['path']).name}"+(' [BANGER — your tag]' if t.get('banger') else ''))
    text.append(f"    BPM: {t.get('bpm') if t.get('bpm') is not None else '—'} | Key: {t.get('camelot') or '—'} | Energy: {t.get('scores',{}).get('Energy') if t.get('scores',{}).get('Energy') is not None else '—'} | Stage: {entry.get('stage') or t['current_stage']}")
    ratings=', '.join(f'{name}: {value}' for name,value in t.get('scores',{}).items() if value is not None)
    if ratings:text.append('    Ratings: '+ratings)
@@ -47,9 +47,9 @@ def export_set(plan,rows,destination,format='both'):
   file=destination/(title+'.txt');file.write_text('\n'.join(text)+'\n',encoding='utf-8');files.append(file.name)
  file=destination/(title+'-running-order.csv');score_names=sorted({s for _,_,t in ordered for s in t.get('scores',{})})
  with file.open('w',encoding='utf-8-sig',newline='') as f:
-  writer=csv.DictWriter(f,fieldnames=['position','path','name','set_stage','category','bpm','camelot',*score_names]);writer.writeheader()
+  writer=csv.DictWriter(f,fieldnames=['position','path','name','set_stage','category','bpm','camelot','banger',*score_names]);writer.writeheader()
   for i,e,t in ordered:writer.writerow({'position':i+1,'path':t['path'],'name':Path(t['path']).name,'set_stage':e.get('stage') or t['current_stage'],
-   'category':t['current_stage'],'bpm':t.get('bpm'),'camelot':t.get('camelot'),**{s:t.get('scores',{}).get(s) for s in score_names}})
+   'category':t['current_stage'],'bpm':t.get('bpm'),'camelot':t.get('camelot'),'banger':'yes' if t.get('banger') else '',**{s:t.get('scores',{}).get(s) for s in score_names}})
  files.append(file.name)
  instructions='The playlist and CSV preserve your exact running order. Music files are not copied or changed.\nM3U/M3U8 import depends on your Serato version.\n'
  if crates:instructions+='Native .crate files use a community-derived format and need validation in your Serato version. Each drive has a separate crate; within-drive order is retained. The M3U8/CSV contains the complete cross-drive sequence. Export does not install or overwrite Serato crates.\n'

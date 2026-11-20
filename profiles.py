@@ -37,7 +37,7 @@ class ProfileStore:
     if records.exists():
      rows=json.loads(records.read_text(encoding='utf-8'))
      if not isinstance(rows,list):raise ValueError('Invalid analyzed library')
-     clean=[{k:v for k,v in row.items() if k not in {'manual_stage','learned_stage','current_stage'}} for row in rows]
+     clean=[{k:v for k,v in row.items() if k not in {'manual_stage','learned_stage','current_stage','banger','banger_source'}} for row in rows]
      atomic_json(directory/'dpm_results.json',clean)
     for name_db in ['cache.sqlite3','inventory.sqlite3']:
      path=source/name_db

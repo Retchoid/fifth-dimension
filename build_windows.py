@@ -23,6 +23,8 @@ def main():
   subprocess.run([str(exe),'--bundle-check',str(report)],check=True,timeout=360)
   if json.loads(report.read_text()).get('bundle_imports')!='passed':raise RuntimeError('Frozen bundle import check failed')
  shutil.copy2(root/'TESTER-README.txt',exe.parent/'READ ME FIRST.txt')
+ shutil.copy2(root/'UI-AUDIT-v0.15.md',exe.parent/'UI-AUDIT-v0.15.md')
+ shutil.copy2(root/'RELEASE-v0.15.md',exe.parent/'RELEASE-v0.15.md')
  shutil.copy2(root/'requirements-windows.txt',exe.parent/'BUILD-DEPENDENCIES.txt')
  # Package installed dependency license metadata alongside the beta.
  import importlib.metadata as metadata
@@ -34,5 +36,5 @@ def main():
     src=Path(dist.locate_file(file))
     if src.is_file():
      target=licenses/dist.metadata['Name']/Path(file).name;target.parent.mkdir(exist_ok=True);shutil.copy2(src,target)
- archive=shutil.make_archive(str(root/'5D-DPM-Windows-v0.14-beta'),'zip',root/'dist','5D DPM');print(archive)
+ archive=shutil.make_archive(str(root/'5D-DPM-Windows-v0.15-beta'),'zip',root/'dist','5D DPM');print(archive)
 if __name__=='__main__':main()

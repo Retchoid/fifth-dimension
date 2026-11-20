@@ -13,7 +13,7 @@ from learning import identity,features,recommend,current_stage,rebind_labels,bat
 from tempo import apply_override,valid_bpm,resolve_tempo
 
 BASE=Path(__file__).resolve().parent
-VERSION='0.14-win-beta'
+VERSION='0.15-win-beta'
 
 def read_json(path,default):
  if not path.exists():return default
@@ -47,6 +47,7 @@ class State:
    self.tracks=read_json(self.data/'dpm_results.json',[])
    self.labels=rebind_labels(self.tracks,read_json(self.data/'labels.json',{}))
    self.overrides=read_json(self.data/'tempo_overrides.json',{})
+   self.manual_tags=read_json(self.data/'manual_tags.json',{})
    rechecks=read_json(self.data/'tempo_rechecks.json',{})
    self.rows=[]
    for track in self.tracks:
@@ -58,6 +59,8 @@ class State:
     from set_tools import stage_number
     item['stage_number']=stage_number(item['current_stage'])
     item['name']=Path(item['path']).name
+    item['banger']=self.manual_tags.get(item['id'],{}).get('banger') is True
+    item['banger_source']='user' if item['banger'] else None
     self.rows.append(item)
    self.revision+=1
  def eligible(self):
@@ -73,7 +76,7 @@ class State:
    counts=dict.fromkeys(COLORS,0)
    for item in self.eligible():counts[item['current_stage']]+=1
    result={'profile':self.profiles.current(),'profiles':self.profiles.summary(),'version':VERSION,'revision':self.revision,'status':self.status,'counts':counts,
-           'reviewed':len(self.labels),'stored':len(self.rows),'eligible':len(self.eligible()),
+           'bangers':sum(t.get('banger',False) for t in self.eligible()),'reviewed':len(self.labels),'stored':len(self.rows),'eligible':len(self.eligible()),
            'scan_running':self.proc is not None,'busy':self.worker is not None and self.worker.is_alive(),
            'playing':self.audio_id,'playback':playback,'average_bpm':self.average_bpm,'job':self.job,'set_summaries':self.sets.summary(),'minimum':self.minimum,'maximum':self.maximum,'tempo_minimum':self.tempo_minimum,'tempo_maximum':self.tempo_maximum,'prefer_range':self.prefer_range,
            'can_undo':self.undo is not None,'last_export':self.last_export,'colors':COLORS}
@@ -90,6 +93,22 @@ class State:
    try:atomic_json(self.data/'labels.json',self.labels)
    except Exception:self.labels=previous;raise
    self.undo=undo;self.reload();self.status=f'Saved {len(tracks)} category correction'+('s' if len(tracks)!=1 else '')+'. Recommendations updated.'
+ def clear_labels(self,keys):
+  with self.lock:
+   if not isinstance(keys,list) or not keys:raise ValueError('Select at least one track')
+   tracks=[self.find(key) for key in dict.fromkeys(keys)];previous=dict(self.labels)
+   undo={t['id']:self.labels.get(t['id']) for t in tracks}
+   updated={key:value for key,value in self.labels.items() if key not in undo}
+   atomic_json(self.data/'labels.json',updated);self.labels=updated;self.undo=undo;self.reload();self.status='Manual placements cleared. Learned placements restored; Undo is available.'
+ def tag_bangers(self,keys,value):
+  with self.lock:
+   if not isinstance(keys,list) or not keys:raise ValueError('Select at least one track')
+   if not isinstance(value,bool):raise ValueError('Banger status must be true or false')
+   tracks=[self.find(key) for key in dict.fromkeys(keys)];updated=dict(self.manual_tags)
+   for item in tracks:
+    if value:updated[item['id']]={'banger':True,'source':'user','path':item['path']}
+    else:updated.pop(item['id'],None)
+   atomic_json(self.data/'manual_tags.json',updated);self.reload();self.status=('Tagged as Bangers' if value else 'Bangers tag removed')+'. Your choice only; stage learning is unchanged.'
  def undo_labels(self):
   with self.lock:
    if self.undo is None:return
@@ -137,7 +156,7 @@ class State:
    settings=read_json(directory/'settings.json',{})
    from set_tools import SetStore
    sets=SetStore(directory/'sets.json')
-   fields=['data','settings','sets','labels','tracks','rows','overrides','undo','minimum','maximum','tempo_minimum','tempo_maximum','prefer_range','average_bpm','last_export','job','worker','status','revision']
+   fields=['data','settings','sets','labels','manual_tags','tracks','rows','overrides','undo','minimum','maximum','tempo_minimum','tempo_maximum','prefer_range','average_bpm','last_export','job','worker','status','revision']
    previous={name:getattr(self,name) for name in fields};self.stop()
    try:
     self.data=directory;self.settings=settings;self.sets=sets;self.undo=None;self.last_export=None;self.job=None;self.worker=None
@@ -196,14 +215,14 @@ class State:
    if operation=='preview':
     from copy import deepcopy
     from set_tools import validate_plan
-    from arc_presets import validate_options
+    from arc_presets import validate_options,curve
     plan=deepcopy(self.sets.get(key));arc,limits=validate_plan(args['mode'],args['arc'],args['limits'])
     plan.update(mode=args['mode'],arc=arc,limits=limits,options=validate_options(args.get('options')),source_folders=validate_sources(args.get('source_folders',plan.get('source_folders',[]))))
     class View:
      data=self.sets.data
      def get(self,_):return plan
     pool=scope_rows(live_eligible,plan.get('source_folders',[]))
-    return {'phase_cards':planning_cards(View(),key,pool),'source_count':len(pool)}
+    return {'phase_cards':planning_cards(View(),key,pool),'source_count':len(pool),'target_curve':curve(plan)}
    if operation in {'append_many','append_phase'}:
     ids=args.get('ids',[])
     if not isinstance(ids,list) or not ids or len(ids)>500 or any(not isinstance(i,str) for i in ids):raise ValueError('Choose 1–500 tracks to add')
@@ -422,6 +441,8 @@ class Handler(BaseHTTPRequestHandler):
     from native_window import activate
     activate(self.server)
    elif route=='/api/labels':state.assign(args.get('ids',[]),args.get('stage'))
+   elif route=='/api/clear_labels':state.clear_labels(args.get('ids',[]))
+   elif route=='/api/bangers':state.tag_bangers(args.get('ids',[]),args.get('value'))
    elif route=='/api/undo':state.undo_labels()
    elif route=='/api/tempo':state.set_tempo(args.get('ids',[]),args.get('value'),args.get('factor'),args.get('clear',False))
    elif route=='/api/play':state.play(args.get('id'))

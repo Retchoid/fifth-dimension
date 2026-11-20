@@ -1,8 +1,8 @@
-5D DPM Windows v0.14 beta
+5D DPM Windows v0.15 beta
 
 1. Extract the WHOLE ZIP, including the _internal folder.
 2. Double-click 5D DPM.exe.
-3. Confirm v0.14-win-beta at bottom left.
+3. Confirm v0.15-win-beta at bottom left.
 4. Scan a SMALL music folder first (MP3/WAV/FLAC/AIFF/OGG).
 5. Test playback, seeking, BPM recheck, one category placement, and Sets & analysis.
 
@@ -20,3 +20,5 @@ Report your Windows version, the app version, the failing action and launch.log 
 SETS UPDATE: New sets fill automatically. Edit criteria and Generate set, drag tracks with the grip, click for ratings/swaps, and Export this set. Planning cards preview strict stage/energy matches without changing your running order.
 
 NEW: Text set export; multiple source folders; isolated DJ profiles in Settings; Add to set from library and planning cards; refreshed suggestions.
+
+V0.15: Permanent energy plot, clearer set workflow and enlarged Camelot guide. Change designation directly in the library dropdown. Star Bangers manually and filter them; tagging does not train stage predictions. Existing tools remain available.
