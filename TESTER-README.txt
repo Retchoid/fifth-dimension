@@ -17,6 +17,6 @@ Data and launch.log: %LOCALAPPDATA%\5D DPM
 No music files or tags are modified.
 Report your Windows version, the app version, the failing action and launch.log if it fails.
 
-SETS UPDATE: New sets fill automatically. Edit criteria and Build set, drag tracks with the grip, click for ratings/swaps, and Export this set. Planning cards preview strict stage/energy matches without changing your running order.
+SETS UPDATE: New sets fill automatically. Edit criteria and Generate set, drag tracks with the grip, click for ratings/swaps, and Export this set. Planning cards preview strict stage/energy matches without changing your running order.
 
 NEW: Text set export; multiple source folders; isolated DJ profiles in Settings; Add to set from library and planning cards; refreshed suggestions.

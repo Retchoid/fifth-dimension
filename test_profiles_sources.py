@@ -1,5 +1,6 @@
 import unittest,tempfile,json,sqlite3
 from pathlib import Path
+from contextlib import closing
 from unittest.mock import patch
 import desktop,test_set_editor
 from dpm import atomic_json
@@ -22,9 +23,9 @@ class ProfileSourceTests(unittest.TestCase):
  def test_sqlite_reuse_and_failed_create_do_not_damage_original(self):
   with tempfile.TemporaryDirectory() as td:
    root=Path(td);store=ProfileStore(root)
-   with sqlite3.connect(root/'cache.sqlite3') as db:db.execute('create table cache (value)');db.execute('insert into cache values (42)')
+   with closing(sqlite3.connect(root/'cache.sqlite3')) as db:db.execute('create table cache (value)');db.execute('insert into cache values (42)');db.commit()
    record=store.create('reuse','default')
-   with sqlite3.connect(store.path(record['id'])/'cache.sqlite3') as db:self.assertEqual(42,db.execute('select value from cache').fetchone()[0])
+   with closing(sqlite3.connect(store.path(record['id'])/'cache.sqlite3')) as db:self.assertEqual(42,db.execute('select value from cache').fetchone()[0])
    before=store.file.read_bytes()
    with patch.object(store,'save',side_effect=OSError('disk full')):
     with self.assertRaises(OSError):store.create('fail')
@@ -39,7 +40,7 @@ class ProfileSourceTests(unittest.TestCase):
    root=Path(td);a=root/'genre';b=root/'genre-other';sub=a/'sub';sub.mkdir(parents=True);b.mkdir();rows=test_set_editor.EditorTests().rows(sub,3);other=test_set_editor.EditorTests().rows(b,2)
    self.assertEqual(3,len(scope_rows(rows+other,[str(a)])));self.assertEqual(5,len(scope_rows(rows+other,[str(a),str(b)])))
    alias=b/'duplicate.wav';alias.write_bytes(b'audio unchanged');rows[0]['duplicate_paths']=[str(alias)]
-   scoped=scope_rows(rows,[str(b)]);self.assertEqual(1,len(scoped));self.assertEqual(str(alias),scoped[0]['source_path']);self.assertEqual(5,len(scope_rows(rows+other,[])))
+   scoped=scope_rows(rows,[str(b)]);self.assertEqual(1,len(scoped));self.assertEqual(str(alias.resolve()),scoped[0]['source_path']);self.assertEqual(5,len(scope_rows(rows+other,[])))
    with self.assertRaises(ValueError):validate_sources(['relative'])
  def test_scoped_generation_preview_and_undo(self):
   with tempfile.TemporaryDirectory() as td:
@@ -48,7 +49,7 @@ class ProfileSourceTests(unittest.TestCase):
    atomic_json(root/'dpm_results.json',rows+other);state=desktop.State(root)
    made=state.set_action({'operation':'create','mode':'range','auto_populate':True,'count':4,'source_folders':[str(a)]});p=made['plan'];self.assertTrue(p['entries']);self.assertTrue(all(int(e['track_id'])<8 for e in p['entries']))
    before=(root/'sets.json').read_bytes();preview=state.set_action({'operation':'preview','id':p['id'],'mode':'range','arc':p['arc'],'limits':p['limits'],'source_folders':[str(b)]});self.assertEqual(8,preview['source_count']);self.assertEqual(before,(root/'sets.json').read_bytes())
-   state.set_action({'operation':'configure','title':p['title'],'id':p['id'],'mode':'range','arc':p['arc'],'limits':p['limits'],'source_folders':[str(b)],'count':4});self.assertTrue(all(int(e['track_id'])>=20 for e in p['entries']));undo_order(state.sets,p['id']);self.assertEqual([str(a)],p['source_folders'])
+   state.set_action({'operation':'configure','title':p['title'],'id':p['id'],'mode':'range','arc':p['arc'],'limits':p['limits'],'source_folders':[str(b)],'count':4});self.assertTrue(all(int(e['track_id'])>=20 for e in p['entries']));undo_order(state.sets,p['id']);self.assertEqual([str(a.resolve())],p['source_folders'])
  def test_text_export_exact_order_zero_ratings_and_source_copy(self):
   with tempfile.TemporaryDirectory() as td:
    root=Path(td);rows=test_set_editor.EditorTests().rows(root,3);rows[1]['scores'].update(Energy=0,Aggression=0,Unknown=None);alias=root/'alternate.wav';alias.write_bytes(b'audio unchanged')
