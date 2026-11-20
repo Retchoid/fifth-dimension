@@ -1,4 +1,4 @@
-# 5D DPM Windows v0.13 — set editor
+# 5D DPM Windows v0.14 — set editor
 
 Sets now build an available, unique running order from your arc or range criteria. Drag tracks to reorder, click for Energy/key/all available ratings, preview and swap alternatives, Undo edits, and export the current order directly from Sets.
 

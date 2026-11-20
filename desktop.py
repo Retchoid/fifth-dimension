@@ -13,7 +13,7 @@ from learning import identity,features,recommend,current_stage,rebind_labels,bat
 from tempo import apply_override,valid_bpm,resolve_tempo
 
 BASE=Path(__file__).resolve().parent
-VERSION='0.13-win-beta'
+VERSION='0.14-win-beta'
 
 def read_json(path,default):
  if not path.exists():return default
@@ -29,7 +29,9 @@ def clean_json(value):
 
 class State:
  def __init__(self,data):
-  self.data=Path(data);self.data.mkdir(parents=True,exist_ok=True);self.lock=threading.RLock()
+  self.profile_root=Path(data);self.profile_root.mkdir(parents=True,exist_ok=True)
+  from profiles import ProfileStore
+  self.profiles=ProfileStore(self.profile_root);self.data=self.profiles.path(self.profiles.data['active']);self.data.mkdir(parents=True,exist_ok=True);self.lock=threading.RLock()
   self.labels={};self.tracks=[];self.overrides={};self.rows=[];self.revision=0
   self.undo=None;self.proc=None;self.audio=None;self.audio_id=None;self.audio_handle=None
   self.settings=read_json(self.data/'settings.json',{})
@@ -70,7 +72,7 @@ class State:
    self.audio_id=playback['id']
    counts=dict.fromkeys(COLORS,0)
    for item in self.eligible():counts[item['current_stage']]+=1
-   result={'version':VERSION,'revision':self.revision,'status':self.status,'counts':counts,
+   result={'profile':self.profiles.current(),'profiles':self.profiles.summary(),'version':VERSION,'revision':self.revision,'status':self.status,'counts':counts,
            'reviewed':len(self.labels),'stored':len(self.rows),'eligible':len(self.eligible()),
            'scan_running':self.proc is not None,'busy':self.worker is not None and self.worker.is_alive(),
            'playing':self.audio_id,'playback':playback,'average_bpm':self.average_bpm,'job':self.job,'set_summaries':self.sets.summary(),'minimum':self.minimum,'maximum':self.maximum,'tempo_minimum':self.tempo_minimum,'tempo_maximum':self.tempo_maximum,'prefer_range':self.prefer_range,
@@ -124,6 +126,27 @@ class State:
     self.player.load(key,path)
    self.audio_id=key;self.status='Loaded '+item['name']
  def seek(self,seconds):return self.player.seek(seconds)
+ def profile_action(self,args):
+  with self.lock:
+   if self.proc is not None or (self.worker and self.worker.is_alive()):raise ValueError('Finish or cancel the current scan/analysis before switching DJ profiles')
+   operation=args.get('operation');key=args.get('id')
+   if operation=='create':
+    record=self.profiles.create(args.get('name',''),self.profiles.data['active'] if args.get('reuse_analysis') else None);key=record['id']
+   elif operation!='switch':raise ValueError('Choose create or switch profile')
+   self.profiles.get(key);directory=self.profiles.path(key);directory.mkdir(parents=True,exist_ok=True)
+   settings=read_json(directory/'settings.json',{})
+   from set_tools import SetStore
+   sets=SetStore(directory/'sets.json')
+   fields=['data','settings','sets','labels','tracks','rows','overrides','undo','minimum','maximum','tempo_minimum','tempo_maximum','prefer_range','average_bpm','last_export','job','worker','status','revision']
+   previous={name:getattr(self,name) for name in fields};self.stop()
+   try:
+    self.data=directory;self.settings=settings;self.sets=sets;self.undo=None;self.last_export=None;self.job=None;self.worker=None
+    self.minimum=settings.get('minimum',90);self.maximum=settings.get('maximum',900);self.tempo_minimum=settings.get('tempo_minimum',140);self.tempo_maximum=settings.get('tempo_maximum',176);self.prefer_range=settings.get('prefer_range',True);self.average_bpm=settings.get('average_bpm',160)
+    self.reload();self.profiles.activate(key);self.status='DJ profile: '+self.profiles.current()['name']+'. Training, sets and settings are separate.'
+   except Exception:
+    for name,value in previous.items():setattr(self,name,value)
+    raise
+   return self.snapshot()
  def choose_file(self,prompt):
   if sys.platform=='win32':
    from platform_support import choose_path
@@ -161,27 +184,49 @@ class State:
    finally:self.job['running']=False
   self.worker=threading.Thread(target=work,daemon=True);self.worker.start()
  def set_action(self,args):
-  from set_tools import suggestions,analyze_set,import_tracklist,availability,populate,replacements,reorder,replace_track,undo_order,checkpoint,playable_path,planning_cards
+  from set_tools import suggestions,analyze_set,import_tracklist,availability,populate,replacements,reorder,replace_track,undo_order,checkpoint,playable_path,planning_cards,append_tracks,remember_suggestions
   with self.lock:
-   operation=args.get('operation','list');key=args.get('id');exported=None
+   operation=args.get('operation','list');key=args.get('id');exported=None;added=None
    live_rows=availability(self.rows) if operation!='list' else self.rows
    eligible_ids={t['id'] for t in self.eligible()};live_eligible=[t for t in live_rows if t['id'] in eligible_ids]
+   from source_scope import validate_sources,scope_rows
+   if operation=='pick_source':
+    path=self.choose_folder('Choose a music folder to draw this set from')
+    return {'folder':str(path.resolve()) if path is not None else None}
    if operation=='preview':
     from copy import deepcopy
     from set_tools import validate_plan
     from arc_presets import validate_options
     plan=deepcopy(self.sets.get(key));arc,limits=validate_plan(args['mode'],args['arc'],args['limits'])
-    plan.update(mode=args['mode'],arc=arc,limits=limits,options=validate_options(args.get('options')))
+    plan.update(mode=args['mode'],arc=arc,limits=limits,options=validate_options(args.get('options')),source_folders=validate_sources(args.get('source_folders',plan.get('source_folders',[]))))
     class View:
      data=self.sets.data
      def get(self,_):return plan
-    return {'phase_cards':planning_cards(View(),key,live_eligible)}
-   if operation=='create':
+    pool=scope_rows(live_eligible,plan.get('source_folders',[]))
+    return {'phase_cards':planning_cards(View(),key,pool),'source_count':len(pool)}
+   if operation in {'append_many','append_phase'}:
+    ids=args.get('ids',[])
+    if not isinstance(ids,list) or not ids or len(ids)>500 or any(not isinstance(i,str) for i in ids):raise ValueError('Choose 1–500 tracks to add')
+    items=[self.find(track_id) for track_id in ids]
+    for item in items:
+     if not playable_path(item):raise ValueError('Track unavailable: '+item['name']+'. Nothing was added.')
+    if key is None:
+     from arc_presets import preset_phases
+     plan=self.sets.create(args.get('title','Library selection'),'range',preset_phases('journey'),args.get('limits'));key=plan['id']
+    affected={t['current_stage'] for t in items};shown={}
+    if operation=='append_many':shown={str(c['index']):[r['id'] for r in c['rows']] for c in planning_cards(self.sets,key,live_eligible) if c['stage'] is None or c['stage'] in affected}
+    added=append_tracks(self.sets,key,items,args.get('phase_index') if operation=='append_phase' else None,args.get('seen_ids'),args.get('criteria'),shown)
+    self.status=f"Added {added['count']} tracks to set; {added['duplicates']} already present."
+   elif operation=='more_suggestions':
+    plan=self.sets.get(key);index=args.get('phase_index',0)
+    if not isinstance(index,int) or isinstance(index,bool) or not 0<=index<(len(plan['arc']) if plan['mode']=='arc' else 1):raise ValueError('Section not found')
+    remember_suggestions(plan,index,args.get('seen_ids',[]));self.sets.save()
+   elif operation=='create':
     from arc_presets import preset_phases
     arc=args.get('arc',preset_phases(args.get('preset','journey')))
     plan=self.sets.create(args.get('title','New set'),args.get('mode','arc'),arc,args.get('limits'),args.get('options'));key=plan['id']
-    plan['preset']=args.get('preset','journey')
-    if args.get('auto_populate'):populate(self.sets,key,live_eligible,args.get('count'))
+    plan['preset']=args.get('preset','journey');plan['source_folders']=validate_sources(args.get('source_folders',[]))
+    if args.get('auto_populate'):populate(self.sets,key,scope_rows(live_eligible,self.sets.get(key).get('source_folders',[])),args.get('count'))
     else:self.sets.save()
    elif operation in {'update','configure'}:
     from set_tools import validate_plan
@@ -189,13 +234,14 @@ class State:
     requested=sum(p['tracks'] for p in args['arc']) if args['mode']=='arc' else args.get('count',20)
     if operation=='configure' and (isinstance(requested,bool) or not isinstance(requested,(int,float)) or int(requested)!=requested or not 1<=requested<=500):raise ValueError('Build a set of 1–500 tracks')
     from copy import deepcopy
-    previous_config={k:deepcopy(v) for k,v in self.sets.get(key).items() if k in {'title','mode','arc','limits','options','preset','range_count'}}
+    previous_config={k:deepcopy(v) for k,v in self.sets.get(key).items() if k in {'title','mode','arc','limits','options','preset','range_count','source_folders'}}
+    sources=validate_sources(args.get('source_folders',self.sets.get(key).get('source_folders',[])))
     self.sets.update(key,args['title'],args['mode'],args['arc'],args['limits'],args.get('options'))
-    self.sets.get(key)['preset']=args.get('preset','custom')
+    self.sets.get(key)['preset']=args.get('preset','custom');self.sets.get(key)['source_folders']=sources
     if operation=='configure':
-     populate(self.sets,key,live_eligible,args.get('count'));self.sets.get(key)['undo_config']=previous_config;self.sets.save()
+     populate(self.sets,key,scope_rows(live_eligible,self.sets.get(key).get('source_folders',[])),args.get('count'));self.sets.get(key)['undo_config']=previous_config;self.sets.save()
     else:self.sets.save()
-   elif operation=='generate':populate(self.sets,key,live_eligible,args.get('count'))
+   elif operation=='generate':populate(self.sets,key,scope_rows(live_eligible,self.sets.get(key).get('source_folders',[])),args.get('count'))
    elif operation=='move':reorder(self.sets,key,args['index'],args['to_index'])
    elif operation=='swap':replace_track(self.sets,key,args['index'],self.find(args['track_id']))
    elif operation=='undo_order':undo_order(self.sets,key)
@@ -243,10 +289,12 @@ class State:
     plan['import_unmatched']=unmatched;self.sets.save();self.status=f'Imported set: {len(entries)-len(unmatched)} matched, {len(unmatched)} unmatched. Review before learning.'
    elif operation not in {'list','get'}:raise ValueError('Unknown set action')
    if key:
-    plan=self.sets.get(key)
-    return {'sets':self.sets.summary(),'plan':plan,'analysis':analyze_set(plan,live_rows),'phase_cards':None if args.get('details_only') else planning_cards(self.sets,key,live_eligible),'exported':exported,'can_export_crate':sys.platform!='win32',
-      'suggestions':suggestions(self.sets,key,live_eligible,args.get('source_id')),
-      'replacements':replacements(self.sets,key,live_eligible,args['replace_index']) if args.get('replace_index') is not None and 0<=int(args['replace_index'])<len(plan['entries']) else None,
+    plan=self.sets.get(key);scoped=scope_rows(live_eligible,plan.get('source_folders',[]))
+    source_lookup={r['id']:r for r in scope_rows(live_rows,plan.get('source_folders',[]))}
+    detail_rows=[source_lookup.get(r['id'],r) for r in live_rows]
+    return {'sets':self.sets.summary(),'plan':plan,'analysis':analyze_set(plan,detail_rows),'source_count':len(scoped),'phase_cards':None if args.get('details_only') else planning_cards(self.sets,key,scoped),'exported':exported,'added':added,'can_export_crate':sys.platform!='win32',
+      'suggestions':suggestions(self.sets,key,scoped,args.get('source_id')),
+      'replacements':replacements(self.sets,key,scoped,args['replace_index']) if args.get('replace_index') is not None and 0<=int(args['replace_index'])<len(plan['entries']) else None,
       'learned':self.sets.data['learned'].get(key)}
    return {'sets':self.sets.summary()}
  def choose_folder(self,prompt):
@@ -381,8 +429,9 @@ class Handler(BaseHTTPRequestHandler):
    elif route=='/api/recheck_bpm':state.recheck_bpm(args.get('ids',[]))
    elif route=='/api/cancel_job':state.job_cancel.set()
    elif route=='/api/sets':return self.respond(state.set_action(args))
+   elif route=='/api/profiles':return self.respond(state.profile_action(args))
    elif route=='/api/reload':state.reload();state.status='Recommendations refreshed.'
-   elif route=='/api/scan':state.scan('/Volumes/23' if args.get('drive23') and sys.platform=='darwin' else None)
+   elif route=='/api/scan':state.scan(args.get('root') or ('/Volumes/23' if args.get('drive23') and sys.platform=='darwin' else None))
    elif route=='/api/cancel_scan':
     if state.proc is not None:state.proc.terminate();state.status='Stopping scan…'
    elif route=='/api/refresh_tags':state.refresh_tags()

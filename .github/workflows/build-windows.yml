@@ -21,12 +21,12 @@ jobs:
       - name: Check dependencies
         run: python -m pip check
       - name: Test Windows adapters and ranking
-        run: python -m unittest -v test_windows test_arcs test_transitions test_set_editor
+        run: python -m unittest -v test_windows test_arcs test_transitions test_set_editor test_set_additions test_profiles_sources
       - name: Build executable and check frozen imports
         run: python build_windows.py
       - uses: actions/upload-artifact@v4
         with:
-          name: 5D-DPM-Windows-v0.13-beta
-          path: 5D-DPM-Windows-v0.13-beta.zip
+          name: 5D-DPM-Windows-v0.14-beta
+          path: 5D-DPM-Windows-v0.14-beta.zip
           if-no-files-found: error
           retention-days: 14

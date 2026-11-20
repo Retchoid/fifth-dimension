@@ -13,7 +13,7 @@ def main():
   '--add-data',f'{root / "field_manual.json"};.', '--exclude-module','PyQt5','--exclude-module','PyQt6','--exclude-module','PySide2','--exclude-module','PySide6']
  for package in ['librosa','numba','llvmlite','scipy','sklearn','soundfile','sounddevice','webview','pythonnet','clr_loader']:
   command+=['--collect-all',package]
- for name in ['dpm','inventory','audio_v2','bpm_recheck','desktop','native_window','playback','windows_audio','platform_support','arc_presets','set_tools','set_export','learning','transitions','tempo','crate_export','field_manual','clr','_sounddevice_data','tkinter','tkinter.filedialog','webview.platforms.edgechromium']:
+ for name in ['dpm','inventory','audio_v2','bpm_recheck','desktop','native_window','playback','windows_audio','platform_support','arc_presets','set_tools','set_export','profiles','source_scope','learning','transitions','tempo','crate_export','field_manual','clr','_sounddevice_data','tkinter','tkinter.filedialog','webview.platforms.edgechromium']:
   command+=['--hidden-import',name]
  command+=[str(root/'windows_entry.py')]
  subprocess.run(command,cwd=root,check=True)
@@ -34,5 +34,5 @@ def main():
     src=Path(dist.locate_file(file))
     if src.is_file():
      target=licenses/dist.metadata['Name']/Path(file).name;target.parent.mkdir(exist_ok=True);shutil.copy2(src,target)
- archive=shutil.make_archive(str(root/'5D-DPM-Windows-v0.13-beta'),'zip',root/'dist','5D DPM');print(archive)
+ archive=shutil.make_archive(str(root/'5D-DPM-Windows-v0.14-beta'),'zip',root/'dist','5D DPM');print(archive)
 if __name__=='__main__':main()

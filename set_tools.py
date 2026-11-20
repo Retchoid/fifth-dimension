@@ -9,6 +9,7 @@ from dpm import COLORS,atomic_json
 from transitions import transition_details,number
 from learning import identity
 from arc_presets import target_at,curve,validate_options
+from source_scope import validate_sources,scope_rows
 STAGES=list(COLORS)
 
 def stage_number(name):return STAGES.index(name)+1 if name in STAGES else None
@@ -208,7 +209,7 @@ def harmonic_movement(source,target,allow_boost=False):
 
 
 def playable_path(track):
- for text in [track.get('path'),*track.get('duplicate_paths',[])]:
+ for text in [track.get('source_path'),track.get('playback_path'),track.get('path'),*track.get('duplicate_paths',[])]:
   if not text:continue
   try:
    if Path(text).is_file():return str(Path(text))
@@ -230,8 +231,10 @@ def stage_at(plan,position):
 
 def checkpoint(plan):
  plan['undo_entries']=copy.deepcopy(plan['entries'])
- plan['undo_config']={k:copy.deepcopy(v) for k,v in plan.items() if k in {'title','mode','arc','limits','options','preset','range_count'}}
+ plan['undo_config']={k:copy.deepcopy(v) for k,v in plan.items() if k in {'title','mode','arc','limits','options','preset','range_count','source_folders'}}
  plan['undo_generation']=copy.deepcopy(plan.get('generation'))
+ plan['undo_suggestion_history']=copy.deepcopy(plan.get('suggestion_history',{}))
+ plan['undo_replacement_history']=copy.deepcopy(plan.get('replacement_history',[]))
 
 def reset_ratings(plan):
  for entry in plan['entries']:entry['rating']='unreviewed'
@@ -246,9 +249,11 @@ def undo_order(store,key):
  plan=store.get(key)
  if 'undo_entries' not in plan:raise ValueError('No set edit to undo')
  plan['entries']=plan.pop('undo_entries');generation=plan.pop('undo_generation',None)
+ plan['suggestion_history']=plan.pop('undo_suggestion_history',{})
+ plan['replacement_history']=plan.pop('undo_replacement_history',[])
  config=plan.pop('undo_config',None)
  if config is not None:
-  for k in {'title','mode','arc','limits','options','preset','range_count'}:
+  for k in {'title','mode','arc','limits','options','preset','range_count','source_folders'}:
    if k in config:plan[k]=config[k]
    else:plan.pop(k,None)
  if generation is None:plan.pop('generation',None)
@@ -261,6 +266,9 @@ def replace_track(store,key,index,item):
  if not playable_path(item):raise ValueError('Replacement track is unavailable. Reconnect its drive and refresh suggestions.')
  if any(e.get('track_id')==identity(item) for i,e in enumerate(plan['entries']) if i!=index):raise ValueError('That track is already in this set')
  checkpoint(plan);old=plan['entries'][index]
+ history=plan.setdefault('replacement_history',[])
+ if old.get('track_id') and old['track_id'] not in history:history.append(old['track_id'])
+ plan['replacement_history']=history[-500:]
  plan['entries'][index]={'track_id':identity(item),'stage':old.get('stage') or item['current_stage'],'rating':'unreviewed'}
  if index+1<len(plan['entries']):plan['entries'][index+1]['rating']='unreviewed'
  store.save()
@@ -275,7 +283,9 @@ def replacements(store,key,rows,index,limit=12):
    candidate=lookup[row['id']];desired=(target_at(plan,index+1) or 0)-(target_at(plan,index) or 0)
    onward=transition_details(candidate,following,desired,validate_options(plan.get('options'))['weights'])
    row['outgoing']=onward;row['score']=round(.65*row['score']+.35*((onward['score'] or 0)-30*(1-onward['coverage'])),2)
- ranked['rows'].sort(key=lambda x:(-x['score'],x['id']));ranked['rows']=ranked['rows'][:limit]
+ ranked['rows'].sort(key=lambda x:(-x['score'],x['id']))
+ fresh=[r for r in ranked['rows'] if r['id'] not in plan.get('replacement_history',[])]
+ ranked['recycled']=not fresh and bool(ranked['rows']);ranked['rows']=(fresh or ranked['rows'])[:limit]
  return ranked
 
 def populate(store,key,rows,count=None):
@@ -292,9 +302,10 @@ def populate(store,key,rows,count=None):
   ranked=suggestions(view,key,rows,limit=1)
   if not ranked['rows']:break
   choice=ranked['rows'][0];target=stage_at(draft,len(draft['entries']));item=next(t for t in rows if identity(t)==choice['id'])
-  draft['entries'].append({'track_id':choice['id'],'stage':target or item['current_stage'],'rating':'unreviewed'})
+  draft['entries'].append({'track_id':choice['id'],'stage':target or item['current_stage'],'rating':'unreviewed',**({'path_hint':item['source_path']} if item.get('source_path') else {})})
   fallbacks+=not choice['stage_match']
  checkpoint(plan);plan['entries']=draft['entries'];plan['range_count']=requested
+ plan['suggestion_history']={};plan['replacement_history']=[]
  plan['generation']={'requested':requested,'filled':len(plan['entries']),'unfilled':requested-len(plan['entries']),'stage_fallbacks':fallbacks,
   'unavailable_excluded':sum(t.get('available') is False for t in rows)}
  store.save();return plan['generation']
@@ -304,7 +315,7 @@ def planning_cards(store,key,rows,limit=3):
  """Strict per-section matches, separate from the full builder's soft stage fit."""
  plan=store.get(key);used={e.get('track_id') for e in plan['entries']};limits=plan['limits'];cards=[];start=0
  phases=plan['arc'] if plan['mode']=='arc' else [{'stage':None,'tracks':plan.get('range_count',20)}]
- lookup={identity(t):t for t in rows}
+ lookup={identity(t):t for t in rows};assigned=set()
  for i,phase in enumerate(phases):
   a,b=number(phase.get('energy_from')),number(phase.get('energy_to'))
   low=max(limits['energy_min'],min(a,b)-.5) if a is not None and b is not None else limits['energy_min']
@@ -318,12 +329,78 @@ def planning_cards(store,key,rows,limit=3):
    matching.append(t)
   unused={identity(t) for t in matching if identity(t) not in used}
   ranked=suggestions(store,key,rows,position=start,limit=len(rows))['rows']
-  choices=[]
-  for ranked_row in ranked:
-   if ranked_row['id'] not in unused:continue
-   t=lookup[ranked_row['id']];choices.append({'id':identity(t),'name':t.get('name',Path(t['path']).name),'bpm':t.get('bpm'),'camelot':t.get('camelot'),'energy':t.get('scores',{}).get('Energy'),'score':ranked_row['score']})
-   if len(choices)>=limit:break
+  history=set(plan.get('suggestion_history',{}).get(str(i),[]))
+  pool=[entry for entry in ranked if entry['id'] in unused and entry['id'] not in assigned]
+  fresh=[entry for entry in pool if entry['id'] not in history]
+  recycled=not fresh and bool(pool);choices=[]
+  for ranked_row in (fresh or pool)[:limit]:
+   t=lookup[ranked_row['id']];choices.append({'id':identity(t),'name':t.get('name',Path(t['path']).name),'bpm':t.get('bpm'),'camelot':t.get('camelot'),'energy':t.get('scores',{}).get('Energy'),'score':ranked_row['score']});assigned.add(identity(t))
   cards.append({'index':i,'stage':phase.get('stage'),'tracks':phase['tracks'],'start':start,'end':start+phase['tracks'],
-   'energy_from':a,'energy_to':b,'match_min':low,'match_max':high,'matching_count':len(matching),'unused_count':len(unused),'rows':choices})
+   'energy_from':a,'energy_to':b,'match_min':low,'match_max':high,'matching_count':len(matching),'unused_count':len(unused),'recycled':recycled,'elsewhere':bool(unused and not pool),'rows':choices})
   start+=phase['tracks']
  return cards
+
+
+def remember_suggestions(plan,phase_index,ids):
+ history=plan.setdefault('suggestion_history',{});key=str(phase_index);seen=history.setdefault(key,[])
+ for track_id in ids:
+  if isinstance(track_id,str) and track_id not in seen:seen.append(track_id)
+ history[key]=seen[-500:]
+
+def append_tracks(store,key,items,phase_index=None,seen_ids=None,criteria=None,seen_cards=None):
+ """One atomic user edit. Append a library block or insert into a planning section."""
+ plan=store.get(key);draft=copy.deepcopy(plan)
+ if criteria is not None:
+  arc,limits=validate_plan(criteria['mode'],criteria['arc'],criteria['limits']);options=validate_options(criteria.get('options'))
+  draft['source_folders']=validate_sources(criteria.get('source_folders',draft.get('source_folders',[])))
+  draft.update(title=str(criteria.get('title',plan['title'])).strip()[:100] or 'Untitled set',mode=criteria['mode'],arc=arc,limits=limits,options=options,preset=criteria.get('preset','custom'))
+ used={e.get('track_id') for e in plan['entries']};new=[];duplicates=0
+ for item in items:
+  if identity(item) in used:duplicates+=1;continue
+  if not playable_path(item):raise ValueError('Track unavailable: '+item.get('name',Path(item['path']).name)+'. Reconnect its drive and retry.')
+  used.add(identity(item));new.append(item)
+ if len(plan['entries'])+len(new)>500:raise ValueError('A set can contain at most 500 tracks. Nothing was added.')
+ if not new:return {'count':0,'duplicates':duplicates,'indices':[],'last_index':None}
+ for index,ids in (seen_cards or {}).items():remember_suggestions(draft,index,ids)
+ insert_at=len(draft['entries']);stage=None
+ if phase_index is not None:
+  if isinstance(phase_index,bool) or not isinstance(phase_index,int):raise ValueError('Invalid section')
+  scoped={identity(t):t for t in scope_rows(new,draft.get('source_folders',[]))}
+  if any(identity(t) not in scoped for t in new):raise ValueError('This suggestion is outside the selected source folders. Refresh suggestions.')
+  new=[scoped[identity(t)] for t in new]
+  if draft['mode']=='arc':
+   if not 0<=phase_index<len(draft['arc']):raise ValueError('Section not found')
+   phase=draft['arc'][phase_index];stage=phase['stage'];limits=draft['limits'];a,b=number(phase.get('energy_from')),number(phase.get('energy_to'))
+   low=max(limits['energy_min'],min(a,b)-.5) if a is not None and b is not None else limits['energy_min'];high=min(limits['energy_max'],max(a,b)+.5) if a is not None and b is not None else limits['energy_max']
+   for item in new:
+    energy=number(item.get('scores',{}).get('Energy'));bpm=number(item.get('bpm'))
+    if item['current_stage']!=stage or energy is None or bpm is None or not(low<=energy<=high and limits['bpm_min']<=bpm<=limits['bpm_max']):raise ValueError('This suggestion no longer matches the section. Refresh suggestions and try again.')
+   # Infer legacy phase membership once, before changing any phase lengths.
+   pos=0
+   for index,p in enumerate(draft['arc']):
+    for entry in draft['entries'][pos:pos+p['tracks']]:entry.setdefault('phase_index',index)
+    pos+=p['tracks']
+   insert_at=next((i for i,e in enumerate(draft['entries']) if e.get('phase_index') is not None and e['phase_index']>phase_index),len(draft['entries']))
+   actual=sum(e.get('phase_index')==phase_index for e in draft['entries']);needed=actual+len(new)
+   if needed>50:raise ValueError('This section is full (50 tracks). Add another phase or add from the library to the end.')
+   phase['tracks']=max(phase['tracks'],needed)
+  elif phase_index!=0:raise ValueError('Section not found')
+  else:
+   limits=draft['limits']
+   for item in new:
+    energy=number(item.get('scores',{}).get('Energy'));bpm=number(item.get('bpm'))
+    if energy is None or bpm is None or not(limits['energy_min']<=energy<=limits['energy_max'] and limits['bpm_min']<=bpm<=limits['bpm_max']):raise ValueError('This suggestion no longer matches the set range. Refresh suggestions.')
+  remember_suggestions(draft,phase_index,seen_ids or [])
+ entries=[{'track_id':identity(item),'stage':stage or item['current_stage'],'rating':'unreviewed',**({'path_hint':item['source_path']} if item.get('source_path') else {}),**({'phase_index':phase_index} if phase_index is not None and draft['mode']=='arc' else {})} for item in new]
+ draft['entries'][insert_at:insert_at]=entries
+ if insert_at+len(entries)<len(draft['entries']):draft['entries'][insert_at+len(entries)]['rating']='unreviewed'
+ draft.pop('generation',None)
+ if draft['mode']=='range':draft['range_count']=max(draft.get('range_count',20),len(draft['entries']))
+ # Checkpoint the original configuration/order/histories, then publish the draft once.
+ checkpoint(draft)
+ draft['undo_entries']=copy.deepcopy(plan['entries']);draft['undo_config']={k:copy.deepcopy(v) for k,v in plan.items() if k in {'title','mode','arc','limits','options','preset','range_count','source_folders'}}
+ draft['undo_generation']=copy.deepcopy(plan.get('generation'));draft['undo_suggestion_history']=copy.deepcopy(plan.get('suggestion_history',{}));draft['undo_replacement_history']=copy.deepcopy(plan.get('replacement_history',[]))
+ previous=copy.deepcopy(plan);plan.clear();plan.update(draft)
+ try:store.save()
+ except Exception:plan.clear();plan.update(previous);raise
+ return {'count':len(new),'duplicates':duplicates,'indices':list(range(insert_at,insert_at+len(new))),'last_index':insert_at+len(new)-1}
