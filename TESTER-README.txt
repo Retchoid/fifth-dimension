@@ -1,8 +1,8 @@
-5D DPM Windows v0.12 beta
+5D DPM Windows v0.13 beta
 
 1. Extract the WHOLE ZIP, including the _internal folder.
 2. Double-click 5D DPM.exe.
-3. Confirm v0.12-win-beta at bottom left.
+3. Confirm v0.13-win-beta at bottom left.
 4. Scan a SMALL music folder first (MP3/WAV/FLAC/AIFF/OGG).
 5. Test playback, seeking, BPM recheck, one category placement, and Sets & analysis.
 
@@ -16,3 +16,5 @@ AAC/M4A codecs are not guaranteed. Serato crate installation is not available in
 Data and launch.log: %LOCALAPPDATA%\5D DPM
 No music files or tags are modified.
 Report your Windows version, the app version, the failing action and launch.log if it fails.
+
+SETS UPDATE: New sets fill automatically. Edit criteria and Build set, drag tracks with the grip, click for ratings/swaps, and Export this set. Planning cards preview strict stage/energy matches without changing your running order.

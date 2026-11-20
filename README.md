@@ -1,17 +1,13 @@
-# 5D DPM Windows v0.12 beta
+# 5D DPM Windows v0.13 — set editor
 
-The Windows executable was built successfully on GitHub Actions. Download the portable ZIP from https://github.com/Retchoid/fifth-dimension/actions/runs/44628708408/artifacts/14580986513 . The artifact wraps the distributable ZIP; extract the entire distributable and run 5D DPM.exe with its _internal folder beside it. Python is bundled.
+Sets now build an available, unique running order from your arc or range criteria. Drag tracks to reorder, click for Energy/key/all available ratings, preview and swap alternatives, Undo edits, and export the current order directly from Sets.
 
-Windows 10/11 x64, Microsoft Edge WebView2 Runtime and an output audio device are required. This is an unsigned beta. Use the official WebView2 installer if needed: https://developer.microsoft.com/en-us/microsoft-edge/webview2/ .
+Planning cards show strict matching tracks for each stage and energy band. A Gathering energy target of 4 lists Gathering tracks at 3.5–4.5, subject to BPM and availability. Editing cards previews criteria without saving or changing the running order. Build set applies them. Full-set generation uses soft stage fit and reports fallbacks or shortages; it never inserts unavailable placeholders. Reviewed set learning and category labels remain explicit actions.
 
-The Windows runner passed all 16 adapter/ranking tests, launched the frozen executable, checked its bundled imports/resources and freshly decoded a generated 174 BPM WAV with a result within 1 BPM. These checks do not verify audible output or native UI on a physical laptop.
+Windows exports an ordered M3U8 and ratings CSV; native .crate output is experimental and available in the Mac build only. M3U/M3U8 import depends on your Serato version. Music and tags are not modified or copied.
 
-Features retained: six set arcs, editable targets/weights, reviewed set learning, all 576 Camelot pairs, stage numbers, forced BPM rechecks, seekable playback, persistent settings and category training. Windows playback streams through soundfile/PortAudio. MP3/WAV/AIFF/FLAC/OGG are the first testing targets; AAC/M4A codecs are not guaranteed. Direct Serato indexing/install actions are hidden; Windows exports playlists/CSV rather than experimental crates. Music files/tags are read-only.
+Build on Windows x64/Python 3.11 with Build-Windows.cmd, or use the isolated dpm-windows-beta branch workflow. The workflow runs 26 portable adapter/arc/editor tests, builds with PyInstaller and runs frozen dependency/resource and real synthetic audio checks. The distributable is a ZIP containing 5D DPM.exe and _internal; keep the whole folder together. No separate Python install is needed on the tester's machine.
 
-Data and logs: %LOCALAPPDATA%/5D DPM . Your friend starts with their own library and training data. The build includes no personal audio or labels.
+Microsoft Edge WebView2 Runtime is required. Download it from https://developer.microsoft.com/en-us/microsoft-edge/webview2/ if missing. This is an unsigned beta. MP3/WAV/AIFF/FLAC/OGG are the first codec testing targets; AAC/M4A playback is not guaranteed. Physical laptop UI, dragging and sound output require real-device checks.
 
-Reproduce on Windows with Python 3.11 x64: run Build-Windows.cmd. Or push build changes to the isolated dpm-windows-beta branch to run .github/workflows/build-windows.yml. The build creates an onedir PyInstaller distribution, runs frozen checks and uploads the ZIP. Keep the whole distribution folder together.
-
-The user approved publishing this source on dpm-windows-beta. The website main2 branch was verified unchanged. Build source: 8e06f34a220d207131f55347fbd820ae1d6f0aed. Successful run: 44628708408.
-
-The font and bundled proxy_tools wheel retain their license notices. The build copies available dependency license notices into LICENSES. Build documentation: https://pyinstaller.org/en/stable/operating-mode.html .
+Data/logs: %LOCALAPPDATA%/5D DPM . No personal audio or labels are distributed. The website main2 branch remains separate and unchanged. Font and proxy_tools notices are retained; the build collects installed dependency licenses.

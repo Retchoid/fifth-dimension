@@ -13,7 +13,7 @@ from learning import identity,features,recommend,current_stage,rebind_labels,bat
 from tempo import apply_override,valid_bpm,resolve_tempo
 
 BASE=Path(__file__).resolve().parent
-VERSION='0.12-win-beta'
+VERSION='0.13-win-beta'
 
 def read_json(path,default):
  if not path.exists():return default
@@ -161,18 +161,63 @@ class State:
    finally:self.job['running']=False
   self.worker=threading.Thread(target=work,daemon=True);self.worker.start()
  def set_action(self,args):
-  from set_tools import suggestions,analyze_set,import_tracklist
+  from set_tools import suggestions,analyze_set,import_tracklist,availability,populate,replacements,reorder,replace_track,undo_order,checkpoint,playable_path,planning_cards
   with self.lock:
-   operation=args.get('operation','list');key=args.get('id')
+   operation=args.get('operation','list');key=args.get('id');exported=None
+   live_rows=availability(self.rows) if operation!='list' else self.rows
+   eligible_ids={t['id'] for t in self.eligible()};live_eligible=[t for t in live_rows if t['id'] in eligible_ids]
+   if operation=='preview':
+    from copy import deepcopy
+    from set_tools import validate_plan
+    from arc_presets import validate_options
+    plan=deepcopy(self.sets.get(key));arc,limits=validate_plan(args['mode'],args['arc'],args['limits'])
+    plan.update(mode=args['mode'],arc=arc,limits=limits,options=validate_options(args.get('options')))
+    class View:
+     data=self.sets.data
+     def get(self,_):return plan
+    return {'phase_cards':planning_cards(View(),key,live_eligible)}
    if operation=='create':
     from arc_presets import preset_phases
     arc=args.get('arc',preset_phases(args.get('preset','journey')))
     plan=self.sets.create(args.get('title','New set'),args.get('mode','arc'),arc,args.get('limits'),args.get('options'));key=plan['id']
-   elif operation=='update':self.sets.update(key,args['title'],args['mode'],args['arc'],args['limits'],args.get('options'))
+    plan['preset']=args.get('preset','journey')
+    if args.get('auto_populate'):populate(self.sets,key,live_eligible,args.get('count'))
+    else:self.sets.save()
+   elif operation in {'update','configure'}:
+    from set_tools import validate_plan
+    validate_plan(args['mode'],args['arc'],args['limits'])
+    requested=sum(p['tracks'] for p in args['arc']) if args['mode']=='arc' else args.get('count',20)
+    if operation=='configure' and (isinstance(requested,bool) or not isinstance(requested,(int,float)) or int(requested)!=requested or not 1<=requested<=500):raise ValueError('Build a set of 1–500 tracks')
+    from copy import deepcopy
+    previous_config={k:deepcopy(v) for k,v in self.sets.get(key).items() if k in {'title','mode','arc','limits','options','preset','range_count'}}
+    self.sets.update(key,args['title'],args['mode'],args['arc'],args['limits'],args.get('options'))
+    self.sets.get(key)['preset']=args.get('preset','custom')
+    if operation=='configure':
+     populate(self.sets,key,live_eligible,args.get('count'));self.sets.get(key)['undo_config']=previous_config;self.sets.save()
+    else:self.sets.save()
+   elif operation=='generate':populate(self.sets,key,live_eligible,args.get('count'))
+   elif operation=='move':reorder(self.sets,key,args['index'],args['to_index'])
+   elif operation=='swap':replace_track(self.sets,key,args['index'],self.find(args['track_id']))
+   elif operation=='undo_order':undo_order(self.sets,key)
+   elif operation=='export':
+    from set_export import export_set
+    from datetime import datetime
+    plan=self.sets.get(key)
+    if not plan['entries']:raise ValueError('Build or add tracks before exporting')
+    bad=[str(i+1) for i,e in enumerate(plan['entries']) if not next((r for r in live_rows if r['id']==e.get('track_id') and r.get('available')),None)]
+    if bad:raise ValueError('Reconnect, swap or remove unavailable positions '+', '.join(bad)+' before exporting')
+    parent=self.choose_folder('Choose where to export this set')
+    if parent is not None:
+     destination=parent/('5D-DPM-set-'+datetime.now().strftime('%Y%m%d-%H%M%S-%f'))
+     exported=export_set(plan,live_rows,destination,args.get('format','both'));self.status='Set exported in your exact running order: '+str(destination)
    elif operation=='add':
-    item=self.find(args['track_id']);stage=args.get('stage') or self.sets.next_stage(key) or item['current_stage']
+    item=self.find(args['track_id'])
+    if not playable_path(item):raise ValueError('Track unavailable. Reconnect the drive and refresh suggestions.')
+    stage=args.get('stage') or self.sets.next_stage(key) or item['current_stage']
     self.sets.add(key,item['id'],stage)
-   elif operation=='edit':self.sets.edit_entry(key,args['index'],args.get('stage'),args.get('rating'),args.get('move'),args.get('remove',False))
+   elif operation=='edit':
+    if args.get('remove') or args.get('move') is not None:checkpoint(self.sets.get(key))
+    self.sets.edit_entry(key,args['index'],args.get('stage'),args.get('rating'),args.get('move'),args.get('remove',False))
    elif operation=='rate_all':
     plan=self.sets.get(key)
     for entry in plan['entries'][1:]:entry['rating']='good'
@@ -194,13 +239,15 @@ class State:
    elif operation=='import':
     path=self.choose_file('Choose an ordered M3U/M3U8 or CSV set tracklist')
     if path is None:return {'sets':self.sets.summary()}
-    entries,unmatched=import_tracklist(path,self.rows);plan=self.sets.create(path.stem,'range');key=plan['id'];plan['entries']=entries
+    entries,unmatched=import_tracklist(path,live_rows);plan=self.sets.create(path.stem,'range');key=plan['id'];plan['entries']=entries
     plan['import_unmatched']=unmatched;self.sets.save();self.status=f'Imported set: {len(entries)-len(unmatched)} matched, {len(unmatched)} unmatched. Review before learning.'
    elif operation not in {'list','get'}:raise ValueError('Unknown set action')
    if key:
     plan=self.sets.get(key)
-    return {'sets':self.sets.summary(),'plan':plan,'analysis':analyze_set(plan,self.rows),
-      'suggestions':suggestions(self.sets,key,self.eligible(),args.get('source_id')),'learned':self.sets.data['learned'].get(key)}
+    return {'sets':self.sets.summary(),'plan':plan,'analysis':analyze_set(plan,live_rows),'phase_cards':None if args.get('details_only') else planning_cards(self.sets,key,live_eligible),'exported':exported,'can_export_crate':sys.platform!='win32',
+      'suggestions':suggestions(self.sets,key,live_eligible,args.get('source_id')),
+      'replacements':replacements(self.sets,key,live_eligible,args['replace_index']) if args.get('replace_index') is not None and 0<=int(args['replace_index'])<len(plan['entries']) else None,
+      'learned':self.sets.data['learned'].get(key)}
    return {'sets':self.sets.summary()}
  def choose_folder(self,prompt):
   if sys.platform=='win32':
@@ -291,7 +338,7 @@ class Handler(BaseHTTPRequestHandler):
   if not self.valid_host():return self.respond({'error':'Invalid host'},403)
   url=urlparse(self.path)
   if url.path.startswith('/api/'):
-   if not self.authenticated():return self.respond({'error':'Open DPM from Launch.command to reconnect'},403)
+   if not self.authenticated():return self.respond({'error':'Open 5D DPM.exe to reconnect'},403)
    try:
     if url.path=='/api/state':return self.respond(self.server.state.snapshot(parse_qs(url.query).get('revision',[None])[0]))
     if url.path=='/api/playback':return self.respond(self.server.state.player.snapshot())
