@@ -243,7 +243,10 @@ class State:
     else:self.sets.save()
    elif operation=='generate':populate(self.sets,key,scope_rows(live_eligible,self.sets.get(key).get('source_folders',[])),args.get('count'))
    elif operation=='move':reorder(self.sets,key,args['index'],args['to_index'])
-   elif operation=='swap':replace_track(self.sets,key,args['index'],self.find(args['track_id']))
+   elif operation=='swap':
+    matches=scope_rows([self.find(args['track_id'])],self.sets.get(key).get('source_folders',[]))
+    if not matches:raise ValueError('Choose a replacement from this set’s source folders')
+    replace_track(self.sets,key,args['index'],matches[0])
    elif operation=='undo_order':undo_order(self.sets,key)
    elif operation=='export':
     from set_export import export_set

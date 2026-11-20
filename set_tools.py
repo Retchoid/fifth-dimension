@@ -269,7 +269,7 @@ def replace_track(store,key,index,item):
  history=plan.setdefault('replacement_history',[])
  if old.get('track_id') and old['track_id'] not in history:history.append(old['track_id'])
  plan['replacement_history']=history[-500:]
- plan['entries'][index]={'track_id':identity(item),'stage':old.get('stage') or item['current_stage'],'rating':'unreviewed'}
+ plan['entries'][index]={'track_id':identity(item),'stage':old.get('stage') or item['current_stage'],'rating':'unreviewed',**({'path_hint':item['source_path']} if item.get('source_path') else {})}
  if index+1<len(plan['entries']):plan['entries'][index+1]['rating']='unreviewed'
  store.save()
 

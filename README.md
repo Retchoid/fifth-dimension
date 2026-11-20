@@ -11,3 +11,5 @@ Build on Windows x64/Python 3.11 with Build-Windows.cmd, or use the isolated dpm
 Microsoft Edge WebView2 Runtime is required. Download it from https://developer.microsoft.com/en-us/microsoft-edge/webview2/ if missing. This is an unsigned beta. MP3/WAV/AIFF/FLAC/OGG are the first codec testing targets; AAC/M4A playback is not guaranteed. Physical laptop UI, dragging and sound output require real-device checks.
 
 Data/logs: %LOCALAPPDATA%/5D DPM . No personal audio or labels are distributed. The website main2 branch remains separate and unchanged. Font and proxy_tools notices are retained; the build collects installed dependency licenses.
+
+See RELEASE-v0.14.md for text export, source folders, isolated DJ profiles, and updated set controls.
